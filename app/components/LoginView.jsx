@@ -10,6 +10,7 @@ class LoginView extends React.Component {
     super(props);
     this.login = props.actions.login;
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.navigation = props.navigation;
   }
 
   handleSubmit(values) {
@@ -19,7 +20,6 @@ class LoginView extends React.Component {
     })
     .then(res => {
       this.login(res.data);
-      Alert.alert('Logeado como: ' + res.data.nickname);
     }).catch(function (error) {
       Alert.alert('Error', 'Credenciales invalidas, verifique usuario y/o contraseña');
     });
