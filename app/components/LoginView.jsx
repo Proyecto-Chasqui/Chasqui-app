@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Button, Text, Alert, View } from 'react-native';
-import { Input, Image } from 'react-native-elements';
+import { StyleSheet, Text, Alert, View, Dimensions } from 'react-native';
+import { Input, Image, Button } from 'react-native-elements';
 import { Formik } from 'formik';
 import axios from 'axios';
 
@@ -28,52 +28,54 @@ class LoginView extends React.Component {
 
   render() {
     return (
-      <View style={{flex: 1,
-        flexDirection: 'column', justifyContent: 'center', backgroundColor: 'rgba(51, 102, 255, 1)', width:"100%", height:"100%"}}>
+      <View style={styles.principalContainer}>
         <Formik
           initialValues={{ email: '', contraseña: '' }}
           onSubmit={values => this.handleSubmit(values)}
         >
           {({ handleChange, handleBlur, handleSubmit, values }) => (
-            <View style={{
-            alignItems:'center'}}>
-            <View style={styles.TitleAlign}>
-              <Text style={styles.Title}>Bienvenidxs</Text>
-            </View>
-              <Image
-                  source={{ uri: 'http://www.proyectochasqui.org/images/logo_chasqui_400.png' }}
-                  style={{ width: 200, height: 71, resizeMode: 'contain' }}
-                />
-              <View style={{ marginTop: '10%', width: "90%", height: 71}}>
-                <Input
-                    inputStyle={{color:"white"}}                 
-                    onChangeText={handleChange('email')}
-                    onBlur={handleBlur('email')}
-                    placeholder=' Correo electronico'
-                    leftIcon={{ type: 'font-awesome', name: 'user' }}
-                    value={values.email}
+            <View>
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}>Bienvenidxs</Text>
+              </View>
+              <View style={styles.imageContainer}>
+                <Image
+                    source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                    style={styles.image}
                   />
               </View>
-              <View style={{ marginTop: '3%', width: "90%", height: 71}}>
-                <Input
-                    inputStyle={{color:"white"}}   
-                    onChangeText={handleChange('contraseña')}
-                    onBlur={handleBlur('constraseña')}
-                    placeholder=' Contraseña'
-                    leftIcon={{ type: 'font-awesome', name: 'lock' }}
-                    secureTextEntry={true}
-                    value={values.contraseña}
-                  />
+              <View style={styles.inputContainer}>
+                  <Input
+                      inputStyle={{color:"white", marginLeft:10}} 
+                      placeholderTextColor = "white"                
+                      onChangeText={handleChange('email')}
+                      onBlur={handleBlur('email')}
+                      placeholder='Correo electronico'
+                      leftIcon={{ type: 'font-awesome', name: 'user' }}
+                      value={values.email}
+                    />
               </View>
-              <View style={{ marginTop: '2%', width: "90%"}}>
-                <Button style={{height: 171}} onPress={handleSubmit} title="Ingresar" />
+              <View style={styles.lowerInputContainer}>
+                  <Input
+                      inputStyle={{color:"white", marginLeft:10}}
+                      placeholderTextColor = "white"     
+                      onChangeText={handleChange('contraseña')}
+                      onBlur={handleBlur('constraseña')}
+                      placeholder='Contraseña'
+                      leftIcon={{ type: 'font-awesome', name: 'lock' }}
+                      secureTextEntry={true}
+                      value={values.contraseña}
+                    />
               </View>
-              <View style={{marginTop: '5%', flexDirection: 'row', justifyContent:'space-evenly'}} >
-                  <View style={styles.MainContainer}>
+              <View style={styles.buttonContainer}>
+                  <Button buttonStyle={{height: 60, backgroundColor:'#80bfff', borderColor:"white", borderWidth: 1}} titleStyle={{fontSize: 20, }} onPress={handleSubmit} title="INGRESAR" />
+              </View>
+              <View style={styles.lowerButtonsContainer} >
+                  <View style={styles.leftButton}>
                     <Text style={styles.TextStyle} onPress={() => Alert.alert('En desarrollo')}> Olvide mi contraseña </Text>
                   </View>
-                  <View style = {{ height: 38, width: 1, backgroundColor: 'rgba(194, 215, 242, 1)'}} />
-                  <View style={styles.MainContainer}>
+                  <View style = {styles.divisor} />
+                  <View style={styles.rightButton}>
                     <Text style={styles.TextStyle} onPress={() => Alert.alert('En desarrollo')}> Registrarme </Text>
                   </View>
               </View>
@@ -87,12 +89,75 @@ class LoginView extends React.Component {
 }
 
 const styles = StyleSheet.create({
- 
-  MainContainer: {
+  
+  principalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center', 
+    backgroundColor: 'rgba(51, 102, 255, 1)', 
   },
+
+  titleContainer: {
+    alignSelf: 'center',
+  },
+
+  title: {
+    fontSize: 36,
+    color: '#ffffff'
+  },
+
+  imageContainer:{
+    alignSelf: 'center',
+    marginTop: "10%"
+  },
+
+  image:{ 
+    width: 278 / 2,
+    height: 321 / 2,
+    resizeMode: 'contain',
+  },
+
+  inputContainer:{ 
+    marginTop: '20%',
+    width: Dimensions.get('window').width -40,
+    height: 71,
+    alignSelf: 'center'
+  },
+
+  lowerInputContainer:{ 
+    marginTop: 5, 
+    width: Dimensions.get('window').width -40, 
+    height: 71,
+    alignSelf: 'center'
+  },
+
+  buttonContainer:{
+    marginTop: '2%',
+    width: "90%",
+    alignSelf: 'center'
+  },
+
+  lowerButtonsContainer:{
+    marginTop: '5%', 
+    flexDirection: 'row',
+    justifyContent:'space-evenly',
+  },
+
+  divisor: { 
+    height: 38, 
+    width: 1, 
+    backgroundColor: 'rgba(194, 215, 242, 1)',
+  },
+
+  leftButton: {
+    justifyContent: 'center',
+  },
+
+  rightButton:{
+    justifyContent: 'center',
+    marginRight: 40
+  },
+
  
   TextStyle: {
     fontSize: 16,
@@ -100,16 +165,7 @@ const styles = StyleSheet.create({
  
   },
 
-  TitleAlign: {
-    flex: 1,
-    justifyContent: 'center',
-    marginBottom: '25%'
-  },
 
-  Title: {
-    fontSize: 36,
-    color: '#ffffff'
-  }
 });
 
 export default LoginView;

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, Alert, Image, ScrollView, Dimensions } from 'react-native';
 import axios from 'axios';
 import { Card, Badge } from 'react-native-elements';
+import LoadingView from '../components/LoadingView';
 
 class VendorsView extends React.Component {
 
@@ -17,16 +18,23 @@ class VendorsView extends React.Component {
     }    
     
     cropText(text){
-        if(text.length > 15){
-            return text.slice(0, 14) + "..";
+        if(text.length > 32){
+            return text.slice(0, 31) + "..";
         }else{
             return text;
         }
     }
 
     componentWillMount() {
-        this.getVendors(this.props);
-        
+        this.getVendors(this.props);  
+    }
+
+    screenLowerThan(value,styleA,styleB){
+        console.log("dimension", Dimensions.get('window').width);
+        if(Dimensions.get('window').width < value){
+            return styleB;
+        }
+        return styleA;
     }
 
     getVendors(props){
@@ -54,12 +62,12 @@ class VendorsView extends React.Component {
     render() {
         
         if (this.state.isLoading) {
-            return <View><Text>Loading...</Text></View>;
+            return <LoadingView></LoadingView>;
         }
         
         return(
-        <ScrollView >
-            <View style={styles.flexView}>
+        <ScrollView>
+            <View style={styles.flexViewCentered}>
             {
                 this.props.vendors.map((u, i) => {
                     if(u.visibleEnMulticatalogo){
@@ -69,7 +77,7 @@ class VendorsView extends React.Component {
                                 <Image style={styles.cardImage} source={{ uri: 'http://69.61.93.71/chasqui-dev-panel/' + u.imagen}}/>      
                                     <View style={styles.viewBadgesTOrg}>
                                         {(u.tagsTipoOrganizacion.map((tag) =>
-                                            <Badge badgeStyle={styles.badge} containerStyle={styles.tagOrganizacion} value={<Text style={styles.textBadge}>{" "+this.cropText(tag.nombre)+" "}</Text>} />
+                                            <Badge badgeStyle={styles.badge} containerStyle={styles.tagOrganizacion} value={<Text style={styles.textBadge}>{"  "+this.cropText(tag.nombre)+"  "}</Text>} />
                                         ))}                                
                                     </View>
                                     <View style={styles.viewBadgesSellStrat}>
@@ -107,15 +115,168 @@ class VendorsView extends React.Component {
 
 
 
-const styles = StyleSheet.create ({
-
+const stylesSoloCard = StyleSheet.create ({
+    
     flexView: {
         flex: 1,
         flexDirection:'row',
         marginTop: -9,
         marginBottom: 10,
         flexWrap: 'wrap',
-        alignContent: 'center'
+        justifyContent: 'center'
+    },
+
+    flexViewCentered: {
+        flex: 1,
+        flexDirection:'row',
+        marginTop: -9,
+        marginBottom: 10,
+        flexWrap: 'wrap',
+        justifyContent: 'center'
+    },
+
+    backgroundBadge:{
+        backgroundColor:'#e5e5e5',
+        borderRadius:5,
+        marginLeft: 5
+    },
+    viewBadgesSellingModes:{
+        flexDirection:'row',
+        alignSelf:'flex-end',
+        marginTop: 10
+    },
+
+    viewBadgesSellStrat:{
+        flexDirection:'row',
+        alignSelf:'flex-end',
+        position:'absolute',
+        marginTop: 160,
+    },  
+
+    badgeImage:{
+        height: 30,
+        width: 30,
+                
+    },
+
+    viewBadgesTOrg:{
+      position:'absolute',
+      marginTop: 160,
+      flexDirection:'row',
+      alignSelf:'flex-start'
+    },
+
+    viewZones:{
+        position:'absolute',
+        marginTop: 230,
+        width: 300,
+        flexDirection:'row',
+        alignSelf:'flex-start',
+        flexWrap: 'wrap',
+    },
+
+    viewProducts:{
+        position:'absolute',
+        marginTop: 292,
+        width:Dimensions.get('window').width - 30,
+        flexDirection:'row',
+        alignSelf:'flex-start',
+        flexWrap: 'wrap',
+    },
+
+    textBadge:{
+        color: "white",
+        fontWeight: "bold",
+    },
+
+    badge: {
+        backgroundColor:'#412467',
+        height: 30,
+        borderRadius:5,
+        alignSelf:'flex-start'
+    },
+
+    badgeCobertura: {
+        backgroundColor:'#48bb78',
+        height: 30,
+        borderRadius:5,
+        alignSelf:'flex-start',
+    },
+
+    badgeProductos:{
+        backgroundColor:'rgba(51, 102, 255, 1)',
+        height: 28,
+        borderRadius:5,
+        alignSelf:'flex-start'
+    },
+
+    tagOrganizacion: {
+       alignSelf:'flex-start',
+       marginRight: 3
+    },
+
+    nameTextStyle: {
+        fontSize: 20,
+        alignContent: 'center',
+        marginTop: 20,
+        width: Dimensions.get('window').width - 30,
+        fontWeight: "bold",
+    },
+
+    wiewCard: {
+        width: Dimensions.get('window').width,
+        borderRadius:5,        
+    },
+
+    card:{
+        height: 370,
+        borderRadius: 10,
+    },
+
+    cardImage : { 
+        width: Dimensions.get('window').width - 30,
+        height: 190,
+        resizeMode: 'cover',
+        marginTop: -16,
+        marginLeft: -16,
+        borderTopRightRadius:10,
+        borderTopLeftRadius:10
+    },
+
+    cardText: {
+        textAlign: "left",
+        marginTop: 0        
+    },
+
+    contentContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        paddingVertical: -20,
+        marginStart: -15,
+        marginEnd:-13,
+        marginTop: -14.5,
+        marginBottom: 0,
+    }
+});
+
+const stylesCards = StyleSheet.create ({
+    
+    flexView: {
+        flex: 1,
+        flexDirection:'row',
+        marginTop: -9,
+        marginBottom: 10,
+        flexWrap: 'wrap',
+        justifyContent: 'space-between'
+    },
+
+    flexViewCentered: {
+        flex: 1,
+        flexDirection:'row',
+        marginTop: -9,
+        marginBottom: 10,
+        flexWrap: 'wrap',
+        justifyContent: 'center'
     },
 
     backgroundBadge:{
@@ -204,28 +365,28 @@ const styles = StyleSheet.create ({
         alignContent: 'center',
         marginTop: 16,
         marginLeft: -4,
-        width: Dimensions.get('window').width / 2.5,
+        width: 240,
         fontWeight: "bold",
     },
 
     wiewCard: {
-        width: Dimensions.get('window').width / 2,
-        borderRadius:5
+        width: 240,
+        borderRadius:5,        
     },
 
     card:{
-        height: Dimensions.get('window').height / 2.3,
+        height: 370,
         borderRadius: 10,
     },
 
     cardImage : { 
-        width: Dimensions.get('window').width / 2.3 + 1,
+        width: 210,
         height: 150,
         resizeMode: 'cover',
-        marginTop: -14.5,
-        marginLeft: -17,
-        borderTopRightRadius:5,
-        borderTopLeftRadius:5
+        marginTop: -16,
+        marginLeft: -16,
+        borderTopRightRadius:10,
+        borderTopLeftRadius:10
     },
 
     cardText: {
@@ -243,5 +404,8 @@ const styles = StyleSheet.create ({
         marginBottom: 0,
     }
 });
+
+const styles = stylesSoloCard;
+
 
 export default VendorsView;
