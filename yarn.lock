@@ -4369,6 +4369,11 @@ react-is@^16.12.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4, react-i
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
   integrity sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==
 
+react-native-auto-scrolling@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-auto-scrolling/-/react-native-auto-scrolling-2.0.0.tgz#febeccc8602cdab9bc5e8f412362415b2679807c"
+  integrity sha512-gGrfq2GUZ/c1rmPmAE4mnNq5MuSuW0WgABjUpH+mdqtSePjcp0HsIIfSxfe2Us4QD6sWTn1/FRa3Tq9PTcKAWg==
+
 react-native-elements@^1.2.7:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-1.2.7.tgz#1eca2db715c41722aeb67aea62bd2a4621adb134"

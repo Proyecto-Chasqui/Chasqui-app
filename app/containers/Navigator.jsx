@@ -1,6 +1,5 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-//import {vendors, obtainVendors} from '../actions';
 import NavigatorView from '../components/NavigatorView';
 
 const mapStateToProps = state => ({

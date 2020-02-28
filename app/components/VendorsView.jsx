@@ -1,100 +1,231 @@
 import React from 'react';
 import { StyleSheet, View, Text, Alert, Image, ScrollView, Dimensions } from 'react-native';
 import axios from 'axios';
-import { Card, ListItem, Button, Icon } from 'react-native-elements'
-
-
+import { Card, Badge } from 'react-native-elements';
 
 class VendorsView extends React.Component {
+
+
     constructor(props) {
         super(props);
+        console.log(props);
         this.vendors = props.actions.vendors;
+ 
         this.state = {
-            isLoading: true
-          };       
+            isLoading: true,
+          };      
     }    
     
+    cropText(text){
+        if(text.length > 15){
+            return text.slice(0, 14) + "..";
+        }else{
+            return text;
+        }
+    }
+
     componentWillMount() {
-        this.getVendors();
+        this.getVendors(this.props);
+        
     }
 
     getVendors(props){
         axios.get('http://69.61.93.71/chasqui-dev-panel/rest/client/vendedor/all')
         .then(res => {
            this.vendors(res.data);
+           console.log("vendedores",res.data);
            this.setState({
                 isLoading: false
             });
         }).catch(function (error) {
+
             Alert.alert(
                 'Error',
                 'Ocurrio un error al obtener los vendedores, vuelva a intentar mas tarde.',
                 [                  
-                  {text: 'Entendido', onPress: () =>  props.navigation.navigate('Bienvenidxs')},
+                  {text: 'Entendido', onPress: () =>  props.actions.logout()},
                 ],
                 {cancelable: false},
               );
         });
     }
     
+
     render() {
+        
         if (this.state.isLoading) {
             return <View><Text>Loading...</Text></View>;
         }
+        
         return(
-        <ScrollView>
+        <ScrollView >
             <View style={styles.flexView}>
             {
-
                 this.props.vendors.map((u, i) => {
+                    if(u.visibleEnMulticatalogo){
                     return (
-                        <View style={styles.wiewCard}>
-                            <Card>
-                                <View style={styles.card} key={i} >
-                                    <Image style={styles.cardImage} source={{ uri: 'http://69.61.93.71/chasqui-dev-panel/' + u.imagen}}/>      
-                                    <Text style={styles.nameTextStyle}>{u.nombre}</Text>
-                                    <Text>{u.tagsTipoOrganizacion.nombre}</Text>                          
+                        <View style={styles.wiewCard}  key={i}>
+                            <Card containerStyle ={styles.card}>
+                                <Image style={styles.cardImage} source={{ uri: 'http://69.61.93.71/chasqui-dev-panel/' + u.imagen}}/>      
+                                    <View style={styles.viewBadgesTOrg}>
+                                        {(u.tagsTipoOrganizacion.map((tag) =>
+                                            <Badge badgeStyle={styles.badge} containerStyle={styles.tagOrganizacion} value={<Text style={styles.textBadge}>{" "+this.cropText(tag.nombre)+" "}</Text>} />
+                                        ))}                                
+                                    </View>
+                                    <View style={styles.viewBadgesSellStrat}>
+                                        {u.few.seleccionDeDireccionDelUsuario ? (<View style={styles.backgroundBadge}><Image style={styles.badgeImage} source={require('./badge_icons/entrega_domicilio.png')} /></View>):null}
+                                        {u.few.puntoDeEntrega  ? (<View style={styles.backgroundBadge}><Image style={styles.badgeImage} source={require('./badge_icons/entrega_lugar.png')} /></View>):null}
+                                    </View>    
+                                <Text style={styles.nameTextStyle}>{u.nombre}</Text>
+                                     <View style={styles.viewBadgesSellingModes}>
+                                        {u.few.gcc  ? (<View style={styles.backgroundBadge}><Image style={styles.badgeImage} source={require('./badge_icons/compra_grupal.png')} /></View>) : null}
+                                        {u.few.nodos  ? (<View style={styles.backgroundBadge}><Image style={styles.badgeImage} source={require('./badge_icons/compra_nodos.png')} /></View>) : null}
+                                        {u.few.compraIndividual  ? (<View style={styles.backgroundBadge}><Image style={styles.badgeImage} source={require('./badge_icons/compra_individual.png')} /></View>) : null} 
+                                    </View>                                  
+                                <View style={styles.viewZones}>
+                                        {(u.tagsZonaDeCobertura.map((tag) =>
+                                            <Badge badgeStyle={styles.badgeCobertura} containerStyle={styles.tagOrganizacion} value={<Text style={styles.textBadge}>{"  "+this.cropText(tag.nombre)+"  "}</Text>} />
+                                        ))}                          
                                 </View>
+                                
+                                <View style={styles.viewProducts}>
+                                        {(u.tagsTipoProductos.map((tag) =>
+                                            <Badge badgeStyle={styles.badgeProductos} containerStyle={styles.tagOrganizacion} value={<Text style={styles.textBadge}>{"  "+this.cropText(tag.nombre)+"  "}</Text>} />
+                                        ))}                               
+                                </View>              
                             </Card>  
-                        </View>                          
+                        </View>
                     );
+                    }                          
                 })
             }
             </View>            
         </ScrollView>
-        );
-    }
+        );        
+    }    
 }
+
+
 
 const styles = StyleSheet.create ({
 
     flexView: {
         flex: 1,
         flexDirection:'row',
+        marginTop: -9,
+        marginBottom: 10,
         flexWrap: 'wrap',
         alignContent: 'center'
     },
 
+    backgroundBadge:{
+        backgroundColor:'#e5e5e5',
+        borderRadius:5,
+       
+    },
+    viewBadgesSellingModes:{
+        flexDirection:'row',
+        alignSelf:'flex-end',
+        marginTop: 10
+    },
+
+    viewBadgesSellStrat:{
+        flexDirection:'row',
+        alignSelf:'flex-end',
+        position:'absolute',
+        marginTop: 120,
+    },  
+
+    badgeImage:{
+        height: 30,
+        width: 30,
+    },
+
+    viewBadgesTOrg:{
+      position:'absolute',
+      marginTop: 120,
+      marginLeft: -5,
+      flexDirection:'row',
+      alignSelf:'flex-start'
+    },
+
+    viewZones:{
+        position:'absolute',
+        marginTop: 185,
+        marginLeft: -5,
+        width: 125,
+        flexDirection:'row',
+        alignSelf:'flex-start',
+        flexWrap: 'wrap',
+    },
+
+    viewProducts:{
+        position:'absolute',
+        marginTop: 260,
+        marginLeft: -5,
+        width:175,
+        flexDirection:'row',
+        alignSelf:'flex-start',
+        flexWrap: 'wrap',
+    },
+
+    textBadge:{
+        color: "white",
+        fontWeight: "bold",
+    },
+
+    badge: {
+        backgroundColor:'#412467',
+        height: 30,
+        borderRadius:5,
+        alignSelf:'flex-start'
+    },
+
+    badgeCobertura: {
+        backgroundColor:'#48bb78',
+        height: 23,
+        borderRadius:5,
+        alignSelf:'flex-start',
+    },
+
+    badgeProductos:{
+        backgroundColor:'rgba(51, 102, 255, 1)',
+        height: 23,
+        borderRadius:5,
+        alignSelf:'flex-start'
+    },
+
+    tagOrganizacion: {
+       alignSelf:'flex-start',
+    },
+
     nameTextStyle: {
+        fontSize: 16,
+        alignContent: 'center',
+        marginTop: 16,
+        marginLeft: -4,
         width: Dimensions.get('window').width / 2.5,
+        fontWeight: "bold",
     },
 
     wiewCard: {
         width: Dimensions.get('window').width / 2,
-        
+        borderRadius:5
     },
 
     card:{
-        height: Dimensions.get('window').height / 2.7
+        height: Dimensions.get('window').height / 2.3,
+        borderRadius: 10,
     },
 
     cardImage : { 
-        width: Dimensions.get('window').width / 2.3,
-        height: 120,
+        width: Dimensions.get('window').width / 2.3 + 1,
+        height: 150,
         resizeMode: 'cover',
         marginTop: -14.5,
-        marginBottom: -15.5,
         marginLeft: -17,
+        borderTopRightRadius:5,
+        borderTopLeftRadius:5
     },
 
     cardText: {
