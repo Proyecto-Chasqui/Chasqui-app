@@ -72,11 +72,11 @@ class LoginView extends React.Component {
               </View>
               <View style={styles.lowerButtonsContainer} >
                   <View style={styles.leftButton}>
-                    <Text style={styles.TextStyle} onPress={() => Alert.alert('En desarrollo')}> Olvide mi contraseña </Text>
+                    <Text style={styles.TextStyle} onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}> Olvide mi contraseña </Text>
                   </View>
                   <View style = {styles.divisor} />
                   <View style={styles.rightButton}>
-                    <Text style={styles.TextStyle} onPress={() => Alert.alert('En desarrollo')}> Registrarme </Text>
+                    <Text style={styles.TextStyle} onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}> Registrarme </Text>
                   </View>
               </View>
             </View>

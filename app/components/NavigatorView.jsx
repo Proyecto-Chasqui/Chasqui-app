@@ -20,6 +20,16 @@ class NavigatorView extends React.Component {
         state.isSignout = props.user.token == "";
     }  
 
+    logoutAlert(){
+      Alert.alert(
+        'Cerrar sesión',
+       '¿Esta seguro que desea cerrar la sesión?',
+       [
+        {text: 'Si', onPress: () =>  this.logout()},
+        {text: 'No', onPress: () => null},
+       ])
+    }
+
     loginHeaderComponent(props){
         return(
         <ScrollView>
@@ -31,26 +41,26 @@ class NavigatorView extends React.Component {
         <View>
         <Button icon={<Icon name="bell" size={20} color="rgba(51, 102, 255, 1)" containerStyle={styles.iconMenuButton}/>}
                 buttonStyle={styles.menuButton}
-                onPress={() => Alert.alert('En Desarrollo', '')}
+                onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
                 title="Notificaciones"
                 titleStyle = {styles.menuButtonTitle}
             />
         <Button icon={<Icon name="cog" size={20} color="rgba(51, 102, 255, 1)"/>}
                 buttonStyle={styles.menuButton}
-                onPress={() => Alert.alert('En Desarrollo', '')}
-                title="Configuracion"
+                onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
+                title="Configuración"
                 titleStyle = {styles.menuButtonTitle}
             />
         <Button icon={<Icon name="question-circle" size={20} color="rgba(51, 102, 255, 1)" style={{alignSelf:'flex-start'}}/>}
                 buttonStyle={styles.menuButton}
-                onPress={() => Alert.alert('En Desarrollo', '')}
+                onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
                 title="Ayuda"
                 titleStyle = {styles.menuButtonTitle}
             />
         <Button icon={<Icon name="times-circle" size={20} color="rgba(51, 102, 255, 1)"/>}
                 buttonStyle={styles.menuButton}
-                onPress={() => this.logout()}
-                title="Cerrar sesion"
+                onPress={() => this.logoutAlert()}
+                title="Cerrar sesión"
                 titleStyle = {styles.menuButtonTitle}
             />                
         </View>
