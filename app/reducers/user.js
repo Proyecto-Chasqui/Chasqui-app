@@ -7,7 +7,8 @@ import {
     email: "",
     token: "",
     id: 0,
-    nickname: "usuario no logueado"
+    nickname: "usuario no logueado",
+    avatar: "",
   }
   
   export default function user(state=initialState, action) {

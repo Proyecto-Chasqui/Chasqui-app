@@ -3,9 +3,10 @@ import { StyleSheet, View, Text, Alert, Image, ScrollView, Dimensions } from 're
 import axios from 'axios';
 import { Card, Badge } from 'react-native-elements';
 import LoadingView from '../components/LoadingView';
+import {Header, Button} from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class VendorsView extends React.Component {
-
 
     constructor(props) {
         super(props);
@@ -66,6 +67,28 @@ class VendorsView extends React.Component {
         }
         
         return(
+        <View style={{marginBottom:75}}>    
+            <Header>
+            <Button
+                icon={
+                <Icon name="bars" size={20} color="white"/>
+                }
+                buttonStyle={styles.headerButton}
+                onPress={() => this.props.navigation.openDrawer()}
+            />
+            <Image
+            style={{ width: 50, height: 50, alignSelf:'center', resizeMode:'contain'}}
+            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+            />
+            <Button
+                icon={
+                <Icon name="truck" size={20} color="white"/>
+                }
+                buttonStyle={styles.headerButton}
+                onPress={() => this.props.navigation.openDrawer()}
+            />
+            </Header>
+          
         <ScrollView>
             <View style={styles.flexViewCentered}>
             {
@@ -94,8 +117,7 @@ class VendorsView extends React.Component {
                                         {(u.tagsZonaDeCobertura.map((tag) =>
                                             <Badge badgeStyle={styles.badgeCobertura} containerStyle={styles.tagOrganizacion} value={<Text style={styles.textBadge}>{"  "+this.cropText(tag.nombre)+"  "}</Text>} />
                                         ))}                          
-                                </View>
-                                
+                                </View>                                
                                 <View style={styles.viewProducts}>
                                         {(u.tagsTipoProductos.map((tag) =>
                                             <Badge badgeStyle={styles.badgeProductos} containerStyle={styles.tagOrganizacion} value={<Text style={styles.textBadge}>{"  "+this.cropText(tag.nombre)+"  "}</Text>} />
@@ -109,6 +131,7 @@ class VendorsView extends React.Component {
             }
             </View>            
         </ScrollView>
+        </View>
         );        
     }    
 }
@@ -121,7 +144,7 @@ const stylesSoloCard = StyleSheet.create ({
         flex: 1,
         flexDirection:'row',
         marginTop: -9,
-        marginBottom: 10,
+        marginBottom: 50,
         flexWrap: 'wrap',
         justifyContent: 'center'
     },
@@ -256,7 +279,16 @@ const stylesSoloCard = StyleSheet.create ({
         marginEnd:-13,
         marginTop: -14.5,
         marginBottom: 0,
-    }
+    },
+
+    headerButton:{
+        backgroundColor:'#66000000',
+        marginLeft:15, 
+        borderColor:"white", 
+        borderWidth: 1,
+        width:40,
+        height:40
+    },
 });
 
 const stylesCards = StyleSheet.create ({
