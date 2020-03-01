@@ -1,15 +1,16 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {vendors, obtainVendors, logout} from '../actions';
+import {vendors, logout, vendorTags} from '../actions';
 import VendorsView from '../components/VendorsView';
 
 const mapStateToProps = state => ({
+  user: state.user,
+  vendorTags: state.vendorTags,
   vendors: state.vendors,
-  user: state.user
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({vendors, obtainVendors, logout}, dispatch),
+  actions: bindActionCreators({vendors, logout, vendorTags}, dispatch),
 });
 
 export default connect(

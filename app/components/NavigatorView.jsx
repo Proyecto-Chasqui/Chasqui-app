@@ -1,8 +1,7 @@
 import React from 'react';
 import Login from '../containers/Login';
 import Vendors from '../containers/Vendors';
-import {Text, Header, Button} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {Text, Header, Button, Icon} from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
@@ -33,31 +32,31 @@ class NavigatorView extends React.Component {
     loginHeaderComponent(props){
         return(
         <ScrollView>
-        <Header>
+        <Header containerStyle={{backgroundColor:'rgba(51, 102, 255, 1)'}}  >
           <Image style={styles.userAvatar} source={{uri: "http://69.61.93.71/chasqui-dev-panel/" + this.props.user.avatar}}></Image>
           <Text style={styles.nickText}>{(this.props.user.nickname).toUpperCase()}</Text>
         </Header>
         <DrawerItemList {...props} />
-        <View>
-        <Button icon={<Icon name="bell" size={20} color="rgba(51, 102, 255, 1)" containerStyle={styles.iconMenuButton}/>}
+        <View style={{marginLeft:20, }}>
+        <Button icon={<Icon name="bell" type='font-awesome' size={20} iconStyle={styles.iconMenuButton} />}
                 buttonStyle={styles.menuButton}
                 onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
                 title="Notificaciones"
                 titleStyle = {styles.menuButtonTitle}
             />
-        <Button icon={<Icon name="cog" size={20} color="rgba(51, 102, 255, 1)"/>}
+        <Button icon={<Icon name="cog" type='font-awesome' size={20} iconStyle={styles.iconMenuButton}/>}
                 buttonStyle={styles.menuButton}
                 onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
                 title="Configuración"
                 titleStyle = {styles.menuButtonTitle}
             />
-        <Button icon={<Icon name="question-circle" size={20} color="rgba(51, 102, 255, 1)" style={{alignSelf:'flex-start'}}/>}
+        <Button icon={<Icon name="question-circle" type='font-awesome' size={20} iconStyle={styles.iconMenuButton}/>}
                 buttonStyle={styles.menuButton}
                 onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
                 title="Ayuda"
                 titleStyle = {styles.menuButtonTitle}
             />
-        <Button icon={<Icon name="times-circle" size={20} color="rgba(51, 102, 255, 1)"/>}
+        <Button icon={<Icon name="times-circle" type='font-awesome' size={20} iconStyle={styles.iconMenuButton}/>}
                 buttonStyle={styles.menuButton}
                 onPress={() => this.logoutAlert()}
                 title="Cerrar sesión"
@@ -93,7 +92,12 @@ class NavigatorView extends React.Component {
                 </Stack.Navigator>
                 ) : (
                 // User is signed in
-                <Drawer.Navigator initialRouteName="Bienvenidxs" drawerContentOptions={{headerTintColor: "DarkBlue",}} drawerContent={props => this.loginHeaderComponent(props)}>
+                <Drawer.Navigator initialRouteName="Bienvenidxs"
+                                  drawerContentOptions={{
+                                    activeTintColor: '#0066cc',
+                                    itemStyle: { marginLeft: 20, marginRight:20 },
+                                  }} 
+                                  drawerContent={props => this.loginHeaderComponent(props)}>
                     <Drawer.Screen name='Catalogos' component={Vendors}/>
                 </Drawer.Navigator>
                 )}                    
@@ -118,7 +122,7 @@ const styles = StyleSheet.create({
   },
   menuButton:{
     backgroundColor:'#66000000',
-    alignSelf:'flex-start'
+    alignSelf:'flex-start',
   },
   menuButtonTitle:{
     color:"black",
@@ -126,6 +130,7 @@ const styles = StyleSheet.create({
   },
   iconMenuButton:{
     marginRight: 15,
+    color:"rgba(51, 102, 255, 1)" 
   }
 });
 
