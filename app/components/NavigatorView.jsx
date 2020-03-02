@@ -4,7 +4,7 @@ import Vendors from '../containers/Vendors';
 import {Text, Header, Button, Icon} from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
+import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer'
 import { ScrollView , StyleSheet, Image, View, Alert} from 'react-native';
 
 
