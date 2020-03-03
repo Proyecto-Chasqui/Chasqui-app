@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, Alert, Image, ScrollView, Dimensions, Picker, M
 import axios from 'axios';
 import LoadingView from '../components/LoadingView';
 import { Header, Button, Icon, Overlay, Card, Badge, CheckBox } from 'react-native-elements';
-import VendorSingleCardView from '../containers/VendorSingleCard';
 import VendorMultipleCards from '../containers/VendorMultipleCards';
 
 class VendorsView extends React.Component {
@@ -293,7 +292,7 @@ class VendorsView extends React.Component {
                         </View>
                         : null}
 
-                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} type="outline" title="Tipo de productos"
+                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} type="outline" title="Zona de entregas"
                         onPress={() => this.setState({
                             showTipoOrganizacionSet: false,
                             showTipoProductoSet: false,
@@ -350,7 +349,7 @@ class VendorsView extends React.Component {
                         />
                     }
                 />
-                {this.state.multipleCards ? (<VendorMultipleCards />) : (<VendorSingleCardView />)}
+                <VendorMultipleCards multipleCards={this.state.multipleCards}/>
             </View>
         );
 
