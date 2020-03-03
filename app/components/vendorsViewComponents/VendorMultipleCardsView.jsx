@@ -6,10 +6,9 @@ import TextTicker from 'react-native-text-ticker'
 class VendorMultipleCardsView extends React.Component {
     constructor(props) {
         super(props);
-        console.log("multiple cards",props.multipleCards);
         this.vendors = props.actions.vendors;
         this.state = {
-            maxTagTextLength: 16
+            maxTagTextLength: 32
         }
     }
 
@@ -22,7 +21,7 @@ class VendorMultipleCardsView extends React.Component {
 
     createScrollText(text,styleText){
         return(
-            <TextTicker style={styleText} loop duration={5000} marqueeDelay={6000} repeatSpacer={0} bounce={true} >{" "+text+" "}</TextTicker>
+            <TextTicker style={styleText} loop duration={6000} marqueeDelay={3000} repeatSpacer={0} bounce={true} >{" "+text+" "}</TextTicker>
         )
     }
 
@@ -51,7 +50,7 @@ class VendorMultipleCardsView extends React.Component {
                                         <View style={stylesCards.viewTagsOrgAndSellStrat}>                                            
                                             <View style={stylesCards.viewBadgesTOrg}> 
                                                 {(u.tagsTipoOrganizacion.map((tag) =>
-                                                    <Badge badgeStyle={stylesCards.badge} containerStyle={stylesCards.tagOrganizacion} value={this.createScrollText(tag.nombre,stylesCards.textBadge)} />
+                                                    <Badge badgeStyle={stylesCards.badge} containerStyle={stylesCards.tagOrganizacion} value={this.props.multipleCards ? this.createScrollText(tag.nombre,stylesCards.textBadge) : <Text style={stylesCards.textBadge}>{this.cropText(tag.nombre)}</Text>} />
                                                     ))}
                                             </View>
                                             <View style={stylesCards.viewBadgesSellStrat}>
@@ -63,7 +62,7 @@ class VendorMultipleCardsView extends React.Component {
                                         <View style={stylesCards.viewTagsZonesAndSellModes} >
                                             <View style={stylesCards.viewZones}>
                                                 {(u.tagsZonaDeCobertura.map((tag) =>
-                                                    <Badge badgeStyle={stylesCards.badgeCobertura} containerStyle={stylesCards.tagOrganizacion} value={this.createScrollText(tag.nombre,stylesCards.textBadge)} />
+                                                    <Badge badgeStyle={stylesCards.badgeCobertura} containerStyle={stylesCards.tagOrganizacion} value={this.props.multipleCards ? this.createScrollText(tag.nombre,stylesCards.textBadge) : <Text style={stylesCards.textBadge}>{this.cropText(tag.nombre)}</Text>} />
                                                 ))}
                                             </View>
                                             <View style={stylesCards.viewBadgesSellingModes}>
@@ -74,7 +73,7 @@ class VendorMultipleCardsView extends React.Component {
                                         </View>
                                         <View style={stylesCards.viewProducts}>
                                             {(u.tagsTipoProductos.map((tag) =>
-                                                <Badge badgeStyle={stylesCards.badgeProductos} containerStyle={stylesCards.tagOrganizacion} value={this.createScrollText(tag.nombre,stylesCards.textBadge)} />
+                                                <Badge badgeStyle={stylesCards.badgeProductos} containerStyle={stylesCards.tagOrganizacion} value={this.props.multipleCards ? this.createScrollText(tag.nombre,stylesCards.textBadge) : <Text style={stylesCards.textBadge} >{this.cropText(tag.nombre)}</Text>} />
                                             ))}
                                         </View>
                                     </Card>
@@ -274,7 +273,7 @@ const stylesSingleCards = StyleSheet.create ({
     flexView: {
         flex: 1,
         flexDirection:'row',
-        marginTop: 15,
+        marginTop: 0,
         marginBottom: 55,
         flexWrap: 'wrap',        
     },
@@ -304,7 +303,8 @@ const stylesSingleCards = StyleSheet.create ({
     backgroundBadge:{
         backgroundColor:'#e5e5e5',
         borderRadius:5,
-        alignSelf:'flex-end'
+        alignSelf:'flex-end',
+        marginLeft:4
     },
 
     viewBadgesSellStrat:{
@@ -333,7 +333,6 @@ const stylesSingleCards = StyleSheet.create ({
         flexDirection:'row',
         alignSelf:'center',
         marginTop: 0,
-        marginLeft: 5,
         borderRadius:5,
     },
 
@@ -341,6 +340,7 @@ const stylesSingleCards = StyleSheet.create ({
         backgroundColor:'#e5e5e5',
         borderRadius:5,
         alignItems:'flex-end',
+        marginLeft:4
     },
 
     viewZones:{
@@ -366,7 +366,8 @@ const stylesSingleCards = StyleSheet.create ({
     textBadge:{
         color: "white",
         fontWeight: "bold",
-        marginRight: 2
+        marginRight: 2,
+        marginLeft: 2
     },
 
     badge: {
