@@ -1,11 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, ScrollView, Dimensions, Animated } from 'react-native';
 import { Card, Badge } from 'react-native-elements';
-import TextTicker from 'react-native-text-ticker'
+import TextTicker from 'react-native-text-ticker';
+import GLOBALS from '../../Globals';
 
 class VendorMultipleCardsView extends React.Component {
     constructor(props) {
         super(props);
+        this.serverBaseRoute = GLOBALS.BASE_URL;
         this.vendors = props.actions.vendors;
         this.state = {
             maxTagTextLength: 32
@@ -42,10 +44,10 @@ class VendorMultipleCardsView extends React.Component {
                     this.props.vendors.map((u, i) => {
                         if (u.visibleEnMulticatalogo) {
                             return (
-                                <View style={stylesCards.wiewCard} key={i}>
+                                <View style={stylesCards.wiewCard} key={u.id}>
                                     <Card containerStyle={stylesCards.card}>
                                         <View style={stylesCards.cardImageView}>
-                                         <Image style={stylesCards.cardImage} source={{ uri: 'http://69.61.93.71/chasqui-dev-panel/' + u.imagen }} />
+                                         <Image style={stylesCards.cardImage} source={{ uri: (this.serverBaseRoute + u.imagen) }} />
                                         </View>
                                         <View style={stylesCards.viewTagsOrgAndSellStrat}>                                            
                                             <View style={stylesCards.viewBadgesTOrg}> 
@@ -93,7 +95,7 @@ const stylesMultipleCards = StyleSheet.create ({
     flexView: {
         flex: 1,
         flexDirection:'row',
-        marginTop: -9,
+        marginTop: 0,
         marginBottom: 55,
         flexWrap: 'wrap',        
     },
@@ -366,8 +368,8 @@ const stylesSingleCards = StyleSheet.create ({
     textBadge:{
         color: "white",
         fontWeight: "bold",
-        marginRight: 2,
-        marginLeft: 2
+        marginRight: 4,
+        marginLeft: 4
     },
 
     badge: {

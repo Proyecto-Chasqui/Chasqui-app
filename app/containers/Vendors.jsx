@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {vendors, logout, vendorTags} from '../actions';
+import {vendors, logout, vendorTags } from '../actions';
 import VendorsView from '../components/VendorsView';
 
 const mapStateToProps = state => ({

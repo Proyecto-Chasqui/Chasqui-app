@@ -2,8 +2,9 @@ import React from 'react';
 import { StyleSheet, View, Text, Alert, Image, ScrollView, Dimensions, Picker, Modal, TouchableHighlight } from 'react-native';
 import axios from 'axios';
 import LoadingView from '../components/LoadingView';
-import { Header, Button, Icon, Overlay, Card, Badge, CheckBox } from 'react-native-elements';
+import { Header, Button, Icon, Overlay, CheckBox ,SearchBar} from 'react-native-elements';
 import VendorMultipleCards from '../containers/VendorMultipleCards';
+import GLOBALS from '../Globals';
 
 class VendorsView extends React.Component {
 
@@ -11,14 +12,23 @@ class VendorsView extends React.Component {
         super(props);
         this.vendors = props.actions.vendors;
         this.vendorTags = props.actions.vendorTags;
+        this.productSeals = props.actions.productSeals;
+        this.productionSeals = props.actions.productionSeals;
+        this.serverBaseRoute = GLOBALS.BASE_URL;
         this.state = {
+            search: '',
             isLoading: true,
             multipleCards: false,
             maxTagTextLength: 32,
             isVisible: false,
-            showTipoOrganizacionSet: false,
-            showTipoProductoSet: false,
-            showZonaCobertura: false,
+            isLoadingVendors: true,
+            isLoadingTags: true,
+            isLoadingProductionSeals: true,
+            isLoadingProductSeals: true,
+            showTypeOrganizacionSet: false,
+            showTypeProductSet: false,
+            showZoneCoverage: false,
+            showSellingModes: false,
             filtersHasChange: false,
             dataChecksTipoOrganizacion: [],
             dataChecksZonaEntrega: [],
@@ -26,8 +36,17 @@ class VendorsView extends React.Component {
             selectedTagsTipoOrganizacion: [],
             selectedTipoProducto: [],
             selectedTagsZonaDeCobertura: [],
+            dataCheckHomeDelivery: false,
+            dataCheckOnSiteDelivery: false,            
+            dataCheckIndividualMode: false,
+            dataCheckGroupMode: false,
+            dataCheckNodeMode: false,
         };
     }
+    
+    updateSearch = search => {
+        this.setState({ search: search, filtersHasChange: true });
+    };
 
     cropText(text) {
         if (text.length > this.state.maxTagTextLength) {
@@ -51,8 +70,8 @@ class VendorsView extends React.Component {
     }
 
     componentWillMount() {
-        this.getVendors();
-        this.getVendorsTags();
+        this.getVendors(this.props);
+        this.getVendorsTags(this.props);
     }
 
     screenLowerThan(value, styleA, styleB) {
@@ -70,38 +89,69 @@ class VendorsView extends React.Component {
     }
 
     getFilterVendors() {
-        axios.post('http://69.61.93.71/chasqui-dev-panel/rest/client/vendedor/obtenerVendedoresConTags', {
+        let props = this.props;
+        axios.post( this.serverBaseRoute + 'rest/client/vendedor/obtenerVendedoresConTags/', {
             idsTagsTipoOrganizacion: this.state.selectedTagsTipoOrganizacion,
             idsTagsTipoProducto: this.state.selectedTipoProducto,
             idsTagsZonaDeCobertura: this.state.selectedTagsZonaDeCobertura,
-            nombre: "",
-            usaEstrategiaNodos: false,
-            usaEstrategiaGrupos: false,
-            usaEstrategiaIndividual: false,
-            entregaADomicilio: false,
-            usaPuntoDeRetiro: false,
-        })
-            .then(res => {
+            nombre: this.state.search,
+            usaEstrategiaNodos: this.state.dataCheckNodeMode,
+            usaEstrategiaGrupos: this.state.dataCheckGroupMode,
+            usaEstrategiaIndividual:  this.state.dataCheckIndividualMode,
+            entregaADomicilio:  this.state.dataCheckHomeDelivery,
+            usaPuntoDeRetiro: this.state.dataCheckOnSiteDelivery,
+        }).then(res => {
                 this.vendors(res.data);
                 this.setState({
                     isLoading: false
                 });
-            })
+        }).catch(function (error) {
+
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al obtener los vendedores, vuelva a intentar mas tarde.',
+                [
+                    { text: 'Entendido', onPress: () => props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+        });
     }
 
-    getVendors() {
-        axios.get('http://69.61.93.71/chasqui-dev-panel/rest/client/vendedor/all')
+    getVendors(props) {
+        axios.get(this.serverBaseRoute + 'rest/client/vendedor/all')
             .then(res => {
                 this.vendors(res.data);
 
                 this.setState({
-                    isLoading: false
+                    isLoadingVendors: false,
                 });
             }).catch(function (error) {
 
                 Alert.alert(
                     'Error',
                     'Ocurrio un error al obtener los vendedores, vuelva a intentar mas tarde.',
+                    [
+                        { text: 'Entendido', onPress: () => props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            });
+    }
+
+    getVendorsTags(props) {
+        axios.get(this.serverBaseRoute + 'rest/client/vendedor/obtenerTags')
+            .then(res => {
+                this.vendorTags(res.data);
+                this.constructDataForChecked(res.data);
+                this.setState({
+                    isLoadingTags: false,
+                });
+            }).catch(function (error) {
+
+                Alert.alert(
+                    'Error',
+                    'Ocurrio un error al obtener los datos de tags, vuelva a intentar mas tarde.',
                     [
                         { text: 'Entendido', onPress: () => props.actions.logout() },
                     ],
@@ -144,8 +194,6 @@ class VendorsView extends React.Component {
         });
     }
 
-
-
     onCheckChangedZonasDeEntrega(id) {
         const data = this.state.dataChecksZonaEntrega;
         const index = data.findIndex((x) => x.id === id);
@@ -179,17 +227,74 @@ class VendorsView extends React.Component {
 
         this.setState({
             filtersHasChange: true,
-            selectedTagsZonaDeCobertura: [],
+            showTypeOrganizacionSet: false,
+            showTypeProductSet: false,
+            showZoneCoverage: false,
+            showSellingModes: false,
+            showDeliveryType: false,
+            dataChecksTipoOrganizacion: dataOrga,
             dataChecksZonaEntrega: dataZona,
-            selectedTipoProducto: [],
             dataChecksTipoProducto: dataProducto,
             selectedTagsTipoOrganizacion: [],
-            dataChecksTipoOrganizacion: dataOrga,
-            showTipoOrganizacionSet: false,
-            showTipoProductoSet: false,
-            showZonaCobertura: false,
+            selectedTipoProducto: [],
+            selectedTagsZonaDeCobertura: [],
+            dataCheckHomeDelivery: false,
+            dataCheckOnSiteDelivery: false,            
+            dataCheckIndividualMode: false,
+            dataCheckGroupMode: false,
+            dataCheckNodeMode: false,
         });
 
+    }
+
+    showTypeOrganizacionSet(){
+        this.setState({
+            showTypeOrganizacionSet: !this.state.showTypeOrganizacionSet,
+            showTypeProductSet: false,
+            showZoneCoverage: false,
+            showDeliveryType: false,
+            showSellingModes: false,
+        })
+    }
+
+    showTypeProductSet(){
+        this.setState({
+            showTypeOrganizacionSet: false,
+            showTypeProductSet: !this.state.showTypeProductSet,
+            showZoneCoverage: false,
+            showDeliveryType: false,
+            showSellingModes: false,
+        })
+    }
+
+    showZoneCoverage(){
+        this.setState({
+            showTypeOrganizacionSet: false,
+            showTypeProductSet: false,
+            showZoneCoverage: !this.state.showZoneCoverage,
+            showDeliveryType: false,
+            showSellingModes: false,
+        })
+    }
+
+    showDeliveryType(){
+        this.setState({
+            showTypeOrganizacionSet: false,
+            showTypeProductSet: false,
+            showZoneCoverage: false,
+            showDeliveryType: !this.state.showDeliveryType,
+            showSellingModes: false,
+        })
+    }
+
+    showSellingModes(){
+        this.setState({
+            showTypeOrganizacionSet: false,
+            showTypeProductSet: false,
+            showZoneCoverage: false,
+            showDeliveryType: false,
+            showSellingModes: !this.state.showSellingModes,
+        })
     }
 
     constructDataForChecked(data) {
@@ -212,31 +317,10 @@ class VendorsView extends React.Component {
         })
     }
 
-    getVendorsTags() {
-        axios.get('http://69.61.93.71/chasqui-dev-panel/rest/client/vendedor/obtenerTags')
-            .then(res => {
-                this.vendorTags(res.data);
-                this.constructDataForChecked(res.data);
-                this.setState({
-                    isLoading: false,
-                });
-            }).catch(function (error) {
-
-                Alert.alert(
-                    'Error',
-                    'Ocurrio un error al obtener los datos del servidor, vuelva a intentar mas tarde.',
-                    [
-                        { text: 'Entendido', onPress: () => props.actions.logout() },
-                    ],
-                    { cancelable: false },
-                );
-            });
-    }
-
 
     render() {
 
-        if (this.state.isLoading) {
+        if (this.state.isLoadingVendors && this.state.isLoadingTags) {
             return <LoadingView></LoadingView>;
         }
 
@@ -244,27 +328,25 @@ class VendorsView extends React.Component {
             <View style={{ marginBottom: 75 }}>
                 <Overlay containerStyle={styles.overlayContainer}
                     overlayStyle={styles.overlay}
-                    windowBackgroundColor="rgba(0, 0, 0, 0)"
+                    windowBackgroundColor="rgba(0, 0, 0, 0.3)"
                     onBackdropPress={() => this.showFilters()} isVisible={this.state.isVisible}
                 >
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 3, marginTop: -6}}>
                         <View style={{ justifyContent: 'center' }}>
                             <Text style={{ alignSelf: 'flex-start', marginLeft: 15, fontSize: 15, fontWeight: 'bold' }}>Buscar Por:</Text>
                         </View>
-                        <Button titleStyle={styles.searchButtonResetTitle} buttonStyle={styles.searchButtonReset} type="outline" title="Limpiar Filtros"
+                        <Button titleStyle={styles.searchButtonResetTitle} buttonStyle={styles.searchButtonReset} type="clear" title="Limpiar Filtros"
                             onPress={() => this.unCheckAll()} />
                     </View>
-                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} type="outline" title="Tipo de organización"
-                        onPress={() => this.setState({
-                            showTipoOrganizacionSet: !this.state.showTipoOrganizacionSet,
-                            showTipoProductoSet: false,
-                            showZonaCobertura: false,
-                        })} />
-                    {this.state.showTipoOrganizacionSet ?
+                    <View style={styles.divisor}/>
+                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Tipo de organización"
+                        onPress={() => this.showTypeOrganizacionSet()} icon={<Icon iconStyle={styles.iconRevealButton}  name="caret-down" iconRight={true} size={20} color="blue" type='font-awesome' />
+                    } iconRight/>
+                    {this.state.showTypeOrganizacionSet ?
                         <View style={styles.menuSelectorItems}>
                             <ScrollView>
                                 {this.props.vendorTags.tagsTipoOrganizacion.map((u, i) => {
-                                    return (<CheckBox title={u.nombre} checked={this.state.dataChecksTipoOrganizacion[i].checked}
+                                    return (<CheckBox title={u.nombre} key={u.id} checked={this.state.dataChecksTipoOrganizacion[i].checked}
                                         onPress={() => this.onCheckChangedOrganizacion(u.id)}
                                     />);
                                 })
@@ -273,17 +355,15 @@ class VendorsView extends React.Component {
                         </View>
                         : null}
 
-                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} type="outline" title="Tipo de productos"
-                        onPress={() => this.setState({
-                            showTipoOrganizacionSet: false,
-                            showTipoProductoSet: !this.state.showTipoProductoSet,
-                            showZonaCobertura: false
-                        })} />
-                    {this.state.showTipoProductoSet ?
+                    <View style={styles.divisor}/>                    
+                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Tipo de productos"
+                        onPress={() => this.showTypeProductSet()} icon={<Icon iconStyle={styles.iconRevealButton}  name="caret-down" iconRight={true} size={20} color="blue" type='font-awesome' />
+                    } iconRight/>                   
+                    {this.state.showTypeProductSet ?
                         <View style={styles.menuSelectorItems}>
                             <ScrollView>
                                 {this.props.vendorTags.tagsTipoProducto.map((u, i) => {
-                                    return (<CheckBox title={u.nombre} checked={this.state.dataChecksTipoProducto[i].checked}
+                                    return (<CheckBox title={u.nombre}  key={u.id} checked={this.state.dataChecksTipoProducto[i].checked}
                                         onPress={() => this.onCheckChangedProducto(u.id)}
                                     />);
                                 })
@@ -292,17 +372,15 @@ class VendorsView extends React.Component {
                         </View>
                         : null}
 
-                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} type="outline" title="Zona de entregas"
-                        onPress={() => this.setState({
-                            showTipoOrganizacionSet: false,
-                            showTipoProductoSet: false,
-                            showZonaCobertura: !this.state.showZonaCobertura
-                        })} />
-                    {this.state.showZonaCobertura ?
+                    <View style={styles.divisor}/>
+                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Zona de entregas"
+                        onPress={() => this.showZoneCoverage()} icon={<Icon iconStyle={styles.iconRevealButton}  name="caret-down"  iconRight={true} size={20} color="blue" type='font-awesome' />
+                    } iconRight/>   
+                    {this.state.showZoneCoverage ?
                         <View style={styles.menuSelectorItems}>
                             <ScrollView>
                                 {this.props.vendorTags.tagsZonaDeCobertura.map((u, i) => {
-                                    return (<CheckBox title={u.nombre} checked={this.state.dataChecksZonaEntrega[i].checked}
+                                    return (<CheckBox title={u.nombre}  key={u.id} checked={this.state.dataChecksZonaEntrega[i].checked}
                                         onPress={() => this.onCheckChangedZonasDeEntrega(u.id)}
                                     />);
                                 })
@@ -310,35 +388,113 @@ class VendorsView extends React.Component {
                             </ScrollView>
                         </View>
                         : null}
+                    
+                    <View style={styles.divisor}/>
+                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Tipo de entregas"
+                        onPress={() => this.showDeliveryType()} icon={<Icon iconStyle={styles.iconRevealButton}  name="caret-down"  iconRight={true} size={20} color="blue" type='font-awesome' />
+                    } iconRight/>                       
+                    {this.state.showDeliveryType ?
+                        <View style={styles.menuSelectorItems}>
+                            <ScrollView>                                                               
+                                <CheckBox title="Entrega a domicilio" checked={this.state.dataCheckHomeDelivery}
+                                        checkedIcon={<Image style={styles.badgeFilterSelected} source={require('./vendorsViewComponents/badge_icons/entrega_domicilio.png')} />}
+                                        uncheckedIcon={<Image style={styles.badgeFilterUnselected} source={require('./vendorsViewComponents/badge_icons/entrega_domicilio.png')} />}
+                                        onPress={() => 
+                                            this.setState({
+                                                dataCheckHomeDelivery: !this.state.dataCheckHomeDelivery,
+                                                filtersHasChange: true,
+                                            }) }
+                                    />
+                                <CheckBox title="Punto de retiro" checked={this.state.dataCheckOnSiteDelivery}
+                                        checkedIcon={<Image style={styles.badgeFilterSelected} source={require('./vendorsViewComponents/badge_icons/entrega_lugar.png')} />}
+                                        uncheckedIcon={<Image style={styles.badgeFilterUnselected} source={require('./vendorsViewComponents/badge_icons/entrega_lugar.png')} />}
+                                        onPress={() => 
+                                            this.setState({
+                                                dataCheckOnSiteDelivery: !this.state.dataCheckOnSiteDelivery,
+                                                filtersHasChange: true,
+                                            }) }
+                                    />
+                            </ScrollView>
+                        </View>
+                        : null}
+                    
+                    <View style={styles.divisor}/>
+                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Modo de ventas"
+                        onPress={() => this.showSellingModes()} icon={<Icon iconStyle={styles.iconRevealButton}  name="caret-down"  iconRight={true} size={20} color="blue" type='font-awesome' />
+                    } iconRight/> 
+                    {this.state.showSellingModes ?
+                        <View style={styles.menuSelectorItems}>
+                            <ScrollView>                                                               
+                                <CheckBox title="Individual" checked={this.state.dataCheckIndividualMode}
+                                        checkedIcon={<Image style={styles.badgeFilterSelected} source={require('./vendorsViewComponents/badge_icons/compra_individual.png')} />}
+                                        uncheckedIcon={<Image style={styles.badgeFilterUnselected} source={require('./vendorsViewComponents/badge_icons/compra_individual.png')} />}
+                                        onPress={() => this.setState({
+                                            dataCheckIndividualMode: !this.state.dataCheckIndividualMode,
+                                            filtersHasChange: true,
+                                        }) }
+                                    />
+                                <CheckBox title="Grupal" checked={this.state.dataCheckGroupMode}
+                                        checkedIcon={<Image style={styles.badgeFilterSelected} source={require('./vendorsViewComponents/badge_icons/compra_grupal.png')} />}
+                                        uncheckedIcon={<Image style={styles.badgeFilterUnselected} source={require('./vendorsViewComponents/badge_icons/compra_grupal.png')} />}
+                                        onPress={() => this.setState({
+                                            dataCheckGroupMode: !this.state.dataCheckGroupMode,
+                                            filtersHasChange: true,
+                                        }) }
+                                    />
+                                <CheckBox title="Nodo" checked={this.state.dataCheckNodeMode}
+                                        checkedIcon={<Image style={styles.badgeFilterSelected} source={require('./vendorsViewComponents/badge_icons/compra_nodos.png')} />}
+                                        uncheckedIcon={<Image style={styles.badgeFilterUnselected} source={require('./vendorsViewComponents/badge_icons/compra_nodos.png')} />}
+                                        onPress={() => this.setState({
+                                            dataCheckNodeMode: !this.state.dataCheckNodeMode,
+                                            filtersHasChange: true,
+                                        }) }
+                                    />
+                            </ScrollView>
+                        </View>
+                        : null}
+                    <View style={styles.divisor}/>
                 </Overlay>
                 <Header containerStyle={styles.topHeader}>
                     <Button
                         icon={
                             <Icon name="bars" size={20} color="white" type='font-awesome' />
                         }
-                        buttonStyle={styles.headerButton}
+                        buttonStyle={styles.rightHeaderButton}
                         onPress={() => this.props.navigation.openDrawer()}
                     />
                     <Image
                         style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'contain' }}
                         source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                     />
-                    {this.state.multipleCards ? (<Button
+                    {! this.state.multipleCards ? (<Button
                         icon={
                             <Icon name="th" size={20} color="white" type='font-awesome' />
                         }
-                        buttonStyle={styles.headerButton}
+                        buttonStyle={styles.leftHeaderButton}
                         onPress={() => this.switchStyle()}
                     />) : (<Button
                         icon={
                             <Icon name="th-large" size={20} color="white" type='font-awesome' />
                         }
-                        buttonStyle={styles.headerButton}
+                        buttonStyle={styles.leftHeaderButton}
                         onPress={() => this.switchStyle()}
                     />)
                     }
                 </Header>
                 <Header backgroundColor='white' containerStyle={styles.lowerHeaderStyle}
+                    leftComponent={
+                        <View style={styles.viewSearchContainer}>
+                        <SearchBar
+                        placeholder="Tu busqueda comienza aqui"
+                        onChangeText={this.updateSearch}
+                        value={this.state.search}
+                        containerStyle={styles.searchContainer}
+                        inputContainerStyle={styles.inputSearchContainer}
+                        inputStyle={styles.inputStyle}
+                        lightTheme
+                      />
+                      </View>
+                    }
                     rightComponent={
                         <Button
                             icon={<Icon name="caret-down" type='font-awesome' size={20} iconStyle={styles.iconLowerHeaderButton} />}
@@ -349,6 +505,7 @@ class VendorsView extends React.Component {
                         />
                     }
                 />
+                
                 <VendorMultipleCards multipleCards={this.state.multipleCards}/>
             </View>
         );
@@ -387,13 +544,56 @@ const styles = StyleSheet.create({
         marginBottom: 0,
     },
 
-    headerButton: {
+    rightHeaderButton: {
+        backgroundColor: '#66000000',
+        marginRight: 15,
+        borderColor: "white",
+        borderWidth: 1,
+        width: 40,
+        height: 40
+    },
+
+    leftHeaderButton: {
         backgroundColor: '#66000000',
         marginLeft: 15,
         borderColor: "white",
         borderWidth: 1,
         width: 40,
         height: 40
+    },
+
+    viewSearchContainer:{
+        
+        marginTop:-30,
+        height:25,
+        width:"390%",
+        marginLeft:-10,
+        backgroundColor:"transparent",
+        borderWidth:0,
+        
+    },
+
+    searchContainer:{
+        height:35,    
+        marginTop:0,   
+        backgroundColor:"transparent",
+        borderColor:"white",
+        borderWidth:0,
+    },
+
+    inputSearchContainer:{
+        width: "100%",
+        height:"100%",
+        marginTop:-8,
+        backgroundColor:"transparent",
+        borderColor:"white",
+        borderWidth:0,
+    },
+
+    inputStyle:{
+        width: "75%",
+        height: 20,
+        backgroundColor:"white",
     },
 
     lowerHeaderButton: {
@@ -425,26 +625,84 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         marginTop: 35,
         width: Dimensions.get('window').width / 1.5,
+        borderWidth:2,
+        borderColor:"#D8D8D8",
     },
     menuSelectorItems: {
-        backgroundColor: "#f4f4f4",
-        borderWidth: 1,
-        borderColor: "#f4f4f4",
-        height: 300,
+        backgroundColor: null,
+        borderTopWidth: 2,
+        borderTopColor: "#f4f4f4",
+        width:"107%",
+        marginLeft:-9,
+        height: 320,
+        
     },
+
+    divisor:{
+        borderTopWidth:2,
+        borderTopColor:"#D8D8D8",
+        marginLeft:-9,
+        width:"107%"
+    },  
+
+    buttonAndIconContainer:{
+        flexDirection:"row",
+        width: "104%",
+        alignSelf:'flex-end',
+    },
+
     searchButtonReveal: {
         alignSelf: 'center',
         width: "100%",
-        borderColor: "rgba(51, 102, 255, 1)"
     },
+
+    searchContainerButtonReveal: {
+        flexDirection:"row",
+        alignSelf:'flex-start',
+        width: "105%",
+        marginLeft:-5,
+        justifyContent:'space-between'
+    },
+
     titleButtonReveal: {
-        color: "black"
+        color: "black",
+        alignSelf:'flex-end',
+        width:"70%"
     },
+
+    iconRevealButton:{
+        marginLeft:50,
+        alignSelf:'flex-end',
+        color:"#D7DF01"
+    },  
+
+    iconContainer:{
+        borderWidth:2,
+        borderColor: "#D8D8D8"
+    },
+
+
+
+
     searchButtonResetTitle: {
         color: "rgba(51, 102, 255, 1)"
     },
+    
     searchButtonReset: {
         borderColor: "rgba(0, 0, 0, 0)"
+    },
+
+    badgeFilterSelected: {
+        borderColor:"#BDBDBD",
+        backgroundColor: "#81BEF7",
+        borderRadius: 5,
+        borderWidth: 2
+    },
+
+    badgeFilterUnselected:{
+        borderColor:"#BDBDBD",
+        borderRadius: 5,
+        borderWidth: 2
     },
 });
 

@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer'
 import { ScrollView , StyleSheet, Image, View, Alert} from 'react-native';
-
+import GLOBALS from '../Globals';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -17,6 +17,7 @@ class NavigatorView extends React.Component {
         super(props);
         this.logout = props.actions.logout;
         state.isSignout = props.user.token == "";
+        this.serverBaseRoute = GLOBALS.BASE_URL;
     }  
 
     logoutAlert(){
@@ -33,7 +34,7 @@ class NavigatorView extends React.Component {
         return(
         <ScrollView>
         <Header containerStyle={{backgroundColor:'rgba(51, 102, 255, 1)'}}  >
-          <Image style={styles.userAvatar} source={{uri: "http://69.61.93.71/chasqui-dev-panel/" + this.props.user.avatar}}></Image>
+          <Image style={styles.userAvatar} source={{uri: (this.serverBaseRoute+ this.props.user.avatar) }}></Image>
           <Text style={styles.nickText}>{(this.props.user.nickname).toUpperCase()}</Text>
         </Header>
         <DrawerItemList {...props} />
@@ -77,15 +78,8 @@ class NavigatorView extends React.Component {
                     name="Bienvenidxs"
                     component={Login}
                     options={{
+                        headerShown: false,
                         title: 'Bienvenidxs',
-                        headerStyle: {
-                            backgroundColor: 'rgba(51, 102, 255, 1)',
-                        },
-                        headerTintColor: '#fff',
-                        headerTitleStyle: {
-                            fontWeight: 'bold',
-                        },
-                        headerTitleAlign: "center",
                         animationTypeForReplace: state.isSignout ? 'pop' : 'push',
                     }}
                     />
