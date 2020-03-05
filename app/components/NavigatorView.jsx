@@ -1,6 +1,7 @@
 import React from 'react';
 import Login from '../containers/Login';
 import Vendors from '../containers/Vendors';
+import { ActivityIndicator } from 'react-native';
 import {Text, Header, Button, Icon} from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -34,7 +35,7 @@ class NavigatorView extends React.Component {
         return(
         <ScrollView>
         <Header containerStyle={{backgroundColor:'rgba(51, 102, 255, 1)'}}  >
-          <Image style={styles.userAvatar} source={{uri: (this.serverBaseRoute+ this.props.user.avatar) }}></Image>
+          <Image style={styles.userAvatar} PlaceholderContent={<ActivityIndicator/>} source={{uri: (this.serverBaseRoute+ this.props.user.avatar) }}></Image>
           <Text style={styles.nickText}>{(this.props.user.nickname).toUpperCase()}</Text>
         </Header>
         <DrawerItemList {...props} />

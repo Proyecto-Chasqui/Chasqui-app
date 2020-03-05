@@ -3,18 +3,30 @@ import { StyleSheet, Text, Alert, View, Dimensions } from 'react-native';
 import { Input, Image, Button } from 'react-native-elements';
 import { Formik } from 'formik';
 import axios from 'axios';
+import GLOBALS from '../Globals';
 
 
 class LoginView extends React.Component {
   constructor(props) {
     super(props);
+    this.serverBaseRoute = GLOBALS.BASE_URL;
     this.login = props.actions.login;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.navigation = props.navigation;
   }
 
+  loginAsGuest(){
+    this.login({
+      email: "invitado@invitado.com",
+      token: "invitado",
+      id: 0,
+      nickname: "invitado",
+      avatar: "",
+    });
+  }
+
   handleSubmit(values) {
-    axios.post('http://69.61.93.71/chasqui-dev-panel/rest/client/sso/singIn', { 
+    axios.post( this.serverBaseRoute +'rest/client/sso/singIn', { 
         email: values.email,
         password: values.contraseña
     })
@@ -78,6 +90,11 @@ class LoginView extends React.Component {
                   <View style={styles.rightButton}>
                     <Text style={styles.TextStyle} onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}> Registrarme </Text>
                   </View>
+              </View>
+              <View style={styles.middleButton} >
+                <View>
+                      <Text style={styles.TextStyle} onPress={() => this.loginAsGuest()}> Ingresar como invitado </Text>
+                </View>
               </View>
             </View>
           )}
@@ -156,6 +173,17 @@ const styles = StyleSheet.create({
   rightButton:{
     justifyContent: 'center',
     marginRight: 40
+  },
+
+  middleButton:{
+    backgroundColor:'#4da6ff', 
+    borderColor:"white", 
+    borderWidth: 1,
+    borderRadius:5,
+    height:25,
+    marginTop:20,
+    marginLeft:0,
+    alignSelf:'center'
   },
 
  

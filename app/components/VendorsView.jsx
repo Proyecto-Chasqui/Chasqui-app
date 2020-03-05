@@ -15,8 +15,10 @@ class VendorsView extends React.Component {
         this.productSeals = props.actions.productSeals;
         this.productionSeals = props.actions.productionSeals;
         this.serverBaseRoute = GLOBALS.BASE_URL;
+        this.minWidth = false,
         this.state = {
             search: '',
+            isLoadingFilterVendors:false,            
             isLoading: true,
             multipleCards: false,
             maxTagTextLength: 32,
@@ -47,14 +49,6 @@ class VendorsView extends React.Component {
     updateSearch = search => {
         this.setState({ search: search, filtersHasChange: true });
     };
-
-    cropText(text) {
-        if (text.length > this.state.maxTagTextLength) {
-            return text.slice(0, this.state.maxTagTextLength - 1) + "..";
-        } else {
-            return text;
-        }
-    }
 
     switchStyle() {
         this.setState({
@@ -90,11 +84,14 @@ class VendorsView extends React.Component {
 
     getFilterVendors() {
         let props = this.props;
+        this.setState({
+            isLoadingFilterVendors: true
+        });
         axios.post( this.serverBaseRoute + 'rest/client/vendedor/obtenerVendedoresConTags/', {
             idsTagsTipoOrganizacion: this.state.selectedTagsTipoOrganizacion,
             idsTagsTipoProducto: this.state.selectedTipoProducto,
             idsTagsZonaDeCobertura: this.state.selectedTagsZonaDeCobertura,
-            nombre: this.state.search,
+            nombre: this.state.search === undefined ? "" : this.state.search,
             usaEstrategiaNodos: this.state.dataCheckNodeMode,
             usaEstrategiaGrupos: this.state.dataCheckGroupMode,
             usaEstrategiaIndividual:  this.state.dataCheckIndividualMode,
@@ -103,7 +100,7 @@ class VendorsView extends React.Component {
         }).then(res => {
                 this.vendors(res.data);
                 this.setState({
-                    isLoading: false
+                    isLoadingFilterVendors: false
                 });
         }).catch(function (error) {
 
@@ -148,7 +145,6 @@ class VendorsView extends React.Component {
                     isLoadingTags: false,
                 });
             }).catch(function (error) {
-
                 Alert.alert(
                     'Error',
                     'Ocurrio un error al obtener los datos de tags, vuelva a intentar mas tarde.',
@@ -320,7 +316,7 @@ class VendorsView extends React.Component {
 
     render() {
 
-        if (this.state.isLoadingVendors && this.state.isLoadingTags) {
+        if (this.state.isLoadingVendors || this.state.isLoadingTags) {
             return <LoadingView></LoadingView>;
         }
 
@@ -338,6 +334,7 @@ class VendorsView extends React.Component {
                         <Button titleStyle={styles.searchButtonResetTitle} buttonStyle={styles.searchButtonReset} type="clear" title="Limpiar Filtros"
                             onPress={() => this.unCheckAll()} />
                     </View>
+                <ScrollView style={styles.scrollViewFilters}>
                     <View style={styles.divisor}/>
                     <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Tipo de organización"
                         onPress={() => this.showTypeOrganizacionSet()} icon={<Icon iconStyle={styles.iconRevealButton}  name="caret-down" iconRight={true} size={20} color="blue" type='font-awesome' />
@@ -356,7 +353,7 @@ class VendorsView extends React.Component {
                         : null}
 
                     <View style={styles.divisor}/>                    
-                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Tipo de productos"
+                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Tipo de producto"
                         onPress={() => this.showTypeProductSet()} icon={<Icon iconStyle={styles.iconRevealButton}  name="caret-down" iconRight={true} size={20} color="blue" type='font-awesome' />
                     } iconRight/>                   
                     {this.state.showTypeProductSet ?
@@ -373,7 +370,7 @@ class VendorsView extends React.Component {
                         : null}
 
                     <View style={styles.divisor}/>
-                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Zona de entregas"
+                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Zona de entrega"
                         onPress={() => this.showZoneCoverage()} icon={<Icon iconStyle={styles.iconRevealButton}  name="caret-down"  iconRight={true} size={20} color="blue" type='font-awesome' />
                     } iconRight/>   
                     {this.state.showZoneCoverage ?
@@ -390,7 +387,7 @@ class VendorsView extends React.Component {
                         : null}
                     
                     <View style={styles.divisor}/>
-                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Tipo de entregas"
+                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Tipo de entrega"
                         onPress={() => this.showDeliveryType()} icon={<Icon iconStyle={styles.iconRevealButton}  name="caret-down"  iconRight={true} size={20} color="blue" type='font-awesome' />
                     } iconRight/>                       
                     {this.state.showDeliveryType ?
@@ -419,7 +416,7 @@ class VendorsView extends React.Component {
                         : null}
                     
                     <View style={styles.divisor}/>
-                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Modo de ventas"
+                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Modo de venta"
                         onPress={() => this.showSellingModes()} icon={<Icon iconStyle={styles.iconRevealButton}  name="caret-down"  iconRight={true} size={20} color="blue" type='font-awesome' />
                     } iconRight/> 
                     {this.state.showSellingModes ?
@@ -453,6 +450,7 @@ class VendorsView extends React.Component {
                         </View>
                         : null}
                     <View style={styles.divisor}/>
+                    </ScrollView>
                 </Overlay>
                 <Header containerStyle={styles.topHeader}>
                     <Button
@@ -466,7 +464,8 @@ class VendorsView extends React.Component {
                         style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'contain' }}
                         source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                     />
-                    {! this.state.multipleCards ? (<Button
+                    {this.minWidth ? (
+                    ! this.state.multipleCards ? (<Button
                         icon={
                             <Icon name="th" size={20} color="white" type='font-awesome' />
                         }
@@ -479,21 +478,25 @@ class VendorsView extends React.Component {
                         buttonStyle={styles.leftHeaderButton}
                         onPress={() => this.switchStyle()}
                     />)
-                    }
+                    )
+                    : 
+                    null
+                    }                    
                 </Header>
                 <Header backgroundColor='white' containerStyle={styles.lowerHeaderStyle}
                     leftComponent={
-                        <View style={styles.viewSearchContainer}>
                         <SearchBar
-                        placeholder="Tu busqueda comienza aqui"
+                        placeholder="Tu busqueda comienza aquí"
                         onChangeText={this.updateSearch}
                         value={this.state.search}
                         containerStyle={styles.searchContainer}
                         inputContainerStyle={styles.inputSearchContainer}
                         inputStyle={styles.inputStyle}
+                        leftIconContainerStyle={styles.iconContainerLeft}
+                        placeholderTextColor={"rgba(51, 102, 255, 1)"}
+                        searchIcon={<Icon name="search" type='font-awesome' size={16} iconStyle={styles.searchIcon} />}
                         lightTheme
                       />
-                      </View>
                     }
                     rightComponent={
                         <Button
@@ -505,8 +508,19 @@ class VendorsView extends React.Component {
                         />
                     }
                 />
-                
-                <VendorMultipleCards multipleCards={this.state.multipleCards}/>
+                {
+                    this.state.isLoadingFilterVendors ? 
+                        (<LoadingView textStyle={ {
+                            position:"absolute",
+                            fontSize: 24,
+                            marginTop: 5,
+                            color: 'black',
+                            fontWeight: "bold",
+                            marginTop: "100%",
+                        }}></LoadingView>)
+                        :
+                        (<VendorMultipleCards multipleCards={this.state.multipleCards}/>)
+                }
             </View>
         );
 
@@ -561,41 +575,41 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40
     },
+//Search container
 
-    viewSearchContainer:{
-        
-        marginTop:-30,
-        height:25,
-        width:"390%",
-        marginLeft:-10,
+    searchContainer:{       
+        marginTop:-20,  
         backgroundColor:"transparent",
-        borderWidth:0,
-        
-    },
-
-    searchContainer:{
-        height:35,    
-        marginTop:0,   
-        backgroundColor:"transparent",
-        borderColor:"white",
+        marginLeft:-18,
+        borderBottomColor:"transparent",
+        borderTopColor:"transparent",
         borderWidth:0,
     },
 
     inputSearchContainer:{
-        width: "100%",
-        height:"100%",
-        marginTop:-8,
         backgroundColor:"transparent",
         borderColor:"white",
+        marginTop:-5,
+        height:30,
+        width:"350%",
         borderWidth:0,
     },
 
     inputStyle:{
-        width: "75%",
-        height: 20,
-        backgroundColor:"white",
+        width:"100%",
+        fontSize: 13,
+        fontWeight: "bold",
+        color:"black",
+        
+    },
+    iconContainerLeft:{
+        backgroundColor:"transparent",
     },
 
+    searchIcon:{
+        color: "rgba(51, 102, 255, 1)",
+    },
+//end Search container
     lowerHeaderButton: {
         backgroundColor: '#66000000',
         marginLeft: 15,
@@ -618,24 +632,26 @@ const styles = StyleSheet.create({
     },
 
     overlayContainer: {
-        alignSelf: 'flex-start',
-
     },
+
     overlay: {
-        alignSelf: 'flex-end',
-        marginTop: 35,
-        width: Dimensions.get('window').width / 1.5,
+        alignSelf:"flex-end",
+        width: 300,
+        height: "75%" ,
         borderWidth:2,
         borderColor:"#D8D8D8",
     },
+    
+    scrollViewFilters:{
+        marginLeft:-10,
+        marginRight:-10
+    },
+
     menuSelectorItems: {
         backgroundColor: null,
         borderTopWidth: 2,
         borderTopColor: "#f4f4f4",
-        width:"107%",
-        marginLeft:-9,
-        height: 320,
-        
+        width:"100%",      
     },
 
     divisor:{
@@ -680,9 +696,6 @@ const styles = StyleSheet.create({
         borderWidth:2,
         borderColor: "#D8D8D8"
     },
-
-
-
 
     searchButtonResetTitle: {
         color: "rgba(51, 102, 255, 1)"

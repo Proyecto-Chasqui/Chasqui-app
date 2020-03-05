@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, ScrollView, Dimensions, Animated } from 'react-native';
-import { Card, Badge } from 'react-native-elements';
+import { Card, Badge, Icon } from 'react-native-elements';
 import TextTicker from 'react-native-text-ticker';
 import GLOBALS from '../../Globals';
 
 class VendorMultipleCardsView extends React.Component {
     constructor(props) {
         super(props);
+        console.log("vendor props", props);
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.vendors = props.actions.vendors;
         this.state = {
@@ -37,6 +38,23 @@ class VendorMultipleCardsView extends React.Component {
 
     render() {
         let stylesCards = this.props.multipleCards ? stylesMultipleCards : stylesSingleCards;
+        if(this.props.vendors.length < 1){
+            return(
+            <View style={stylesSingleCards.viewSearchErrorContainer}>
+                <View style={stylesSingleCards.viewErrorContainer}>
+                <View style={stylesSingleCards.searchIconErrorContainer}>
+                    <Icon name="search" type='font-awesome' size={50} color={"white"} containerStyle={stylesSingleCards.searchIconError}></Icon>
+                </View>
+                    <Text style={stylesSingleCards.errorText}>
+                        No se encontraron vendedores
+                    </Text>
+                    <Text style={stylesSingleCards.tipErrorText}>
+                        Revise los filtros o la busqueda
+                    </Text>
+                </View>
+            </View>
+            );
+        }
         return(
         <ScrollView>
             <View style={stylesCards.flexView}>
@@ -95,8 +113,8 @@ const stylesMultipleCards = StyleSheet.create ({
     flexView: {
         flex: 1,
         flexDirection:'row',
-        marginTop: 0,
-        marginBottom: 55,
+        marginTop: 5,
+        marginBottom: 50,
         flexWrap: 'wrap',        
     },
 
@@ -223,12 +241,15 @@ const stylesMultipleCards = StyleSheet.create ({
     },
 
     wiewCard: {
-        width: "50%",
-        borderRadius:5,        
+        flexDirection:"column",
+        width: "50%",       
     },
 
     card:{
         height: 370,
+        marginTop:2,
+        marginLeft:2,
+        marginRight:2,
         borderRadius: 10,
         shadowColor: "#000",
         shadowOffset: {
@@ -271,12 +292,46 @@ const stylesMultipleCards = StyleSheet.create ({
 });
 
 const stylesSingleCards = StyleSheet.create ({
-    
+    viewSearchErrorContainer:{
+        backgroundColor:"#f2f2f2",
+        height:"100%"
+    },
+
+    viewErrorContainer:{
+        marginTop:230
+    },
+
+    errorText:{
+        marginTop:7,
+        fontSize:22,
+        fontWeight:"bold",
+        alignSelf:'center'
+    },
+
+    tipErrorText:{
+        marginTop:7,
+        fontSize:16,
+        alignSelf:'center'
+    },
+
+    searchIconErrorContainer:{
+        backgroundColor:"grey",
+        borderRadius:50, 
+        width:100, 
+        height:100,
+        alignSelf:'center'
+    },
+
+    searchIconError:{
+       marginTop:23,
+    },
+
+
     flexView: {
         flex: 1,
         flexDirection:'row',
-        marginTop: 0,
-        marginBottom: 55,
+        marginTop: 5,
+        marginBottom: 50,
         flexWrap: 'wrap',        
     },
 
@@ -417,8 +472,11 @@ const stylesSingleCards = StyleSheet.create ({
     },
 
     card:{
-        height: 340,
+        height: 345,
         borderRadius: 10,
+        marginTop:5,
+        marginLeft:5,
+        marginRight:5,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
