@@ -15,7 +15,7 @@ class LoginView extends React.Component {
     this.navigation = props.navigation;
   }
 
-  loginAsGuest(){
+  loginAsGuest() {
     this.login({
       email: "invitado@invitado.com",
       token: "invitado",
@@ -26,16 +26,16 @@ class LoginView extends React.Component {
   }
 
   handleSubmit(values) {
-    axios.post( this.serverBaseRoute +'rest/client/sso/singIn', { 
-        email: values.email,
-        password: values.contraseña
+    axios.post(this.serverBaseRoute + 'rest/client/sso/singIn', {
+      email: values.email,
+      password: values.contraseña
     })
-    .then(res => {
-      this.login(res.data);
-    }).catch(function (error) {
-      Alert.alert('Error', 'Credenciales invalidas, verifique usuario y/o contraseña');
-    });
-    
+      .then(res => {
+        this.login(res.data);
+      }).catch(function (error) {
+        Alert.alert('Error', 'Credenciales invalidas, verifique usuario y/o contraseña');
+      });
+
   }
 
   render() {
@@ -52,66 +52,66 @@ class LoginView extends React.Component {
               </View>
               <View style={styles.imageContainer}>
                 <Image
-                    source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
-                    style={styles.image}
-                  />
+                  source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                  style={styles.image}
+                />
               </View>
               <View style={styles.inputContainer}>
-                  <Input
-                      inputStyle={{color:"white", marginLeft:10}} 
-                      placeholderTextColor = "white"                
-                      onChangeText={handleChange('email')}
-                      onBlur={handleBlur('email')}
-                      placeholder='Correo electronico'
-                      leftIcon={{ type: 'font-awesome', name: 'user' }}
-                      value={values.email}
-                    />
+                <Input
+                  inputStyle={{ color: "white", marginLeft: 10 }}
+                  placeholderTextColor="white"
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  placeholder='Correo electronico'
+                  leftIcon={{ type: 'font-awesome', name: 'user' }}
+                  value={values.email}
+                />
               </View>
               <View style={styles.lowerInputContainer}>
-                  <Input
-                      inputStyle={{color:"white", marginLeft:10}}
-                      placeholderTextColor = "white"     
-                      onChangeText={handleChange('contraseña')}
-                      onBlur={handleBlur('constraseña')}
-                      placeholder='Contraseña'
-                      leftIcon={{ type: 'font-awesome', name: 'lock' }}
-                      secureTextEntry={true}
-                      value={values.contraseña}
-                    />
+                <Input
+                  inputStyle={{ color: "white", marginLeft: 10 }}
+                  placeholderTextColor="white"
+                  onChangeText={handleChange('contraseña')}
+                  onBlur={handleBlur('constraseña')}
+                  placeholder='Contraseña'
+                  leftIcon={{ type: 'font-awesome', name: 'lock' }}
+                  secureTextEntry={true}
+                  value={values.contraseña}
+                />
               </View>
               <View style={styles.buttonContainer}>
-                  <Button buttonStyle={{height: 60, backgroundColor:'#80bfff', borderColor:"white", borderWidth: 1}} titleStyle={{fontSize: 20, }} onPress={handleSubmit} title="INGRESAR" />
+                <Button buttonStyle={{ height: 60, backgroundColor: '#80bfff', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={handleSubmit} title="INGRESAR" />
               </View>
               <View style={styles.lowerButtonsContainer} >
-                  <View style={styles.leftButton}>
-                    <Text style={styles.TextStyle} onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}> Olvide mi contraseña </Text>
-                  </View>
-                  <View style = {styles.divisor} />
-                  <View style={styles.rightButton}>
-                    <Text style={styles.TextStyle} onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}> Registrarme </Text>
-                  </View>
+                <View style={styles.leftButton}>
+                  <Text style={styles.TextStyle} onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}> Olvide mi contraseña </Text>
+                </View>
+                <View style={styles.divisor} />
+                <View style={styles.rightButton}>
+                  <Text style={styles.TextStyle} onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}> Registrarme </Text>
+                </View>
               </View>
               <View style={styles.middleButton} >
                 <View>
-                      <Text style={styles.TextStyle} onPress={() => this.loginAsGuest()}> Ingresar como invitado </Text>
+                  <Text style={styles.TextStyle} onPress={() => this.loginAsGuest()}> Ingresar como invitado </Text>
                 </View>
               </View>
             </View>
           )}
         </Formik>
 
-        </View>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  
+
   principalContainer: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center', 
-    backgroundColor: 'rgba(51, 102, 255, 1)', 
+    justifyContent: 'center',
+    backgroundColor: 'rgba(51, 102, 255, 1)',
   },
 
   titleContainer: {
@@ -123,46 +123,46 @@ const styles = StyleSheet.create({
     color: '#ffffff'
   },
 
-  imageContainer:{
+  imageContainer: {
     alignSelf: 'center',
     marginTop: "10%"
   },
 
-  image:{ 
+  image: {
     width: 278 / 2,
     height: 321 / 2,
     resizeMode: 'contain',
   },
 
-  inputContainer:{ 
+  inputContainer: {
     marginTop: '20%',
-    width: Dimensions.get('window').width -40,
+    width: Dimensions.get('window').width - 40,
     height: 71,
     alignSelf: 'center'
   },
 
-  lowerInputContainer:{ 
-    marginTop: 5, 
-    width: Dimensions.get('window').width -40, 
+  lowerInputContainer: {
+    marginTop: 5,
+    width: Dimensions.get('window').width - 40,
     height: 71,
     alignSelf: 'center'
   },
 
-  buttonContainer:{
+  buttonContainer: {
     marginTop: '2%',
     width: "90%",
     alignSelf: 'center'
   },
 
-  lowerButtonsContainer:{
-    marginTop: '5%', 
+  lowerButtonsContainer: {
+    marginTop: '5%',
     flexDirection: 'row',
-    justifyContent:'space-evenly',
+    justifyContent: 'space-evenly',
   },
 
-  divisor: { 
-    height: 38, 
-    width: 1, 
+  divisor: {
+    height: 38,
+    width: 1,
     backgroundColor: 'rgba(194, 215, 242, 1)',
   },
 
@@ -170,27 +170,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  rightButton:{
+  rightButton: {
     justifyContent: 'center',
     marginRight: 40
   },
 
-  middleButton:{
-    backgroundColor:'#4da6ff', 
-    borderColor:"white", 
+  middleButton: {
+    backgroundColor: '#4da6ff',
+    borderColor: "white",
     borderWidth: 1,
-    borderRadius:5,
-    height:25,
-    marginTop:20,
-    marginLeft:0,
-    alignSelf:'center'
+    borderRadius: 5,
+    height: 25,
+    marginTop: 20,
+    marginLeft: 0,
+    alignSelf: 'center'
   },
 
- 
+
   TextStyle: {
     fontSize: 16,
     color: '#ffffff'
- 
+
   },
 
 
