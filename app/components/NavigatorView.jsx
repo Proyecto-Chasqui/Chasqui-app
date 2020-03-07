@@ -1,16 +1,19 @@
 import React from 'react';
 import Login from '../containers/Login';
 import Vendors from '../containers/Vendors';
+import Catalog from '../containers/Catalog';
+import NavigationItems from '../containers/NavigatorComponentContainters/NavigationItems'
+import NavigationOptionItems from '../containers/NavigatorComponentContainters/NavigationOptionItems'
 import { ActivityIndicator } from 'react-native';
-import {Text, Header, Button, Icon} from 'react-native-elements';
+import { Text, Header, Button, Icon } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer'
 import { ScrollView , StyleSheet, Image, View, Alert} from 'react-native';
 import GLOBALS from '../Globals';
 
-const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
+const StackLogin = createStackNavigator();
+const DrawerCatalogs = createDrawerNavigator();
 const state = {};
 
 class NavigatorView extends React.Component {
@@ -21,50 +24,17 @@ class NavigatorView extends React.Component {
         this.serverBaseRoute = GLOBALS.BASE_URL;
     }  
 
-    logoutAlert(){
-      Alert.alert(
-        'Cerrar sesión',
-       '¿Esta seguro que desea cerrar la sesión?',
-       [
-        {text: 'Si', onPress: () =>  this.logout()},
-        {text: 'No', onPress: () => null},
-       ])
-    }
 
-    loginHeaderComponent(props){
+
+    sideMenuComponent(props){
         return(
-        <ScrollView>
+        <ScrollView style={{backgroundColor:"#ededed"}}>
         <Header containerStyle={{backgroundColor:'rgba(51, 102, 255, 1)'}}  >
           <Image style={styles.userAvatar} PlaceholderContent={<ActivityIndicator/>} source={{uri: (this.serverBaseRoute+ this.props.user.avatar) }}></Image>
           <Text style={styles.nickText}>{(this.props.user.nickname).toUpperCase()}</Text>
         </Header>
-        <DrawerItemList {...props} />
-        <View style={{marginLeft:20, }}>
-        <Button icon={<Icon name="bell" type='font-awesome' size={20} iconStyle={styles.iconMenuButton} />}
-                buttonStyle={styles.menuButton}
-                onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
-                title="Notificaciones"
-                titleStyle = {styles.menuButtonTitle}
-            />
-        <Button icon={<Icon name="cog" type='font-awesome' size={20} iconStyle={styles.iconMenuButton}/>}
-                buttonStyle={styles.menuButton}
-                onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
-                title="Configuración"
-                titleStyle = {styles.menuButtonTitle}
-            />
-        <Button icon={<Icon name="question-circle" type='font-awesome' size={20} iconStyle={styles.iconMenuButton}/>}
-                buttonStyle={styles.menuButton}
-                onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
-                title="Ayuda"
-                titleStyle = {styles.menuButtonTitle}
-            />
-        <Button icon={<Icon name="times-circle" type='font-awesome' size={20} iconStyle={styles.iconMenuButton}/>}
-                buttonStyle={styles.menuButton}
-                onPress={() => this.logoutAlert()}
-                title="Cerrar sesión"
-                titleStyle = {styles.menuButtonTitle}
-            />                
-        </View>
+        <NavigationItems navigation={props.navigation}></NavigationItems>
+        <NavigationOptionItems></NavigationOptionItems>
         </ScrollView>
         );
     }
@@ -74,8 +44,8 @@ class NavigatorView extends React.Component {
             <NavigationContainer>
                 {this.props.user.token == ""  ? (
                 // No token found, user isn't signed in
-                <Stack.Navigator>
-                    <Stack.Screen
+                <StackLogin.Navigator>
+                    <StackLogin.Screen
                     name="Bienvenidxs"
                     component={Login}
                     options={{
@@ -84,17 +54,17 @@ class NavigatorView extends React.Component {
                         animationTypeForReplace: state.isSignout ? 'pop' : 'push',
                     }}
                     />
-                </Stack.Navigator>
+                </StackLogin.Navigator>
                 ) : (
-                // User is signed in
-                <Drawer.Navigator initialRouteName="Bienvenidxs"
+                <DrawerCatalogs.Navigator initialRouteName="Catalogos"
                                   drawerContentOptions={{
                                     activeTintColor: '#0066cc',
                                     itemStyle: { marginLeft: 20, marginRight:20 },
                                   }} 
-                                  drawerContent={props => this.loginHeaderComponent(props)}>
-                    <Drawer.Screen name='Catalogos' component={Vendors}/>
-                </Drawer.Navigator>
+                                  drawerContent={(props) => this.sideMenuComponent(props)}>
+                    <DrawerCatalogs.Screen name='Catalogos' component={Vendors}/>
+                    <DrawerCatalogs.Screen name='Catalogo' component={Catalog}/>
+                </DrawerCatalogs.Navigator>
                 )}                    
             </NavigationContainer>
             );
@@ -123,10 +93,12 @@ const styles = StyleSheet.create({
     color:"black",
     alignSelf:'flex-end'
   },
+
   iconMenuButton:{
     marginRight: 15,
     color:"rgba(51, 102, 255, 1)" 
-  }
+  },
+
 });
 
 export default NavigatorView;

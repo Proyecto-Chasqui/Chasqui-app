@@ -1,18 +1,19 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import NavigatorView from '../components/NavigatorView';
-import {logout} from '../actions';
+import {vendorSelected, products} from '../actions';
+import CatalogView from '../components/CatalogView';
 
 const mapStateToProps = state => ({
   user: state.user,
   vendorSelected: state.vendorSelected,
+  products: state.products
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({logout}, dispatch),
+  actions: bindActionCreators({vendorSelected, products}, dispatch),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(NavigatorView);
+)(CatalogView);

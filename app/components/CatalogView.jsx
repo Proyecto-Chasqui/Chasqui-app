@@ -1,71 +1,51 @@
 import React from 'react';
-import { StyleSheet, View, Alert, Image, Dimensions } from 'react-native';
-import axios from 'axios';
-import LoadingView from '../components/LoadingView';
-import { Header, Button, Icon, SearchBar } from 'react-native-elements';
-import VendorCards from '../containers/VendorsComponentContainers/VendorCards';
-import VendorFilters from '../containers/VendorsComponentContainers/VendorFilters';
+import { View, Text, StyleSheet } from 'react-native';
+import { Header, Button, Icon, SearchBar, Image } from 'react-native-elements';
 import GLOBALS from '../Globals';
+import ProductCardsView from '../containers/CatalogComponentsContainers/ProductCards';
+import LoadingView from '../components/LoadingView';
+import axios from 'axios';
 
-class VendorsView extends React.Component {
-
-    constructor(props) {
+class CatalogView extends React.Component{
+    constructor(props){
         super(props);
-        this.vendors = props.actions.vendors;
-        this.vendorTags = props.actions.vendorTags;
+        //console.log("props catalog",props);
+        this.products = props.actions.products;
         this.serverBaseRoute = GLOBALS.BASE_URL;
-        this.minWidth = false,
             this.state = {
                 search: '',
-                isLoadingSearchVendors: false,
+                isLoadingSearchProducts: false,
                 isLoadingFilterComponent: false,
                 isLoading: true,
                 multipleCards: false,
                 isVisible: false,
-                isLoadingVendors: true,
-                isLoadingTags: true,
+                isLoadingProducts: true,
+                isLoadingProductSeals: true,
+                isLoadingProductionSeals: true,
                 searchHasChanged: false,
             };
     }
 
-    updateSearch = search => {
-        this.setState({ search: search, searchHasChanged: true });
+    componentWillMount(){
+        this.getProducts()
     }
 
-    stopSearch() {
-        this.setState({ searchHasChanged: false });
-    }
-
-    switchStyle() {
-        this.setState({
-            multipleCards: !this.state.multipleCards
-        });
-    }
-
-    showFilters() {
-        this.setState({
-            isVisible: !this.state.isVisible
-        })
-    }
-
-    componentWillMount() {
-        this.getVendors(this.props);
-    }
-
-    screenLowerThan(value, styleA, styleB) {
-        if (Dimensions.get('window').width < value) {
-            return styleB;
-        }
-        return styleA;
-    }
-
-
-    getVendors(props) {
-        axios.get(this.serverBaseRoute + 'rest/client/vendedor/all')
-            .then(res => {
-                this.vendors(res.data);
+    getProducts(props) {
+        axios.post(this.serverBaseRoute + 'rest/client/producto/productosByMultiplesFiltros', {
+            idVendedor: this.props.vendorSelected.id,
+            idCategoria: null,
+            idsSellosProducto: [],
+            idProductor: null,
+            idsSellosProductor: [],
+            numeroDeOrden: 1,
+            query: "",
+            pagina: 1,
+            cantItems: 20,
+            precio: null
+        }).then(res => {
+                this.products(res.data.productos);
                 this.setState({
-                    isLoadingVendors: false,
+                    isLoadingProducts: false,
                 });
             }).catch(function (error) {
                 Alert.alert(
@@ -79,24 +59,27 @@ class VendorsView extends React.Component {
             });
     }
 
-    isLoadingSearch(value) {
-        this.setState({ isLoadingSearchVendors: value });
+    updateSearch = search => {
+        this.setState({ search: search, searchHasChanged: true });
     }
 
-    isLoadingComponent(value) {
-        this.setState({ isLoadingFilterComponent: value });
+    showFilters(){
+
     }
 
-    render() {
+    updateSearch(){
 
-        if (this.state.isLoadingVendors || this.state.isLoadingFilterComponent) {
+    }
+
+    render(){
+
+        if (this.state.isLoadingProducts) {
             return <LoadingView></LoadingView>;
         }
 
-        return (
-            <View style={{ marginBottom: 75 }}>
-                <View>
-                    <Header containerStyle={styles.topHeader}>
+        return(
+            <View>
+                <Header containerStyle={styles.topHeader}>
                         <Button
                             icon={
                                 <Icon name="bars" size={20} color="white" type='font-awesome' />
@@ -127,7 +110,7 @@ class VendorsView extends React.Component {
                             null
                         }
                     </Header>
-                    <Header backgroundColor='white' containerStyle={styles.lowerHeaderStyle}
+                <Header backgroundColor='white' containerStyle={styles.lowerHeaderStyle}
                         leftComponent={
                             <SearchBar
                                 placeholder="Tu busqueda comienza aquí"
@@ -150,32 +133,13 @@ class VendorsView extends React.Component {
                                 title="Filtros"
                                 titleStyle={styles.lowerHeaderButtonTitle}
                             />
-                        }
-                    />
-                </View>
-                <View style={{backgroundColor:"Black"}}></View>
-                    <VendorFilters showFilter={() => this.showFilters()}
-                        isVisible={this.state.isVisible}
-                        searchValue={this.state.search}
-                        searchHasChanged={this.state.searchHasChanged}
-                        functionStopSearch={() => this.stopSearch()}
-                        isLoadingSearch={(value) => this.isLoadingSearch(value)}
-                        isLoadingComponent={(value) => this.isLoadingComponent(value)}>
-                    </VendorFilters>
-                
-                {
-                    this.state.isLoadingSearchVendors ?
-                        (<LoadingView textStyle={styles.loadingTextStyle}></LoadingView>)
-                        :
-                        (<VendorCards navigation={this.props.navigation} multipleCards={this.state.multipleCards} />)
-                }
+                   }
+                />
+                <ProductCardsView></ProductCardsView>
             </View>
         );
-
     }
 }
-
-
 
 const styles = StyleSheet.create({
 
@@ -291,4 +255,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default VendorsView;
+export default CatalogView;

@@ -7,6 +7,7 @@ import GLOBALS from '../../Globals';
 class VendorMultipleCardsView extends React.Component {
     constructor(props) {
         super(props);
+        console.log("Vendors Cards props", props.vendorSelected);
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.vendors = props.actions.vendors;
         this.state = {
@@ -35,6 +36,15 @@ class VendorMultipleCardsView extends React.Component {
         }
     }
 
+    selectVendor(vendor){
+        this.props.actions.vendorSelected(vendor);
+        this.props.navigation.navigate('Catalogo');
+        this.props.navigation.reset({
+            index: 1,
+            routes: [{ name: 'Catalogo' }],
+          });
+    }
+
     render() {
         let stylesCards = this.props.multipleCards ? stylesMultipleCards : stylesSingleCards;
         if (this.props.vendors.length < 1) {
@@ -61,10 +71,10 @@ class VendorMultipleCardsView extends React.Component {
                         this.props.vendors.map((u, i) => {
                             if (u.visibleEnMulticatalogo) {
                                 return (
-                                    <View style={stylesCards.wiewCard} key={u.id}>
+                                    <View style={stylesCards.wiewCard}  key={u.id}>
                                         <Card containerStyle={stylesCards.card}>
                                             <View style={stylesCards.cardImageView}>
-                                                <Image style={stylesCards.cardImage} source={{ uri: (this.serverBaseRoute + u.imagen) }} />
+                                                <Image onStartShouldSetResponder={() => this.selectVendor(u)} style={stylesCards.cardImage} source={{ uri: (this.serverBaseRoute + u.imagen) }} />
                                             </View>
                                             <View style={stylesCards.viewTagsOrgAndSellStrat}>
                                                 <View style={stylesCards.viewBadgesTOrg}>

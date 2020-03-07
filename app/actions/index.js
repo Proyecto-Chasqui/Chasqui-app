@@ -5,6 +5,9 @@ export const OBTAINVENDORS = 'OBTAINVENDORS';
 export const VENDORSTAGS = 'VENDORSTAGS';
 export const PRODUCTIONSEALS = 'PRODUCTIONSEALS';
 export const PRODUCTSEALS = 'PRODUCTSEALS';
+export const VENDORSELECTED = 'VENDORSELECTED';
+export const VENDORUNSELECTED = 'VENDORUNSELECTED';
+export const PRODUCTS = 'PRODUCTS';
 
 export const login = userData => ({type: LOGIN, userData});
 export const logout = () => ({type: LOGOUT});
@@ -13,3 +16,6 @@ export const obtainVendors = () => ({type: OBTAINVENDORS});
 export const vendorTags = stackTags => ({type:VENDORSTAGS, stackTags});
 export const productSeals = productSealsStack =>({type:PRODUCTSEALS, productSealsStack});
 export const productionSeals = productionSealsStack => ({type: PRODUCTIONSEALS, productionSealsStack});
+export const vendorSelected = vendorSelectedData => ({type: VENDORSELECTED, vendorSelectedData});
+export const vendorUnSelected = () => ({type: VENDORUNSELECTED});
+export const products = (productStack) => ({type: PRODUCTS, productStack});
