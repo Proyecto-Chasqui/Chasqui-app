@@ -2,15 +2,15 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Text, Header, Button, Icon } from 'react-native-elements';
 
-class NavigationItemsView extends React.Component {
+class NavigationItemsView extends React.PureComponent {
     constructor(props) {
         super(props);
         this.navigation = props.navigation;
-        console.log("actions in items",props.actions);
     }
 
     goToCatalogs(){
-        this.props.actions.vendorUnSelected()
+        this.props.actions.vendorUnSelected();
+        this.props.actions.flushproducts();
         this.navigation.navigate('Catalogos')
     }
 

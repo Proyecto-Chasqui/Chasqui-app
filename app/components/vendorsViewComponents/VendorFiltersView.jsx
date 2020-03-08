@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Button, Icon, Overlay, CheckBox } from 'react-native-elements';
 import GLOBALS from '../../Globals';
 
-class VendorFiltersView extends React.Component {
+class VendorFiltersView extends React.PureComponent {
     constructor(props) {
         super(props);
         this.vendors = props.actions.vendors;

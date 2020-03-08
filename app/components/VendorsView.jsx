@@ -7,7 +7,7 @@ import VendorCards from '../containers/VendorsComponentContainers/VendorCards';
 import VendorFilters from '../containers/VendorsComponentContainers/VendorFilters';
 import GLOBALS from '../Globals';
 
-class VendorsView extends React.Component {
+class VendorsView extends React.PureComponent {
 
     constructor(props) {
         super(props);

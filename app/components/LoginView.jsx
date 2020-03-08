@@ -6,7 +6,7 @@ import axios from 'axios';
 import GLOBALS from '../Globals';
 
 
-class LoginView extends React.Component {
+class LoginView extends React.PureComponent {
   constructor(props) {
     super(props);
     this.serverBaseRoute = GLOBALS.BASE_URL;

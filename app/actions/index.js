@@ -8,6 +8,7 @@ export const PRODUCTSEALS = 'PRODUCTSEALS';
 export const VENDORSELECTED = 'VENDORSELECTED';
 export const VENDORUNSELECTED = 'VENDORUNSELECTED';
 export const PRODUCTS = 'PRODUCTS';
+export const FLUSHPRODUCTS = 'FLUSHPRODUCTS'
 
 export const login = userData => ({type: LOGIN, userData});
 export const logout = () => ({type: LOGOUT});
@@ -19,3 +20,4 @@ export const productionSeals = productionSealsStack => ({type: PRODUCTIONSEALS, 
 export const vendorSelected = vendorSelectedData => ({type: VENDORSELECTED, vendorSelectedData});
 export const vendorUnSelected = () => ({type: VENDORUNSELECTED});
 export const products = (productStack) => ({type: PRODUCTS, productStack});
+export const flushproducts = () => ({type: FLUSHPRODUCTS});

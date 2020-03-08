@@ -16,7 +16,7 @@ const StackLogin = createStackNavigator();
 const DrawerCatalogs = createDrawerNavigator();
 const state = {};
 
-class NavigatorView extends React.Component {
+class NavigatorView extends React.PureComponent {
     constructor(props) {
         super(props);
         this.logout = props.actions.logout;

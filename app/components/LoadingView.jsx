@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, View, StyleSheet, Text, Dimensions } from "react-native";
 
 
-class LoadingView extends React.Component {
+class LoadingView extends React.PureComponent {
     constructor(props) {
         super(props);
         this.textStyle = props.textStyle;

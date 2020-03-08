@@ -2,7 +2,7 @@
   "expo": {
     "name": "Chasqui",
     "slug": "chasqui-app",
-    "privacy": "public",
+    "privacy": "unlisted",
     "owner": "dev_david",
     "sdkVersion": "36.0.0",
     "platforms": [

@@ -6,11 +6,12 @@ import ProductCardsView from '../containers/CatalogComponentsContainers/ProductC
 import LoadingView from '../components/LoadingView';
 import axios from 'axios';
 
-class CatalogView extends React.Component{
+class CatalogView extends React.PureComponent{
     constructor(props){
         super(props);
         //console.log("props catalog",props);
         this.products = props.actions.products;
+        this.flushproducts = props.actions.flushproducts;
         this.serverBaseRoute = GLOBALS.BASE_URL;
             this.state = {
                 search: '',
@@ -40,7 +41,7 @@ class CatalogView extends React.Component{
             numeroDeOrden: 1,
             query: "",
             pagina: 1,
-            cantItems: 20,
+            cantItems: 500,
             precio: null
         }).then(res => {
                 this.products(res.data.productos);

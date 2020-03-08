@@ -2,7 +2,7 @@ import React from 'react';
 import { View , StyleSheet, Alert} from 'react-native';
 import { Text, Header, Button, Icon } from 'react-native-elements';
 
-class NavigationOptionItemsView extends React.Component{
+class NavigationOptionItemsView extends React.PureComponent{
     constructor(props){
         super(props)
         this.logout = props.actions.logout;

@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {vendorUnSelected} from '../../actions'
+import {vendorUnSelected,flushproducts} from '../../actions'
 import NavigationItemsView from '../../components/navigatorViewComponents/NavigationItemsView';
 
 const mapStateToProps = state => ({
@@ -8,7 +8,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({vendorUnSelected}, dispatch),
+  actions: bindActionCreators({vendorUnSelected, flushproducts}, dispatch),
 });
 
 export default connect(

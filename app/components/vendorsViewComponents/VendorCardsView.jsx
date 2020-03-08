@@ -1,13 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, ScrollView, Dimensions, Animated } from 'react-native';
+import { StyleSheet, View, Text, Image, ScrollView, Dimensions } from 'react-native';
 import { Card, Badge, Icon } from 'react-native-elements';
 import TextTicker from 'react-native-text-ticker';
 import GLOBALS from '../../Globals';
 
-class VendorMultipleCardsView extends React.Component {
+class VendorMultipleCardsView extends React.PureComponent {
     constructor(props) {
         super(props);
-        console.log("Vendors Cards props", props.vendorSelected);
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.vendors = props.actions.vendors;
         this.state = {

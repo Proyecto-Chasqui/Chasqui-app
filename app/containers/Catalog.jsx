@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {vendorSelected, products} from '../actions';
+import {vendorSelected, products,flushproducts} from '../actions';
 import CatalogView from '../components/CatalogView';
 
 const mapStateToProps = state => ({
@@ -10,7 +10,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({vendorSelected, products}, dispatch),
+  actions: bindActionCreators({vendorSelected, products,flushproducts}, dispatch),
 });
 
 export default connect(

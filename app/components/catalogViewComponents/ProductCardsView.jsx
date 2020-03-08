@@ -1,21 +1,38 @@
 import React from 'react'
-import { StyleSheet, View, Text, Image, ScrollView, Dimensions, Animated, ActivityIndicator, Button } from 'react-native';
-import { Card, Badge, Icon } from 'react-native-elements';
+import { StyleSheet, View, Text, ScrollView, Dimensions, ActivityIndicator, Button } from 'react-native';
+import { Card, Badge, Icon, Image } from 'react-native-elements';
 import GLOBALS from '../../Globals';
+import SealsView from '../catalogViewComponents/SealsView'
 
-class ProductCardsView extends React.Component {
+class ProductCardsView extends React.PureComponent {
     constructor(props) {
         super(props);
         this.serverBaseRoute = GLOBALS.BASE_URL;
-        console.log("productos", props.products);
     }
 
     normalizeText(text) {
-        console.log(encodeURI(text));
         return encodeURI(text);
     }
 
     render() {
+        if (this.props.products.length < 1) {
+            return (
+                <View style={stylesCards.viewSearchErrorContainer}>
+                    <View style={stylesCards.viewErrorContainer}>
+                        <View style={stylesCards.searchIconErrorContainer}>
+                            <Icon name="search" type='font-awesome' size={50} color={"white"} containerStyle={stylesCards.searchIconError}></Icon>
+                        </View>
+                        <Text style={stylesCards.errorText}>
+                            No se encontraron productos
+                    </Text>
+                        <Text style={stylesCards.tipErrorText}>
+                            Revise los filtros o la busqueda
+                    </Text>
+                    </View>
+                </View>
+            );
+        }
+
         return (
             <ScrollView>
                 <View style={stylesCards.flexView}>
@@ -24,26 +41,31 @@ class ProductCardsView extends React.Component {
                             <View style={stylesCards.wiewCard} key={product.id}>
                                 <Card containerStyle={stylesCards.card}>
                                     <View style={stylesCards.cardImageView}>
-                                        <Image style={stylesCards.cardImage} PlaceholderContent={<ActivityIndicator />} source={{ uri: (this.normalizeText(this.serverBaseRoute + product.imagenPrincipal)) }} />
+                                        <Image style={stylesCards.cardImage} PlaceholderContent={<ActivityIndicator  size="large" color="#0000ff" />}  source={{ uri: (this.normalizeText(this.serverBaseRoute + product.imagenPrincipal)) }} />
                                     </View>
-                                    {product.destacado ? 
-                                    (<Badge badgeStyle={stylesCards.badge} containerStyle={stylesCards.tagDestacado} 
-                                        value={<Text style={stylesCards.textBadge}>Destacado</Text>} />
-                                    ):(
-                                        null)                                        
+                                    {product.destacado ?
+                                        (<Badge badgeStyle={stylesCards.badge} containerStyle={stylesCards.tagDestacado}
+                                            value={<Text style={stylesCards.textBadge}>Destacado</Text>} />
+                                        ) : (
+                                            null)
                                     }
-                                    <View flexDirection="column">
+                                    <View style={{flexDirection:"column"}}>
                                         <View>
                                             <Text style={stylesCards.priceStyle}>$ {product.precio}</Text>
                                         </View>
-                                        <View style={{height:50}}>
+                                        <View style={{ height: 50 }}>
                                             <Text style={stylesCards.nameTextStyle}>{product.nombreProducto}</Text>
                                         </View>
-                                        <View style={{height:50}}>
+                                        <View style={{ height: 30 }}>
                                             <Text style={stylesCards.nameProducerTextStyle}>{product.nombreFabricante}</Text>
                                         </View>
-                                        <View style={{width:"50%"}}>
-                                            <Button containerStyel={stylesCards.buttonStyle} buttonStyle={stylesCards.buttonStyle} title="Agregar" />
+                                        <SealsView sealsContainer={stylesCards.sealContainerStyle}
+                                                sealsStyle={stylesCards.sealStyle}
+                                                productSeals={product.medallasProducto}
+                                                producerSeals={product.medallasProductor} >
+                                        </SealsView>
+                                        <View style={{flexDirection:"column", width: "50%",alignSelf:"flex-start" }}>
+                                            <Button containerStyle={stylesCards.containerButtonStyle} buttonStyle={stylesCards.buttonStyle} title="Agregar" />
                                         </View>
                                     </View>
                                 </Card>
@@ -193,11 +215,11 @@ const stylesCards = StyleSheet.create({
     },
 
     badge: {
-        marginTop:-15,
+        marginTop: -15,
         backgroundColor: '#00b300',
         height: 30,
         borderRadius: 5,
-        borderColor:"black",
+        borderColor: "black",
         alignSelf: 'flex-start'
     },
 
@@ -225,11 +247,10 @@ const stylesCards = StyleSheet.create({
 
     wiewCard: {
         width: "50%",
-        backgroundColor: "black"
     },
 
     card: {
-        height: 360,
+        height: 385,
         borderRadius: 2,
         marginTop: 5,
         marginLeft: 5,
@@ -246,14 +267,16 @@ const stylesCards = StyleSheet.create({
     },
 
     cardImageView: {
-        marginTop: -16,
-        marginLeft: -16,
-        marginRight: -16,
+        marginTop: -15,
+        marginLeft: -15,
+        marginRight: -15,
     },
 
     cardImage: {
         width: null,
         height: 150,
+        marginLeft: 0,
+        marginRight: 0,
         resizeMode: 'cover',
         borderTopRightRadius: 2,
         borderTopLeftRadius: 2
@@ -266,25 +289,41 @@ const stylesCards = StyleSheet.create({
 
     priceStyle: {
         fontSize: 20,
-        alignSelf:'flex-start'
+        alignSelf: 'flex-start'
     },
 
     nameTextStyle: {
         fontSize: 13,
-        alignSelf:'flex-start',
+        alignSelf: 'flex-start',
         fontWeight: "bold",
-        alignContent:'center',
-        alignContent:'center'
+        alignContent: 'center',
+        alignContent: 'center'
     },
 
     nameProducerTextStyle: {
         fontSize: 10,
-        alignSelf:'flex-start'
+        alignSelf: 'flex-start'
     },
+
+    sealContainerStyle:{
+        flexDirection: "row",
+        flexWrap: "wrap",
+        marginBottom: 3,
+        height:60
+    },
+
+    sealStyle: {
+        height: 30,
+        width: 30,
+    },
+
+    containerButtonStyle:{
+        flexDirection:"column-reverse",
+    }, 
 
     buttonStyle: {
         backgroundColor: 'black',
-        width: "50%"
+        width: "50%",
     },
 
     contentContainer: {
