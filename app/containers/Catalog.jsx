@@ -1,16 +1,17 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {vendorSelected, products,flushproducts} from '../actions';
+import {vendorSelected, products,flushproducts, producers, logout, seals} from '../actions';
 import CatalogView from '../components/CatalogView';
 
 const mapStateToProps = state => ({
   user: state.user,
   vendorSelected: state.vendorSelected,
-  products: state.products
+  products: state.products,
+  producers: state.producers,
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({vendorSelected, products,flushproducts}, dispatch),
+  actions: bindActionCreators({vendorSelected, products,flushproducts,producers, logout, seals}, dispatch),
 });
 
 export default connect(

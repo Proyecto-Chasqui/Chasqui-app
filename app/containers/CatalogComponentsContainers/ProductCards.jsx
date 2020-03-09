@@ -4,7 +4,7 @@ import { productSelected, productUnselected } from '../../actions';
 import ProductCardsView from '../../components/catalogViewComponents/ProductCardsView';
 
 const mapStateToProps = state => ({
-    products: state.products
+    products: state.products,
 });
 
 const mapDispatchToProps = dispatch => ({

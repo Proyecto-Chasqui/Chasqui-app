@@ -16,19 +16,9 @@ class ProductCardsView extends React.PureComponent {
         return encodeURI(text);
     }
 
-    async goToProductDetails(product){
-        let regex = /(<([^>]+)>)/ig;
-        product.descripcion = await product.descripcion.replace(regex, '');
-        product.descripcion = await product.descripcion.replace('&oacute;','ó');
-        product.descripcion = await product.descripcion.replace('&iexcl;','¡');
-        product.descripcion = await product.descripcion.replace('&aacute;','á');
-        product.descripcion = await product.descripcion.replace('&eacute;','é');
-        product.descripcion = await product.descripcion.replace('&iacute;','í');
-        product.descripcion = await product.descripcion.replace('&uacute;','ú');
-        product.descripcion = await product.descripcion.replace('&ntilde;','ñ');
-        product.descripcion = await product.descripcion.replace('&nbsp;',' ');
-        await this.props.actions.productSelected(product);
-        await this.navigation.navigate('Producto');              
+    goToProductDetails(product){
+         this.props.actions.productSelected(product);
+         this.navigation.navigate('Producto');              
     }
 
     render() {

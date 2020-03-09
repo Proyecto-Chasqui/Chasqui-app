@@ -1,13 +1,11 @@
 import React from 'react'
-import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Header, Button, Icon, Image } from 'react-native-elements';
 import GLOBALS from '../Globals';
-import ProductCardsView from '../containers/CatalogComponentsContainers/ProductCards';
-import LoadingView from '../components/LoadingView';
 import SealsView from '../components/catalogViewComponents/SealsView';
 import QuantitySelector from '../components/catalogViewComponents/QuantitySelectorView';
-import { WebView } from 'react-native-webview';
-import axios from 'axios';
+import WebView from 'react-native-webview'
+import { ScrollView } from 'react-native-gesture-handler';
 
 class ProductView extends React.PureComponent {
     constructor(props) {
@@ -34,6 +32,57 @@ class ProductView extends React.PureComponent {
 
     haventSeals(){
         return this.props.productSelected.medallasProducto === null && this.props.productSelected.medallasProductor.length == 0  ;
+    }
+
+    getProducer(){
+        let varProducer = {}
+        this.props.producers.map((producer, i) => {
+            if(producer.idProductor === this.props.productSelected.idFabricante){
+                varProducer = producer;
+            }
+        });
+        return varProducer;
+    }
+    
+    async goToSeals(){
+        let sealsSelected = [];
+        await this.props.seals.map((seal, i) => {
+            if(this.props.productSelected.medallasProducto !== null){
+                this.props.productSelected.medallasProducto.map((productSeal, i) => {
+                    if(seal.nombre === productSeal.nombre){
+                        sealsSelected.push(seal);
+                    }
+                })
+            }
+            if(this.props.productSelected.medallasProductor !== null){
+                this.props.productSelected.medallasProductor.map((producerSeal, i) => {
+                    if(seal.nombre === producerSeal.nombre){
+                        sealsSelected.push(seal);
+                    }
+                })
+            }
+        })
+        this.props.actions.sealsSelected(sealsSelected);
+        this.props.navigation.navigate("Sellos");
+    }
+
+    async normalizeData(data){
+        let regex = /(<([^>]+)>)/ig;
+        data = await data.replace(regex, '');
+        data = await data.replace('&oacute;','ó');
+        data = await data.replace('&iexcl;','¡');
+        data = await data.replace('&aacute;','á');
+        data = await data.replace('&eacute;','é');
+        data = await data.replace('&iacute;','í');
+        data = await data.replace('&uacute;','ú');
+        data = await data.replace('&ntilde;','ñ');
+        data = await data.replace('&nbsp;',' ');
+    }
+
+    async goToProducer(){       
+        let producer = this.getProducer();   
+        this.props.actions.producerSelected(producer);
+        this.props.navigation.navigate("Fabricante");
     }
 
     render() {
@@ -72,32 +121,35 @@ class ProductView extends React.PureComponent {
                         />
                     </View>
                     <Text style={styles.priceStyle}>$ {this.props.productSelected.precio}</Text>
-                    <Text style={styles.descriptionStyle}>{this.props.productSelected.descripcion}</Text>
+                    <ScrollView style={styles.descriptionViewContainer}>
+                        <View style={{ height: 100 }}>
+                                <WebView
+                                    scalesPageToFit={false}
+                                    style={{backgroundColor:"transparent"}}
+                                    containerStyle={{ }}
+                                    source={{ html: this.props.productSelected.descripcion }}
+                                />
+                        </View>
+                    </ScrollView>
                     <View style={styles.caracteristicsContanierStyle}>
                         <View style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
                             <Text style={styles.caracteristicsStyle} >Caracterisiticas</Text>
                             <View style={styles.verticalDivisor} />
-                            { this.state.showCaracteristics?(
                             <Button icon={
-                                <Icon
-                                name='caret-up'
-                                type='font-awesome'
-                                color='#b0b901'
-                                size={30}
-                                />}
-                                containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
-                                onPress={() => this.showCaracteristics()} ></Button>    
-                            ):(
-                                <Button icon={
+                                this.state.showCaracteristics?(
                                     <Icon
+                                    name='caret-up'
+                                    type='font-awesome'
+                                    color='#b0b901'
+                                    size={30}
+                                />):(<Icon
                                     name='caret-down'
                                     type='font-awesome'
                                     color='#b0b901'
                                     size={30}
-                                    />}
-                                    containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
-                                    onPress={() => this.showCaracteristics()} ></Button>   
-                            )}                  
+                                    />)}
+                                containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
+                                onPress={() => this.showCaracteristics()}></Button>                      
                         </View>
                         { this.state.showCaracteristics?
                         (
@@ -114,7 +166,8 @@ class ProductView extends React.PureComponent {
                                 color='#b0b901'
                                 size={30}
                                 />}
-                                containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle} ></Button>
+                                containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
+                                onPress={()=>this.goToProducer()}></Button>
                         </View>
                         </View>
                         {this.haventSeals() ? (null):(
@@ -130,7 +183,8 @@ class ProductView extends React.PureComponent {
                                 color='#b0b901'
                                 size={30}
                                 />}
-                                containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle} ></Button>
+                                containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle} 
+                                onPress={()=>this.goToSeals()}></Button>
                         </View></View>)
                         }
                         </View>
@@ -239,8 +293,14 @@ const styles = StyleSheet.create({
         marginRight: 20,
     },
 
-    descriptionStyle: {
+    descriptionViewContainer:{
         height: 100,
+        marginBottom: 5,
+        marginLeft: 15,
+        marginRight:15
+    },
+
+    descriptionStyle: {
         marginLeft: 20,
         marginRight: 20,
         textAlign: 'justify'

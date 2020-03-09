@@ -3,17 +3,20 @@ import Login from '../containers/Login';
 import Vendors from '../containers/Vendors';
 import Catalog from '../containers/Catalog';
 import Product from '../containers/Product';
-import NavigationItems from '../containers/NavigatorComponentContainters/NavigationItems'
-import NavigationOptionItems from '../containers/NavigatorComponentContainters/NavigationOptionItems'
+import Producer from '../containers/CatalogComponentsContainers/Producer';
+import SubNavigatorView from './SubNavigatorView';
+import NavigationItems from '../containers/NavigatorComponentContainters/NavigationItems';
+import NavigationOptionItems from '../containers/NavigatorComponentContainters/NavigationOptionItems';
 import { ActivityIndicator } from 'react-native';
 import { Text, Header, Button, Icon } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer'
+import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer';
 import { ScrollView, StyleSheet, Image, View, Alert } from 'react-native';
 import GLOBALS from '../Globals';
 
 const StackLogin = createStackNavigator();
+
 const DrawerCatalogs = createDrawerNavigator();
 const state = {};
 
@@ -38,6 +41,16 @@ class NavigatorView extends React.PureComponent {
     );
   }
 
+  catalogos(){
+    return(
+      <Stack.Navigator initialRouteName="Catalogo">
+            <Stack.Screen name='Catalogo' component={Catalog} />
+            <Stack.Screen name='Producto' component={Product} />
+            <Stack.Screen name='Fabricante' component={Producer} />
+      </Stack.Navigator>
+    )
+  }
+
   render() {
     return (
       <NavigationContainer>
@@ -60,10 +73,10 @@ class NavigatorView extends React.PureComponent {
                 activeTintColor: '#0066cc',
                 itemStyle: { marginLeft: 20, marginRight: 20 },
               }}
-              drawerContent={(props) => this.sideMenuComponent(props)}>
+              drawerContent={(props) => this.sideMenuComponent(props)}
+              >
               <DrawerCatalogs.Screen name='Catalogos' component={Vendors} />
-              <DrawerCatalogs.Screen name='Catalogo' component={Catalog} />
-              <DrawerCatalogs.Screen name='Producto' component={Product} />
+              <DrawerCatalogs.Screen name='Catalogo' component={SubNavigatorView} />
             </DrawerCatalogs.Navigator>
           )}
       </NavigationContainer>

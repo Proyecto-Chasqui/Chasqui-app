@@ -3,13 +3,17 @@ import {combineReducers} from 'redux';
 import user from './user';
 import vendors from './vendors';
 import vendorTags from './vendorTags';
-import productSeals from './productSeals';
+import seals from './seals';
+import sealsSelected from './sealsSelected';
 import productionSeals from './productionSeals';
 import vendorSelected from './vendorSelected';
 import products from './products';
 import productSelected from './productSelected';
+import producers from './producers';
+import producerSelected from './producerSelected';
 
 const rootReducer = combineReducers({user, vendors, vendorTags,
-     products, productSeals, productionSeals, vendorSelected, productSelected });
+     products, seals, sealsSelected, vendorSelected, productSelected, producers,
+     producerSelected });
 
 export default rootReducer;

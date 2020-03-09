@@ -37,14 +37,7 @@ class VendorMultipleCardsView extends React.PureComponent {
     
     selectVendor(vendor){
         this.props.actions.vendorSelected(vendor);
-        this.props.navigation.navigate('Catalogo',{
-            itemId: 86,
-            otherParam: 'anything you want here',
-          });
-        this.props.navigation.reset({
-            index: 1,
-            routes: [{ name: 'Catalogo', name: 'Producto' }],
-          });
+        this.props.navigation.navigate('Catalogo');
     }
 
     render() {

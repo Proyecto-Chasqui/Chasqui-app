@@ -9,13 +9,9 @@ class NavigationItemsView extends React.PureComponent {
     }
 
     goToCatalogs(){
-        this.props.actions.vendorUnSelected();
-        this.props.actions.flushproducts();
+        //this.props.actions.vendorUnSelected();
+        //this.props.actions.flushproducts();
         this.navigation.navigate('Catalogos');
-        this.navigation.reset({
-            index: 0,
-            routes: [{ name: 'Catalogos' }],
-          });
     }
 
     render() {

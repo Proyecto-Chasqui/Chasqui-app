@@ -1,36 +1,75 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Header, Button, Icon, SearchBar, Image } from 'react-native-elements';
 import GLOBALS from '../Globals';
 import ProductCardsView from '../containers/CatalogComponentsContainers/ProductCards';
 import LoadingView from '../components/LoadingView';
 import axios from 'axios';
 
-class CatalogView extends React.Component{
-    constructor(props){
+class CatalogView extends React.Component {
+    constructor(props) {
         super(props);
         this.products = props.actions.products;
+        this.producers = props.actions.producers;
+        this.seals = props.actions.seals;
         this.flushproducts = props.actions.flushproducts;
         this.serverBaseRoute = GLOBALS.BASE_URL;
-            this.state = {
-                search: '',
-                isLoadingSearchProducts: false,
-                isLoadingFilterComponent: false,
-                isLoading: true,
-                multipleCards: false,
-                isVisible: false,
-                isLoadingProducts: true,
-                isLoadingProductSeals: true,
-                isLoadingProductionSeals: true,
-                searchHasChanged: false,
-            };
+        this.vendorId = 0;
+        this.state = {
+            search: '',
+            isLoadingSearchProducts: false,
+            isLoadingFilterComponent: false,
+            isLoading: true,
+            multipleCards: false,
+            isVisible: false,
+            isLoadingProducts: true,
+            isLoadingProductSeals: true,
+            isLoadingProductionSeals: true,
+            searchHasChanged: false,
+        };
     }
 
-    componentWillMount(){
-        this.getProducts(this.props);
+    load() {
+        if (this.props.vendorSelected.id !== undefined) {
+            this.vendorId = this.props.vendorSelected.id;
+            this.getProducts(this.props);
+            this.getProducers(this.props);
+            this.getSeals(this.props);
+        }
     }
 
+    componentDidUpdate() {
+        if (this.props.vendorSelected.id !== undefined) {
+            if (this.vendorId != this.props.vendorSelected.id) {
+                this.setState({
+                    isLoadingProducts: true,
+                })
+                this.load();
+                this.props.navigation.navigate("Catalogo");
+            }
+        }
+    }
+
+    componentWillMount() {
+        this.load();
+    }
+
+    getSeals(props){
+        axios.get((this.serverBaseRoute + 'rest/client/medalla/all')).then(res => {
+            this.seals(res.data);
+        }).catch(function (error) {
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al obtener los productos del servidor, vuelva a intentar mas tarde.',
+                [
+                    { text: 'Entendido', onPress: () => props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
     getProducts(props) {
+        console.log("getting products");
         axios.post(this.serverBaseRoute + 'rest/client/producto/productosByMultiplesFiltros', {
             idVendedor: this.props.vendorSelected.id,
             idCategoria: null,
@@ -43,97 +82,113 @@ class CatalogView extends React.Component{
             cantItems: 100,
             precio: null
         }).then(res => {
-                this.products(res.data.productos);
-                this.setState({
-                    isLoadingProducts: false,
-                });
-            }).catch(function (error) {
-                Alert.alert(
-                    'Error',
-                    'Ocurrio un error al obtener los productos del servidor, vuelva a intentar mas tarde.',
-                    [
-                        { text: 'Entendido', onPress: () => props.actions.logout() },
-                    ],
-                    { cancelable: false },
-                );
+            this.products(res.data.productos);
+            this.setState({
+                isLoadingProducts: false,
             });
+        }).catch(function (error) {
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al obtener los productos del servidor, vuelva a intentar mas tarde.',
+                [
+                    { text: 'Entendido', onPress: () => props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+        });
     }
+
+    getProducers(props) {
+        axios.get((this.serverBaseRoute + 'rest/client/productor/all/' + props.vendorSelected.id)).then(res => {
+            this.producers(res.data);
+        }).catch(function (error) {
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al obtener los productos del servidor, vuelva a intentar mas tarde.',
+                [
+                    { text: 'Entendido', onPress: () => props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
+
 
     updateSearch = search => {
         this.setState({ search: search, searchHasChanged: true });
     }
 
-    showFilters(){
+    showFilters() {
 
     }
 
-    updateSearch(){
+    updateSearch() {
 
     }
 
-    render(){
+    render() {
 
         if (this.state.isLoadingProducts) {
             return <LoadingView></LoadingView>;
         }
 
-        return(
+        return (
             <View>
                 <Header containerStyle={styles.topHeader}>
-                        <Button
+                    <Button
+                        icon={
+                            <Icon name="bars" size={20} color="white" type='font-awesome' />
+                        }
+                        buttonStyle={styles.rightHeaderButton}
+                        onPress={() => this.props.navigation.openDrawer()}
+                    />
+                    <Image
+                        style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'contain' }}
+                        source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                    />
+                    {this.minWidth ? (
+                        !this.state.multipleCards ? (<Button
                             icon={
-                                <Icon name="bars" size={20} color="white" type='font-awesome' />
+                                <Icon name="th" size={20} color="white" type='font-awesome' />
                             }
-                            buttonStyle={styles.rightHeaderButton}
-                            onPress={() => this.props.navigation.openDrawer()}
-                        />
-                        <Image
-                            style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'contain' }}
-                            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
-                        />
-                        {this.minWidth ? (
-                            !this.state.multipleCards ? (<Button
-                                icon={
-                                    <Icon name="th" size={20} color="white" type='font-awesome' />
-                                }
-                                buttonStyle={styles.leftHeaderButton}
-                                onPress={() => this.switchStyle()}
-                            />) : (<Button
-                                icon={
-                                    <Icon name="th-large" size={20} color="white" type='font-awesome' />
-                                }
-                                buttonStyle={styles.leftHeaderButton}
-                                onPress={() => this.switchStyle()}
-                            />)
-                        )
-                            :
-                            null
-                        }
-                    </Header>
+                            buttonStyle={styles.leftHeaderButton}
+                            onPress={() => this.switchStyle()}
+                        />) : (<Button
+                            icon={
+                                <Icon name="th-large" size={20} color="white" type='font-awesome' />
+                            }
+                            buttonStyle={styles.leftHeaderButton}
+                            onPress={() => this.switchStyle()}
+                        />)
+                    )
+                        :
+                        null
+                    }
+                </Header>
                 <Header backgroundColor='white' containerStyle={styles.lowerHeaderStyle}
-                        leftComponent={
-                            <SearchBar
-                                placeholder="Tu busqueda comienza aquí"
-                                onChangeText={this.updateSearch}
-                                value={this.state.search}
-                                containerStyle={styles.searchContainer}
-                                inputContainerStyle={styles.inputSearchContainer}
-                                inputStyle={styles.inputStyle}
-                                leftIconContainerStyle={styles.iconContainerLeft}
-                                placeholderTextColor={"rgba(51, 102, 255, 1)"}
-                                searchIcon={<Icon name="search" type='font-awesome' size={16} iconStyle={styles.searchIcon} />}
-                                lightTheme
-                            />
-                        }
-                        rightComponent={
-                            <Button
-                                icon={<Icon name="caret-down" type='font-awesome' size={20} iconStyle={styles.iconLowerHeaderButton} />}
-                                buttonStyle={styles.lowerHeaderButton}
-                                onPress={() => this.showFilters()}
-                                title="Filtros"
-                                titleStyle={styles.lowerHeaderButtonTitle}
-                            />
-                   }
+                    leftComponent={
+                        <SearchBar
+                            placeholder="Tu busqueda comienza aquí"
+                            onChangeText={this.updateSearch}
+                            value={this.state.search}
+                            containerStyle={styles.searchContainer}
+                            inputContainerStyle={styles.inputSearchContainer}
+                            inputStyle={styles.inputStyle}
+                            leftIconContainerStyle={styles.iconContainerLeft}
+                            placeholderTextColor={"rgba(51, 102, 255, 1)"}
+                            searchIcon={<Icon name="search" type='font-awesome' size={16} iconStyle={styles.searchIcon} />}
+                            lightTheme
+                        />
+                    }
+                    rightComponent={
+                        <Button
+                            icon={<Icon name="caret-down" type='font-awesome' size={20} iconStyle={styles.iconLowerHeaderButton} />}
+                            buttonStyle={styles.lowerHeaderButton}
+                            onPress={() => this.showFilters()}
+                            title="Filtros"
+                            titleStyle={styles.lowerHeaderButtonTitle}
+                        />
+                    }
                 />
                 <ProductCardsView navigation={this.props.navigation}></ProductCardsView>
             </View>
