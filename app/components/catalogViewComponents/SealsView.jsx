@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { Image } from 'react-native-elements';
 import GLOBALS from '../../Globals';
 
@@ -9,8 +9,28 @@ class SealsView extends React.PureComponent {
         this.productSeals = this.setSeals(props.productSeals);
         this.producerSeals = this.setSeals(props.producerSeals);
         this.serverBaseRoute = GLOBALS.BASE_URL;
-        this.sealsStyle = props.sealsStyle;
-        this.sealsContainer = props.sealsContainer;
+        this.sealsStyle = this.setStyle(props.sealsStyle);
+        this.sealsContainer = this.setContainerStyle(props.sealsContainer);
+    }
+
+    setContainerStyle(data){
+        if(data == undefined){
+            return style.sealContainerStyle;
+        }
+        else
+        {               
+            return data
+        };
+    }
+
+    setStyle(data){
+        if(data == undefined){
+            return style.sealStyle;
+        }
+        else
+        {               
+            return data
+        };
     }
 
     setSeals(data){
@@ -29,28 +49,28 @@ class SealsView extends React.PureComponent {
     }
 
     render() {
-        if(this.productSeals.length == 0 && this.producerSeals.length == 0){
+        if(this.setSeals(this.props.producerSeals).length == 0 && this.setSeals(this.props.productSeals).length == 0){
             return (
                 <View style={this.sealsContainer} >
-                    <Image style={this.sealsStyle}  source={null}></Image>
+                    <Image style={this.sealsStyle} placeholderStyle={style.placeHolderStyle} source={null}></Image>
                 </View>
             );
         }
 
         return (
             <View style={this.sealsContainer} >
-                {this.productSeals !== null ? (
-                    this.productSeals.map((seal, i) => {
+                {this.setSeals(this.props.productSeals).length > 0 ? (
+                    this.props.productSeals.map((seal, i) => {
                         return (
-                                <Image style={this.sealsStyle} PlaceholderContent={<ActivityIndicator  color="#0000ff" />} source={{ uri: (this.normalizeText(this.serverBaseRoute + seal.pathImagen)) }} />
+                                <Image style={this.sealsStyle}  PlaceholderContent={<ActivityIndicator  color="#0000ff" />} source={{ uri: (this.normalizeText(this.serverBaseRoute + seal.pathImagen)) }} />
                             
                         );
                     })
                 ) : (null)}
-                {this.producerSeals !== null ? (
-                    this.producerSeals.map((seal, i) => {
+                {this.setSeals(this.props.producerSeals).length > 0 ? (
+                    this.props.producerSeals.map((seal, i) => {
                         return (
-                                <Image style={this.sealsStyle} PlaceholderContent={<ActivityIndicator color="#0000ff" />} source={{ uri: (this.normalizeText(this.serverBaseRoute + seal.pathImagen)) }} />
+                                <Image style={this.sealsStyle}  PlaceholderContent={<ActivityIndicator color="#0000ff" />} source={{ uri: (this.normalizeText(this.serverBaseRoute + seal.pathImagen)) }} />
                             
                         );
                     })
@@ -59,5 +79,24 @@ class SealsView extends React.PureComponent {
         );
     }
 }
+
+const style = StyleSheet.create({
+    
+    placeHolderStyle:{
+        backgroundColor:"transparent"
+    },
+
+    sealContainerStyle:{
+        flexDirection: "row",
+        flexWrap: "wrap",
+        marginBottom: 3,
+        height:120
+    },
+
+    sealStyle: {
+        height: 60,
+        width: 60,
+    },
+});
 
 export default SealsView;

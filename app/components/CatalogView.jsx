@@ -6,10 +6,9 @@ import ProductCardsView from '../containers/CatalogComponentsContainers/ProductC
 import LoadingView from '../components/LoadingView';
 import axios from 'axios';
 
-class CatalogView extends React.PureComponent{
+class CatalogView extends React.Component{
     constructor(props){
         super(props);
-        //console.log("props catalog",props);
         this.products = props.actions.products;
         this.flushproducts = props.actions.flushproducts;
         this.serverBaseRoute = GLOBALS.BASE_URL;
@@ -28,7 +27,7 @@ class CatalogView extends React.PureComponent{
     }
 
     componentWillMount(){
-        this.getProducts()
+        this.getProducts(this.props);
     }
 
     getProducts(props) {
@@ -41,7 +40,7 @@ class CatalogView extends React.PureComponent{
             numeroDeOrden: 1,
             query: "",
             pagina: 1,
-            cantItems: 500,
+            cantItems: 100,
             precio: null
         }).then(res => {
                 this.products(res.data.productos);
@@ -51,7 +50,7 @@ class CatalogView extends React.PureComponent{
             }).catch(function (error) {
                 Alert.alert(
                     'Error',
-                    'Ocurrio un error al obtener los datos del servidor, vuelva a intentar mas tarde.',
+                    'Ocurrio un error al obtener los productos del servidor, vuelva a intentar mas tarde.',
                     [
                         { text: 'Entendido', onPress: () => props.actions.logout() },
                     ],
@@ -136,7 +135,7 @@ class CatalogView extends React.PureComponent{
                             />
                    }
                 />
-                <ProductCardsView></ProductCardsView>
+                <ProductCardsView navigation={this.props.navigation}></ProductCardsView>
             </View>
         );
     }

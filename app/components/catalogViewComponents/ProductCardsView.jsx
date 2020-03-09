@@ -1,17 +1,34 @@
 import React from 'react'
-import { StyleSheet, View, Text, ScrollView, Dimensions, ActivityIndicator, Button } from 'react-native';
-import { Card, Badge, Icon, Image } from 'react-native-elements';
+import { StyleSheet, View, Text, ScrollView, Dimensions, ActivityIndicator } from 'react-native';
+import { Card, Badge, Icon, Image,Button } from 'react-native-elements';
 import GLOBALS from '../../Globals';
 import SealsView from '../catalogViewComponents/SealsView'
 
 class ProductCardsView extends React.PureComponent {
     constructor(props) {
         super(props);
+        //console.log(props.actions);
         this.serverBaseRoute = GLOBALS.BASE_URL;
+        this.navigation = props.navigation;
     }
 
     normalizeText(text) {
         return encodeURI(text);
+    }
+
+    async goToProductDetails(product){
+        let regex = /(<([^>]+)>)/ig;
+        product.descripcion = await product.descripcion.replace(regex, '');
+        product.descripcion = await product.descripcion.replace('&oacute;','ó');
+        product.descripcion = await product.descripcion.replace('&iexcl;','¡');
+        product.descripcion = await product.descripcion.replace('&aacute;','á');
+        product.descripcion = await product.descripcion.replace('&eacute;','é');
+        product.descripcion = await product.descripcion.replace('&iacute;','í');
+        product.descripcion = await product.descripcion.replace('&uacute;','ú');
+        product.descripcion = await product.descripcion.replace('&ntilde;','ñ');
+        product.descripcion = await product.descripcion.replace('&nbsp;',' ');
+        await this.props.actions.productSelected(product);
+        await this.navigation.navigate('Producto');              
     }
 
     render() {
@@ -64,8 +81,9 @@ class ProductCardsView extends React.PureComponent {
                                                 productSeals={product.medallasProducto}
                                                 producerSeals={product.medallasProductor} >
                                         </SealsView>
-                                        <View style={{flexDirection:"column", width: "50%",alignSelf:"flex-start" }}>
-                                            <Button containerStyle={stylesCards.containerButtonStyle} buttonStyle={stylesCards.buttonStyle} title="Agregar" />
+                                        <View style={{flexDirection:"row", width:"100%",alignSelf:"flex-start" }}>
+                                            <Button titleStyle={{color:"black"}} containerStyle={stylesCards.containerButtonStyle} buttonStyle={stylesCards.buttonStyle} title="Agregar"
+                                            onPress={()=> this.goToProductDetails(product)} />
                                         </View>
                                     </View>
                                 </Card>
@@ -318,12 +336,12 @@ const stylesCards = StyleSheet.create({
     },
 
     containerButtonStyle:{
-        flexDirection:"column-reverse",
+       
     }, 
 
     buttonStyle: {
-        backgroundColor: 'black',
-        width: "50%",
+        backgroundColor: "#f8f162",
+        width:"100%"
     },
 
     contentContainer: {
