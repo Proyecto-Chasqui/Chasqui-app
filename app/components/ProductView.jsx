@@ -26,9 +26,6 @@ class ProductView extends React.PureComponent {
         });
         return this.state.showCaracteristics;
     }
-    
-    componentWillUnmount() {
-    }
 
     haventSeals(){
         return this.props.productSelected.medallasProducto === null && this.props.productSelected.medallasProductor.length == 0  ;
@@ -116,6 +113,7 @@ class ProductView extends React.PureComponent {
                         {this.props.productSelected.destacado ? (<Text style={styles.featuredTag}>Destacado</Text>) : (<Text style={{marginTop: -10}}></Text>)}
                         <Text style={styles.productNameStyle}>{this.props.productSelected.nombreProducto}</Text>
                         <Image
+                            onStartShouldSetResponder={() =>null}
                             style={{ width: null, height: 280, alignSelf: 'center', resizeMode: 'contain' }}
                             source={{ uri: this.normalizeText(this.serverBaseRoute + this.props.productSelected.imagenPrincipal) }}
                         />
@@ -124,6 +122,7 @@ class ProductView extends React.PureComponent {
                     <ScrollView style={styles.descriptionViewContainer}>
                         <View style={{ height: 100 }}>
                                 <WebView
+                                    originWhitelist= {["*"]}
                                     scalesPageToFit={false}
                                     style={{backgroundColor:"transparent"}}
                                     containerStyle={{ }}

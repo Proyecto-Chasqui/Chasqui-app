@@ -2,9 +2,7 @@ import {
     PRODUCTIONSEALS,
   } from '../actions';
   
-  const initialState = {
-    
-  }
+  const initialState = []
   
   export default function productionSeals(state=initialState, action) {
       

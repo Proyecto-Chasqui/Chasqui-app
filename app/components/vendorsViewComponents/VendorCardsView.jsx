@@ -74,7 +74,7 @@ class VendorMultipleCardsView extends React.PureComponent {
                                             <View style={stylesCards.viewTagsOrgAndSellStrat}>
                                                 <View style={stylesCards.viewBadgesTOrg}>
                                                     {(u.tagsTipoOrganizacion.map((tag) =>
-                                                        <Badge badgeStyle={stylesCards.badge} containerStyle={stylesCards.tagOrganizacion} value={this.props.multipleCards ? this.createScrollText(tag.nombre, stylesCards.textBadge) : <Text style={stylesCards.textBadge}>{this.cropText(tag.nombre)}</Text>} />
+                                                        <Badge key={tag.id} badgeStyle={stylesCards.badge} containerStyle={stylesCards.tagOrganizacion} value={this.props.multipleCards ? this.createScrollText(tag.nombre, stylesCards.textBadge) : <Text style={stylesCards.textBadge}>{this.cropText(tag.nombre)}</Text>} />
                                                     ))}
                                                 </View>
                                                 <View style={stylesCards.viewBadgesSellStrat}>
@@ -86,7 +86,7 @@ class VendorMultipleCardsView extends React.PureComponent {
                                             <View style={stylesCards.viewTagsZonesAndSellModes} >
                                                 <View style={stylesCards.viewZones}>
                                                     {(u.tagsZonaDeCobertura.map((tag) =>
-                                                        <Badge badgeStyle={stylesCards.badgeCobertura} containerStyle={stylesCards.tagOrganizacion} value={this.props.multipleCards ? this.createScrollText(tag.nombre, stylesCards.textBadge) : <Text style={stylesCards.textBadge}>{this.cropText(tag.nombre)}</Text>} />
+                                                        <Badge  key={tag.id} badgeStyle={stylesCards.badgeCobertura} containerStyle={stylesCards.tagOrganizacion} value={this.props.multipleCards ? this.createScrollText(tag.nombre, stylesCards.textBadge) : <Text style={stylesCards.textBadge}>{this.cropText(tag.nombre)}</Text>} />
                                                     ))}
                                                 </View>
                                                 <View style={stylesCards.viewBadgesSellingModes}>
@@ -97,7 +97,7 @@ class VendorMultipleCardsView extends React.PureComponent {
                                             </View>
                                             <View style={stylesCards.viewProducts}>
                                                 {(u.tagsTipoProductos.map((tag) =>
-                                                    <Badge badgeStyle={stylesCards.badgeProductos} containerStyle={stylesCards.tagOrganizacion} value={this.props.multipleCards ? this.createScrollText(tag.nombre, stylesCards.textBadge) : <Text style={stylesCards.textBadge} >{this.cropText(tag.nombre)}</Text>} />
+                                                    <Badge  key={tag.id} badgeStyle={stylesCards.badgeProductos} containerStyle={stylesCards.tagOrganizacion} value={this.props.multipleCards ? this.createScrollText(tag.nombre, stylesCards.textBadge) : <Text style={stylesCards.textBadge} >{this.cropText(tag.nombre)}</Text>} />
                                                 ))}
                                             </View>
                                         </Card>

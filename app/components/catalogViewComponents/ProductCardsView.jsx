@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, ScrollView, Dimensions, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Dimensions, FlatList, ActivityIndicator } from 'react-native';
 import { Card, Badge, Icon, Image,Button } from 'react-native-elements';
 import GLOBALS from '../../Globals';
 import SealsView from '../catalogViewComponents/SealsView'
@@ -41,16 +41,13 @@ class ProductCardsView extends React.PureComponent {
         }
 
         return (
-            <ScrollView>
-                <View style={stylesCards.flexView}>
-                    {this.props.products.map((product, i) => {
-                        return (
-                            <View style={stylesCards.wiewCard} key={product.id}>
+                <FlatList  numColumns={2} windowSize={15} data={this.props.products} renderItem={({ item }) =>                             
+                            <View style={stylesCards.wiewCard}>
                                 <Card containerStyle={stylesCards.card}>
                                     <View style={stylesCards.cardImageView}>
-                                        <Image style={stylesCards.cardImage} PlaceholderContent={<ActivityIndicator  size="large" color="#0000ff" />}  source={{ uri: (this.normalizeText(this.serverBaseRoute + product.imagenPrincipal)) }} />
+                                        <Image  onStartShouldSetResponder={() =>null} style={stylesCards.cardImage} PlaceholderContent={<ActivityIndicator  size="large" color="#0000ff" />}  source={{ uri: (this.normalizeText(this.serverBaseRoute + item.imagenPrincipal)) }} />
                                     </View>
-                                    {product.destacado ?
+                                    {item.destacado ?
                                         (<Badge badgeStyle={stylesCards.badge} containerStyle={stylesCards.tagDestacado}
                                             value={<Text style={stylesCards.textBadge}>Destacado</Text>} />
                                         ) : (
@@ -58,31 +55,30 @@ class ProductCardsView extends React.PureComponent {
                                     }
                                     <View style={{flexDirection:"column"}}>
                                         <View>
-                                            <Text style={stylesCards.priceStyle}>$ {product.precio}</Text>
+                                            <Text style={stylesCards.priceStyle}>$ {item.precio}</Text>
                                         </View>
                                         <View style={{ height: 50 }}>
-                                            <Text style={stylesCards.nameTextStyle}>{product.nombreProducto}</Text>
+                                            <Text style={stylesCards.nameTextStyle}>{item.nombreProducto}</Text>
                                         </View>
                                         <View style={{ height: 30 }}>
-                                            <Text style={stylesCards.nameProducerTextStyle}>{product.nombreFabricante}</Text>
+                                            <Text style={stylesCards.nameProducerTextStyle}>{item.nombreFabricante}</Text>
                                         </View>
                                         <SealsView sealsContainer={stylesCards.sealContainerStyle}
                                                 sealsStyle={stylesCards.sealStyle}
-                                                productSeals={product.medallasProducto}
-                                                producerSeals={product.medallasProductor} >
+                                                productSeals={item.medallasProducto}
+                                                producerSeals={item.medallasProductor} >
                                         </SealsView>
                                         <View style={{flexDirection:"row", width:"100%",alignSelf:"flex-start" }}>
                                             <Button titleStyle={{color:"black"}} containerStyle={stylesCards.containerButtonStyle} buttonStyle={stylesCards.buttonStyle} title="Agregar"
-                                            onPress={()=> this.goToProductDetails(product)} />
+                                            onPress={()=> this.goToProductDetails(item)} />
                                         </View>
                                     </View>
                                 </Card>
                             </View>
-                        )
-                    }
-                    )}
-                </View>
-            </ScrollView>
+                            }
+                            keyExtractor={item => item.idProducto}
+                            >
+                    </FlatList>
         )
     }
 }

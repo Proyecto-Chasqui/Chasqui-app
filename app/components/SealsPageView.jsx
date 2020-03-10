@@ -17,17 +17,19 @@ class SealsPageView extends React.PureComponent {
             <View style={{marginTop:25, marginBottom:25}}>
             {this.props.sealsSelected.map((seal, i) => {
                 return (
-                    <View>
+                    <View key={seal.idMedalla + i}> 
                         <Card containerStyle={styles.cardStyle}>
                             <View style={{ flexDirection: "column", width: Dimensions.get("window").width - 60 }}>
                                 <Image
+                                    onStartShouldSetResponder={() =>null}
                                     containerStyle={{ alignSelf: "center" }}
                                     style={{ width: 150, height: 150, marginBottom:5, resizeMode: 'stretch' }}
                                     source={{ uri: this.serverBaseRoute + seal.pathImagen }}
                                 />
                             </View>
-                            <View style={{ height: 200 }}>
+                            <View  style={{ height: 200 }}>
                                 <WebView
+                                    originWhitelist= {["*"]}
                                     scalesPageToFit={false}
                                     containerStyle={{ height: 100, }}
                                     source={{ html: seal.descripcion }}

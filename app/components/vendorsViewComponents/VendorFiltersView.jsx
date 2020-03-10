@@ -46,7 +46,7 @@ class VendorFiltersView extends React.PureComponent {
         props.showFilter = !props.showFilter;
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.getVendorsTags(this.props);
     }
 

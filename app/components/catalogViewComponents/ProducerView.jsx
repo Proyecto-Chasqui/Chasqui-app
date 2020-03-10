@@ -9,7 +9,6 @@ import axios from 'axios';
 class ProducerView extends React.PureComponent{
     constructor(props){
         super(props)
-        console.log("path",this.props.producerSelected.pathImagen);
         this.serverBaseRoute = GLOBALS.BASE_URL;
     }
     
@@ -26,7 +25,7 @@ class ProducerView extends React.PureComponent{
                 </View>
                 {this.props.producerSelected.pathImagen === null ? 
                 (
-                    <Image style={{ width: Dimensions.get("window").width, height: 300, alignSelf: 'center', resizeMode: 'contain' }}
+                    <Image onStartShouldSetResponder={() =>null} style={{ width: Dimensions.get("window").width, height: 300, alignSelf: 'center', resizeMode: 'contain' }}
                     source={ require('./catalogAssets/imagennodisponible.png') }
                     PlaceholderContent={<ActivityIndicator />}
                     />

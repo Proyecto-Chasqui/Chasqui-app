@@ -48,7 +48,7 @@ class VendorsView extends React.PureComponent {
         })
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.getVendors(this.props);
     }
 

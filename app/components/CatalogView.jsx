@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, Dimensions } from 'react-native';
 import { Header, Button, Icon, SearchBar, Image } from 'react-native-elements';
 import GLOBALS from '../Globals';
 import ProductCardsView from '../containers/CatalogComponentsContainers/ProductCards';
 import LoadingView from '../components/LoadingView';
+import ProductFilterView from '../containers/CatalogComponentsContainers/ProductFilter';
 import axios from 'axios';
 
 class CatalogView extends React.Component {
@@ -50,7 +51,9 @@ class CatalogView extends React.Component {
         }
     }
 
-    componentWillMount() {
+
+
+    componentDidMount() {
         this.load();
     }
 
@@ -68,8 +71,22 @@ class CatalogView extends React.Component {
             );
         });
     }
+
+    stopSearch() {
+        this.setState({ searchHasChanged: false });
+    }
+
+    showFilters() {
+        this.setState({
+            isVisible: !this.state.isVisible
+        })
+    }
+
+    isLoadingSearch(value) {
+        this.setState({ isLoadingSearchProducts: value });
+    }
+
     getProducts(props) {
-        console.log("getting products");
         axios.post(this.serverBaseRoute + 'rest/client/producto/productosByMultiplesFiltros', {
             idVendedor: this.props.vendorSelected.id,
             idCategoria: null,
@@ -117,23 +134,18 @@ class CatalogView extends React.Component {
     updateSearch = search => {
         this.setState({ search: search, searchHasChanged: true });
     }
-
-    showFilters() {
-
-    }
-
-    updateSearch() {
-
+    isLoadingComponent(value) {
+        this.setState({ isLoadingFilterComponent: value });
     }
 
     render() {
 
-        if (this.state.isLoadingProducts) {
+        if (this.state.isLoadingProducts || this.state.isLoadingFilterComponent) {
             return <LoadingView></LoadingView>;
         }
 
         return (
-            <View>
+            <View style={{height:Dimensions.get("window").height}}>
                 <Header containerStyle={styles.topHeader}>
                     <Button
                         icon={
@@ -146,24 +158,13 @@ class CatalogView extends React.Component {
                         style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'contain' }}
                         source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                     />
-                    {this.minWidth ? (
-                        !this.state.multipleCards ? (<Button
-                            icon={
-                                <Icon name="th" size={20} color="white" type='font-awesome' />
-                            }
-                            buttonStyle={styles.leftHeaderButton}
-                            onPress={() => this.switchStyle()}
-                        />) : (<Button
-                            icon={
-                                <Icon name="th-large" size={20} color="white" type='font-awesome' />
-                            }
-                            buttonStyle={styles.leftHeaderButton}
-                            onPress={() => this.switchStyle()}
-                        />)
-                    )
-                        :
-                        null
-                    }
+                    <Button
+                        icon={
+                            <Icon name="shopping-cart" size={20} color="white" type='font-awesome' />
+                        }
+                        buttonStyle={styles.leftHeaderButton}
+                        onPress={() => null}
+                    />
                 </Header>
                 <Header backgroundColor='white' containerStyle={styles.lowerHeaderStyle}
                     leftComponent={
@@ -190,7 +191,20 @@ class CatalogView extends React.Component {
                         />
                     }
                 />
-                <ProductCardsView navigation={this.props.navigation}></ProductCardsView>
+                <ProductFilterView showFilter={() => this.showFilters()}
+                        isVisible={this.state.isVisible}
+                        searchValue={this.state.search}
+                        searchHasChanged={this.state.searchHasChanged}
+                        functionStopSearch={() => this.stopSearch()}
+                        isLoadingSearch={(value) => this.isLoadingSearch(value)}
+                        isLoadingComponent={(value) => this.isLoadingComponent(value)}></ProductFilterView>
+                {
+                    this.state.isLoadingSearchProducts ?
+                        (<LoadingView textStyle={styles.loadingTextStyle}></LoadingView>)
+                        :
+                        (<ProductCardsView navigation={this.props.navigation}></ProductCardsView>)
+                }
+                
             </View>
         );
     }
@@ -304,7 +318,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         fontSize: 24,
         marginTop: 5,
-        color: 'black',
+        color: 'white',
         fontWeight: "bold",
         marginTop: "100%",
     },
