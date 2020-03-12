@@ -20,9 +20,9 @@ class ProducerView extends React.PureComponent{
         return (
             <View style={{backgroundColor:"white"}}>
                 <View style={{marginTop:25, marginBottom:25}}>
-                <View style={styles.producerNameContainer}>
+                <ScrollView style={styles.producerNameContainer}>
                     <Text style={styles.producerName}>{this.props.producerSelected.nombreProductor}</Text>
-                </View>
+                </ScrollView>
                 {this.props.producerSelected.pathImagen === null ? 
                 (
                     <Image onStartShouldSetResponder={() =>null} style={{ width: Dimensions.get("window").width, height: 300, alignSelf: 'center', resizeMode: 'contain' }}

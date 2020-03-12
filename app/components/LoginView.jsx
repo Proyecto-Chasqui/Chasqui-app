@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, Alert, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, Alert, View, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { Input, Image, Button } from 'react-native-elements';
 import { Formik } from 'formik';
 import axios from 'axios';
@@ -33,14 +33,14 @@ class LoginView extends React.PureComponent {
       .then(res => {
         this.login(res.data);
       }).catch(function (error) {
-        Alert.alert('Error', 'Credenciales invalidas, verifique usuario y/o contraseña');
+        Alert.alert('Error', 'Credenciales inválidas, verifique usuario y/o contraseña');
       });
 
   }
 
   render() {
     return (
-      <View style={styles.principalContainer}>
+      <KeyboardAvoidingView style={styles.principalContainer} behavior="padding" enabled>
         <Formik
           initialValues={{ email: '', contraseña: '' }}
           onSubmit={values => this.handleSubmit(values)}
@@ -62,7 +62,7 @@ class LoginView extends React.PureComponent {
                   placeholderTextColor="white"
                   onChangeText={handleChange('email')}
                   onBlur={handleBlur('email')}
-                  placeholder='Correo electronico'
+                  placeholder='Correo electrónico'
                   leftIcon={{ type: 'font-awesome', name: 'user' }}
                   value={values.email}
                 />
@@ -84,7 +84,7 @@ class LoginView extends React.PureComponent {
               </View>
               <View style={styles.lowerButtonsContainer} >
                 <View style={styles.leftButton}>
-                  <Text style={styles.TextStyle} onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}> Olvide mi contraseña </Text>
+                  <Text style={styles.TextStyle} onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}> Olvidé mi contraseña </Text>
                 </View>
                 <View style={styles.divisor} />
                 <View style={styles.rightButton}>
@@ -93,14 +93,13 @@ class LoginView extends React.PureComponent {
               </View>
               <View style={styles.middleButton} >
                 <View>
-                  <Text style={styles.TextStyle} onPress={() => this.loginAsGuest()}> Ingresar como invitado </Text>
+                  <Text style={styles.TextStyle} onPress={() => this.loginAsGuest()}> Ingresar como invitadx </Text>
                 </View>
               </View>
             </View>
           )}
         </Formik>
-
-      </View>
+    </KeyboardAvoidingView>
     );
   }
 }

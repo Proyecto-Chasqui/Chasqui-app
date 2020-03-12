@@ -20,7 +20,6 @@ class QuantitySelectorView extends React.PureComponent{
 
     onChangeText(text){
         let reg = new RegExp('^[0-9]+$');
-        console.log(reg.test(text));
         if(reg.test(text)){
             let adjustedValue = parseInt(text, 10).toString();
             this.setState({

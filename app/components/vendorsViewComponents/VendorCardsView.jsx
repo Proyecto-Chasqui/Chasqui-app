@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Card, Badge, Icon } from 'react-native-elements';
 import TextTicker from 'react-native-text-ticker';
 import GLOBALS from '../../Globals';
@@ -69,7 +69,9 @@ class VendorMultipleCardsView extends React.PureComponent {
                                     <View style={stylesCards.wiewCard}  key={u.id}>
                                         <Card containerStyle={stylesCards.card}>
                                             <View style={stylesCards.cardImageView}>
-                                                <Image onStartShouldSetResponder={() => this.selectVendor(u)} style={stylesCards.cardImage} source={{ uri: (this.serverBaseRoute + u.imagen) }} />
+                                            <TouchableOpacity onPress={() => this.selectVendor(u)}>
+                                                <Image style={stylesCards.cardImage} source={{ uri: (this.serverBaseRoute + u.imagen) }} />
+                                            </TouchableOpacity>
                                             </View>
                                             <View style={stylesCards.viewTagsOrgAndSellStrat}>
                                                 <View style={stylesCards.viewBadgesTOrg}>

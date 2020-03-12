@@ -27,6 +27,8 @@ class CatalogView extends React.Component {
             isLoadingProductSeals: true,
             isLoadingProductionSeals: true,
             searchHasChanged: false,
+            viewSelected: GLOBALS.CATALOG_VIEW_MODES.TWOCARDS,
+            viewSize:2,
         };
     }
 
@@ -138,6 +140,13 @@ class CatalogView extends React.Component {
         this.setState({ isLoadingFilterComponent: value });
     }
 
+    viewSelected(value){
+        this.setState({
+            viewSelected: value,
+            viewSize: (value === undefined || value === GLOBALS.CATALOG_VIEW_MODES.TWOCARDS )?(2):(1),
+        });
+    }
+
     render() {
 
         if (this.state.isLoadingProducts || this.state.isLoadingFilterComponent) {
@@ -155,7 +164,7 @@ class CatalogView extends React.Component {
                         onPress={() => this.props.navigation.openDrawer()}
                     />
                     <Image
-                        style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'contain' }}
+                        style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
                         source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                     />
                     <Button
@@ -197,12 +206,14 @@ class CatalogView extends React.Component {
                         searchHasChanged={this.state.searchHasChanged}
                         functionStopSearch={() => this.stopSearch()}
                         isLoadingSearch={(value) => this.isLoadingSearch(value)}
-                        isLoadingComponent={(value) => this.isLoadingComponent(value)}></ProductFilterView>
+                        isLoadingComponent={(value) => this.isLoadingComponent(value)}
+                        viewSelected={(value) => this.viewSelected(value)}>
+                </ProductFilterView>
                 {
                     this.state.isLoadingSearchProducts ?
                         (<LoadingView textStyle={styles.loadingTextStyle}></LoadingView>)
                         :
-                        (<ProductCardsView navigation={this.props.navigation}></ProductCardsView>)
+                        (<ProductCardsView size={this.state.viewSize} viewSelected={this.state.viewSelected} navigation={this.props.navigation}></ProductCardsView>)
                 }
                 
             </View>

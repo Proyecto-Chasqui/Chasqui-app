@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, Dimensions, View, Text} from 'react-native'
+import {StyleSheet, Dimensions, View, Text, Alert} from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
 import { Button, Icon, Overlay, CheckBox, Image } from 'react-native-elements';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import GLOBALS from '../../Globals'
 class ProductFilterView extends React.PureComponent{
     constructor(props){
         super(props)
+        this.typesViewsGlobals = [GLOBALS.CATALOG_VIEW_MODES.TWOCARDS, GLOBALS.CATALOG_VIEW_MODES.SINGLECARD, GLOBALS.CATALOG_VIEW_MODES.LIST];
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.productionSeals = props.actions.productionSeals;
         this.productSeals = props.actions.productSeals;
@@ -22,6 +23,7 @@ class ProductFilterView extends React.PureComponent{
             dataChecksProducers: [],
             dataChecksProductSeals: [],
             dataChecksProducerSeals:[],
+            dataChecksTypeView:[],
             selectedProducer:[],
             selectedCategories:[],
             selectedProductSeals:[],
@@ -99,7 +101,7 @@ class ProductFilterView extends React.PureComponent{
         });
     }
 
-    getProductSeals(){
+    getProductSeals(props){
         axios.get((this.serverBaseRoute + 'rest/client/medalla/producto/all')).then(res => {
             this.productSeals(res.data);
             this.constructDataForChecked();
@@ -115,7 +117,7 @@ class ProductFilterView extends React.PureComponent{
         });
     }
 
-    getProductCategories(){
+    getProductCategories(props){
         axios.get((this.serverBaseRoute + 'rest/client/categoria/all/' + this.props.vendorSelected.id)).then(res => {
             this.productCategories(res.data);
             this.constructDataForChecked();
@@ -136,6 +138,7 @@ class ProductFilterView extends React.PureComponent{
         const checksProducers = [];
         const checksProductSeals = [];
         const checksProducerSeals = [];
+        const checksTypeView =[];
         this.props.productCategories.map((u, i) => {
             checksCategories.push({ id: u.idCategoria, checked: false });
         })
@@ -148,11 +151,15 @@ class ProductFilterView extends React.PureComponent{
         this.props.productionSeals.map((u, i) => {
             checksProducerSeals.push({ id: u.idMedalla, checked: false });
         })
+        this.typesViewsGlobals.map((u, i) => {
+            checksTypeView.push({ id: i, checked: false });
+        })
         this.setState({
             dataChecksCategories: checksCategories,
             dataChecksProducers: checksProducers,
             dataChecksProductSeals: checksProductSeals,
-            dataChecksProducerSeals: checksProducerSeals
+            dataChecksProducerSeals: checksProducerSeals,
+            dataChecksTypeView: checksTypeView,
         })
     }
 
@@ -251,11 +258,33 @@ class ProductFilterView extends React.PureComponent{
         });
     }
 
+    onCheckTypeView(id){
+        const data = this.state.dataChecksTypeView;
+        const index = data.findIndex((x) => x.id === id);
+        data[index].checked = !data[index].checked;
+        this.unCheckOthers(data, index);
+        const selectedItems = [];
+        data.map((u, i) => {
+            if (u.checked) {
+                selectedItems.push(u.id);
+            }
+        });
+        if(selectedItems.length>0){
+            this.props.viewSelected(this.typesViewsGlobals[selectedItems[0]]), 
+            this.setState({
+                dataChecksTypeView: data,
+            });
+        }else{
+            data[index].checked = !data[index].checked;
+        }
+    }
+
     showCategoriesSet(){
         this.setState({
             showCategories: !this.state.showCategories,
             showProducers: false,
             showSeals: false,
+            showViews: false,
         })
     }
 
@@ -265,6 +294,7 @@ class ProductFilterView extends React.PureComponent{
             showCategories: false,
             showProducers: !this.state.showProducers,
             showSeals: false,
+            showViews: false,
         })
     }
 
@@ -273,6 +303,16 @@ class ProductFilterView extends React.PureComponent{
             showCategories: false,
             showProducers: false,
             showSeals: !this.state.showSeals,
+            showViews: false,
+        })
+    }
+
+    showViewTypesSet(){
+        this.setState({
+            showCategories: false,
+            showProducers: false,
+            showSeals: false,
+            showViews: !this.state.showViews,
         })
     }
 
@@ -347,6 +387,23 @@ class ProductFilterView extends React.PureComponent{
                                     checkedIcon={<Image style={styles.badgeFilterSelected} source={{ uri: this.normalizeText(this.serverBaseRoute + u.pathImagen) }} />}
                                     uncheckedIcon={<Image style={styles.badgeFilterUnselected} source={{ uri: this.normalizeText(this.serverBaseRoute + u.pathImagen) }} />}                                    
                                     onPress={() => this.onCheckChangedProductSeal(u.idMedalla)}
+                                />);
+                            })
+                            }
+                        </ScrollView>
+                    </View>
+                    : null}
+                
+                <View style={styles.divisor} />
+                <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Ver resultados como"
+                    onPress={() => this.showViewTypesSet()} icon={<Icon iconStyle={styles.iconRevealButton} name="caret-down" iconRight={true} size={20} color={this.state.iconColor} type='font-awesome' />
+                    } iconRight />
+                {this.state.showViews ?
+                    <View style={styles.menuSelectorItems}>
+                        <ScrollView>
+                            {this.typesViewsGlobals.map((u, i) => {
+                                return (<CheckBox title={u} key={i} checked={this.state.dataChecksTypeView[i].checked}
+                                    onPress={() => this.onCheckTypeView(i)}
                                 />);
                             })
                             }
