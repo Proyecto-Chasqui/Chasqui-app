@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Alert, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Alert, Dimensions, BackHandler  } from 'react-native';
 import { Header, Button, Icon, SearchBar, Image } from 'react-native-elements';
 import GLOBALS from '../Globals';
 import ProductCardsView from '../containers/CatalogComponentsContainers/ProductCards';
@@ -10,11 +10,16 @@ import axios from 'axios';
 class CatalogView extends React.Component {
     constructor(props) {
         super(props);
+        console.log(this.props.navigation.dangerouslyGetState())
+        console.log(this.props.navigation)
         this.products = props.actions.products;
         this.producers = props.actions.producers;
+        this.zones = props.actions.zones;
         this.seals = props.actions.seals;
         this.flushproducts = props.actions.flushproducts;
         this.serverBaseRoute = GLOBALS.BASE_URL;
+        this.backButtonClick = this.backButtonClick.bind(this);
+        this.goBackCatalogs = this.goBackCatalogs.bind(this);
         this.vendorId = 0;
         this.state = {
             search: '',
@@ -38,8 +43,39 @@ class CatalogView extends React.Component {
             this.getProducts(this.props);
             this.getProducers(this.props);
             this.getSeals(this.props);
+            if(this.props.vendorSelected.few.seleccionDeDireccionDelUsuario){
+                this.getZones(this.props);
+            }
         }
     }
+
+    componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.backButtonClick);
+      }
+    
+      componentWillUnmount(){
+        BackHandler.removeEventListener('hardwareBackPress', this.backButtonClick);
+      }
+
+      goBackCatalogs(){
+        this.props.navigation.goBack(null);
+      }
+
+      backButtonClick(){
+        if(this.props.navigation && this.props.navigation.canGoBack() && this.props.navigation.dangerouslyGetState().index === 0){
+            Alert.alert(
+                'Pregunta',
+                '¿Desea volver a la lista de catalogos?',
+                [
+                    { text: 'Si', onPress: () => this.goBackCatalogs()},
+                    { text: 'No', onPress: () => null},
+                ],
+                { cancelable: true },
+            );
+            return true;
+        }
+        return false;
+      }
 
     componentDidUpdate() {
         if (this.props.vendorSelected.id !== undefined) {
@@ -54,7 +90,6 @@ class CatalogView extends React.Component {
     }
 
 
-
     componentDidMount() {
         this.load();
     }
@@ -66,6 +101,22 @@ class CatalogView extends React.Component {
             Alert.alert(
                 'Error',
                 'Ocurrio un error al obtener los productos del servidor, vuelva a intentar mas tarde.',
+                [
+                    { text: 'Entendido', onPress: () => props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
+
+    
+    getZones(props){
+        axios.get((this.serverBaseRoute + '/rest/client/zona/all/' + this.props.vendorSelected.id)).then(res => {
+            this.zones(res.data);
+        }).catch(function (error) {
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al obtener las zonas del servidor, vuelva a intentar mas tarde.',
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],

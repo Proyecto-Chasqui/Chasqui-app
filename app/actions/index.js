@@ -16,6 +16,8 @@ export const PRODUCTUNSELECTED = 'PRODUCTUNSELECTED';
 export const PRODUCERS = 'PRODUCERS';
 export const PRODUCERSELECTED = 'PRODUCERSELECTED';
 export const PRODUCTCATEGORIES = 'PRODUCTCATEGORIES';
+export const ZONES = 'ZONES';
+export const CLEANZONES = 'CLEANZONES';
 
 export const login = userData => ({type: LOGIN, userData});
 export const logout = () => ({type: LOGOUT});
@@ -35,3 +37,5 @@ export const productUnselected = () => ({type: PRODUCTUNSELECTED});
 export const producers = (producersStack) => ({type:PRODUCERS, producersStack});
 export const producerSelected = (producer) => ({type: PRODUCERSELECTED, producer});
 export const productCategories = (categoriesStack) => ({type: PRODUCTCATEGORIES, categoriesStack});
+export const zones = (zoneStack) => ({type:ZONES, zoneStack});
+export const cleanZones = () => ({type:CLEANZONES});

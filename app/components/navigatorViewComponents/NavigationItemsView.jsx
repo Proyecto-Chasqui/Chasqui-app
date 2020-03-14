@@ -8,22 +8,44 @@ class NavigationItemsView extends React.PureComponent {
         this.navigation = props.navigation;
     }
 
-    goToCatalogs(){
+    goToCatalogs() {
         //this.props.actions.vendorUnSelected();
         //this.props.actions.flushproducts();
         this.navigation.navigate('Catalogos');
+        this.navigation.reset({
+            index: 0,
+            routes: [{ name: 'Catalogos' }],
+          });
+    }
+
+    goToDeliveryZones() {
+        this.navigation.navigate('Entregas');
+    }
+
+    showControls(){
+        return this.props.vendorSelected.id !== undefined;
     }
 
     render() {
         return (
             <View style={{ backgroundColor: "white" }}>
-                {this.props.vendorSelected.id !== undefined ? (
-                    <Button
-                        buttonStyle={styles.menuButtonSection}
-                        onPress={() => this.goToCatalogs()}
-                        title="Catalogos"
-                        titleStyle={styles.menuButtonTitleSection}
-                    />
+                {this.showControls() ? (
+                    <View>
+                        <Button
+                            buttonStyle={styles.menuButtonSection}
+                            onPress={() => this.goToCatalogs()}
+                            title="Catalogos"
+                            titleStyle={styles.menuButtonTitleSection}
+                        />
+                        {this.props.vendorSelected.few.seleccionDeDireccionDelUsuario ?
+                            (<Button
+                                buttonStyle={styles.menuButtonSection}
+                                onPress={() => this.goToDeliveryZones()}
+                                title="Entregas"
+                                titleStyle={styles.menuButtonTitleSection}
+                            />) : (null)
+                        }
+                    </View>
                 ) : (
                         null
                     )}

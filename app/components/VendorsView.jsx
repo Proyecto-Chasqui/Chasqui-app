@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Alert, Image, Dimensions } from 'react-native';
+import { StyleSheet, View, Alert, Image, Dimensions, BackHandler } from 'react-native';
 import axios from 'axios';
 import LoadingView from '../components/LoadingView';
 import { Header, Button, Icon, SearchBar } from 'react-native-elements';

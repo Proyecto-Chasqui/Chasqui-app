@@ -55,7 +55,6 @@ class NavigatorView extends React.PureComponent {
     return (
       <NavigationContainer>
         {this.props.user.token == "" ? (
-          // No token found, user isn't signed in
           <StackLogin.Navigator>
             <StackLogin.Screen
               name="Bienvenidxs"
