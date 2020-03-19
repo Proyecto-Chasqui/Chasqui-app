@@ -6,6 +6,12 @@ class NavigationOptionItemsView extends React.PureComponent{
     constructor(props){
         super(props)
         this.logout = props.actions.logout;
+        this.navigation = props.navigation;
+    }
+
+    sendLogout(){
+      this.navigation.closeDrawer()
+      this.logout()
     }
 
     logoutAlert(){
@@ -13,14 +19,14 @@ class NavigationOptionItemsView extends React.PureComponent{
           'Cerrar sesión',
          '¿Esta seguro que desea cerrar la sesión?',
          [
-          {text: 'Si', onPress: () =>  this.logout()},
+          {text: 'Si', onPress: () =>  this.sendLogout()},
           {text: 'No', onPress: () => null},
          ])
       }
 
     render(){
         return(
-            <View>
+            <View style={{marginTop:10}}>
             { this.props.user.id !== 0 ?(
                 <View style={{marginLeft:20, backgroundColor:"#ededed" }}>
                 <Button icon={<Icon name="bell" type='font-awesome' size={20} iconStyle={styles.iconMenuButton} />}

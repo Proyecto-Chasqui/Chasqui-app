@@ -41,8 +41,8 @@ class SubNavigatorView extends React.PureComponent{
 
     render(){
         return(
-            <Stack.Navigator initialRouteName="Catalogo" transitionConfig={NavigationConfig}>
-                  <Stack.Screen name='Catalogo' component={Catalog}  options={{headerShown: false}}/>
+            <Stack.Navigator initialRouteName="Productos" transitionConfig={NavigationConfig}>
+                  <Stack.Screen name='Productos' component={Catalog}  options={{headerShown: false}}/>
                   <Stack.Screen name='Producto' component={Product}  options={{headerShown: false}} />
                   <Stack.Screen name='Fabricante' component={Producer}  options={{headerShown: false}} />
                   <Stack.Screen name='Sellos' component={SealsPage}  options={{headerShown: false}} />

@@ -5,7 +5,8 @@ import DeliveryZonesView from '../components/DeliveryZonesView';
 
 const mapStateToProps = state => ({
   vendorSelected: state.vendorSelected,
-  zones: state.zones,
+  zones: state.zones,  
+  sellerPoints: state.sellerPoints,
 });
 
 const mapDispatchToProps = dispatch => ({

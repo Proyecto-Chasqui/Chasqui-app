@@ -4,6 +4,7 @@ import Vendors from '../containers/Vendors';
 import Catalog from '../containers/Catalog';
 import Product from '../containers/Product';
 import Producer from '../containers/CatalogComponentsContainers/Producer';
+import Entregas from '../containers/DeliveryZones';
 import SubNavigatorView from './SubNavigatorView';
 import NavigationItems from '../containers/NavigatorComponentContainters/NavigationItems';
 import NavigationOptionItems from '../containers/NavigatorComponentContainters/NavigationOptionItems';
@@ -36,19 +37,9 @@ class NavigatorView extends React.PureComponent {
           <Text style={styles.nickText}>{(this.props.user.nickname).toUpperCase()}</Text>
         </Header>
         <NavigationItems navigation={props.navigation}></NavigationItems>
-        <NavigationOptionItems></NavigationOptionItems>
+        <NavigationOptionItems navigation={props.navigation}></NavigationOptionItems>
       </ScrollView>
     );
-  }
-
-  catalogos(){
-    return(
-      <Stack.Navigator initialRouteName="Catalogo">
-            <Stack.Screen name='Catalogo' component={Catalog} />
-            <Stack.Screen name='Producto' component={Product} />
-            <Stack.Screen name='Fabricante' component={Producer} />
-      </Stack.Navigator>
-    )
   }
 
   render() {

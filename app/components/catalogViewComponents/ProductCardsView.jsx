@@ -8,7 +8,6 @@ import SealsView from '../catalogViewComponents/SealsView'
 class ProductCardsView extends React.PureComponent {
     constructor(props) {
         super(props);
-        //console.log(props.actions);
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.catalogViewModes = GLOBALS.CATALOG_VIEW_MODES;
         this.navigation = props.navigation;

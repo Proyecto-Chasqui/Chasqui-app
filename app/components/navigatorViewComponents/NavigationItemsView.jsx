@@ -9,8 +9,8 @@ class NavigationItemsView extends React.PureComponent {
     }
 
     goToCatalogs() {
-        //this.props.actions.vendorUnSelected();
-        //this.props.actions.flushproducts();
+        this.props.actions.vendorUnSelected();
+        this.props.actions.flushproducts();
         this.navigation.navigate('Catalogos');
         this.navigation.reset({
             index: 0,
@@ -22,29 +22,41 @@ class NavigationItemsView extends React.PureComponent {
         this.navigation.navigate('Entregas');
     }
 
+    goToProducts(){
+        this.navigation.navigate('Productos');
+    }
+
     showControls(){
         return this.props.vendorSelected.id !== undefined;
     }
 
     render() {
         return (
-            <View style={{ backgroundColor: "white" }}>
+            <View style={{ backgroundColor: "white"}}>
                 {this.showControls() ? (
-                    <View>
+                    <View style={{ backgroundColor: "white",marginTop:10,marginBottom:10, alignItems:"flex-start", }}>
                         <Button
                             buttonStyle={styles.menuButtonSection}
                             onPress={() => this.goToCatalogs()}
-                            title="Catalogos"
+                            title="Catálogos"
                             titleStyle={styles.menuButtonTitleSection}
                         />
-                        {this.props.vendorSelected.few.seleccionDeDireccionDelUsuario ?
-                            (<Button
+                        {this.props.vendorSelected.few.seleccionDeDireccionDelUsuario || this.props.vendorSelected.few.puntoDeEntrega ?
+                        (                        
+                        <Button
                                 buttonStyle={styles.menuButtonSection}
                                 onPress={() => this.goToDeliveryZones()}
                                 title="Entregas"
                                 titleStyle={styles.menuButtonTitleSection}
-                            />) : (null)
+                        />
+                        ) : (null)
                         }
+                        <Button
+                            buttonStyle={styles.menuButtonSection}
+                            onPress={() => this.goToProducts()}
+                            title="Productos"
+                            titleStyle={styles.menuButtonTitleSection}
+                        />
                     </View>
                 ) : (
                         null
@@ -61,8 +73,8 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
     },
     menuButtonTitleSection: {
-        marginRight: 100,
-        color: "black"
+        color: "black",
+        marginLeft: 50
     }
 });
 

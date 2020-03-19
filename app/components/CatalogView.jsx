@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Alert, Dimensions, BackHandler  } from 'react-native';
+import { View, Text, StyleSheet, Alert, Dimensions, BackHandler } from 'react-native';
 import { Header, Button, Icon, SearchBar, Image } from 'react-native-elements';
 import GLOBALS from '../Globals';
 import ProductCardsView from '../containers/CatalogComponentsContainers/ProductCards';
@@ -10,12 +10,13 @@ import axios from 'axios';
 class CatalogView extends React.Component {
     constructor(props) {
         super(props);
-        console.log(this.props.navigation.dangerouslyGetState())
-        console.log(this.props.navigation)
         this.products = props.actions.products;
         this.producers = props.actions.producers;
         this.zones = props.actions.zones;
+        this.cleanZones = props.actions.cleanZones;
         this.seals = props.actions.seals;
+        this.sellerPoints = props.actions.sellerPoints;
+        this.cleanSellerPoints = props.actions.cleanSellerPoints;
         this.flushproducts = props.actions.flushproducts;
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.backButtonClick = this.backButtonClick.bind(this);
@@ -33,7 +34,7 @@ class CatalogView extends React.Component {
             isLoadingProductionSeals: true,
             searchHasChanged: false,
             viewSelected: GLOBALS.CATALOG_VIEW_MODES.TWOCARDS,
-            viewSize:2,
+            viewSize: 2,
         };
     }
 
@@ -43,39 +44,45 @@ class CatalogView extends React.Component {
             this.getProducts(this.props);
             this.getProducers(this.props);
             this.getSeals(this.props);
-            if(this.props.vendorSelected.few.seleccionDeDireccionDelUsuario){
+            this.cleanZones();
+            this.cleanSellerPoints();
+            if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario) {
                 this.getZones(this.props);
+            }
+            if (this.props.vendorSelected.few.puntoDeEntrega) {
+                this.getSellerPoints(this.props);
             }
         }
     }
 
     componentWillMount() {
         BackHandler.addEventListener('hardwareBackPress', this.backButtonClick);
-      }
-    
-      componentWillUnmount(){
+    }
+
+    componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.backButtonClick);
-      }
+    }
 
-      goBackCatalogs(){
+    goBackCatalogs() {
+        this.props.actions.vendorUnSelected();
         this.props.navigation.goBack(null);
-      }
+    }
 
-      backButtonClick(){
-        if(this.props.navigation && this.props.navigation.canGoBack() && this.props.navigation.dangerouslyGetState().index === 0){
+    backButtonClick() {
+        if (this.props.navigation && this.props.navigation.canGoBack() && this.props.navigation.dangerouslyGetState().index === 0) {
             Alert.alert(
                 'Pregunta',
-                '¿Desea volver a la lista de catalogos?',
+                '¿Desea volver a la lista de catálogos?',
                 [
-                    { text: 'Si', onPress: () => this.goBackCatalogs()},
-                    { text: 'No', onPress: () => null},
+                    { text: 'Si', onPress: () => this.goBackCatalogs() },
+                    { text: 'No', onPress: () => null },
                 ],
                 { cancelable: true },
             );
             return true;
         }
         return false;
-      }
+    }
 
     componentDidUpdate() {
         if (this.props.vendorSelected.id !== undefined) {
@@ -94,7 +101,7 @@ class CatalogView extends React.Component {
         this.load();
     }
 
-    getSeals(props){
+    getSeals(props) {
         axios.get((this.serverBaseRoute + 'rest/client/medalla/all')).then(res => {
             this.seals(res.data);
         }).catch(function (error) {
@@ -109,14 +116,29 @@ class CatalogView extends React.Component {
         });
     }
 
-    
-    getZones(props){
+
+    getZones(props) {
         axios.get((this.serverBaseRoute + '/rest/client/zona/all/' + this.props.vendorSelected.id)).then(res => {
             this.zones(res.data);
         }).catch(function (error) {
             Alert.alert(
                 'Error',
                 'Ocurrio un error al obtener las zonas del servidor, vuelva a intentar mas tarde.',
+                [
+                    { text: 'Entendido', onPress: () => props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
+
+    getSellerPoints(props) {
+        axios.get((this.serverBaseRoute + 'rest/client/vendedor/puntosDeRetiro/' + this.props.vendorSelected.nombreCorto)).then(res => {
+            this.sellerPoints(res.data.puntosDeRetiro);
+        }).catch(function (error) {
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al obtener los puntos de retiro del servidor, vuelva a intentar mas tarde.',
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],
@@ -191,10 +213,10 @@ class CatalogView extends React.Component {
         this.setState({ isLoadingFilterComponent: value });
     }
 
-    viewSelected(value){
+    viewSelected(value) {
         this.setState({
             viewSelected: value,
-            viewSize: (value === undefined || value === GLOBALS.CATALOG_VIEW_MODES.TWOCARDS )?(2):(1),
+            viewSize: (value === undefined || value === GLOBALS.CATALOG_VIEW_MODES.TWOCARDS) ? (2) : (1),
         });
     }
 
@@ -205,7 +227,7 @@ class CatalogView extends React.Component {
         }
 
         return (
-            <View style={{height:Dimensions.get("window").height}}>
+            <View style={{ height: Dimensions.get("window").height }}>
                 <Header containerStyle={styles.topHeader}>
                     <Button
                         icon={
@@ -252,13 +274,13 @@ class CatalogView extends React.Component {
                     }
                 />
                 <ProductFilterView showFilter={() => this.showFilters()}
-                        isVisible={this.state.isVisible}
-                        searchValue={this.state.search}
-                        searchHasChanged={this.state.searchHasChanged}
-                        functionStopSearch={() => this.stopSearch()}
-                        isLoadingSearch={(value) => this.isLoadingSearch(value)}
-                        isLoadingComponent={(value) => this.isLoadingComponent(value)}
-                        viewSelected={(value) => this.viewSelected(value)}>
+                    isVisible={this.state.isVisible}
+                    searchValue={this.state.search}
+                    searchHasChanged={this.state.searchHasChanged}
+                    functionStopSearch={() => this.stopSearch()}
+                    isLoadingSearch={(value) => this.isLoadingSearch(value)}
+                    isLoadingComponent={(value) => this.isLoadingComponent(value)}
+                    viewSelected={(value) => this.viewSelected(value)}>
                 </ProductFilterView>
                 {
                     this.state.isLoadingSearchProducts ?
@@ -266,7 +288,7 @@ class CatalogView extends React.Component {
                         :
                         (<ProductCardsView size={this.state.viewSize} viewSelected={this.state.viewSelected} navigation={this.props.navigation}></ProductCardsView>)
                 }
-                
+
             </View>
         );
     }

@@ -18,6 +18,8 @@ export const PRODUCERSELECTED = 'PRODUCERSELECTED';
 export const PRODUCTCATEGORIES = 'PRODUCTCATEGORIES';
 export const ZONES = 'ZONES';
 export const CLEANZONES = 'CLEANZONES';
+export const SELLERPOINTS = 'SELLERPOINTS';
+export const CLEANSELLERPOINT = 'CLEANSELLERPOINT';
 
 export const login = userData => ({type: LOGIN, userData});
 export const logout = () => ({type: LOGOUT});
@@ -39,3 +41,5 @@ export const producerSelected = (producer) => ({type: PRODUCERSELECTED, producer
 export const productCategories = (categoriesStack) => ({type: PRODUCTCATEGORIES, categoriesStack});
 export const zones = (zoneStack) => ({type:ZONES, zoneStack});
 export const cleanZones = () => ({type:CLEANZONES});
+export const sellerPoints = (sellerPointsStack) => ({type:SELLERPOINTS, sellerPointsStack});
+export const cleanSellerPoints = () => ({type:CLEANSELLERPOINT})
