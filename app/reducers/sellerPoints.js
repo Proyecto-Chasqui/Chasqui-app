@@ -1,5 +1,5 @@
 import {
-    SELLERPOINTS,
+    SELLERPOINTS, CLEANSELLERPOINT
 } from '../actions';
   
 const initialState = []

@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { Card, Badge, Icon, Image, Button, Avatar  } from 'react-native-elements';
 import GLOBALS from '../../Globals';
-import SealsView from '../catalogViewComponents/SealsView'
+import SealsView from '../catalogViewComponents/SealsView';
 
 
 class ProductCardsView extends React.PureComponent {
@@ -441,7 +441,7 @@ const stylesMultipleCards = StyleSheet.create({
         marginRight: 0,
         resizeMode: 'cover',
         borderTopRightRadius: 2,
-        borderTopLeftRadius: 2
+        borderTopLeftRadius: 2,
     },
 
     cardText: {

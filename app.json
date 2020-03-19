@@ -31,7 +31,7 @@
       "package": "org.proyectochasqui.ar",
       "versionCode": 1,
       "config": {
-        "googleMaps": { "apiKey": "putyourgoogleapikey" }   
+        "googleMaps": { "apiKey": "yourapikey" }   
      }
     },
     "description": ""
