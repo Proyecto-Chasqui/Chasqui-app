@@ -4,6 +4,7 @@ import Product from '../containers/Product';
 import Producer from '../containers/CatalogComponentsContainers/Producer';
 import SealsPage from '../containers/SealsPage';
 import DeliveryZones from '../containers/DeliveryZones';
+import Configuration from '../containers/Configuration';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
@@ -47,6 +48,7 @@ class SubNavigatorView extends React.PureComponent{
                   <Stack.Screen name='Fabricante' component={Producer}  options={{headerShown: false}} />
                   <Stack.Screen name='Sellos' component={SealsPage}  options={{headerShown: false}} />
                   <Stack.Screen name='Entregas' component={DeliveryZones}  options={{headerShown: false}} />
+                  <Stack.Screen name='Configuración' component={Configuration} options ={{headerShown:false}}/>
              </Stack.Navigator>
           );
     }

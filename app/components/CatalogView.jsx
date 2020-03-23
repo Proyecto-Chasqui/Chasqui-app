@@ -5,6 +5,7 @@ import GLOBALS from '../Globals';
 import ProductCardsView from '../containers/CatalogComponentsContainers/ProductCards';
 import LoadingView from '../components/LoadingView';
 import ProductFilterView from '../containers/CatalogComponentsContainers/ProductFilter';
+import base64 from 'react-native-base64'
 import axios from 'axios';
 
 class CatalogView extends React.Component {
@@ -14,6 +15,7 @@ class CatalogView extends React.Component {
         this.producers = props.actions.producers;
         this.zones = props.actions.zones;
         this.cleanZones = props.actions.cleanZones;
+        this.personalData = props.actions.personalData;
         this.seals = props.actions.seals;
         this.sellerPoints = props.actions.sellerPoints;
         this.cleanSellerPoints = props.actions.cleanSellerPoints;
@@ -52,11 +54,25 @@ class CatalogView extends React.Component {
             if (this.props.vendorSelected.few.puntoDeEntrega) {
                 this.getSellerPoints(this.props);
             }
+            if(this.props.user.id !== 0){
+                this.getPersonalData(this.props);
+            }
         }
     }
 
-    componentWillMount() {
-        BackHandler.addEventListener('hardwareBackPress', this.backButtonClick);
+    getPersonalData(props) {
+        const token = base64.encode(`${props.user.email}:${props.user.token}`);
+        axios.get(this.serverBaseRoute + 'rest/user/adm/read', {
+            headers: {
+                'Content-Type':'application/json',
+                'Authorization': `Basic ${token}`
+            }
+        }).then(res => {
+            this.personalData(res.data);
+        }).catch(function (error) {
+            Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
+        });
+        this.props.actions.personalData({});
     }
 
     componentWillUnmount() {
@@ -98,6 +114,7 @@ class CatalogView extends React.Component {
 
 
     componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.backButtonClick);
         this.load();
     }
 
@@ -118,7 +135,7 @@ class CatalogView extends React.Component {
 
 
     getZones(props) {
-        axios.get((this.serverBaseRoute + '/rest/client/zona/all/' + this.props.vendorSelected.id)).then(res => {
+        axios.get((this.serverBaseRoute + 'rest/client/zona/all/' + this.props.vendorSelected.id)).then(res => {
             this.zones(res.data);
         }).catch(function (error) {
             Alert.alert(

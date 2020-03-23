@@ -1,19 +1,14 @@
 import React from 'react';
 import Login from '../containers/Login';
 import Vendors from '../containers/Vendors';
-import Catalog from '../containers/Catalog';
-import Product from '../containers/Product';
-import Producer from '../containers/CatalogComponentsContainers/Producer';
-import Entregas from '../containers/DeliveryZones';
 import SubNavigatorView from './SubNavigatorView';
 import NavigationItems from '../containers/NavigatorComponentContainters/NavigationItems';
 import NavigationOptionItems from '../containers/NavigatorComponentContainters/NavigationOptionItems';
-import { ActivityIndicator } from 'react-native';
-import { Text, Header, Button, Icon } from 'react-native-elements';
+import { Text, Header, Image } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer';
-import { ScrollView, StyleSheet, Image, View, Alert } from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { ScrollView, StyleSheet} from 'react-native';
 import GLOBALS from '../Globals';
 
 const StackLogin = createStackNavigator();
@@ -33,7 +28,12 @@ class NavigatorView extends React.PureComponent {
     return (
       <ScrollView style={{ backgroundColor: "#ededed" }}>
         <Header containerStyle={{ backgroundColor: 'rgba(51, 102, 255, 1)' }}  >
-          <Image style={styles.userAvatar} PlaceholderContent={<ActivityIndicator />} source={{ uri: (this.serverBaseRoute + this.props.user.avatar) }}></Image>
+          {this.props.user.id != 0?(
+            <Image  style={styles.userAvatar} source={{ uri: (this.serverBaseRoute + (this.props.user.avatar.substring(1))) }}></Image>
+          ):(
+            <Image  style={styles.userAvatar} source={ require('./configurationViewComponents/configurationAssets/avatar_4.png') }></Image>
+          )}
+          
           <Text style={styles.nickText}>{(this.props.user.nickname).toUpperCase()}</Text>
         </Header>
         <NavigationItems navigation={props.navigation}></NavigationItems>
@@ -41,6 +41,8 @@ class NavigatorView extends React.PureComponent {
       </ScrollView>
     );
   }
+
+
 
   render() {
     return (

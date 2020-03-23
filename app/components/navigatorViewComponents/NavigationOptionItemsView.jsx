@@ -6,7 +6,7 @@ class NavigationOptionItemsView extends React.PureComponent{
     constructor(props){
         super(props)
         this.logout = props.actions.logout;
-        this.navigation = props.navigation;
+        this.navigation = this.props.navigation;
     }
 
     sendLogout(){
@@ -24,23 +24,32 @@ class NavigationOptionItemsView extends React.PureComponent{
          ])
       }
 
+    goConfiguration(){
+      this.navigation.navigate('Configuración');
+    }
+
     render(){
         return(
             <View style={{marginTop:10}}>
             { this.props.user.id !== 0 ?(
                 <View style={{marginLeft:20, backgroundColor:"#ededed" }}>
-                <Button icon={<Icon name="bell" type='font-awesome' size={20} iconStyle={styles.iconMenuButton} />}
-                        buttonStyle={styles.menuButton}
-                        onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
-                        title="Notificaciones"
-                        titleStyle = {styles.menuButtonTitle}
-                    />
+                {this.props.vendorSelected.id !== undefined ? (
+                <View>
                 <Button icon={<Icon name="cog" type='font-awesome' size={20} iconStyle={styles.iconMenuButton}/>}
                         buttonStyle={styles.menuButton}
-                        onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
+                        onPress={() => this.goConfiguration()}
                         title="Configuración"
                         titleStyle = {styles.menuButtonTitle}
                     />
+                <Button icon={<Icon name="bell" type='font-awesome' size={20} iconStyle={styles.iconMenuButton} />}
+                    buttonStyle={styles.menuButton}
+                    onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
+                    title="Notificaciones"
+                    titleStyle = {styles.menuButtonTitle}
+                />
+                </View>
+                    ):(null)}
+
                 <Button icon={<Icon name="question-circle" type='font-awesome' size={20} iconStyle={styles.iconMenuButton}/>}
                         buttonStyle={styles.menuButton}
                         onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}

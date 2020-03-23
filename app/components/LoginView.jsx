@@ -40,7 +40,7 @@ class LoginView extends React.PureComponent {
 
   render() {
     return (
-      <KeyboardAvoidingView style={styles.principalContainer} behavior="padding" enabled>
+      <View style={styles.principalContainer}>
         <Formik
           initialValues={{ email: '', contraseña: '' }}
           onSubmit={values => this.handleSubmit(values)}
@@ -99,7 +99,7 @@ class LoginView extends React.PureComponent {
             </View>
           )}
         </Formik>
-    </KeyboardAvoidingView>
+    </View>
     );
   }
 }

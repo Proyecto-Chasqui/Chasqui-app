@@ -15,9 +15,11 @@ import producerSelected from './producerSelected';
 import productCategories from './productCategories';
 import zones from './zones';
 import sellerPoints from './sellerPoints';
+import personalData from './personalData';
 
 const rootReducer = combineReducers({user, vendors, vendorTags,
      products, seals, sealsSelected, vendorSelected, productSelected, producers,
-     producerSelected, productSeals, productionSeals, productCategories, zones, sellerPoints });
+     producerSelected, productSeals, productionSeals, productCategories, zones, sellerPoints,
+     personalData });
 
 export default rootReducer;

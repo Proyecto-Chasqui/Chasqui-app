@@ -20,6 +20,7 @@ export const ZONES = 'ZONES';
 export const CLEANZONES = 'CLEANZONES';
 export const SELLERPOINTS = 'SELLERPOINTS';
 export const CLEANSELLERPOINT = 'CLEANSELLERPOINT';
+export const PERSONALDATA = 'PERSONALDATA';
 
 export const login = userData => ({type: LOGIN, userData});
 export const logout = () => ({type: LOGOUT});
@@ -43,3 +44,4 @@ export const zones = (zoneStack) => ({type:ZONES, zoneStack});
 export const cleanZones = () => ({type:CLEANZONES});
 export const sellerPoints = (sellerPointsStack) => ({type:SELLERPOINTS, sellerPointsStack});
 export const cleanSellerPoints = () => ({type:CLEANSELLERPOINT})
+export const personalData = (personalData) =>({type:PERSONALDATA, personalData});
