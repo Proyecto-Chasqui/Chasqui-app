@@ -1,6 +1,7 @@
 import {
     LOGIN,
-    LOGOUT
+    LOGOUT,
+    SETPASSWORD
   } from '../actions';
   
   const initialState = {
@@ -19,6 +20,11 @@ import {
   
       case LOGOUT:
         return initialState;
+
+      case SETPASSWORD:
+        return Object.assign({}, state, {
+          password: action.passwordData
+        });
   
       default:
         return state;

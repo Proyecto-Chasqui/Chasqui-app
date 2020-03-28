@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { personalData, login } from '../../actions';
-import PersonalDataView from '../../components/configurationViewComponents/personalDataView';
+import PersonalDataView from '../../components/configurationViewComponents/PersonalDataView';
 
 const mapStateToProps = state => ({
     personalData: state.personalData,

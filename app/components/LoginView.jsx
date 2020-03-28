@@ -11,6 +11,7 @@ class LoginView extends React.PureComponent {
     super(props);
     this.serverBaseRoute = GLOBALS.BASE_URL;
     this.login = props.actions.login;
+    this.setPassword = props.actions.setPassword;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.navigation = props.navigation;
   }
@@ -32,6 +33,7 @@ class LoginView extends React.PureComponent {
     })
       .then(res => {
         this.login(res.data);
+        this.setPassword(values.contraseña);
       }).catch(function (error) {
         Alert.alert('Error', 'Credenciales inválidas, verifique usuario y/o contraseña');
       });

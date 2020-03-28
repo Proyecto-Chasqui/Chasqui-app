@@ -2,6 +2,7 @@ import React from 'react'
 import { Text, View, StyleSheet,Alert } from 'react-native'
 import { Header, Button, Icon, ButtonGroup, Image } from 'react-native-elements';
 import PersonalDataView from '../containers/ConfigurationComponentsContainers/PersonalData';
+import PasswordConfigView from '../containers/ConfigurationComponentsContainers/PasswordConfig';
 import axios from 'axios';
 import GLOBALS from '../Globals';
 
@@ -57,9 +58,9 @@ class ConfigurationView extends React.PureComponent {
             {this.state.selectedIndex === 1 ? (<View>
                 <Text>Direcciones</Text>
             </View>) : (null)}
-            {this.state.selectedIndex === 2 ? (<View>
-                <Text>Contraseña</Text>
-            </View>) : (null)}
+            {this.state.selectedIndex === 2 ? (
+                <PasswordConfigView></PasswordConfigView>
+            ) : (null)}
 
 
 

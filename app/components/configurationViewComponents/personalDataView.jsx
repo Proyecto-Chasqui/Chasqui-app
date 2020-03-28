@@ -12,7 +12,7 @@ const APELLIDO = 'apellido'
 const TELEFONOMOVIL = 'telefono_movil'
 const TELEFONOFIJO = 'telefono_fijo'
 
-class personalDataView extends React.PureComponent {
+class PersonalDataView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.serverBaseRoute = GLOBALS.BASE_URL;
@@ -340,7 +340,7 @@ class personalDataView extends React.PureComponent {
                     {fields.map((field, i) => {
                         return (
                             <View style={styles.inputContainer}>
-                                <Text>{this.normalizeText(field)}</Text>
+                                <Text style={styles.fieldText}>{this.normalizeText(field)}</Text>
                                 <Input
                                     inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}
                                     placeholderTextColor='black'
@@ -353,7 +353,7 @@ class personalDataView extends React.PureComponent {
                             </View>)
                     })}
                     <View style={styles.inputContainer}>
-                        <Text>{this.normalizeText(TELEFONOMOVIL)}</Text>
+                        <Text style={styles.fieldText}>{this.normalizeText(TELEFONOMOVIL)}</Text>
                         <Input
                             inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}
                             placeholderTextColor='black'
@@ -365,7 +365,7 @@ class personalDataView extends React.PureComponent {
                         />
                     </View>
                     <View style={styles.inputContainer}>
-                        <Text>{this.normalizeText(TELEFONOFIJO)}</Text>
+                        <Text style={styles.fieldText}>{this.normalizeText(TELEFONOFIJO)}</Text>
                         <Input
                             inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}
                             placeholderTextColor='black'
@@ -478,6 +478,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
 
+    fieldText:{
+        fontWeight:"bold"
+    },
 
     TextStyle: {
         fontSize: 16,
@@ -506,4 +509,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default personalDataView;
+export default PersonalDataView;

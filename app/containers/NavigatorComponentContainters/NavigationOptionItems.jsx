@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {logout} from '../../actions';
+import {logout, vendorUnSelected} from '../../actions';
 import NavigationOptionItemsView from '../../components/navigatorViewComponents/NavigationOptionItemsView';
 
 const mapStateToProps = state => ({
@@ -9,7 +9,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({logout}, dispatch),
+  actions: bindActionCreators({logout, vendorUnSelected}, dispatch),
 });
 
 export default connect(

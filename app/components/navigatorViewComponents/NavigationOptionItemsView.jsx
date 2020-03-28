@@ -11,6 +11,7 @@ class NavigationOptionItemsView extends React.PureComponent{
 
     sendLogout(){
       this.navigation.closeDrawer()
+      this.props.actions.vendorUnSelected()
       this.logout()
     }
 
