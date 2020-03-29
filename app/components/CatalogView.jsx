@@ -16,6 +16,7 @@ class CatalogView extends React.Component {
         this.zones = props.actions.zones;
         this.cleanZones = props.actions.cleanZones;
         this.personalData = props.actions.personalData;
+        this.adressesData = props.actions.adressesData;
         this.seals = props.actions.seals;
         this.sellerPoints = props.actions.sellerPoints;
         this.cleanSellerPoints = props.actions.cleanSellerPoints;
@@ -56,8 +57,24 @@ class CatalogView extends React.Component {
             }
             if(this.props.user.id !== 0){
                 this.getPersonalData(this.props);
+                this.getAdressesData(this.props);
             }
         }
+    }
+
+    
+    getAdressesData(props) {
+        const token = base64.encode(`${props.user.email}:${props.user.token}`);
+        axios.get(this.serverBaseRoute + 'rest/user/adm/dir', {
+            headers: {
+                'Content-Type':'application/json',
+                'Authorization': `Basic ${token}`
+            }
+        }).then(res => {
+            this.adressesData(res.data);
+        }).catch(function (error) {
+            Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
+        });
     }
 
     getPersonalData(props) {
@@ -72,7 +89,6 @@ class CatalogView extends React.Component {
         }).catch(function (error) {
             Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
         });
-        this.props.actions.personalData({});
     }
 
     componentWillUnmount() {

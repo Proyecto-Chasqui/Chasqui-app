@@ -16,10 +16,11 @@ import productCategories from './productCategories';
 import zones from './zones';
 import sellerPoints from './sellerPoints';
 import personalData from './personalData';
+import adressesData from './adressesData';
 
 const rootReducer = combineReducers({user, vendors, vendorTags,
      products, seals, sealsSelected, vendorSelected, productSelected, producers,
      producerSelected, productSeals, productionSeals, productCategories, zones, sellerPoints,
-     personalData });
+     personalData, adressesData });
 
 export default rootReducer;

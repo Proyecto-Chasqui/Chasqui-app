@@ -3,6 +3,7 @@ import { Text, View, StyleSheet,Alert } from 'react-native'
 import { Header, Button, Icon, ButtonGroup, Image } from 'react-native-elements';
 import PersonalDataView from '../containers/ConfigurationComponentsContainers/PersonalData';
 import PasswordConfigView from '../containers/ConfigurationComponentsContainers/PasswordConfig';
+import DeliveryAdressConfigView from '../containers/ConfigurationComponentsContainers/DeliveryAdressConfig';
 import axios from 'axios';
 import GLOBALS from '../Globals';
 
@@ -55,15 +56,8 @@ class ConfigurationView extends React.PureComponent {
                     containerStyle={{ height: 50 }} />
             </View>
             {this.state.selectedIndex === 0 ? (<PersonalDataView></PersonalDataView>) : (null)}
-            {this.state.selectedIndex === 1 ? (<View>
-                <Text>Direcciones</Text>
-            </View>) : (null)}
-            {this.state.selectedIndex === 2 ? (
-                <PasswordConfigView></PasswordConfigView>
-            ) : (null)}
-
-
-
+            {this.state.selectedIndex === 1 ? (<DeliveryAdressConfigView></DeliveryAdressConfigView>) : (null)}
+            {this.state.selectedIndex === 2 ? (<PasswordConfigView></PasswordConfigView>) : (null)}
         </View>);
     }
 }

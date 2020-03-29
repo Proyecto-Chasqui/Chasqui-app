@@ -378,7 +378,7 @@ class PersonalDataView extends React.PureComponent {
                         />
                     </View>
                     <View style={styles.avatarText}>
-                        <Text>Avatar</Text>
+                        <Text style={styles.fieldText} >Avatar</Text>
                     </View>
                     <View style={{ flexDirection: "row", justifyContent: "center" }}>
                         {this.state.imageRoutesPng.map((route, i) => {
