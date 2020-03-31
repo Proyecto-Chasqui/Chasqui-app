@@ -56,7 +56,7 @@ class ConfigurationView extends React.PureComponent {
                     containerStyle={{ height: 50 }} />
             </View>
             {this.state.selectedIndex === 0 ? (<PersonalDataView></PersonalDataView>) : (null)}
-            {this.state.selectedIndex === 1 ? (<DeliveryAdressConfigView></DeliveryAdressConfigView>) : (null)}
+            {this.state.selectedIndex === 1 ? (<DeliveryAdressConfigView navigation={this.props.navigation}></DeliveryAdressConfigView>) : (null)}
             {this.state.selectedIndex === 2 ? (<PasswordConfigView></PasswordConfigView>) : (null)}
         </View>);
     }
@@ -67,7 +67,16 @@ class ConfigurationView extends React.PureComponent {
 const styles = StyleSheet.create({
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)'
+        backgroundColor: 'rgba(51, 102, 255, 1)',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.32,
+        shadowRadius: 5.46,
+
+        elevation: 9,
     },
 
     lowerHeaderStyle: {

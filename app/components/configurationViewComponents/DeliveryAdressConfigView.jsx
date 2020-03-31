@@ -6,6 +6,11 @@ import { ScrollView } from 'react-native-gesture-handler';
 class DeliveryAdressConfigView extends React.PureComponent {
     constructor(props) {
         super(props)
+        this.navigation = props.navigation;
+    }
+
+    goToNewAdress(){
+        this.navigation.navigate('GestiónDeDirección');
     }
 
     render() {
@@ -14,7 +19,8 @@ class DeliveryAdressConfigView extends React.PureComponent {
             <View>
             <Button titleStyle={{ color: "black", }}
                 containerStyle={styles.buttonAddProductContainer}
-                buttonStyle={styles.buttonNewAddressStyle} title="Nueva dirección">
+                buttonStyle={styles.buttonNewAddressStyle}
+                onPress={()=> this.goToNewAdress()} title="Nueva dirección">
             </Button>
             </View>
             <ScrollView style={{height:Dimensions.get('window').height - 210}}>

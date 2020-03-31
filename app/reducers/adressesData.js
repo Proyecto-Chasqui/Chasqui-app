@@ -8,7 +8,6 @@ import {
       
     switch (action.type) {
       case ADRESSESDATA:
-        console.log("action", action);
         return action.adressesData;
 
       default:
