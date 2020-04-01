@@ -10,7 +10,15 @@ class DeliveryAdressConfigView extends React.PureComponent {
     }
 
     goToNewAdress(){
-        this.navigation.navigate('GestiónDeDirección');
+        this.navigation.navigate('GestiónDeDirección', {
+            adressDataInfo: null,
+        });
+    }
+
+    goToEditAdress(adressData){
+        this.navigation.navigate('GestiónDeDirección', {
+            adressDataInfo: adressData,
+        });
     }
 
     render() {
@@ -39,7 +47,7 @@ class DeliveryAdressConfigView extends React.PureComponent {
                                     size={30}
                                     />}
                                     containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
-                                    onPress={() => null}></Button>
+                                    onPress={() =>  this.goToEditAdress(adressData)}></Button>
                             </View>
                         </View>
                     )

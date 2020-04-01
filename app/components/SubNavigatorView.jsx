@@ -6,6 +6,7 @@ import SealsPage from '../containers/SealsPage';
 import DeliveryZones from '../containers/DeliveryZones';
 import Configuration from '../containers/Configuration';
 import AdressManagment from '../containers/AdressManagment';
+import MapAdressConfig from '../components/MapAdressConfig';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
@@ -51,6 +52,7 @@ class SubNavigatorView extends React.PureComponent{
                   <Stack.Screen name='Entregas' component={DeliveryZones}  options={{headerShown: false}} />
                   <Stack.Screen name='Configuración' component={Configuration} options ={{headerShown:false}}/>
                   <Stack.Screen name='GestiónDeDirección' component={AdressManagment} options ={{headerShown:false}} />
+                  <Stack.Screen name='MapaDeDirección' component={MapAdressConfig} options={{headerShown:false}} />
              </Stack.Navigator>
           );
     }
