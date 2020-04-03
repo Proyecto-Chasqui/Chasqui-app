@@ -1,10 +1,11 @@
 import React from 'react'
 import { Text, View, StyleSheet, Dimensions, KeyboardAvoidingView, Alert } from 'react-native'
-import { Header, Button, Icon, ButtonGroup, Image, Input } from 'react-native-elements'
+import { Header, Button, Icon, ButtonGroup, Image, Input, Overlay } from 'react-native-elements'
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import base64 from 'react-native-base64'
 import GOLBALS from './../Globals';
+import LoadingOverlayView from './generalComponents/LoadingOverlayView'
 
 const NAMEREMAINDER = 'nombre_recordatorio *';
 const STREET = 'calle_*';
@@ -15,6 +16,8 @@ const STREETTWO = 'calle_2';
 const LOCATION = 'localidad_*';
 const POSTALCODE = 'código_postal';
 const COMMENTS = 'comentarios';
+const GEOWAIT = 'Calculando su ubicación...';
+const SENDINGDATAWAIT = 'Enviando sus datos al servidor...'
 
 class AdressManagmentView extends React.PureComponent {
     constructor(props) {
@@ -22,18 +25,21 @@ class AdressManagmentView extends React.PureComponent {
         this.apiKey = GOLBALS.APIKEY;
         this.serverBaseRoute = GOLBALS.BASE_URL;
         this.adressesData = this.props.actions.adressesData;
+        this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
             saveMessage: 'La dirección se guardo correctamente',
             deleteMessage: 'La dirección se eliminó correctamente',
-            sendingData: false,
+            dataSended: false,
             dataChange: false,
             showMoreInfo: false,
-            infoConfirmed:false,
+            infoConfirmed: false,
             location: null,
+            loadingText: GEOWAIT, 
             titleText: 'Nueva dirección',
             isNew: true,
+            isVisible: false,
             adressData: {
-                id_Direccion:null,
+                id_Direccion: null,
                 nombre_recordatorio: '',
                 calle: '',
                 altura: '',
@@ -56,26 +62,27 @@ class AdressManagmentView extends React.PureComponent {
                 comentarios: '',
             },
         }
-        this.handleSubmit = this.handleSubmit.bind(this);
+
     }
 
-    componentDidUpdate(){
-        if(this.state.infoConfirmed){
-            if(this.state.isNew){
+    componentDidUpdate() {
+        if (this.state.infoConfirmed) {
+            this.setState({ dataSended: true })
+            if (this.state.isNew) {
                 this.sendNewDataToServer()
-            }else{
+            } else {
                 this.sendDataUpdateToServer()
             }
-            this.setState({infoConfirmed:false,isNew:false})
+            this.setState({ infoConfirmed: false })
         }
     }
 
-    componentDidMount(){
-        if(this.props.route.params.adressDataInfo){
+    componentDidMount() {
+        if (this.props.route.params.adressDataInfo) {
             let data = this.props.route.params.adressDataInfo;
             this.setState({
-                dataChange:true,
-                titleText:'Editando dirección',
+                dataChange: true,
+                titleText: 'Editando dirección',
                 isNew: false,
                 adressData: {
                     id_Direccion: data.idDireccion,
@@ -210,6 +217,19 @@ class AdressManagmentView extends React.PureComponent {
         }
     }
 
+
+    onlyNumbers(value) {
+        let reg = new RegExp('^[0-9]+$');
+        if (reg.test(value)) {
+            let adjustedValue = parseInt(value, 10).toString();
+            return adjustedValue
+        }
+        if (value.length == 0) {
+            return value
+        }
+        return null
+    }
+
     normalizeText(text) {
         let normalizeText = text.replace("_", " ");
         normalizeText = normalizeText.charAt(0).toUpperCase() + normalizeText.slice(1)
@@ -235,12 +255,15 @@ class AdressManagmentView extends React.PureComponent {
                 }))
                 break;
             case ELEVATION:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    adressData: Object.assign({}, prevState.adressData, {
-                        altura: value
-                    })
-                }))
+                let datavalue = this.onlyNumbers(value)
+                if (datavalue !== null) {
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        adressData: Object.assign({}, prevState.adressData, {
+                            altura: value
+                        })
+                    }))
+                }
                 break;
             case DEPARTMENT:
                 this.setState((prevState) => ({
@@ -313,11 +336,12 @@ class AdressManagmentView extends React.PureComponent {
         return this.validRemainderName() && this.validStreet() && this.validElevation() && this.validLocation();
     }
 
-    goBackAdress(){
+    goBackAdress() {
         this.props.navigation.goBack();
     }
 
-    showAlertActionComplete(text){
+    showAlertActionComplete(text) {
+        this.hideWait();
         Alert.alert(
             'Aviso',
             text,
@@ -328,11 +352,11 @@ class AdressManagmentView extends React.PureComponent {
         );
     }
 
-    updateAdressData(text){
+    updateAdressData(text) {
         const token = base64.encode(`${this.props.user.email}:${this.props.user.token}`);
         axios.get(this.serverBaseRoute + 'rest/user/adm/dir', {
             headers: {
-                'Content-Type':'application/json',
+                'Content-Type': 'application/json',
                 'Authorization': `Basic ${token}`
             }
         }).then(res => {
@@ -344,13 +368,13 @@ class AdressManagmentView extends React.PureComponent {
         });
     }
 
-    sendDataUpdateToServer(){
-        
-        this.setState({sendingData:true})
+    sendDataUpdateToServer() {
+        this.showWait(SENDINGDATAWAIT)
+        this.setState({ dataSended: true })
         axios.put(this.serverBaseRoute + 'rest/user/adm/dir', {
             idDireccion: this.state.adressData.id_Direccion,
-            calle: this.state.adressData.calle ,
-            calleAdyacente1: this.state.adressData.calle_1 ,
+            calle: this.state.adressData.calle,
+            calleAdyacente1: this.state.adressData.calle_1,
             calleAdyacente2: this.state.adressData.calle_2,
             altura: this.state.adressData.altura,
             localidad: this.state.adressData.localidad,
@@ -367,16 +391,18 @@ class AdressManagmentView extends React.PureComponent {
             this.updateAdressData(this.state.saveMessage);
         }).catch(function (error) {
             console.log(error);
+            this.setState({isVisible:false})
             Alert.alert('Error', 'ocurrio un error al enviar los datos de la direccion');
         });
-        this.setState({sendingData:false})
+        this.setState({ dataSended: false })
     }
 
-    sendNewDataToServer(){
-        this.setState({sendingData:true})
+    sendNewDataToServer() {
+        this.showWait(SENDINGDATAWAIT)
+        this.setState({ dataSended: true })
         axios.post(this.serverBaseRoute + 'rest/user/adm/dir', {
-            calle: this.state.adressData.calle ,
-            calleAdyacente1: this.state.adressData.calle_1 ,
+            calle: this.state.adressData.calle,
+            calleAdyacente1: this.state.adressData.calle_1,
             calleAdyacente2: this.state.adressData.calle_2,
             altura: this.state.adressData.altura,
             localidad: this.state.adressData.localidad,
@@ -393,54 +419,72 @@ class AdressManagmentView extends React.PureComponent {
             this.updateAdressData(this.state.saveMessage);
         }).catch(function (error) {
             console.log(error);
+            this.setState({isVisible:false})
             Alert.alert('Error', 'ocurrio un error al enviar los datos de la direccion');
-        });        
-        this.setState({sendingData:false})
+        });
+        this.setState({ dataSended: false })
     }
 
-    changeLocation(valLocation, sender){    
+    changeLocation(valLocation, sender) {
         console.log('location on change', valLocation);
-        sender.setState({location: valLocation,
-        infoConfirmed:true});
+        sender.setState({
+            location: valLocation,
+            infoConfirmed: true,
+            isVisible:true,
+        });
     }
 
-    goToMap(geoStatus){
-        this.props.navigation.navigate('MapaDeDirección',{
+    goToMap(geoStatus) {
+        this.props.navigation.navigate('MapaDeDirección', {
             geoFail: geoStatus,
             locationInfo: this.state.location,
             locationEditFunction: this.changeLocation,
             sender: this,
         });
+        this.setState({ dataSended: false })
     }
 
-    handleSubmit(values) {
-        if (!this.state.sendingData) {
-            this.setState({sendingData:true})
+    showWait(message){
+        this.setState({isVisible:true, loadingText:message});
+    }
+
+    hideWait(){
+        this.setState({isVisible:false});
+    }
+
+    handleSubmit() {
+        if (!this.state.dataSended) {
+            this.setState({ dataSended: true })
+            this.showWait(GEOWAIT)
             if (this.dataValid()) {
+                const instance = axios.create();
+                instance.defaults.timeout = 2500;
                 let encodedQuery = this.state.adressData.calle + '+' + this.state.adressData.altura + '+' + this.state.adressData.localidad + '+' + 'Argentina';
-                axios.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + encodedQuery + '+&key=' + this.apiKey +''
+                instance.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + encodedQuery + '+&key=' + this.apiKey + ''
                 ).then(res => {
-                    if(res.data.status === "OK"){
+                    if (res.data.status === "OK") {
                         let valLocation = res.data.results[0].geometry.location;
-                        this.setState({location: valLocation})
+                        this.setState({ location: valLocation })
+                        this.hideWait();
                         this.goToMap(false);
-                    }else{                        
-                        this.setState({sendingData:false})
+                    } else {
+                        this.setState({ dataSended: false, isVisible:false })
                         Alert.alert('Aviso', 'No se pudo ubicar su posición con los datos proporcionados, ¿Que desea hacer?',
-                        [
-                            { text: 'Cambiar datos', onPress: () => null },
-                            { text: 'Marcar en Mapa', onPress: () => this.goToMap(true) },
-                        ],
-                        { cancelable: false });
+                            [
+                                { text: 'Cambiar datos', onPress: () => null },
+                                { text: 'Marcar en Mapa', onPress: () => this.goToMap(true) },
+                            ],
+                            { cancelable: false });
                     }
-                    
-                }).catch(function (error) {
-                    Alert.alert('Error', 'Fallo al obtener la ubicación'); 
+                }).catch((error) => {                    
+                    this.setState({ dataSended: false, isVisible:false })
+                    Alert.alert('Error', 'Ocurrio un error al obtener la ubicación, revise su conexión.');
                 });
             } else {
                 this.showErrorMessages()
+                this.setState({ dataSended: false })
             }
-            this.setState({sendingData:false})
+
         }
     }
 
@@ -448,13 +492,14 @@ class AdressManagmentView extends React.PureComponent {
         this.setState({ showMoreInfo: !this.state.showMoreInfo })
     }
 
-    deleteAdress(){
-        if (!this.state.sendingData) {
-            this.setState({sendingData:true})
+    deleteAdress() {
+        this.showWait(SENDINGDATAWAIT)
+        if (!this.state.dataSended) {
+            this.setState({ dataSended: true })
             const token = base64.encode(`${this.props.user.email}:${this.props.user.token}`);
-            axios.delete(this.serverBaseRoute + 'rest/user/adm/dir/'+ this.state.adressData.id_Direccion, {
+            axios.delete(this.serverBaseRoute + 'rest/user/adm/dir/' + this.state.adressData.id_Direccion, {
                 headers: {
-                    'Content-Type':'application/json',
+                    'Content-Type': 'application/json',
                     'Authorization': `Basic ${token}`
                 }
             }).then(res => {
@@ -465,13 +510,13 @@ class AdressManagmentView extends React.PureComponent {
         }
     }
 
-    alertDeleteAdress(){
+    alertDeleteAdress() {
         Alert.alert('Pregunta', '¿Esta seguro de eliminar la dirección "' + this.state.adressData.nombre_recordatorio + '" ?',
-        [
-            { text: 'No', onPress: () => null },
-            { text: 'Si', onPress: () => this.deleteAdress() },
-        ],
-        { cancelable: false });
+            [
+                { text: 'No', onPress: () => null },
+                { text: 'Si', onPress: () => this.deleteAdress() },
+            ],
+            { cancelable: false });
     }
 
     render() {
@@ -493,18 +538,19 @@ class AdressManagmentView extends React.PureComponent {
                             source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                         />
                         {!this.state.isNew ? (
-                        <Button
-                            icon={
-                                <Icon name="trash" size={20} color="white" type='font-awesome' />
-                            }
-                            buttonStyle={styles.leftHeaderButton}
-                            onPress={() => this.alertDeleteAdress()}
-                        />
-                        ):(null)
+                            <Button
+                                icon={
+                                    <Icon name="trash" size={20} color="white" type='font-awesome' />
+                                }
+                                buttonStyle={styles.leftHeaderButton}
+                                onPress={() => this.alertDeleteAdress()}
+                            />
+                        ) : (null)
                         }
 
                     </Header>
                 </View>
+                <LoadingOverlayView isVisible={this.state.isVisible} loadingText={this.state.loadingText}></LoadingOverlayView>
                 <KeyboardAvoidingView>
                     <View style={styles.titleContainer}>
                         <Text style={styles.adressTitle}>{this.state.titleText}</Text>
@@ -599,9 +645,8 @@ class AdressManagmentView extends React.PureComponent {
                                     null
                                 )
                         }
-
                         <View style={styles.buttonContainer}>
-                            <Button loading={this.state.sendingData} disabled={!this.state.dataChange} buttonStyle={styles.buttonNext} titleStyle={{ fontSize: 20, color:'black' }} onPress={this.handleSubmit} title="Siguiente" />
+                            <Button loading={this.state.dataSended} disabled={!this.state.dataChange} buttonStyle={styles.buttonNext} titleStyle={{ fontSize: 20, color: 'white' }} onPress={() => this.handleSubmit()} title="Siguiente" />
                         </View>
                     </ScrollView>
                 </KeyboardAvoidingView>
@@ -681,7 +726,7 @@ const styles = StyleSheet.create({
 
     soloInputContainer: {
         marginLeft: -5,
-        marginTop:10,
+        marginTop: 10,
         marginBottom: 20,
         width: Dimensions.get('window').width,
         height: 71,
@@ -691,7 +736,7 @@ const styles = StyleSheet.create({
 
     fieldText: {
         marginLeft: 10,
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
 
 
@@ -760,7 +805,7 @@ const styles = StyleSheet.create({
     moreInfoButtonContainer: {
         flexDirection: "row",
         borderColor: 'grey',
-        margin:10,
+        margin: 10,
         borderRadius: 3,
         borderWidth: 1
     },
@@ -773,10 +818,10 @@ const styles = StyleSheet.create({
         textAlign: 'justify'
     },
 
-    buttonNext:{ 
-        backgroundColor: "#f8f162",
+    buttonNext: {
+        backgroundColor: "#5ebb47",
         borderColor: 'grey',
-        borderWidth: 1 
+        borderWidth: 1
     }
 
 })

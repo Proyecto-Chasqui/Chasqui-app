@@ -130,7 +130,7 @@ class VendorsView extends React.PureComponent {
                     <Header backgroundColor='white' containerStyle={styles.lowerHeaderStyle}
                         leftComponent={
                             <SearchBar
-                                placeholder="Tu busqueda comienza aquí"
+                                placeholder="Tu búsqueda comienza aquí"
                                 onChangeText={this.updateSearch}
                                 value={this.state.search}
                                 containerStyle={styles.searchContainer}

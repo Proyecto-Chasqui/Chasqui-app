@@ -50,6 +50,9 @@ class ConfigurationView extends React.PureComponent {
             </View>
             <View>
                 <ButtonGroup
+                textStyle={{fontWeight:'bold'}}
+                selectedTextStyle={{fontWeight:'bold'}}
+                selectedButtonStyle={{ backgroundColor:"#5ebb47"}}
                     onPress={this.updateIndex}
                     selectedIndex={selectedIndex}
                     buttons={buttons}

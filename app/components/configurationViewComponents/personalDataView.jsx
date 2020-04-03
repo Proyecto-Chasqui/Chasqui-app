@@ -5,6 +5,7 @@ import axios from 'axios';
 import GLOBALS from '../../Globals';
 import base64 from 'react-native-base64'
 import { ScrollView } from 'react-native-gesture-handler';
+import LoadingOverlayView from '../generalComponents/LoadingOverlayView'
 
 const APODO = 'apodo'
 const NOMBRE = 'nombre'
@@ -22,6 +23,7 @@ class PersonalDataView extends React.PureComponent {
         this.state = {
             sendingData: false,
             dataChange: false,
+            isVisible:false,
             userData: {
                 apodo: this.props.personalData.nickName,
                 nombre: this.props.personalData.nombre,
@@ -181,7 +183,7 @@ class PersonalDataView extends React.PureComponent {
     handleSubmit(values) {
         if (!this.state.sendingData) {
             if (this.dataValid()) {
-                this.setState({ sendingData: true })
+                this.setState({ sendingData: true, isVisible:true })
                 const token = base64.encode(`${this.props.user.email}:${this.props.user.token}`);
                 axios.put(this.serverBaseRoute + 'rest/user/adm/edit', {
                     password: null,
@@ -199,11 +201,12 @@ class PersonalDataView extends React.PureComponent {
                         this.login(res.data);
                         this.setState({
                             sendingData: false,
-                            dataChange: false
+                            dataChange: false,
+                            isVisible:false,
                         })
                         Alert.alert('Aviso', 'Los datos fueron actualizados correctamente');
                     }).catch(function (error) {
-                        this.setState({ dataChange: true })
+                        this.setState({ dataChange: true, isVisible:false })
                         Alert.alert('Error', 'ocurrio un error al intentar actualizar los datos');
                     });
             } else {
@@ -336,6 +339,7 @@ class PersonalDataView extends React.PureComponent {
         const fields = [APODO, NOMBRE, APELLIDO];
         return (
             <KeyboardAvoidingView>
+                <LoadingOverlayView isVisible={this.state.isVisible} loadingText={'Enviando sus datos al servidor...'}></LoadingOverlayView>
                 <ScrollView>
                     {fields.map((field, i) => {
                         return (
@@ -390,7 +394,7 @@ class PersonalDataView extends React.PureComponent {
                         })}
                     </View>
                     <View style={styles.buttonContainer}>
-                        <Button loading={this.state.sendingData} disabled={!this.state.dataChange} buttonStyle={{ height: 60, backgroundColor: '#80bfff', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={this.handleSubmit} title="Guardar" />
+                        <Button loading={this.state.sendingData} disabled={!this.state.dataChange} buttonStyle={{ height: 60, backgroundColor: '#5ebb47', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={this.handleSubmit} title="Guardar" />
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>

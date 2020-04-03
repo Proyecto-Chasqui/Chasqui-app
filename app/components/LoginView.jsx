@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, Alert, View, Dimensions, KeyboardAvoidingView } from 'react-native';
-import { Input, Image, Button } from 'react-native-elements';
+import { Input, Image, Button, Overlay } from 'react-native-elements';
 import { Formik } from 'formik';
 import axios from 'axios';
 import GLOBALS from '../Globals';
@@ -14,14 +14,20 @@ class LoginView extends React.PureComponent {
     this.setPassword = props.actions.setPassword;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.navigation = props.navigation;
+    this.state = {
+      emailRecover: '',
+      isVisible: false,
+      emailErrorRecover:'',
+      dataChange: false,
+    }
   }
 
   loginAsGuest() {
     this.login({
-      email: "invitado@invitado.com",
+      email: "invitadx@invitadx.com",
       token: "invitado",
       id: 0,
-      nickname: "invitado",
+      nickname: "invitadx",
       avatar: "",
     });
   }
@@ -35,14 +41,105 @@ class LoginView extends React.PureComponent {
         this.login(res.data);
         this.setPassword(values.contraseña);
       }).catch(function (error) {
-        Alert.alert('Error', 'Credenciales inválidas, verifique usuario y/o contraseña');
+        if (error.response) {
+          Alert.alert('Error', error.response.data.error);
+        } else if (error.request) {
+          Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente mas tarde");
+        } else {
+          Alert.alert('Error', "Ocurrio un error al intentar ingresar, intente mas tarde o verifique su conectividad.");
+        }
       });
 
+  }
+
+  resetRecover() {
+    this.setState({ emailRecover: '', isVisible: false })
+  }
+
+  validRecoverEmail(){
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    return reg.test(this.state.emailRecover)
+  }
+
+  showErrorEmailRecover(){
+    this.setState({emailErrorRecover: 'Ingrese un email valido'})
+  }
+
+  handleSubmitRecover() {
+    if (this.validRecoverEmail()) {
+      axios.get(this.serverBaseRoute + 'rest/client/sso/resetPass/' + this.state.emailRecover)
+        .then(res => {
+          Alert.alert('Aviso', 'La contraseña se restauro correctamente, por favor revise su casilla de correo.', [
+            { text: 'Entendido', onPress: () => this.resetRecover() }
+          ],
+            { cancelable: false });
+            this.setState({emailErrorRecover: ''})
+        }).catch((error) => {
+          this.setState({emailErrorRecover: ''})
+          if (error.response) {
+            Alert.alert('Error', error.response.data.error);
+          } else if (error.request) {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente mas tarde");
+          } else {
+            Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente mas tarde o verifique su conectividad.");
+          }
+        });
+    }else{
+      this.showErrorEmailRecover()
+    }
+
+  }
+
+  handleChangeRecover(text) {
+    this.setState({ emailRecover: text, dataChange:true})
+  }
+
+  goToRegister() {
+    this.navigation.navigate('Registrarse')
+  }
+
+  hideShowPop() {
+    this.setState({ isVisible: !this.state.isVisible })
   }
 
   render() {
     return (
       <View style={styles.principalContainer}>
+        <Overlay
+          isVisible={this.state.isVisible}
+          width="90%"
+          height={290}
+          onBackdropPress={() => this.resetRecover()}
+          animationType="fade"
+        >
+          <View style={{ height: "25%" }}>
+            <View style={styles.infoTextContainer}>
+              <Text style={styles.infoText}>Recuperar contraseña</Text>
+            </View>
+            <View style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}>
+              <Text style={{ fontSize: 18, alignSelf: 'center' }}>Si esta registrado, enviaremos las instrucciones a su correo.</Text>
+            </View>
+            <View>
+              <Text style={styles.emailTitle}>Ingrese su correo</Text>
+            </View>
+            <View style={{height:60}}>
+            <Input
+              inputStyle={{ color: "black", marginLeft: 10, }}
+              placeholderTextColor="black"
+              onChangeText={text => this.handleChangeRecover(text)}
+              placeholder=''
+              errorStyle={{ color: 'red' }}
+              errorMessage={this.state.emailErrorRecover}
+              leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+              value={this.state.emailRecover}
+            />
+            </View>
+            <View style={styles.buttonRecoverContainer}>
+              <Button buttonStyle={{ width: 140, backgroundColor: 'transparent', borderColor: "grey", borderWidth: 1 }} titleStyle={{ fontSize: 20, color: "black" }} onPress={() => this.resetRecover()} title="CANCELAR" />
+              <Button disabled={!this.state.dataChange} buttonStyle={{ width: 140, backgroundColor: '#5ebb47', borderColor: "grey", borderWidth: 1, marginLeft: 5 }} titleStyle={{ fontSize: 20, }} onPress={() => this.handleSubmitRecover()} title="ENVIAR" />
+            </View>
+          </View>
+        </Overlay>
         <Formik
           initialValues={{ email: '', contraseña: '' }}
           onSubmit={values => this.handleSubmit(values)}
@@ -86,11 +183,11 @@ class LoginView extends React.PureComponent {
               </View>
               <View style={styles.lowerButtonsContainer} >
                 <View style={styles.leftButton}>
-                  <Text style={styles.TextStyle} onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}> Olvidé mi contraseña </Text>
+                  <Text style={styles.TextStyle} onPress={() => this.hideShowPop()}> Olvidé mi contraseña </Text>
                 </View>
                 <View style={styles.divisor} />
                 <View style={styles.rightButton}>
-                  <Text style={styles.TextStyle} onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}> Registrarme </Text>
+                  <Text style={styles.TextStyle} onPress={() => this.goToRegister()}> Registrarme </Text>
                 </View>
               </View>
               <View style={styles.middleButton} >
@@ -101,12 +198,35 @@ class LoginView extends React.PureComponent {
             </View>
           )}
         </Formik>
-    </View>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+
+  emailTitle: {
+    marginTop: 10,
+    alignSelf: 'center',
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
+
+  infoTextContainer: {
+    backgroundColor: "rgba(51, 102, 255, 1)",
+    marginTop: -10,
+    marginLeft: -10,
+    marginRight: -10,
+    height: 50,
+    alignItems: "center"
+  },
+
+  infoText: {
+    marginTop: 10,
+    fontSize: 19,
+    fontWeight: "bold",
+    color: "white"
+  },
 
   principalContainer: {
     flex: 1,
@@ -153,6 +273,12 @@ const styles = StyleSheet.create({
     marginTop: '2%',
     width: "90%",
     alignSelf: 'center'
+  },
+
+  buttonRecoverContainer: {
+    flexDirection: "row",
+    marginTop: 15,
+    alignSelf: 'center',
   },
 
   lowerButtonsContainer: {

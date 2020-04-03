@@ -5,6 +5,7 @@ import axios from 'axios';
 import GLOBALS from '../../Globals';
 import base64 from 'react-native-base64'
 import { ScrollView } from 'react-native-gesture-handler';
+import LoadingOverlayView from '../generalComponents/LoadingOverlayView'
 
 const OLDPASSWORD = 'Contraseña_anterior';
 const NEWPASSWORD = 'Nueva_contraseña';
@@ -21,6 +22,7 @@ class PasswordConfigView extends React.PureComponent {
         this.state = {
             sendingData: false,
             dataChange: false,
+            isVisible: false,
             passwordData: {
                 old_password: '',
                 new_password: '',
@@ -35,10 +37,10 @@ class PasswordConfigView extends React.PureComponent {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleSubmit(values) {
+    handleSubmit() {
         if (!this.state.sendingData) {
             if (this.dataValid()) {
-                this.setState({  sendingData: false })
+                this.setState({  sendingData: true, isVisible: true })
                 axios.put(this.serverBaseRoute + 'rest/user/adm/editpassword', {
                     password: this.state.passwordData.confirm_password,
                     oldPassword: this.state.passwordData.old_password
@@ -49,8 +51,9 @@ class PasswordConfigView extends React.PureComponent {
                         this.flushPasswords()
                         this.flushErrors()
                         Alert.alert('Aviso', 'Los datos fueron actualizados correctamente');
+                        this.setState({isVisible:false})
                     }).catch(function (error) {
-                        this.setState({ dataChange: true })
+                        this.setState({ sendingData: false, dataChange: true, isVisible: false })
                         Alert.alert('Error', 'ocurrio un error al intentar actualizar los datos');
                     });
             } else {
@@ -243,6 +246,7 @@ class PasswordConfigView extends React.PureComponent {
         const fields = [OLDPASSWORD, NEWPASSWORD, CONFIRMNEWPASSWORD]
         return (
             <KeyboardAvoidingView>
+                <LoadingOverlayView isVisible={this.state.isVisible} loadingText={'Enviando sus datos al servidor...'}></LoadingOverlayView>
                 <ScrollView>
                     <View style={styles.stylesComment}>
                         <Text >La nueva contraseña debe tener entre 10 y 26 caracteres de largo. Recomendamos el uso de números, mayúsculas y minúsculas intercaladas y que la contraseña no se relacione directamente con el nombre de usuario ni con datos personales para mayor seguridad.</Text>
@@ -265,7 +269,7 @@ class PasswordConfigView extends React.PureComponent {
                             </View>)
                     })}
                     <View style={styles.buttonContainer}>
-                        <Button loading={this.state.sendingData} disabled={!this.state.dataChange} buttonStyle={{ height: 60, backgroundColor: '#80bfff', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={this.handleSubmit} title="Guardar" />
+                        <Button loading={this.state.sendingData} disabled={!this.state.dataChange} buttonStyle={{ height: 60, backgroundColor: '#5ebb47', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={()=>this.handleSubmit()} title="Guardar" />
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>

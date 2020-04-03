@@ -35,7 +35,7 @@ class ProductCardsView extends React.PureComponent {
                             No se encontraron productos
                     </Text>
                         <Text style={stylesMultipleCards.tipErrorText}>
-                            Revise los filtros o la busqueda
+                            Revise los filtros o la búsqueda
                     </Text>
                     </View>
                 </View>

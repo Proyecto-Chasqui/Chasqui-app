@@ -18,7 +18,7 @@ class NavigationOptionItemsView extends React.PureComponent{
     logoutAlert(){
         Alert.alert(
           'Cerrar sesión',
-         '¿Esta seguro que desea cerrar la sesión?',
+         '¿Está segurx que desea cerrar la sesión?',
          [
           {text: 'Si', onPress: () =>  this.sendLogout()},
           {text: 'No', onPress: () => null},
