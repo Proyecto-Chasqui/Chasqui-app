@@ -92,7 +92,7 @@ class VendorFiltersView extends React.PureComponent {
 
             Alert.alert(
                 'Error',
-                'Ocurrio un error al obtener los datos del servidor, vuelva a intentar mas tarde.',
+                'Ocurrio un error al obtener los datos del servidor, vuelva a intentar más tarde.',
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],
@@ -110,7 +110,7 @@ class VendorFiltersView extends React.PureComponent {
             }).catch(function (error) {
                 Alert.alert(
                     'Error',
-                    'Ocurrio un error al obtener los datos de tags, vuelva a intentar mas tarde.',
+                    'Ocurrio un error al obtener los datos de tags, vuelva a intentar más tarde.',
                     [
                         { text: 'Entendido', onPress: () => props.actions.logout() },
                     ],

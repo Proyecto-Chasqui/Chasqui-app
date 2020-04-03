@@ -39,7 +39,7 @@ class ProductView extends React.PureComponent {
         }).catch(function (error) {
             Alert.alert(
                 'Error',
-                'Ocurrio un error al obtener las imagenes, vuelva a intentar mas tarde.',
+                'Ocurrio un error al obtener las imagenes, vuelva a intentar más tarde.',
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],
@@ -172,7 +172,7 @@ class ProductView extends React.PureComponent {
                     </ScrollView>
                     <View style={styles.caracteristicsContanierStyle}>
                         <View style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
-                            <Text style={styles.caracteristicsStyle} >Caracterisiticas</Text>
+                            <Text style={styles.caracteristicsStyle} >Caracteristicas</Text>
                             <View style={styles.verticalDivisor} />
                             <Button icon={
                                 this.state.showCaracteristics ? (

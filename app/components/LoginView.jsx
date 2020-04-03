@@ -44,9 +44,9 @@ class LoginView extends React.PureComponent {
         if (error.response) {
           Alert.alert('Error', error.response.data.error);
         } else if (error.request) {
-          Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente mas tarde");
+          Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
         } else {
-          Alert.alert('Error', "Ocurrio un error al intentar ingresar, intente mas tarde o verifique su conectividad.");
+          Alert.alert('Error', "Ocurrio un error al intentar ingresar, intente más tarde o verifique su conectividad.");
         }
       });
 
@@ -79,9 +79,9 @@ class LoginView extends React.PureComponent {
           if (error.response) {
             Alert.alert('Error', error.response.data.error);
           } else if (error.request) {
-            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente mas tarde");
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
           } else {
-            Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente mas tarde o verifique su conectividad.");
+            Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
           }
         });
     }else{
@@ -135,8 +135,8 @@ class LoginView extends React.PureComponent {
             />
             </View>
             <View style={styles.buttonRecoverContainer}>
-              <Button buttonStyle={{ width: 140, backgroundColor: 'transparent', borderColor: "grey", borderWidth: 1 }} titleStyle={{ fontSize: 20, color: "black" }} onPress={() => this.resetRecover()} title="CANCELAR" />
-              <Button disabled={!this.state.dataChange} buttonStyle={{ width: 140, backgroundColor: '#5ebb47', borderColor: "grey", borderWidth: 1, marginLeft: 5 }} titleStyle={{ fontSize: 20, }} onPress={() => this.handleSubmitRecover()} title="ENVIAR" />
+              <Button buttonStyle={{ width: 140, backgroundColor: 'transparent', borderColor: "grey", borderWidth: 1 }} titleStyle={{ fontSize: 20, color: "black" }} onPress={() => this.resetRecover()} title="Cancelar" />
+              <Button disabled={!this.state.dataChange} buttonStyle={{ width: 140, backgroundColor: '#5ebb47', borderColor: "grey", borderWidth: 1, marginLeft: 5 }} titleStyle={{ fontSize: 20, }} onPress={() => this.handleSubmitRecover()} title="Enviar" />
             </View>
           </View>
         </Overlay>

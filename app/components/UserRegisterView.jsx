@@ -10,8 +10,8 @@ import LoadingOverlayView from '../components/generalComponents/LoadingOverlayVi
 const APODO = 'apodo'
 const NOMBRE = 'nombre'
 const APELLIDO = 'apellido'
-const TELEFONO_MOVIL = 'telefono_movil'
-const TELEFONO_FIJO = 'telefono_fijo'
+const TELEFONO_MOVIL = 'teléfono_movil'
+const TELEFONO_FIJO = 'teléfono_fijo'
 const EMAIL = 'correo'
 const CONFIRM_EMAIL = 'repetir_correo'
 const PASSWORD = 'contraseña'
@@ -133,7 +133,7 @@ class UserRegisterView extends React.PureComponent {
         if (!this.validNickname()) {
             this.setState((prevState) => ({
                 errorMessage: Object.assign({}, prevState.errorMessage, {
-                    apodo: 'Debe tener mas de 3 caracteres'
+                    apodo: 'Debe tener más de 3 caracteres'
                 })
             }))
         } else {
@@ -149,7 +149,7 @@ class UserRegisterView extends React.PureComponent {
         if (!this.validName()) {
             this.setState((prevState) => ({
                 errorMessage: Object.assign({}, prevState.errorMessage, {
-                    nombre: 'Debe tener mas de 3 caracteres'
+                    nombre: 'Debe tener más de 3 caracteres'
                 })
             }))
         } else {
@@ -165,7 +165,7 @@ class UserRegisterView extends React.PureComponent {
         if (!this.validLastname()) {
             this.setState((prevState) => ({
                 errorMessage: Object.assign({}, prevState.errorMessage, {
-                    apellido: 'Debe tener mas de 3 caracteres'
+                    apellido: 'Debe tener más de 3 caracteres'
                 })
             }))
         } else {
@@ -183,7 +183,7 @@ class UserRegisterView extends React.PureComponent {
         if (!this.validCellPhoneNumber()) {
             this.setState((prevState) => ({
                 errorMessage: Object.assign({}, prevState.errorMessage, {
-                    telefono_movil: 'Debe tener 6 o mas numeros'
+                    telefono_movil: 'Debe tener 6 o más números'
                 })
             }))
         } else {
@@ -200,7 +200,7 @@ class UserRegisterView extends React.PureComponent {
         if (!this.validPhoneNumber()) {
             this.setState((prevState) => ({
                 errorMessage: Object.assign({}, prevState.errorMessage, {
-                    telefono_fijo: 'Debe tener 6 o mas numeros'
+                    telefono_fijo: 'Debe tener 6 o más números'
                 })
             }))
         } else {
@@ -250,7 +250,7 @@ class UserRegisterView extends React.PureComponent {
         if (!this.validEmail()) {
             this.setState((prevState) => ({
                 errorMessage: Object.assign({}, prevState.errorMessage, {
-                    correo: 'Debe escribir un email valido'
+                    correo: 'Debe escribir un email válido'
                 })
             }))
         } else {
@@ -266,7 +266,7 @@ class UserRegisterView extends React.PureComponent {
         if (!this.validConfirmEmail()) {
             this.setState((prevState) => ({
                 errorMessage: Object.assign({}, prevState.errorMessage, {
-                    repetir_correo: 'Debe escribir un email valido'
+                    repetir_correo: 'Debe escribir un email válido'
                 })
             }))
         } else {
@@ -391,7 +391,7 @@ class UserRegisterView extends React.PureComponent {
                     if (error.response) {
                         Alert.alert('Error', error.response.data.error);
                     } else if (error.request) {
-                        Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente mas tarde");
+                        Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
                     } else {
                         Alert.alert('Error', "Ocurrio un error al tratar de registrar el usuario");
                     }
@@ -609,7 +609,7 @@ class UserRegisterView extends React.PureComponent {
                                 />
                             </View>
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-
+                                
                                 {fields.map((field, i) => {
                                     return (
                                         <View style={styles.inputContainer}>
@@ -625,7 +625,9 @@ class UserRegisterView extends React.PureComponent {
                                             />
                                         </View>)
                                 })}
-
+                            </View>
+                            <Text style={styles.fieldTextPhone} >Ingrese al menos un teléfono</Text>
+                            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                                 <View style={styles.inputContainer}>
                                     <Text style={styles.fieldText}>{this.normalizeText(TELEFONO_MOVIL)}</Text>
                                     <Input
@@ -834,6 +836,13 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
 
+    fieldTextPhone: {
+        fontWeight: "bold",
+        marginLeft: 10,
+        color:"rgba(51, 102, 255, 1)",
+        marginBottom:-15
+    },
+
     TextStyle: {
         fontSize: 16,
         color: '#ffffff'
@@ -855,7 +864,9 @@ const styles = StyleSheet.create({
     },
 
     avatarText: {
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginTop:7,
+        marginBottom:-5
     },
 
     rightHeaderButton: {

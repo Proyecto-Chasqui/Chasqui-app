@@ -10,8 +10,8 @@ import LoadingOverlayView from '../generalComponents/LoadingOverlayView'
 const APODO = 'apodo'
 const NOMBRE = 'nombre'
 const APELLIDO = 'apellido'
-const TELEFONOMOVIL = 'telefono_movil'
-const TELEFONOFIJO = 'telefono_fijo'
+const TELEFONOMOVIL = 'teléfono_movil'
+const TELEFONOFIJO = 'teléfono_fijo'
 
 class PersonalDataView extends React.PureComponent {
     constructor(props) {
@@ -23,7 +23,7 @@ class PersonalDataView extends React.PureComponent {
         this.state = {
             sendingData: false,
             dataChange: false,
-            isVisible:false,
+            isVisible: false,
             userData: {
                 apodo: this.props.personalData.nickName,
                 nombre: this.props.personalData.nombre,
@@ -67,7 +67,7 @@ class PersonalDataView extends React.PureComponent {
             this.validName() &&
             this.validLastname() &&
             (this.validCellPhoneNumber() ||
-            this.validPhoneNumber()))
+                this.validPhoneNumber()))
     }
 
     validNickname() {
@@ -94,7 +94,7 @@ class PersonalDataView extends React.PureComponent {
         if (!this.validNickname()) {
             this.setState((prevState) => ({
                 errorMessage: Object.assign({}, prevState.errorMessage, {
-                    apodo: 'Debe tener mas de 3 caracteres'
+                    apodo: 'Debe tener más de 3 caracteres'
                 })
             }))
         } else {
@@ -110,7 +110,7 @@ class PersonalDataView extends React.PureComponent {
         if (!this.validName()) {
             this.setState((prevState) => ({
                 errorMessage: Object.assign({}, prevState.errorMessage, {
-                    nombre: 'Debe tener mas de 3 caracteres'
+                    nombre: 'Debe tener más de 3 caracteres'
                 })
             }))
         } else {
@@ -126,7 +126,7 @@ class PersonalDataView extends React.PureComponent {
         if (!this.validLastname()) {
             this.setState((prevState) => ({
                 errorMessage: Object.assign({}, prevState.errorMessage, {
-                    apellido: 'Debe tener mas de 3 caracteres'
+                    apellido: 'Debe tener más de 3 caracteres'
                 })
             }))
         } else {
@@ -142,7 +142,7 @@ class PersonalDataView extends React.PureComponent {
         if (!this.validCellPhoneNumber()) {
             this.setState((prevState) => ({
                 errorMessage: Object.assign({}, prevState.errorMessage, {
-                    telefono_movil: 'Debe tener 6 o mas numeros'
+                    telefono_movil: 'Debe tener 6 o más números'
                 })
             }))
         } else {
@@ -159,7 +159,7 @@ class PersonalDataView extends React.PureComponent {
         if (!this.validPhoneNumber()) {
             this.setState((prevState) => ({
                 errorMessage: Object.assign({}, prevState.errorMessage, {
-                    telefono_fijo: 'Debe tener 6 o mas numeros'
+                    telefono_fijo: 'Debe tener 6 o más números'
                 })
             }))
         } else {
@@ -180,10 +180,22 @@ class PersonalDataView extends React.PureComponent {
         this.showErrorPhoneNumber()
     }
 
-    handleSubmit(values) {
+    flushErrors() {
+        this.setState({
+            errorMessage: {
+                apodo: '',
+                nombre: '',
+                apellido: '',
+                telefono_movil: '',
+                telefono_fijo: ''
+            },
+        })
+    }
+
+    handleSubmit() {
         if (!this.state.sendingData) {
             if (this.dataValid()) {
-                this.setState({ sendingData: true, isVisible:true })
+                this.setState({ sendingData: true, isVisible: true })
                 const token = base64.encode(`${this.props.user.email}:${this.props.user.token}`);
                 axios.put(this.serverBaseRoute + 'rest/user/adm/edit', {
                     password: null,
@@ -202,11 +214,13 @@ class PersonalDataView extends React.PureComponent {
                         this.setState({
                             sendingData: false,
                             dataChange: false,
-                            isVisible:false,
+                            isVisible: false,
                         })
+                        this.flushErrors();
                         Alert.alert('Aviso', 'Los datos fueron actualizados correctamente');
                     }).catch(function (error) {
-                        this.setState({ dataChange: true, isVisible:false })
+                        this.flushErrors();
+                        this.setState({ dataChange: true, isVisible: false })
                         Alert.alert('Error', 'ocurrio un error al intentar actualizar los datos');
                     });
             } else {
@@ -250,13 +264,13 @@ class PersonalDataView extends React.PureComponent {
         })
     }
 
-    onlyNumbers(value){
+    onlyNumbers(value) {
         let reg = new RegExp('^[0-9]+$');
-        if(reg.test(value)){
+        if (reg.test(value)) {
             let adjustedValue = parseInt(value, 10).toString();
             return adjustedValue
         }
-        if(value.length == 0){
+        if (value.length == 0) {
             return value
         }
         return null
@@ -271,7 +285,6 @@ class PersonalDataView extends React.PureComponent {
                         apodo: value
                     })
                 }))
-                this.showErrorNickName()
                 break;
             case NOMBRE:
                 this.setState((prevState) => ({
@@ -280,7 +293,6 @@ class PersonalDataView extends React.PureComponent {
                         nombre: value
                     })
                 }))
-                this.showErrorName()
                 break;
 
             case APELLIDO:
@@ -290,19 +302,16 @@ class PersonalDataView extends React.PureComponent {
                         apellido: value
                     })
                 }))
-
-                this.showErrorLastName()
                 break;
             case TELEFONOMOVIL:
                 let datavalue = this.onlyNumbers(value)
-                if(datavalue !== null){
+                if (datavalue !== null) {
                     this.setState((prevState) => ({
                         dataChange: true,
                         userData: Object.assign({}, prevState.userData, {
                             telefono_movil: datavalue
                         })
                     }))
-                    this.showErrorCellPhone()
                 }
                 break;
             case TELEFONOFIJO:
@@ -312,7 +321,6 @@ class PersonalDataView extends React.PureComponent {
                         telefono_fijo: value
                     })
                 }))
-                this.showErrorPhoneNumber()
                 break;
         }
     }
@@ -482,8 +490,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
 
-    fieldText:{
-        fontWeight:"bold"
+    fieldText: {
+        fontWeight: "bold"
     },
 
     TextStyle: {

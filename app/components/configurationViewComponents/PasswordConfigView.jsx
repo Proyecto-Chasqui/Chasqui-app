@@ -52,7 +52,7 @@ class PasswordConfigView extends React.PureComponent {
                         this.flushErrors()
                         Alert.alert('Aviso', 'Los datos fueron actualizados correctamente');
                         this.setState({isVisible:false})
-                    }).catch(function (error) {
+                    }).catch((error) => {
                         this.setState({ sendingData: false, dataChange: true, isVisible: false })
                         Alert.alert('Error', 'ocurrio un error al intentar actualizar los datos');
                     });
@@ -79,7 +79,7 @@ class PasswordConfigView extends React.PureComponent {
     }
 
     dataValid() {
-        return this.validConfirmPassword() && this.validNewPassword && this.validOldPassword && this.matchNewPassword;
+        return this.validConfirmPassword() && this.validNewPassword() && this.validOldPassword() && this.matchNewPassword();
     }
 
     showErrorMessages() {

@@ -76,7 +76,7 @@ class ProductFilterView extends React.PureComponent{
         }).catch(function (error) {
             Alert.alert(
                 'Error',
-                'Ocurrio un error al obtener los productos del servidor, vuelva a intentar mas tarde.',
+                'Ocurrio un error al obtener los productos del servidor, vuelva a intentar más tarde.',
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],
@@ -92,7 +92,7 @@ class ProductFilterView extends React.PureComponent{
         }).catch(function (error) {
             Alert.alert(
                 'Error',
-                'Ocurrio un error al obtener los sellos de productos del servidor, vuelva a intentar mas tarde.',
+                'Ocurrio un error al obtener los sellos de productos del servidor, vuelva a intentar más tarde.',
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],
@@ -108,7 +108,7 @@ class ProductFilterView extends React.PureComponent{
         }).catch(function (error) {
             Alert.alert(
                 'Error',
-                'Ocurrio un error al obtener los sellos de productores del servidor, vuelva a intentar mas tarde.',
+                'Ocurrio un error al obtener los sellos de productores del servidor, vuelva a intentar más tarde.',
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],
@@ -124,7 +124,7 @@ class ProductFilterView extends React.PureComponent{
         }).catch(function (error) {
             Alert.alert(
                 'Error',
-                'Ocurrio un error al obtener las caracteristicas de los productos del servidor, vuelva a intentar mas tarde.',
+                'Ocurrio un error al obtener las caracteristicas de los productos del servidor, vuelva a intentar más tarde.',
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],

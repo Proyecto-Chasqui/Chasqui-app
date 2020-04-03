@@ -140,7 +140,7 @@ class CatalogView extends React.Component {
         }).catch(function (error) {
             Alert.alert(
                 'Error',
-                'Ocurrio un error al obtener los productos del servidor, vuelva a intentar mas tarde.',
+                'Ocurrio un error al obtener los productos del servidor, vuelva a intentar más tarde.',
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],
@@ -156,7 +156,7 @@ class CatalogView extends React.Component {
         }).catch(function (error) {
             Alert.alert(
                 'Error',
-                'Ocurrio un error al obtener las zonas del servidor, vuelva a intentar mas tarde.',
+                'Ocurrio un error al obtener las zonas del servidor, vuelva a intentar más tarde.',
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],
@@ -171,7 +171,7 @@ class CatalogView extends React.Component {
         }).catch(function (error) {
             Alert.alert(
                 'Error',
-                'Ocurrio un error al obtener los puntos de retiro del servidor, vuelva a intentar mas tarde.',
+                'Ocurrio un error al obtener los puntos de retiro del servidor, vuelva a intentar más tarde.',
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],
@@ -214,7 +214,7 @@ class CatalogView extends React.Component {
         }).catch(function (error) {
             Alert.alert(
                 'Error',
-                'Ocurrio un error al obtener los productos del servidor, vuelva a intentar mas tarde.',
+                'Ocurrio un error al obtener los productos del servidor, vuelva a intentar más tarde.',
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],
@@ -229,7 +229,7 @@ class CatalogView extends React.Component {
         }).catch(function (error) {
             Alert.alert(
                 'Error',
-                'Ocurrio un error al obtener los productos del servidor, vuelva a intentar mas tarde.',
+                'Ocurrio un error al obtener los productos del servidor, vuelva a intentar más tarde.',
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],
