@@ -39,13 +39,6 @@ class ConfigurationView extends React.PureComponent {
                         style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
                         source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                     />
-                    <Button
-                        icon={
-                            <Icon name="shopping-cart" size={20} color="white" type='font-awesome' />
-                        }
-                        buttonStyle={styles.leftHeaderButton}
-                        onPress={() => null}
-                    />
                 </Header>
             </View>
             <View>

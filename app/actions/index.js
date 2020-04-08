@@ -23,6 +23,9 @@ export const SELLERPOINTS = 'SELLERPOINTS';
 export const CLEANSELLERPOINT = 'CLEANSELLERPOINT';
 export const PERSONALDATA = 'PERSONALDATA';
 export const ADRESSESDATA = 'ADRESSESDATA';
+export const SHOPPINGCARTS = 'SHOPPINGCARTS';
+export const SHOPPINGCARTSELECTED = 'SHOPPINGCARTSELECTED';
+export const SHOPPINGCARTUNSELECTED = 'SHOPPINGCARTUNSELECTED';
 
 export const login = userData => ({type: LOGIN, userData});
 export const logout = () => ({type: LOGOUT});
@@ -49,3 +52,6 @@ export const sellerPoints = (sellerPointsStack) => ({type:SELLERPOINTS, sellerPo
 export const cleanSellerPoints = () => ({type:CLEANSELLERPOINT})
 export const personalData = (personalData) =>({type:PERSONALDATA, personalData});
 export const adressesData = (adressesData) => ({type:ADRESSESDATA, adressesData});
+export const shoppingCarts = (shoppingCartsStack) => ({type:SHOPPINGCARTS, shoppingCartsStack});
+export const shoppingCartSelected = (dataShoppingCartSelected) => ({type:SHOPPINGCARTSELECTED, dataShoppingCartSelected});
+export const shoppingCartUnselected = () => ({type:SHOPPINGCARTUNSELECTED});
