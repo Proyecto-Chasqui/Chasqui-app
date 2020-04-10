@@ -1,54 +1,229 @@
 import React from 'react'
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, FlatList, ActivityIndicator, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, FlatList, ActivityIndicator, Dimensions, Alert } from 'react-native';
 import { Card, Badge, Icon, Image, Button, Avatar } from 'react-native-elements';
-import GLOBAL from '../../Globals'
+import GLOBAL from '../../Globals';
+import axios from 'axios';
+import LoadingOverlayView from '../generalComponents/LoadingOverlayView'
 
 class ItemInfoCartView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.navigation = this.props.navigation;
         this.serverBaseRoute = GLOBAL.BASE_URL;
+        this.shoppingCarts = this.props.actions.shoppingCarts;
+        this.state = {
+            showWaitSign: false,
+            guest: this.props.user.id === 0,
+            validCart: false,
+        }
     }
     normalizeText(text) {
         return encodeURI(text);
     }
 
+    cancelCartAlert() {
+        Alert.alert(
+            'Pregunta',
+            '¿Esta seguro de cancelar su pedido individual?',
+            [
+                { text: 'No', onPress: () => null },
+                { text: 'Si', onPress: () => this.cancelCart() },
+
+            ],
+            { cancelable: false },
+        );
+    }
+
+
+
+    showAlertInvalidCart(){
+        Alert.alert(
+            'Aviso',
+            'Debe agregar al menos un producto para confirmar',
+            [
+                { text: 'Entendido', onPress: () => null },
+
+            ],
+            { cancelable: false },
+        );
+    }
+
+    goToProduct(idVariante) {
+        this.props.allProducts.map((product) =>{
+            if(product.idProducto === idVariante){
+                this.props.actions.productSelected(product);
+            }
+        })
+        this.goProduct();
+        this.props.functionShow();        
+    }
+
+    goProduct(){
+        this.navigation.navigate("Producto");
+    }
+
+    goToRegister(){
+        this.props.actions.logout();
+    }
+
+    getShoppingCarts() {
+        axios.post((this.serverBaseRoute + '/rest/user/pedido/conEstados'), {
+            idVendedor: this.props.vendorSelected.id,
+            estados: [
+                "ABIERTO"
+            ]
+        }).then(res => {
+            this.shoppingCarts(res.data);
+            this.setState({ showWaitSign: false })
+            Alert.alert(
+                'Aviso',
+                'El pedido ha sido cancelado correctamente',
+                [
+                    { text: 'Entendido', onPress: () => null },
+                ],
+                { cancelable: false },
+            );
+        }).catch((error) => {
+            console.log(error);
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al obtener los pedidos del servidor, vuelva a intentar más tarde.',
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
+
+    cancelCart() {
+        this.setState({ showWaitSign: true })
+        axios.delete((this.serverBaseRoute + 'rest/user/pedido/individual/' + this.props.shoppingCartSelected.id)).then(res => {
+            this.props.actions.shoppingCartUnselected();
+            this.getShoppingCarts();
+        }).catch((error) => {
+            this.setState({ showWaitSign: false })
+            console.log("error", error);
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al cancelar el pedido, vuelva a intentar más tarde.',
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
+
+    confirmCart(){
+        if(this.props.shoppingCartSelected.productosResponse == 0){
+            this.showAlertInvalidCart()
+        }else{
+            this.props.functionShow();     
+            this.navigation.navigate('ConfirmarPedido')
+        }
+    }
+
     render() {
-        if (this.props.shoppingCartSelected.id === null) {
-            return <Text> No se selecciono ningun carrito, por favor seleccione uno desde la sección 'Ver pedidos'</Text>
+        if (this.props.shoppingCartSelected.id === undefined) {
+            return (
+                <View>
+                    <View style={{ height: Dimensions.get("window").height - 270 }}>
+                        <View style={stylesListCard.viewSearchErrorContainer}>
+                            {this.state.guest ?
+                                (
+                                    <View style={stylesListCard.viewErrorContainer}>
+                                        <View style={stylesListCard.searchIconErrorContainer}>
+                                            <Icon name="user" type='font-awesome' size={50} color={"white"} containerStyle={stylesListCard.searchIconError}></Icon>
+                                        </View>
+                                        <Text style={stylesListCard.errorText}>
+                                            Debe ingresar con una cuenta
+                                        </Text><Button onPress={()=>this.goToRegister()}title="Ingresar" type="clear"/>
+                                    </View>
+                                )
+                                :
+                                (
+                                    <View style={stylesListCard.viewErrorContainer}>
+                                        <View style={stylesListCard.searchIconErrorContainer}>
+                                            <Icon name="shopping-cart" type='font-awesome' size={50} color={"white"} containerStyle={stylesListCard.searchIconError}></Icon>
+                                        </View>
+                                        <Text style={stylesListCard.errorText}>
+                                            No tiene ningún pedido seleccionado
+                                        </Text>
+                                        <Text style={stylesListCard.tipErrorText}>
+                                            Seleccione o abra uno en la opción <Text style={{ fontWeight: 'bold' }}>Ver pedidos</Text>
+                                        </Text>
+                                    </View>
+                                )
+                            }
+
+                        </View>
+                    </View>
+                    <View style={{ backgroundColor: '#ebedeb', height: Dimensions.get("window").height - 710, }}>
+                        <View style={{ marginTop: 15 }}>
+                            <View style={stylesListCard.singleItemContainer}>
+                                <Text style={stylesListCard.totalPriceCartStyle}> Total : $ - - - </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 2 }}>
+                                <Button disabled={true} titleStyle={{ color: 'black', }} title='Cancelar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonNotStyle}></Button>
+                                <Button disabled={true} titleStyle={{ color: 'white', }} title='Confirmar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonOkStyle}></Button>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            )
+
         }
 
         return (
-            <View >
-                <View style={{height:Dimensions.get("window").height - 270}}>
-                    <FlatList data={this.props.shoppingCartSelected.productosResponse} keyExtractor={item => item.idVariante} windowSize={15} renderItem={({ item }) =>
-                        <TouchableOpacity onPress={() => null} style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
-                            <View style={stylesListCard.containerList}>
-                                <View style={stylesListCard.cardImageView}>
-                                    <Avatar overlayContainerStyle={stylesListCard.overlayAvatarContainer} rounded size={65} source={{ uri: (this.normalizeText(this.serverBaseRoute + item.imagen)) }} renderPlaceholderContent={<ActivityIndicator size="large" color="#0000ff" />} />
-                                </View>
-                                <View style={{ flex: 2 }}>
-                                    <View >
-                                        <Text style={stylesListCard.priceStyle}>{item.cantidad} x {item.precio} = $ {item.cantidad * item.precio}</Text>
+            <View>
+                <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
+                <View style={{ height: Dimensions.get("window").height - 270 }}>
+                    {this.props.shoppingCartSelected.productosResponse.length == 0 ?
+                        (
+                            <View style={stylesListCard.viewSearchErrorContainer}>
+                                <View style={stylesListCard.viewErrorContainer}>
+                                    <View style={stylesListCard.cartIconOkContainer}>
+                                        <Icon name="shopping-cart" type='font-awesome' size={50} color={"white"} containerStyle={stylesListCard.searchIconError}></Icon>
                                     </View>
-                                    <View >
-                                        <Text style={stylesListCard.nameTextStyle}>{item.nombre}</Text>
-                                    </View>
+                                    <Text style={stylesListCard.errorText}>
+                                        Ya puede agregar productos!
+                        </Text>
+
                                 </View>
                             </View>
-                        </TouchableOpacity>
+                        )
+                        : (
+                            <FlatList data={this.props.shoppingCartSelected.productosResponse} keyExtractor={item => item.idVariante} windowSize={15}
+                                renderItem={({ item }) =>
+                                    <TouchableOpacity onPress={() => this.goToProduct(item.idVariante)} style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                        <View style={stylesListCard.containerList}>
+                                            <View style={stylesListCard.cardImageView}>
+                                                <Avatar overlayContainerStyle={stylesListCard.overlayAvatarContainer} rounded size={65} source={{ uri: (this.normalizeText(this.serverBaseRoute + item.imagen)) }} renderPlaceholderContent={<ActivityIndicator size="large" color="#0000ff" />} />
+                                            </View>
+                                            <View style={{ flex: 2 }}>
+                                                <View >
+                                                    <Text style={stylesListCard.priceStyle}>{item.cantidad} x {item.precio} = $ {item.cantidad * item.precio}</Text>
+                                                </View>
+                                                <View >
+                                                    <Text style={stylesListCard.nameTextStyle}>{item.nombre}</Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
 
-                    } />
+                                } />)
+                    }
                 </View>
-                <View style={{backgroundColor:'#ebedeb', height: Dimensions.get("window").height - 710, }}>
-                    <View style={{marginTop:15}}>
-                    <View style={stylesListCard.singleItemContainer}>
-                        <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {this.props.shoppingCartSelected.montoActual} </Text>
-                    </View>
-                    <View style={{flexDirection:'row', marginLeft:15, marginRight:15, marginTop:2}}>
-                        <Button  titleStyle={{ color: 'black', }} title='Cancelar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonNotStyle}></Button>
-                        <Button  titleStyle={{ color: 'white', }} title='Confirmar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonOkStyle}></Button>
-                    </View>
+                <View style={{ backgroundColor: '#ebedeb', height: Dimensions.get("window").height - 710, }}>
+                    <View style={{ marginTop: 15 }}>
+                        <View style={stylesListCard.singleItemContainer}>
+                            <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {this.props.shoppingCartSelected.montoActual} </Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 2 }}>
+                            <Button onPress={() => this.cancelCartAlert()} titleStyle={{ color: 'black', }} title='Cancelar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonNotStyle}></Button>
+                            <Button onPress={() => this.confirmCart()} titleStyle={{ color: 'white', }} title='Confirmar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonOkStyle}></Button>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -57,6 +232,48 @@ class ItemInfoCartView extends React.PureComponent {
 }
 
 const stylesListCard = StyleSheet.create({
+
+    viewSearchErrorContainer: {
+        height: "100%"
+    },
+
+    viewErrorContainer: {
+        marginTop: 150
+    },
+
+    errorText: {
+        marginTop: 25,
+        fontSize: 15,
+        fontWeight: "bold",
+        alignSelf: 'center'
+    },
+
+    tipErrorText: {
+        marginTop: 25,
+        fontSize: 12,
+        alignSelf: 'center'
+    },
+
+    searchIconErrorContainer: {
+        backgroundColor: "grey",
+        borderRadius: 50,
+        width: 100,
+        height: 100,
+        alignSelf: 'center'
+    },
+
+    cartIconOkContainer: {
+        backgroundColor: "green",
+        borderRadius: 50,
+        width: 100,
+        height: 100,
+        alignSelf: 'center'
+    },
+
+    searchIconError: {
+        marginTop: 23,
+    },
+
     subMenuButtonContainer: {
         flex: 1
     },
@@ -78,8 +295,8 @@ const stylesListCard = StyleSheet.create({
     }
     ,
     totalPriceCartStyle: {
-        textAlign:'center',
-        marginTop:7,
+        textAlign: 'center',
+        marginTop: 7,
         fontSize: 15,
     },
 

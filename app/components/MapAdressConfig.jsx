@@ -7,8 +7,6 @@ import { Header, Button, Icon, SearchBar, Image, Overlay } from 'react-native-el
 class MapAdressConfig extends React.PureComponent {
     constructor(props) {
         super(props)
-        console.log('props', props)
-
         this.initialCamera = {
             center: {
                 latitude: -34.7067799,
@@ -39,7 +37,6 @@ class MapAdressConfig extends React.PureComponent {
 
     componentDidMount() {
         if (this.state.markerLocation !== null) {
-            console.log('camera!');
             let camera = {
                 center: {
                     latitude: this.state.markerLocation.lat,

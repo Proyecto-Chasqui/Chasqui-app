@@ -12,6 +12,8 @@ export const VENDORSELECTED = 'VENDORSELECTED';
 export const VENDORUNSELECTED = 'VENDORUNSELECTED';
 export const PRODUCTS = 'PRODUCTS';
 export const FLUSHPRODUCTS = 'FLUSHPRODUCTS';
+export const ALLPRODUCTS = 'ALLPRODUCTS';
+export const ALLFLUSHPRODUCTS = 'ALLFLUSHPRODUCTS';
 export const PRODUCTSELECTED = 'PRODUCTSELECTED';
 export const PRODUCTUNSELECTED = 'PRODUCTUNSELECTED';
 export const PRODUCERS = 'PRODUCERS';
@@ -41,6 +43,8 @@ export const vendorSelected = vendorSelectedData => ({type: VENDORSELECTED, vend
 export const vendorUnSelected = () => ({type: VENDORUNSELECTED});
 export const products = (productStack) => ({type: PRODUCTS, productStack});
 export const flushproducts = () => ({type: FLUSHPRODUCTS});
+export const allProducts = (allProductsStack) => ({type:ALLPRODUCTS,allProductsStack});
+export const allFlushProducts = () => ({type:ALLFLUSHPRODUCTS});
 export const productSelected = (product) => ({type: PRODUCTSELECTED, product});
 export const productUnselected = () => ({type: PRODUCTUNSELECTED});
 export const producers = (producersStack) => ({type:PRODUCERS, producersStack});

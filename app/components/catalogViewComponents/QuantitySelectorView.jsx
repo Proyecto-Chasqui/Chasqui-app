@@ -6,9 +6,18 @@ class QuantitySelectorView extends React.PureComponent{
     constructor(props){
         super(props)
         this.text = this.props.text;
+        this.functionValueComunicator = this.props.functionValueComunicator;
         this.state = {
-            value: this.setInitialValue(props.initialValue)
+            initialValue: this.setInitialValue(this.props.initialValue),
+            value: this.setInitialValue(this.props.initialValue)
         }        
+    }
+
+    componentDidUpdate(){
+        if(this.state.initialValue !== this.props.initialValue){
+            this.setState({initialValue: this.setInitialValue(this.props.initialValue),
+            value:this.setInitialValue(this.props.initialValue)})
+        }
     }
 
     setInitialValue(value){
@@ -25,6 +34,8 @@ class QuantitySelectorView extends React.PureComponent{
             this.setState({
                 value: adjustedValue
             })
+            let change = this.valueEquals(parseInt(text, 10))
+            this.functionValueComunicator(parseInt(text, 10), change);
         }
     }
 
@@ -35,7 +46,12 @@ class QuantitySelectorView extends React.PureComponent{
             this.setState({
                 value: varValue.toString() 
             })
+            this.functionValueComunicator(varValue, (this.valueEquals(varValue)));
         }
+    }
+
+    valueEquals(varValue){
+        return parseInt(this.state.initialValue) === varValue
     }
 
     add(){
@@ -45,13 +61,15 @@ class QuantitySelectorView extends React.PureComponent{
             this.setState({
                 value: varValue.toString() 
             })
+            this.functionValueComunicator(varValue, (this.valueEquals(varValue)));
         }
+        
     }
 
     render(){
         return(
-        <View style={{flexDirection:"row",width:"100%"}}>
-            <View style={{ width:"10%"}}>
+        <View style={{flexDirection:"row", flex:1}}>
+            <View style={{flex:3}} >
             <Button buttonStyle={{height:"100%", backgroundColor:"transparent", }}
                 icon={
                     <Icon
@@ -61,21 +79,23 @@ class QuantitySelectorView extends React.PureComponent{
                     size={30}
                     />
                 }
+                disabled={this.props.disabled}
                 onPress={() => this.substract()}
                 />
             </View>
             <View style={styles.verticalDivisor} />
-            <View style={{alignSelf:"center", height:"100%", justifyContent:"center", alignContent:"center", flexDirection:"row", width:"80%" }}> 
+            <View style={{flex:12, alignSelf:"center", height:"100%", justifyContent:"center", alignContent:"center", flexDirection:"row" }}> 
                 <Text style={{alignSelf:"center", fontSize:20}}>{this.props.text}</Text>
-                <TextInput style={{ width:"25%",height:"100%", alignSelf:"center", fontSize:20}} containerStyle={{alignSelf:"center", }}
+                <TextInput style={{height:"100%", alignSelf:"center", fontSize:20}} containerStyle={{alignSelf:"center", }}
                         maxLength={10}
                         keyboardType='numeric'
                         onChangeText={text => this.onChangeText(text)}
-                        value = {this.state.value}
+                        value = {this.state.value}                        
+                        editable={!this.props.disabled}
                 />
             </View>
             <View style={styles.verticalDivisor} />
-            <View style={{ width:"9%"}}>
+            <View style={{flex:3}} >
             <Button buttonStyle={{height:"100%", backgroundColor:"transparent"}}
                 icon={
                         <Icon
@@ -85,6 +105,7 @@ class QuantitySelectorView extends React.PureComponent{
                         size={30}
                         />
                 }
+                disabled={this.props.disabled}
                 onPress={() => this.add()}
                 />
             </View>
@@ -99,7 +120,6 @@ const styles = StyleSheet.create({
         borderLeftWidth: 2,
         borderLeftColor: "#D8D8D8",
         height: "100%",
-        alignSelf: "center"
     },
 })
 

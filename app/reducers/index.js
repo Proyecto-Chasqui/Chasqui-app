@@ -19,10 +19,11 @@ import personalData from './personalData';
 import adressesData from './adressesData';
 import shoppingCartSelected from './shoppingCartSelected';
 import shoppingCarts from './shoppingCarts';
+import allProducts from './allProducts';
 
 const rootReducer = combineReducers({user, vendors, vendorTags,
      products, seals, sealsSelected, vendorSelected, productSelected, producers,
      producerSelected, productSeals, productionSeals, productCategories, zones, sellerPoints,
-     personalData, adressesData, shoppingCartSelected, shoppingCarts });
+     personalData, adressesData, shoppingCartSelected, shoppingCarts, allProducts });
 
 export default rootReducer;

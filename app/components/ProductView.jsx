@@ -7,6 +7,7 @@ import QuantitySelector from '../components/catalogViewComponents/QuantitySelect
 import WebView from 'react-native-webview'
 import { ScrollView } from 'react-native-gesture-handler';
 import { SliderBox } from "react-native-image-slider-box";
+import OverlayShoppingCartView from '../containers/CatalogComponentsContainers/OverlayShoppingCart'
 import axios from 'axios';
 
 class ProductView extends React.PureComponent {
@@ -14,34 +15,86 @@ class ProductView extends React.PureComponent {
         super(props)
         this.state = {
             showCaracteristics: false,
-            images: [
-              ]
+            images: [],
+            showShoppingCart: false,
+            initialValue: 0,
+            quantityValue: 0,
+            idPedido: 0,
+            buttonDisabled: true,
+            intentAddingWithOutCart: false,
+            idProduct:0,
         }
         this.serverBaseRoute = GLOBALS.BASE_URL;
+        this.shoppingCarts = this.props.actions.shoppingCarts
     }
 
-    componentDidMount(){
+    setQuantityValue(value, equals) {
+        this.setState({ quantityValue: value, buttonDisabled: equals })
+    }
+
+    componentDidMount() {
         this.getImages(this.props);
+        this.setState({
+            initialValue: this.setProductQuantity(),
+            quantityValue: this.setProductQuantity(),
+        })
+
     }
 
-    parseImageURL(urlImages){
+    componentDidUpdate() {
+        if (this.props.shoppingCartSelected.id !== undefined) {
+            if (this.state.idPedido !== this.props.shoppingCartSelected.id) {
+                this.setState({
+                    initialValue: this.setProductQuantity(),
+                    quantityValue: this.setProductQuantity(),
+                    idPedido: this.props.shoppingCartSelected.id,
+                    buttonDisabled: true,
+                    idProduct: this.props.productSelected.idProducto
+                })
+            }
+            if(this.state.idProduct != this.props.productSelected.idProducto){
+                this.setState({
+                    initialValue: this.setProductQuantity(),
+                    quantityValue: this.setProductQuantity(),
+                    idPedido: this.props.shoppingCartSelected.id,
+                    buttonDisabled: true,
+                    idProduct: this.props.productSelected.idProducto
+                })
+                this.getImages()
+            }
+        }
+    }
+
+    setProductQuantity() {
+        let value = 0;
+        if (this.props.shoppingCartSelected.id !== undefined) {
+            this.props.shoppingCartSelected.productosResponse.map((product) => {
+                if (this.props.productSelected.idProducto === product.idVariante) {
+                    value = product.cantidad
+                }
+            })
+        }
+        return value;
+    }
+
+    parseImageURL(urlImages) {
         let varImageRoutes = []
         urlImages.map((imageData, i) => {
             let route = this.normalizeText(this.serverBaseRoute + imageData.path)
             varImageRoutes.push(route)
         })
-        this.setState({images: varImageRoutes})
+        this.setState({ images: varImageRoutes })
     }
-    
-    getImages(props){
-        axios.get((this.serverBaseRoute + 'rest/client/producto/images/' + props.productSelected.idProducto )).then(res => {
+
+    getImages() {
+        axios.get((this.serverBaseRoute + 'rest/client/producto/images/' + this.props.productSelected.idProducto)).then(res => {
             this.parseImageURL(res.data);
-        }).catch(function (error) {
+        }).catch((error) => {
             Alert.alert(
                 'Error',
                 'Ocurrio un error al obtener las imagenes, vuelva a intentar más tarde.',
                 [
-                    { text: 'Entendido', onPress: () => props.actions.logout() },
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
                 ],
                 { cancelable: false },
             );
@@ -114,6 +167,87 @@ class ProductView extends React.PureComponent {
         this.props.navigation.navigate("Fabricante");
     }
 
+
+    showShoppingCart() {
+        this.setState({ showShoppingCart: !this.state.showShoppingCart })
+    }
+
+    updateCartSelected() {
+        this.props.shoppingCarts.map((cart, i) => {
+            if (cart.id === this.props.shoppingCartSelected.id) {
+                this.props.actions.shoppingCartSelected(cart)
+            }
+        })
+        this.setState({ buttonLoading: false })
+    }
+
+    getShoppingCarts() {
+        axios.post((this.serverBaseRoute + '/rest/user/pedido/conEstados'), {
+            idVendedor: this.props.vendorSelected.id,
+            estados: [
+                "ABIERTO"
+            ]
+        }).then(res => {
+            this.shoppingCarts(res.data);
+            this.updateCartSelected();
+            this.setState({ showWaitSign: false, idPedido: 0 })
+        }).catch((error) => {
+            console.log(error);
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al obtener los pedidos del servidor, vuelva a intentar más tarde.',
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
+
+    addProductToCart() {
+        this.setState({ buttonLoading: true, buttonDisabled: true })
+        if (this.state.quantityValue > this.state.initialValue) {
+            axios.put((this.serverBaseRoute + 'rest/user/pedido/individual/agregar-producto'), {
+                idPedido: this.props.shoppingCartSelected.id,
+                idVariante: this.props.productSelected.idVariante,
+                cantidad: this.state.quantityValue - this.state.initialValue,
+            }).then(res => {
+                this.getShoppingCarts()
+            }).catch((error) => {
+                this.setState({ buttonLoading: false, buttonDisabled: false })
+                if (error.response) {
+                    Alert.alert('Aviso', error.response.data.error);
+                  } else if (error.request) {
+                    Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+                  } else {
+                    Alert.alert('Error', "Ocurrio un error al intentar comunicarse con el servidor, intente más tarde o verifique su conectividad.");
+                  }
+            });
+        } else {
+            axios.put((this.serverBaseRoute + 'rest/user/pedido/individual/eliminar-producto'), {
+                idPedido: this.props.shoppingCartSelected.id,
+                idVariante: this.props.productSelected.idVariante,
+                cantidad: this.state.initialValue - this.state.quantityValue,
+            }).then(res => {
+                this.getShoppingCarts();
+            }).catch((error) => {
+                console.log(error);
+                this.setState({ buttonLoading: false, buttonDisabled: false })
+                if (error.response) {
+                    Alert.alert('Aviso', error.response.data.error);
+                  } else if (error.request) {
+                    Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+                  } else {
+                    Alert.alert('Error', "Ocurrio un error al intentar comunicarse con el servidor, intente más tarde o verifique su conectividad.");
+                  }
+            });
+        }
+    }
+
+    equalsQuantity() {
+        return this.state.quantityValue === this.state.initialValue
+    }
+
     render() {
         return (
 
@@ -124,6 +258,9 @@ class ProductView extends React.PureComponent {
                             <Icon name="bars" size={20} color="white" type='font-awesome' />
                         }
                         buttonStyle={styles.rightHeaderButton}
+                        disabledStyle={styles.rightHeaderButton}
+                        disabled={this.state.buttonLoading}
+                        loading={this.state.buttonLoading}
                         onPress={() => this.props.navigation.openDrawer()}
                     />
                     <Image
@@ -135,7 +272,10 @@ class ProductView extends React.PureComponent {
                             <Icon name="shopping-cart" size={20} color="white" type='font-awesome' />
                         }
                         buttonStyle={styles.leftHeaderButton}
-                        onPress={() => null}
+                        disabledStyle={styles.leftHeaderButton}
+                        disabled={this.state.buttonLoading}
+                        loading={this.state.buttonLoading}
+                        onPress={() => this.setState({ showShoppingCart: !this.state.showShoppingCart })}
                     />
                 </Header>
 
@@ -144,19 +284,19 @@ class ProductView extends React.PureComponent {
                     <View style={styles.topSectionContainer}>
                         {this.props.productSelected.destacado ? (<Text style={styles.featuredTag}>Destacado</Text>) : (<Text style={{ marginTop: -10 }}></Text>)}
                         <Text style={styles.productNameStyle}>{this.props.productSelected.nombreProducto}</Text>
-                        {this.state.images.length>0 ?(
+                        {this.state.images.length > 0 ? (
 
-                            <SliderBox images={this.state.images} 
-                            sliderBoxHeight={280}
-                            dotColor='rgba(51, 102, 255, 1)'
-                            inactiveDotColor='white'
-                            circleLoop
+                            <SliderBox images={this.state.images}
+                                sliderBoxHeight={280}
+                                dotColor='rgba(51, 102, 255, 1)'
+                                inactiveDotColor='white'
+                                circleLoop
                             />
-                            ):(<Image style={{ width: Dimensions.get("window").width, height: 280, alignSelf: 'center', resizeMode: 'contain', backgroundColor:"white" }}
+                        ) : (<Image style={{ width: Dimensions.get("window").width, height: 280, alignSelf: 'center', resizeMode: 'contain', backgroundColor: "white" }}
                             source={{ uri: null }}
                             PlaceholderContent={<ActivityIndicator />}
-                            />)
-                    }
+                        />)
+                        }
                     </View>
                     <Text style={styles.priceStyle}>$ {this.props.productSelected.precio}</Text>
                     <ScrollView style={styles.descriptionViewContainer}>
@@ -187,7 +327,7 @@ class ProductView extends React.PureComponent {
                                         color='#b0b901'
                                         size={30}
                                     />)}
-                                containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
+                                containerStyle={styles.buttonCaracteristicsContainerStyle} buttonStyle={styles.buttonProducerStyle}
                                 onPress={() => this.showCaracteristics()}></Button>
                         </View>
                         {this.state.showCaracteristics ?
@@ -231,16 +371,50 @@ class ProductView extends React.PureComponent {
                         }
                     </View>
                     <View style={{ marginTop: 20 }}></View>
+                    {
+                    this.props.shoppingCartSelected.id !== undefined ? 
+                    (
                     <View style={styles.singleItemContainer}>
-                        <QuantitySelector text={"Cantidad : "}></QuantitySelector>
+                        <QuantitySelector disabled={this.state.buttonLoading} functionValueComunicator={(value, change) => this.setQuantityValue(value, change)} text={"Cantidad : "} initialValue={this.state.initialValue.toString()}></QuantitySelector>
                     </View>
+                    )
+                    :
+                    (null)
+                    }
                     <View style={styles.singleItemContainer}>
-                        <Text style={styles.totalPriceCartStyle}> El total de tu pedido : $ 0 </Text>
+                        {this.props.shoppingCartSelected.id === undefined ?
+                            (<Text style={styles.totalPriceCartStyle}> No posee un pedido seleccionado </Text>)
+                            :
+                            (<Text style={styles.totalPriceCartStyle}> Total del pedido: $ {this.props.shoppingCartSelected.montoActual} </Text>)
+                        }
+
                     </View>
-                    <View style={styles.singleItemContainer}>
-                        <Button titleStyle={{ color: "black", fontSize: 20 }} containerStyle={styles.buttonAddProductContainer} buttonStyle={styles.buttonAddProductStyle} title="Agregar"></Button>
-                    </View>
+                    {this.props.shoppingCartSelected.id !== undefined ? (
+                        <View style={styles.singleItemContainer}>
+                            <Button
+                                onPress={() => this.addProductToCart()}
+                                titleStyle={{ color: "black", fontSize: 20 }}
+                                containerStyle={styles.buttonAddProductContainer}
+                                disabled={this.state.buttonDisabled}
+                                loading={this.state.buttonLoading}
+                                buttonStyle={styles.buttonAddProductStyle} title={this.state.initialValue>0?"Modificar":"Agregar"}></Button>
+                        </View>) : (
+                            <View style={styles.singleItemContainer}>
+                            <Button
+                                onPress={() => this.showShoppingCart()}
+                                titleStyle={{ color: "black", fontSize: 20 }}
+                                containerStyle={styles.buttonAddProductContainer}
+                                buttonStyle={styles.buttonAddProductStyle} title="Seleccionar pedido"></Button>
+                        </View>
+                        )
+
+                    }
                 </ScrollView>
+                <OverlayShoppingCartView
+                    showFilter={() => this.showShoppingCart()}
+                    isVisible={this.state.showShoppingCart}
+                    navigation={this.props.navigation}>                    
+                </OverlayShoppingCartView>
             </View>
         );
     }
@@ -370,7 +544,7 @@ const styles = StyleSheet.create({
     caracteristicsStyle: {
         height: 30,
         fontSize: 17,
-        width: "90%",
+        flex:23,
         alignSelf: "center",
         fontWeight: "bold",
         marginTop: 10,
@@ -379,17 +553,24 @@ const styles = StyleSheet.create({
 
     producerStyle: {
         height: 40,
-        width: "90%",
+        flex:23,
         fontSize: 15,
         alignSelf: "center",
         textAlign: 'justify'
     },
 
     buttonProducerContainerStyle: {
+        
+        flex:5,
         alignSelf: "center",
-        width: "10%",
-        marginRight: 20,
     },
+
+    buttonCaracteristicsContainerStyle:{
+        flex:5,
+        alignSelf: "center",
+    },
+
+
 
     buttonProducerStyle: {
         height: null,
@@ -398,7 +579,7 @@ const styles = StyleSheet.create({
 
     sealsContainer: {
         flexDirection: "row",
-        width: "90%",
+        flex:23,
         height: 50,
     },
 

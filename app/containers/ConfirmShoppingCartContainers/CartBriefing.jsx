@@ -1,7 +1,7 @@
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import CartBreafingView from '../../components/confirmShoppingCartComponents/CartBriefingView';
 import { shoppingCartSelected, shoppingCartUnselected, shoppingCarts, logout } from '../../actions';
-import OverlayShoppingCartView from '../../components/catalogViewComponents/OverlayShoppingCartView';
 
 const mapStateToProps = state => ({
     shoppingCarts: state.shoppingCarts,
@@ -15,6 +15,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(OverlayShoppingCartView);
+  mapStateToProps,
+  mapDispatchToProps,
+)(CartBreafingView);

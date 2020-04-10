@@ -23,6 +23,8 @@ class CatalogView extends React.Component {
         this.cleanSellerPoints = props.actions.cleanSellerPoints;
         this.flushproducts = props.actions.flushproducts;
         this.shoppingCarts = props.actions.shoppingCarts;
+        this.allProducts = props.actions.allProducts;
+        this.shoppingCartUnselected = props.actions.shoppingCartUnselected;
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.backButtonClick = this.backButtonClick.bind(this);
         this.goBackCatalogs = this.goBackCatalogs.bind(this);
@@ -60,8 +62,12 @@ class CatalogView extends React.Component {
             }
             if(this.props.user.id !== 0){
                 this.getShoppingCarts(this.props);
+                this.props.actions.shoppingCartUnselected();
                 this.getPersonalData(this.props);
                 this.getAdressesData(this.props);
+            }else{
+                this.props.actions.shoppingCartUnselected();
+                this.shoppingCarts([]);
             }
         }
     }
@@ -102,6 +108,7 @@ class CatalogView extends React.Component {
     goBackCatalogs() {
         this.props.actions.vendorUnSelected();
         this.props.actions.shoppingCartUnselected();
+        this.vendorId = 0;
         this.props.navigation.goBack(null);
     }
 
@@ -136,6 +143,7 @@ class CatalogView extends React.Component {
 
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.backButtonClick);
+        this.load();
     }
    
     getShoppingCarts(props){
@@ -145,7 +153,6 @@ class CatalogView extends React.Component {
               "ABIERTO"
             ]
           }).then(res => {
-            console.log(res.data);
             this.shoppingCarts(res.data);
         }).catch(function (error) {
             console.log(error);
@@ -234,6 +241,7 @@ class CatalogView extends React.Component {
             precio: null
         }).then(res => {
             this.products(res.data.productos);
+            this.allProducts(res.data.productos);
             this.setState({
                 isLoadingProducts: false,
             });
@@ -348,8 +356,7 @@ class CatalogView extends React.Component {
                 <OverlayShoppingCartView
                     showFilter={() => this.showShoppingCart()}
                     isVisible={this.state.showShoppingCart}
-                    navigation= {this.props.navigation}
-                    isLoadingComponent={(value) => this.isLoadingComponent(value)}>                    
+                    navigation= {this.props.navigation}>                    
                 </OverlayShoppingCartView>
                 {
                     this.state.isLoadingSearchProducts ?

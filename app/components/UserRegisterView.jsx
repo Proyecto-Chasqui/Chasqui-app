@@ -121,7 +121,6 @@ class UserRegisterView extends React.PureComponent {
     }
 
     validEqualsEmail() {
-        console.log("correo igual", this.state.userData.correo === this.state.userData.repetir_correo)
         return this.state.userData.correo === this.state.userData.repetir_correo
     }
 

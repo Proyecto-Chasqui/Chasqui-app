@@ -426,7 +426,6 @@ class AdressManagmentView extends React.PureComponent {
     }
 
     changeLocation(valLocation, sender) {
-        console.log('location on change', valLocation);
         sender.setState({
             location: valLocation,
             infoConfirmed: true,

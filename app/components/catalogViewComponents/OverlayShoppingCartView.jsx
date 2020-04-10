@@ -3,17 +3,23 @@ import { StyleSheet, Dimensions, View, Text, Alert } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
 import { Button, Icon, Overlay, CheckBox, Image, Header } from 'react-native-elements';
 import ItemInfoCartView from '../../containers/CatalogComponentsContainers/ItemInfoCart';
-
+import LoadingOverlayView from '../generalComponents/LoadingOverlayView';
+import GLOBAL from '../../Globals';
+import axios from 'axios';
 
 class OverlayShoppingCartView extends React.PureComponent {
     constructor(props) {
         super(props);
-        console.log("carts", this.props)
         this.shoppingCarts = this.props.shoppingCarts;
+        this.serverBaseRoute = GLOBAL.BASE_URL;
         this.shoppingCartSelected = this.props.actions.shoppingCartSelected;
+        this.shoppingCarts = this.props.actions.shoppingCarts;
         this.state = {
             showShoppingCarts: false,
             shoppingCartTypeSelected: 'Ver pedidos',
+            getShoppingCarts: false,
+            showWaitSign:false,
+            guest: this.props.user.id === 0,
         }
     }
 
@@ -26,15 +32,80 @@ class OverlayShoppingCartView extends React.PureComponent {
         }
     }
 
+    alertOpenCart(){
+        Alert.alert(
+            'Aviso',
+            '¿Seguro que desea abrir un pedido Individual?',
+            [
+                { text: 'Si', onPress: () => this.openCart() },
+                { text: 'No', onPress: () => null},
+            ],
+            { cancelable: false },
+        );
+    }
+
+    getShoppingCarts(){
+        axios.post((this.serverBaseRoute + '/rest/user/pedido/conEstados'),{
+            idVendedor: this.props.vendorSelected.id,
+            estados: [
+              "ABIERTO"
+            ]
+          }).then(res => {
+            this.shoppingCarts(res.data);
+            this.setState({showWaitSign:false});
+            this.showShoppingCarts();
+        }).catch((error) =>{
+            console.log(error);
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al obtener los pedidos del servidor, vuelva a intentar más tarde.',
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
+
+    openCart(){
+        this.setState({showWaitSign:true})
+        axios.post((this.serverBaseRoute + '/rest/user/pedido/obtenerIndividual'),{
+            idVendedor: this.props.vendorSelected.id
+        }).then(res => {
+            this.shoppingCartSelected(res.data);
+            this.getShoppingCarts();
+        }).catch((error) => {
+            this.setState({showWaitSign:false})
+            console.log("error", error);
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al crear el pedido, vuelva a intentar más tarde.',
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
+
+    selectCart(cart){
+        this.shoppingCartSelected(cart);
+        this.showShoppingCarts();
+    }
+
     render() {
+        if(this.props.user.id === 0){
+
+        }
         return (
+           
             <Overlay containerStyle={styles.overlayContainer}
                 overlayStyle={styles.overlay}
                 windowBackgroundColor="rgba(0, 0, 0, 0.3)"
                 onBackdropPress={() => this.props.showFilter()} isVisible={this.props.isVisible}
                 animationType="fade"
             >
-                <View style={styles.topHeader}>
+                 <View style={styles.topHeader}>
                     <View style={styles.containerIconStyle}>
                         <Icon iconStyle={styles.shoppingCartIcon} name="shopping-cart" size={30} color="white" type='font-awesome' />
                     </View>
@@ -42,7 +113,7 @@ class OverlayShoppingCartView extends React.PureComponent {
                 </View>
 
                 <View style={styles.selectorContainer}>
-                    <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title={this.state.shoppingCartTypeSelected}
+                    <Button disabled={this.state.guest} titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title={this.state.shoppingCartTypeSelected}
                         onPress={() => this.showShoppingCarts()} icon=
                         {this.state.showShoppingCarts ? (<Icon containerStyle={styles.iconContainer} iconStyle={styles.iconRevealButton} name="caret-up" size={20} color={'black'} type='font-awesome' />
                         ) :
@@ -51,7 +122,8 @@ class OverlayShoppingCartView extends React.PureComponent {
                         } iconRight />
                 </View>
                 <View style={styles.divisor}></View>
-
+                <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
+                
 
                 {this.state.showShoppingCarts ?
 
@@ -69,20 +141,16 @@ class OverlayShoppingCartView extends React.PureComponent {
                                         <Text> Creado el: {cart.fechaCreacion} </Text>
                                         { this.props.shoppingCartSelected.id === cart.id ?
                                         (null):
-                                        (<Button onPress={()=>this.shoppingCartSelected(cart)}title="Seleccionar"></Button>)                                                                                 
+                                        (<Button onPress={()=>this.selectCart(cart)}title="Seleccionar"></Button>)                                                                                 
                                         }
                                          </View>
                                     )
                                 }) 
                         ):( 
                         <View style={styles.selectorContainer}>    
-                        <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Individual"
-                        onPress={() => null} icon={
-                                                    <Icon containerStyle={styles.iconContainer}
-                                                    iconStyle={styles.iconRevealButton} 
-                                                    name="caret-down" size={20} 
-                                                    color={'black'} 
-                                                    type='font-awesome' />
+                        <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Abrir Pedido Individual"
+                        onPress={() => this.alertOpenCart()} icon={
+                            <Image style={styles.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_individual.png')} />
                         } 
                          iconRight />
                          </View>
@@ -94,11 +162,9 @@ class OverlayShoppingCartView extends React.PureComponent {
                     :
                     (
                         <View style={{ marginLeft: -9, marginRight:-9}}>
-                            {this.props.shoppingCartSelected.id ? (
-                                <ScrollView>
-                                    <ItemInfoCartView  navigation = {this.props.navigation}></ItemInfoCartView>
-                                </ScrollView>) : (<Text>Seleccione un carrito</Text>)
-                            }
+
+                                    <ItemInfoCartView functionShow={()=>this.props.showFilter()}  navigation = {this.props.navigation}></ItemInfoCartView>
+
                         </View>
                     )
                 }
@@ -124,7 +190,7 @@ const styles = StyleSheet.create({
     titleButtonReveal: {
         flex: 1,
         color: "black",
-        alignSelf: 'flex-end',
+        alignSelf: 'center',
     },
 
     iconRevealButton: {
