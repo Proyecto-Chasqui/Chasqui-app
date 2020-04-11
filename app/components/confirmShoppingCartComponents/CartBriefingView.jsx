@@ -43,7 +43,9 @@ class CartBriefingView extends React.PureComponent {
                             <FlatList data={this.props.shoppingCartSelected.productosResponse.sort((a, b) => this.compareIds(a,b))} 
                             keyExtractor={item => item.idVariante} windowSize={15}
                                 renderItem={({ item }) =>
-                                <ProductItemView item={item}></ProductItemView>
+                                <View style={{ flex: 1, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                <ProductItemView touchable={true} item={item}></ProductItemView>
+                                </View>
                                 } />
                     
                 </View>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions, Alert, ActivityIndicator } from 'react-native';
-import { Header, Button, Icon, Image } from 'react-native-elements';
+import { Header, Button, Icon, Image, Tooltip } from 'react-native-elements';
 import GLOBALS from '../Globals';
 import SealsView from '../components/catalogViewComponents/SealsView';
 import QuantitySelector from '../components/catalogViewComponents/QuantitySelectorView';
@@ -9,21 +9,23 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SliderBox } from "react-native-image-slider-box";
 import OverlayShoppingCartView from '../containers/CatalogComponentsContainers/OverlayShoppingCart'
 import axios from 'axios';
+import ProductItemView from '../containers/ConfirmShoppingCartContainers/ProductItem';
 
 class ProductView extends React.PureComponent {
     constructor(props) {
         super(props)
-        this.state = {
-            showCaracteristics: false,
-            images: [],
-            showShoppingCart: false,
-            initialValue: 0,
-            quantityValue: 0,
-            idPedido: 0,
-            buttonDisabled: true,
-            intentAddingWithOutCart: false,
-            idProduct:0,
-        }
+        this.tooltipRef = null,
+            this.state = {
+                showCaracteristics: false,
+                images: [],
+                showShoppingCart: false,
+                initialValue: 0,
+                quantityValue: 0,
+                idPedido: 0,
+                buttonDisabled: true,
+                intentAddingWithOutCart: false,
+                idProduct: 0,
+            }
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.shoppingCarts = this.props.actions.shoppingCarts
     }
@@ -34,33 +36,20 @@ class ProductView extends React.PureComponent {
 
     componentDidMount() {
         this.getImages(this.props);
-        this.setState({
-            initialValue: this.setProductQuantity(),
-            quantityValue: this.setProductQuantity(),
-        })
-
+        this.setProductQuantity();
     }
 
     componentDidUpdate() {
         if (this.props.shoppingCartSelected.id !== undefined) {
             if (this.state.idPedido !== this.props.shoppingCartSelected.id) {
-                this.setState({
-                    initialValue: this.setProductQuantity(),
-                    quantityValue: this.setProductQuantity(),
-                    idPedido: this.props.shoppingCartSelected.id,
-                    buttonDisabled: true,
-                    idProduct: this.props.productSelected.idProducto
-                })
+                this.setProductQuantity()
             }
-            if(this.state.idProduct != this.props.productSelected.idProducto){
-                this.setState({
-                    initialValue: this.setProductQuantity(),
-                    quantityValue: this.setProductQuantity(),
-                    idPedido: this.props.shoppingCartSelected.id,
-                    buttonDisabled: true,
-                    idProduct: this.props.productSelected.idProducto
-                })
+            if (this.state.idProduct != this.props.productSelected.idProducto) {
+                this.setProductQuantity()
                 this.getImages()
+            }
+            if (this.props.shoppingCartSelected.montoActual > this.state.cartPrice || this.props.shoppingCartSelected.montoActual < this.state.cartPrice) {
+                this.setProductQuantity()
             }
         }
     }
@@ -74,6 +63,14 @@ class ProductView extends React.PureComponent {
                 }
             })
         }
+        this.setState({
+            initialValue: value,
+            quantityValue: value,
+            idPedido: this.props.shoppingCartSelected.id,
+            buttonDisabled: true,
+            idProduct: this.props.productSelected.idProducto,
+            cartPrice: this.props.shoppingCartSelected.montoActual
+        })
         return value;
     }
 
@@ -191,6 +188,7 @@ class ProductView extends React.PureComponent {
             this.shoppingCarts(res.data);
             this.updateCartSelected();
             this.setState({ showWaitSign: false, idPedido: 0 })
+            this.tooltipRef.toggleTooltip();
         }).catch((error) => {
             console.log(error);
             Alert.alert(
@@ -217,11 +215,11 @@ class ProductView extends React.PureComponent {
                 this.setState({ buttonLoading: false, buttonDisabled: false })
                 if (error.response) {
                     Alert.alert('Aviso', error.response.data.error);
-                  } else if (error.request) {
+                } else if (error.request) {
                     Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-                  } else {
+                } else {
                     Alert.alert('Error', "Ocurrio un error al intentar comunicarse con el servidor, intente más tarde o verifique su conectividad.");
-                  }
+                }
             });
         } else {
             axios.put((this.serverBaseRoute + 'rest/user/pedido/individual/eliminar-producto'), {
@@ -235,17 +233,41 @@ class ProductView extends React.PureComponent {
                 this.setState({ buttonLoading: false, buttonDisabled: false })
                 if (error.response) {
                     Alert.alert('Aviso', error.response.data.error);
-                  } else if (error.request) {
+                } else if (error.request) {
                     Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-                  } else {
+                } else {
                     Alert.alert('Error', "Ocurrio un error al intentar comunicarse con el servidor, intente más tarde o verifique su conectividad.");
-                  }
+                }
             });
         }
     }
 
     equalsQuantity() {
         return this.state.quantityValue === this.state.initialValue
+    }
+
+
+    parseProduct(){
+        let item = {
+            nombre: this.props.productSelected.nombreProducto,
+            idVariante: this.props.productSelected.idVariante,
+            precio: this.props.productSelected.precio,
+            cantidad: this.state.quantityValue,
+            imagen: this.props.productSelected.imagenPrincipal
+        }
+        return item
+    }
+
+    defineText(){
+        let text = "Producto Agregado al pedido!";
+
+        if(this.state.quantityValue > this.state.initialValue || this.state.quantityValue < this.state.initialValue){
+            text = "Producto Modificado!"
+        }
+        if(this.state.quantityValue == 0){
+            text = "Producto Removido del pedido"
+        }
+        return text;
     }
 
     render() {
@@ -267,17 +289,37 @@ class ProductView extends React.PureComponent {
                         style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'contain' }}
                         source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                     />
-                    <Button
-                        icon={
-                            <Icon name="shopping-cart" size={20} color="white" type='font-awesome' />
-                        }
-                        buttonStyle={styles.leftHeaderButton}
-                        disabledStyle={styles.leftHeaderButton}
-                        disabled={this.state.buttonLoading}
-                        loading={this.state.buttonLoading}
-                        onPress={() => this.setState({ showShoppingCart: !this.state.showShoppingCart })}
-                    />
+                    <View>
+                        <Button
+                            icon={
+                                <Icon name="shopping-cart" size={20} color="white" type='font-awesome' />
+                            }
+                            buttonStyle={styles.leftHeaderButton}
+                            disabledStyle={styles.leftHeaderButton}
+                            disabled={this.state.buttonLoading}
+                            loading={this.state.buttonLoading}
+                            onPress={() => this.setState({ showShoppingCart: !this.state.showShoppingCart })}
+                        />
+                        <View style={{position:'absolute',marginLeft:35,marginTop:75}}>
+                            <Tooltip containerStyle={{borderColor:'black',borderWidth:1, backgroundColor:"white",height:120, width:300, marginLeft:-135}} ref={(ref) => { this.tooltipRef = ref }} withOverlay={false} 
+                            pointerColor='rgba(51, 102, 255, 1)'
+                            popover={
+                            <View style={{ width:300}}>
+                                <View style={{marginTop:15}}>
+                                    <Text style={{textAlign:"center", fontWeight:"bold", }}>
+                                    {this.defineText()}
+                                    </Text>
+                                </View>
+                                <ProductItemView touchable={false} item={this.parseProduct()}></ProductItemView>
+                            </View>
+                            }>                                
+                            </Tooltip>
+                        </View>
+                    </View>
+                    
                 </Header>
+
+
 
                 <ScrollView style={styles.productPageContainer} >
 
@@ -372,14 +414,14 @@ class ProductView extends React.PureComponent {
                     </View>
                     <View style={{ marginTop: 20 }}></View>
                     {
-                    this.props.shoppingCartSelected.id !== undefined ? 
-                    (
-                    <View style={styles.singleItemContainer}>
-                        <QuantitySelector disabled={this.state.buttonLoading} functionValueComunicator={(value, change) => this.setQuantityValue(value, change)} text={"Cantidad : "} initialValue={this.state.initialValue.toString()}></QuantitySelector>
-                    </View>
-                    )
-                    :
-                    (null)
+                        this.props.shoppingCartSelected.id !== undefined ?
+                            (
+                                <View style={styles.singleItemContainer}>
+                                    <QuantitySelector disabled={this.state.buttonLoading} functionValueComunicator={(value, change) => this.setQuantityValue(value, change)} text={"Cantidad : "} initialValue={this.state.initialValue.toString()}></QuantitySelector>
+                                </View>
+                            )
+                            :
+                            (null)
                     }
                     <View style={styles.singleItemContainer}>
                         {this.props.shoppingCartSelected.id === undefined ?
@@ -397,15 +439,15 @@ class ProductView extends React.PureComponent {
                                 containerStyle={styles.buttonAddProductContainer}
                                 disabled={this.state.buttonDisabled}
                                 loading={this.state.buttonLoading}
-                                buttonStyle={styles.buttonAddProductStyle} title={this.state.initialValue>0?"Modificar":"Agregar"}></Button>
+                                buttonStyle={styles.buttonAddProductStyle} title={this.state.initialValue > 0 ? "Modificar" : "Agregar"}></Button>
                         </View>) : (
                             <View style={styles.singleItemContainer}>
-                            <Button
-                                onPress={() => this.showShoppingCart()}
-                                titleStyle={{ color: "black", fontSize: 20 }}
-                                containerStyle={styles.buttonAddProductContainer}
-                                buttonStyle={styles.buttonAddProductStyle} title="Seleccionar pedido"></Button>
-                        </View>
+                                <Button
+                                    onPress={() => this.showShoppingCart()}
+                                    titleStyle={{ color: "black", fontSize: 20 }}
+                                    containerStyle={styles.buttonAddProductContainer}
+                                    buttonStyle={styles.buttonAddProductStyle} title="Seleccionar pedido"></Button>
+                            </View>
                         )
 
                     }
@@ -413,7 +455,8 @@ class ProductView extends React.PureComponent {
                 <OverlayShoppingCartView
                     showFilter={() => this.showShoppingCart()}
                     isVisible={this.state.showShoppingCart}
-                    navigation={this.props.navigation}>                    
+                    navigation={this.props.navigation}>
+
                 </OverlayShoppingCartView>
             </View>
         );
@@ -544,7 +587,7 @@ const styles = StyleSheet.create({
     caracteristicsStyle: {
         height: 30,
         fontSize: 17,
-        flex:23,
+        flex: 23,
         alignSelf: "center",
         fontWeight: "bold",
         marginTop: 10,
@@ -553,20 +596,20 @@ const styles = StyleSheet.create({
 
     producerStyle: {
         height: 40,
-        flex:23,
+        flex: 23,
         fontSize: 15,
         alignSelf: "center",
         textAlign: 'justify'
     },
 
     buttonProducerContainerStyle: {
-        
-        flex:5,
+
+        flex: 5,
         alignSelf: "center",
     },
 
-    buttonCaracteristicsContainerStyle:{
-        flex:5,
+    buttonCaracteristicsContainerStyle: {
+        flex: 5,
         alignSelf: "center",
     },
 
@@ -579,7 +622,7 @@ const styles = StyleSheet.create({
 
     sealsContainer: {
         flexDirection: "row",
-        flex:23,
+        flex: 23,
         height: 50,
     },
 

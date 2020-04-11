@@ -3,27 +3,114 @@ import { Text, View, StyleSheet,Alert,Dimensions } from 'react-native'
 import { Header, Button, Icon, ButtonGroup, Image } from 'react-native-elements';
 import CartBriefingView from '../containers/ConfirmShoppingCartContainers/CartBriefing';
 import ShippingSelectionView from '../containers/ConfirmShoppingCartContainers/ShippingSelection';
+import QuestionaryView from '../components/confirmShoppingCartComponents/QuestionaryView';
+import axios from 'axios'
+import GLOBALS from '../Globals';
 
 class ConfirmShoppingCartView extends React.PureComponent{
     constructor(props){
-        super(props)
+        super(props)        
+        this.serverBaseRoute = GLOBALS.BASE_URL;
         this.state = {
+            dataShippingChanged:false,
+            dataAnswersChange:false,
             selectedIndex:0,
-            maxIndex:1,
+            maxIndex:2,
             minIndex:0,
             showBack:false,
+            allownext:true,
+            sellerPointSelected:undefined,
+            adressSelected:undefined,
+            questions:[],
+            answers: []
+        }
+    }
+
+    componentDidMount(){
+        this.retrieveQuestions()
+    }
+
+
+    retrieveQuestions(){
+        axios.get((this.serverBaseRoute + 'rest/client/vendedor/preguntasDeConsumoIndividual/' + this.props.vendorSelected.nombreCorto))
+        .then(res => {
+            console.log("questions", res.data);
+            this.setState({questions:res.data});
+        }).catch((error) => {
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al obtener los productos del servidor, vuelva a intentar más tarde.',
+                [
+                    { text: 'Entendido', onPress: () => null },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
+
+    componentDidUpdate(){
+        if(this.state.dataShippingChanged){
+            this.setAllowNext(1)
+            this.setState({dataShippingChanged:false})
+        }
+        if(this.state.dataAnswersChange){
+            this.setAllowNext(2)
+            this.setState({dataAnswersChange:false})
+        }
+    }
+
+    setSellerPointSelected(sellerPoint){
+        this.setState({sellerPointSelected: sellerPoint, dataShippingChanged:true})
+    }
+
+    setAdressSelected(adress){
+        this.setState({adressSelected: adress, dataShippingChanged:true})
+    }
+
+    setAnswers(vanswers){
+        this.setState({answers: vanswers, dataAnswersChange:true})
+    }
+
+    hasQuestionsAnswered(){
+        let allAnswered = true
+        this.state.answers.map((answer)=>{
+            console.log("respuesta en cart", answer);
+            if(answer.opcionSeleccionada === null){
+                allAnswered = false
+            }
+        })
+        return allAnswered
+    }
+
+    setAllowNext(index){
+        if(index == 0){
+            this.setState({allownext:true})
+        }
+        if(index == 1){
+            let allow = this.state.sellerPointSelected !== undefined || this.state.adressSelected !== undefined
+            this.setState({allownext:allow})
+        }
+        if(index == 2){
+            if(this.state.answers.length === 0){
+            this.setState({allownext:false})
+            }else{                
+                this.setState({allownext:this.hasQuestionsAnswered()})
+            }
         }
     }
 
     back(){
         if(this.state.selectedIndex > this.state.minIndex){
             this.setState({selectedIndex:this.state.selectedIndex - 1, showBack:this.state.selectedIndex - 1 > 0})
-        }
+            this.setAllowNext(this.state.selectedIndex - 1)
+        }        
     }
 
     next(){
+        console.log("index", this.state.selectedIndex);
         if(this.state.selectedIndex < this.state.maxIndex){
             this.setState({selectedIndex:this.state.selectedIndex +1, showBack:this.state.selectedIndex +1 > 0})
+            this.setAllowNext(this.state.selectedIndex +1)
         }
     }
     
@@ -57,14 +144,14 @@ class ConfirmShoppingCartView extends React.PureComponent{
             </Header>
             <View>
             {this.state.selectedIndex === 0 ? (<CartBriefingView></CartBriefingView>) : (null)}
-            {this.state.selectedIndex === 1 ? (<ShippingSelectionView navigation={this.props.navigation}></ShippingSelectionView>) : (null)}
-            {this.state.selectedIndex === 2 ? (<PasswordConfigView></PasswordConfigView>) : (null)}
+            {this.state.selectedIndex === 1 ? (<ShippingSelectionView spSelected={this.state.sellerPointSelected} adressSelected={this.state.adressSelected} selectedSPFunction={(sp) => this.setSellerPointSelected(sp)} selectedAdressFunction={(adress) => this.setAdressSelected(adress)} navigation={this.props.navigation}></ShippingSelectionView>) : (null)}
+            {this.state.selectedIndex === 2 ? (<QuestionaryView questions={this.state.questions} answerSetFunction={(vanswers) => this.setAnswers(vanswers) }></QuestionaryView>) : (null)}
             <View style={{ backgroundColor: '#ebedeb', height:Dimensions.get("window").height - 725 }}>
                     <View style={{ marginTop: 15 }}>
                         <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 15 }}>
                             {this.state.showBack ? ( <Button onPress={() => this.back()} titleStyle={{ color: 'black', }} title='Atras' containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonNotStyle}></Button>
                             ):(null)}
-                           <Button onPress={() => this.next()} titleStyle={{ color: 'white', }} title='Siguiente' containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonOkStyle}></Button>
+                           <Button disabled={!this.state.allownext} onPress={() => this.next()} titleStyle={{ color: 'white', }} title='Siguiente' containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonOkStyle}></Button>
                         </View>
                     </View>
                 </View>

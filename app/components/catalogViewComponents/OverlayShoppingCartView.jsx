@@ -163,7 +163,7 @@ class OverlayShoppingCartView extends React.PureComponent {
                     (
                         <View style={{ marginLeft: -9, marginRight:-9}}>
 
-                                    <ItemInfoCartView functionShow={()=>this.props.showFilter()}  navigation = {this.props.navigation}></ItemInfoCartView>
+                                    <ItemInfoCartView  functionShow={()=>this.props.showFilter()}  navigation = {this.props.navigation}></ItemInfoCartView>
 
                         </View>
                     )

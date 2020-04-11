@@ -11,6 +11,7 @@ class ProductItemView extends React.PureComponent {
         this.navigation = this.props.navigation;
         this.serverBaseRoute = GLOBAL.BASE_URL;
         this.shoppingCarts = this.props.actions.shoppingCarts;
+        this.touchable = this.props.touchable,
         this.state = {
             showInfo: false,
             validCart: false,
@@ -45,6 +46,10 @@ class ProductItemView extends React.PureComponent {
             quantityValue: this.setProductQuantity(),
         })
 
+    }
+
+    componentWillUnmount(){
+        this.setState({})
     }
 
     setProductQuantity() {
@@ -137,10 +142,16 @@ class ProductItemView extends React.PureComponent {
         }
     }
 
+    showControlsItemProduct(){
+        if(this.touchable){
+            this.setState({ showInfo: !this.state.showInfo })
+        }
+    }
+
     render() {
         return (
             <View>
-                <TouchableOpacity onPress={() => this.setState({ showInfo: !this.state.showInfo })} style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                <TouchableOpacity onPress={() => this.showControlsItemProduct()} >
                     <View style={stylesListCard.containerList}>
                         <View style={stylesListCard.cardImageView}>
                             <Avatar overlayContainerStyle={stylesListCard.overlayAvatarContainer} rounded size={80} source={{ uri: (this.normalizeText(this.serverBaseRoute + this.props.item.imagen)) }} renderPlaceholderContent={<ActivityIndicator size="large" color="#0000ff" />} />
@@ -168,7 +179,11 @@ class ProductItemView extends React.PureComponent {
                                 containerStyle={stylesListCard.buttonAddProductContainer}
                                 disabled={this.state.buttonDisabled}
                                 loading={this.state.buttonLoading}
-                                buttonStyle={stylesListCard.buttonAddProductStyle} title={this.state.initialValue>0?"Modificar":"Agregar"}></Button>
+                                icon={<Icon
+                                    name='edit'
+                                    type='font-awesome'
+                                    size={25} />}
+                                buttonStyle={stylesListCard.buttonAddProductStyle}></Button>
                         </View>
                         </View>
                     </View>) : (null)}
@@ -180,7 +195,7 @@ const stylesListCard = StyleSheet.create({
 
     buttonAddProductStyle: {
         height: "100%",
-        backgroundColor: "#f8f162",
+        backgroundColor: "#5ebb47",
     },
 
     buttonAddProductContainer: {
@@ -266,14 +281,14 @@ const stylesListCard = StyleSheet.create({
     },
 
     quantityContainer:{
-        flex:5,
+        flex:12,
         marginBottom: 5,
         height: 40,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "grey",
-        marginLeft: 20,
-        marginRight: 20,
+        marginLeft: 5,
+        marginRight: 5,
     },
 
     priceStyle: {

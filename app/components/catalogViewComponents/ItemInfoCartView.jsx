@@ -4,6 +4,7 @@ import { Card, Badge, Icon, Image, Button, Avatar } from 'react-native-elements'
 import GLOBAL from '../../Globals';
 import axios from 'axios';
 import LoadingOverlayView from '../generalComponents/LoadingOverlayView'
+import ProductItemView from '../../containers/ConfirmShoppingCartContainers/ProductItem'
 
 class ItemInfoCartView extends React.PureComponent {
     constructor(props) {
@@ -124,6 +125,18 @@ class ItemInfoCartView extends React.PureComponent {
         }
     }
 
+    compareIds(a,b){
+        if (a.idVariante > b.idVariante) {
+            return 1;
+          }
+          if (a.idVariante < b.idVariante) {
+            return -1;
+          }
+          // a must be equal to b
+          return 0;
+    }
+
+
     render() {
         if (this.props.shoppingCartSelected.id === undefined) {
             return (
@@ -194,23 +207,13 @@ class ItemInfoCartView extends React.PureComponent {
                             </View>
                         )
                         : (
-                            <FlatList data={this.props.shoppingCartSelected.productosResponse} keyExtractor={item => item.idVariante} windowSize={15}
+                            <FlatList data={this.props.shoppingCartSelected.productosResponse.sort((a, b) => this.compareIds(a,b))} keyExtractor={item => item.idVariante} windowSize={15}
                                 renderItem={({ item }) =>
-                                    <TouchableOpacity onPress={() => this.goToProduct(item.idVariante)} style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
-                                        <View style={stylesListCard.containerList}>
-                                            <View style={stylesListCard.cardImageView}>
-                                                <Avatar overlayContainerStyle={stylesListCard.overlayAvatarContainer} rounded size={65} source={{ uri: (this.normalizeText(this.serverBaseRoute + item.imagen)) }} renderPlaceholderContent={<ActivityIndicator size="large" color="#0000ff" />} />
-                                            </View>
-                                            <View style={{ flex: 2 }}>
-                                                <View >
-                                                    <Text style={stylesListCard.priceStyle}>{item.cantidad} x {item.precio} = $ {item.cantidad * item.precio}</Text>
-                                                </View>
-                                                <View >
-                                                    <Text style={stylesListCard.nameTextStyle}>{item.nombre}</Text>
-                                                </View>
-                                            </View>
-                                        </View>
-                                    </TouchableOpacity>
+                                
+                                 <View style={{ flex: 1, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                <ProductItemView  touchable={true} item={item}></ProductItemView>
+                                </View>
+                                    
 
                                 } />)
                     }
