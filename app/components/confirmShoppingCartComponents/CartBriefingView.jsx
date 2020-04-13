@@ -29,7 +29,13 @@ class CartBriefingView extends React.PureComponent {
           // a must be equal to b
           return 0;
     }
-
+    getDataProducts(){
+        if (this.props.shoppingCartSelected.productosResponse !== undefined){
+        return this.props.shoppingCartSelected.productosResponse.sort((a, b) => this.compareIds(a, b))
+        }else{
+            return []
+        }
+    }
 
     render() {
 
@@ -40,7 +46,7 @@ class CartBriefingView extends React.PureComponent {
                     </View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
                 <View style={{ height: Dimensions.get("window").height - 320}}>
-                            <FlatList data={this.props.shoppingCartSelected.productosResponse.sort((a, b) => this.compareIds(a,b))} 
+                            <FlatList data={this.getDataProducts()} 
                             keyExtractor={item => item.idVariante} windowSize={15}
                                 renderItem={({ item }) =>
                                 <View style={{ flex: 1, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>

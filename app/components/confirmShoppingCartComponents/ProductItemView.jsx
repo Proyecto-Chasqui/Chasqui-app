@@ -150,7 +150,7 @@ class ProductItemView extends React.PureComponent {
 
     render() {
         return (
-            <View>
+            <View style={{backgroundColor:"white"}}>
                 <TouchableOpacity onPress={() => this.showControlsItemProduct()} >
                     <View style={stylesListCard.containerList}>
                         <View style={stylesListCard.cardImageView}>
@@ -297,6 +297,7 @@ const stylesListCard = StyleSheet.create({
         fontWeight: 'bold'
     },
     containerList: {
+        
         flexDirection: "row",
         margin: 10,
     },

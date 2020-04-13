@@ -301,11 +301,11 @@ class ProductView extends React.PureComponent {
                             onPress={() => this.setState({ showShoppingCart: !this.state.showShoppingCart })}
                         />
                         <View style={{position:'absolute',marginLeft:35,marginTop:75}}>
-                            <Tooltip containerStyle={{borderColor:'black',borderWidth:1, backgroundColor:"white",height:120, width:300, marginLeft:-135}} ref={(ref) => { this.tooltipRef = ref }} withOverlay={false} 
+                            <Tooltip containerStyle={{borderColor:'black',borderWidth:1, backgroundColor:"white",height:150, width:300, marginLeft:-135}} ref={(ref) => { this.tooltipRef = ref }} withOverlay={false} 
                             pointerColor='rgba(51, 102, 255, 1)'
                             popover={
-                            <View style={{ width:300}}>
-                                <View style={{marginTop:15}}>
+                            <View style={{ width:"100%"}}>
+                                <View style={{marginTop:5}}>
                                     <Text style={{textAlign:"center", fontWeight:"bold", }}>
                                     {this.defineText()}
                                     </Text>

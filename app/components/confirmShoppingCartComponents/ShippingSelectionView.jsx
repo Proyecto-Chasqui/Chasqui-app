@@ -37,13 +37,16 @@ class ShippingSelectionView extends React.PureComponent {
             .then(res => {
                 if(this.state.selectedAddress.length === 0){
                     this.setState({zone:undefined, loadingZone:false});
+                    this.props.setZone(undefined);
                 }else{
                 this.setState({zone:res.data, loadingZone:false});
+                this.props.setZone(res.data);
                 }
             }).catch((error) => {
                 
                 if (error.response) {
                     this.setState({zone:undefined, loadingZone:false});
+                    this.props.setZone(undefined);
                 } 
             });
         
@@ -120,7 +123,7 @@ class ShippingSelectionView extends React.PureComponent {
     constructDataForChecked() {
         const checksSellerPoints = [];
         this.props.sellerPoints.map((u, i) => {
-            checksSellerPoints.push({ id: u.id, checked: false });
+            checksSellerPoints.push({sp:u, id: u.id, checked: false });
         })
         this.setState({
             dataChecksSellerPoints: checksSellerPoints,
@@ -140,29 +143,27 @@ class ShippingSelectionView extends React.PureComponent {
         data[index].checked = !data[index].checked;
         this.unCheckOthers(data, index);
         let selectedItems = [];
+        let selectedSPItem = undefined;
         data.map((u, i) => {
             if (u.checked) {
                 selectedItems.push(u.id);
+                selectedSPItem = u.sp;
             }
         });
         this.setState({
             selectedSellerPoint: selectedItems,
             dataChecksSellerPoints: data,
         });
-        let selectedItem = undefined
-        if (selectedItems.length > 0) {
-            selectedItem = selectedItems[0]
-        }
-        this.props.selectedSPFunction(selectedItem)
+        this.props.selectedSPFunction(selectedSPItem)
     }
 
-    addCheck(adress) {
+    addCheck(vadress) {
         const data = this.state.dataChecksAdress;
-        data.push({ id: adress.idDireccion, checked: false })
+        data.push({adress:vadress, id: vadress.idDireccion, checked: false })
         this.setState({
             dataChecksAdress: data,
         })
-        const index = data.findIndex((x) => x.id === adress.idDireccion);
+        const index = data.findIndex((x) => x.id === vadress.idDireccion);
         return index
     }
 
@@ -173,20 +174,18 @@ class ShippingSelectionView extends React.PureComponent {
         data[index].checked = !data[index].checked;
         this.unCheckOthers(data, index);
         let selectedItems = [];
+        let selectedAdressItem = undefined;
         data.map((u, i) => {
             if (u.checked) {
                 selectedItems.push(u.id);
+                selectedAdressItem = u.adress;
             }
         });
         this.setState({
             selectedAddress: selectedItems,
             dataChecksAdress: data,
         });
-        let selectedItem = undefined
-        if (selectedItems.length > 0) {
-            selectedItem = selectedItems[0]
-        }
-        this.props.selectedAdressFunction(selectedItem)
+        this.props.selectedAdressFunction(selectedAdressItem)
         this.getZoneOfAdress(id)
     }
 
@@ -216,7 +215,7 @@ class ShippingSelectionView extends React.PureComponent {
         }
         return null
     }
-    //"29-10-2019 21:00:00"
+
     parseDate(string) {
         let parts = string.split('-');
         let parsedDate = parts[0] + "/" + parts[1] + "/" + parts[2].split(' ')[0];

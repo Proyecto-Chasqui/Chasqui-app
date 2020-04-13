@@ -216,10 +216,10 @@ class DeliveryZonesView extends React.PureComponent {
                     <Header containerStyle={styles.topHeader}>
                         <Button
                             icon={
-                                <Icon name="bars" size={20} color="white" type='font-awesome' />
+                                <Icon name="arrow-left" size={20} color="white" type='font-awesome' />
                             }
                             buttonStyle={styles.rightHeaderButton}
-                            onPress={() => this.props.navigation.openDrawer()}
+                            onPress={() => this.props.navigation.goBack()}
                         />
                         <Image
                             style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
