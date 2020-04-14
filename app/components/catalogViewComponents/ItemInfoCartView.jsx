@@ -240,19 +240,21 @@ class ItemInfoCartView extends React.PureComponent {
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
                 <View style={{ height: Dimensions.get("window").height - 270 }}>
                     <View style={{ backgroundColor: '#ebedeb', flexDirection:"row", justifyContent:"space-evenly", borderBottomColor:"#dfdfdf", borderBottomWidth:1}}>
-                        <View style={{ backgroundColor: 'white', flexDirection:"row", borderRadius:5}}> 
+                        <View style={{ backgroundColor: 'white', flexDirection:"row", borderRadius:5, marginTop:5, marginBottom:5 }}> 
                             {this.props.shoppingCartSelected.idGrupo === null?
                             (<Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_individual.png')}/>)
                             :
                             (<Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_grupal.png')}/>)}
                         </View>
-                        <View style={{backgroundColor: 'white',flexDirection:"row", alignItems:"center", borderColor:"grey", borderWidth:1, borderRadius:5}}>
+                        <View style={{backgroundColor: 'white',marginTop:5, marginBottom:5,flexDirection:"row", alignItems:"center", borderColor:"grey", borderWidth:1, borderRadius:5}}>
                             <Text> Min. Monto: </Text>
                             <View style={{  flexDirection:"row"}}>
                                 <Text style={{textAlign:"center", }}>${this.props.vendorSelected.montoMinimo}</Text>
+                                <View style={{marginLeft:5, marginRight:5}}>
                                 {this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo?(
                                     <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
                                 ):(<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
+                                </View>
                             </View>
                         </View>
                         <View>

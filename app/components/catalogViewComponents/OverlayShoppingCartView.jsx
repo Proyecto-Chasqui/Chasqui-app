@@ -14,6 +14,7 @@ class OverlayShoppingCartView extends React.PureComponent {
         this.serverBaseRoute = GLOBAL.BASE_URL;
         this.shoppingCartSelected = this.props.actions.shoppingCartSelected;
         this.shoppingCarts = this.props.actions.shoppingCarts;
+        this.vendorSelected = this.props.vendorSelected
         this.state = {
             showShoppingCarts: false,
             shoppingCartTypeSelected: 'Ver pedidos',
@@ -94,8 +95,9 @@ class OverlayShoppingCartView extends React.PureComponent {
     }
 
     validCatalog(){
-        if(this.props.vendorSelected.few.compraIndividual !== undefined){
-            return this.props.vendorSelected.few.compraIndividual
+        console.log("VALID")
+        if(this.vendorSelected.few.compraIndividual !== undefined){
+            return this.vendorSelected.few.compraIndividual
         }else{
             return false
         }
@@ -140,16 +142,22 @@ class OverlayShoppingCartView extends React.PureComponent {
                                 this.props.shoppingCarts.map((cart, i) => {
                                     return (
                                     <View style={styles.selectorContainer}>
-                                        <View style={{alignSelf:'center', alignItems:'center', flexDirection:"row"}}>
-                                        <Text style={{fontWeight:'bold', fontSize:15, marginRight:20}}> Pedido {cart.idGrupo==null?('Individual'):('Colectivo')}</Text>
-                                        <Image style={styles.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_individual.png')} />
+                                        <View style={{flex:1, justifyContent:"center", borderColor:"#D8D8D8", borderWidth:2, borderBottomWidth:0, borderTopRightRadius:5, borderTopLeftRadius:5, marginLeft:-2, marginRight:-2, marginTop:-2, alignItems:'center', flexDirection:"row", backgroundColor:'rgba(51, 102, 255, 1)'}}>
+                                            <Text style={{fontWeight:'bold', color:"white", fontSize:15, marginRight:20, }}> Pedido {cart.idGrupo==null?('Individual'):('Colectivo')}</Text>
+                                            <View style={{backgroundColor:"white", borderColor:"black", borderRadius:5, borderWidth:1, margin:4}}>
+                                                <Image style={styles.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_individual.png')} />
+                                            </View>
                                         </View>
-                                        <Text> Total: ${(cart.montoActual).toFixed(2)} </Text>                                      
-                                        <Text> Creado el: {cart.fechaCreacion} </Text>
-                                        { this.props.shoppingCartSelected.id === cart.id ?
-                                        (null):
-                                        (<Button onPress={()=>this.selectCart(cart)}title="Seleccionar"></Button>)                                                                                 
-                                        }
+                                        <View style={{margin:5}}>
+                                        <Text style={{textAlign:"center"}}> Total: ${(cart.montoActual).toFixed(2)} </Text>                                      
+                                        <Text style={{textAlign:"center"}}> Creado el: {cart.fechaCreacion} </Text>
+                                        </View>
+                                        <View style={{margin:5}}>
+                                            { this.props.shoppingCartSelected.id === cart.id ?
+                                            (null):
+                                            (<Button onPress={()=>this.selectCart(cart)} title="Seleccionar" titleStyle={{ color: 'white', }}  containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonOkStyle}></Button>)                                                                                 
+                                            }
+                                        </View>
                                          </View>
                                     )
                                 }) 
@@ -193,6 +201,18 @@ class OverlayShoppingCartView extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+
+    subMenuButtonContainer: {
+        flex: 1
+    },
+
+    subMenuButtonOkStyle: {
+        marginLeft: 5,
+        marginRight: 5,
+        backgroundColor: "#5ebb47",
+        borderColor: 'black',
+        borderWidth: 1
+    },
     viewSearchErrorContainer: {
         height: "100%"
     },
