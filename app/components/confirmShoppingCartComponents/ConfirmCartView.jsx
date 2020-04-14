@@ -96,7 +96,7 @@ class ConfirmCartView extends React.PureComponent {
                             <FlatList data={this.props.answers}
                                 keyExtractor={item => item.nombre} windowSize={15}
                                 renderItem={({ item }) =>
-                                    <View style={{ marginLeft:5, marginRight:5, flex: 1, flexDirection: "row", backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                    <View style={{flex: 1, flexDirection: "row", backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
                                         <Text style={{color:"black",fontWeight:"bold"}}>{item.nombre} : </Text><Text  style={{color:"blue",fontWeight:"bold"}}>{item.opcionSeleccionada}</Text>
                                     </View>
                                 } />
@@ -110,7 +110,7 @@ class ConfirmCartView extends React.PureComponent {
                             {this.props.zone != undefined ? (
                                 <View>
                                     <Text style={stylesListCard.sectionTitleTextStyle}> Detalles de la zona de entrega</Text>
-                                    <TouchableOpacity onPress={()=>this.goToShippingMap()} style={{marginLeft:20, marginRight:20, marginBottom:10, marginTop:10}}>                                            
+                                    <ScrollView style={{marginLeft:20, marginRight:20, marginBottom:10, marginTop:10}}>                                            
                                                 <View style={{flexDirection:'row'}}>
                                                     <Text style={{fontSize:12, fontWeight:'bold'}}>Zona de entrega: </Text>
                                                     <Text style={{fontSize:12}}>{this.props.zone .nombre}</Text>
@@ -120,7 +120,7 @@ class ConfirmCartView extends React.PureComponent {
                                                     <Text style={{fontSize:12}}>{this.parseDate(this.props.zone .fechaCierrePedidos)}</Text>
                                                 </View>
                                                 <Text style={{fontStyle:'italic'}}>{ this.props.zone .descripcion }</Text>
-                                    </TouchableOpacity>
+                                    </ScrollView>
                                  </View>
                             ):(
                                 <Text style={{fontSize:13, marginLeft:20, marginRight:20, marginBottom:10, marginTop:10, fontStyle:'italic', textAlign:"justify"}}>
@@ -133,11 +133,11 @@ class ConfirmCartView extends React.PureComponent {
                     {this.props.sellerPointSelected !== undefined ? (
                         <View style={{height:130}}>
                         <Text style={stylesListCard.sectionTitleTextStyle}>Lo pasa a retirar en</Text>
-                        <TouchableOpacity onPress={()=>this.goToShippingMap()} style={{ flex: 5, marginLeft:20, marginRight:20, marginBottom:10, marginTop:10 }}>
+                        <ScrollView style={{ flex: 5, marginLeft:20, marginRight:10, marginBottom:10, marginTop:10 }}>
                             <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{this.props.sellerPointSelected.nombre}</Text>
                             <Text style={{ color: "blue" }}>{this.parseAdress(this.props.sellerPointSelected.direccion)}</Text>
-                            <Text style={{ fontSize: 14 }}>{this.props.sellerPointSelected.mensaje}</Text>
-                        </TouchableOpacity>
+                            <Text style={{ fontSize: 14,  }}>{this.props.sellerPointSelected.mensaje}</Text>
+                        </ScrollView>
                         </View>
                         ) : (null)}
                     <View>

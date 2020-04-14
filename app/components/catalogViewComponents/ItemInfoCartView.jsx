@@ -162,6 +162,9 @@ class ItemInfoCartView extends React.PureComponent {
             if(!this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega){
                 this.showAlert("No puede confirmar el pedido, por que el catálogo no esta configurado correctamente.")
             }
+            if(!this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega){
+                this.goToConfirm()
+            }
         }
     }
 
@@ -181,6 +184,18 @@ class ItemInfoCartView extends React.PureComponent {
             return '../vendorsViewComponents/badge_icons/compra_individual.png'
         }else{
             return '../vendorsViewComponents/badge_icons/compra_grupal.png'
+        }
+    }
+
+    showMinAmount(){
+        return this.props.vendorSelected.few.seleccionDeDireccionDelUsuario
+    }
+
+    setStyleDistance(){
+        if(this.showMinAmount()){
+            return "space-evenly"
+        }else{
+            return "center"
         }
     }
 
@@ -239,14 +254,16 @@ class ItemInfoCartView extends React.PureComponent {
             <View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
                 <View style={{ height: Dimensions.get("window").height - 270 }}>
-                    <View style={{ backgroundColor: '#ebedeb', flexDirection:"row", justifyContent:"space-evenly", borderBottomColor:"#dfdfdf", borderBottomWidth:1}}>
+                    <View style={{ backgroundColor: '#ebedeb', flexDirection:"row", justifyContent: this.setStyleDistance(), borderBottomColor:"#dfdfdf", borderBottomWidth:1}}>
                         <View style={{ backgroundColor: 'white', flexDirection:"row", borderRadius:5, marginTop:5, marginBottom:5 }}> 
                             {this.props.shoppingCartSelected.idGrupo === null?
                             (<Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_individual.png')}/>)
                             :
                             (<Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_grupal.png')}/>)}
                         </View>
-                        <View style={{backgroundColor: 'white',marginTop:5, marginBottom:5,flexDirection:"row", alignItems:"center", borderColor:"grey", borderWidth:1, borderRadius:5}}>
+                        {this.showMinAmount() ? 
+                        (
+                            <View style={{backgroundColor: 'white',marginTop:5, marginBottom:5,flexDirection:"row", alignItems:"center", borderColor:"grey", borderWidth:1, borderRadius:5}}>
                             <Text> Min. Monto: </Text>
                             <View style={{  flexDirection:"row"}}>
                                 <Text style={{textAlign:"center", }}>${this.props.vendorSelected.montoMinimo}</Text>
@@ -257,6 +274,9 @@ class ItemInfoCartView extends React.PureComponent {
                                 </View>
                             </View>
                         </View>
+                        )
+                        :
+                        (null)}
                         <View>
 
                         </View>

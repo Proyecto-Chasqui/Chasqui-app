@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native'
+import { Text, View, Dimensions, StyleSheet, ScrollView, TouchableOpacity, Alert, TouchableWithoutFeedbackBase } from 'react-native'
 import { Header, Button, Icon, ButtonGroup, Image, Input, Overlay, CheckBox } from 'react-native-elements'
 import axios from 'axios'
 import GLOBALS from '../../Globals';
@@ -221,16 +221,24 @@ class ShippingSelectionView extends React.PureComponent {
     }
 
     minAmount(){
-        return this.props.shoppingCartSelected.montoActual < this.props.vendorSelected.montoMinimo
+        return this.props.shoppingCartSelected.montoActual < this.props.vendorSelected.montoMinimo && (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega)
     }
 
     setDimensionsOnSP(){
         if(this.minAmount()){
-            return  Dimensions.get("window").height - 340
+            return  Dimensions.get("window").height - 330
         }else{
-            return  Dimensions.get("window").height - 300
+            return  Dimensions.get("window").height - 330
         }
 
+    }
+
+    getHeightValue(){
+        if(this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega){
+            return 510
+        }else{
+            return 440
+        }
     }
     render() {
         return (
@@ -275,7 +283,7 @@ class ShippingSelectionView extends React.PureComponent {
                                 <View style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}></View>
                                 {this.props.sellerPoints.map((sellerPoint, i) => {
                                     return (
-                                        <TouchableOpacity key={sellerPoint.id} onPress={() => this.onCheckChangedSellerPoint(sellerPoint.id)} style={{ flexDirection: "row", alignItems: 'center', height: 130, borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                        <TouchableOpacity key={sellerPoint.id} onPress={() => this.onCheckChangedSellerPoint(sellerPoint.id)} style={{ flexDirection: "row", alignItems: 'center', height: 200, borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
                                             <View style={{ flex: 1 }}>
                                                 <CheckBox
                                                     checked={this.state.dataChecksSellerPoints[i].checked}
@@ -299,11 +307,11 @@ class ShippingSelectionView extends React.PureComponent {
                                     buttonStyle={styles.buttonNewAddressStyle}
                                     onPress={() => this.goToNewAdress()} title="Nueva dirección">
                                 </Button>
-                                        <ScrollView style={{height:Dimensions.get("window").height -720}}>
+                                        <ScrollView style={{height:Dimensions.get("window").height - 720}}>
                                             <View style={{borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}></View>
                                             <View style={{marginLeft:20, marginRight:20, marginTop:10}}><Text style={{textAlign:"center", fontSize:15, fontWeight:"bold"}}>Información sobre la entrega</Text></View>
                                             {this.state.zone !== undefined?(
-                                            <View style={{marginLeft:20, marginRight:20, marginBottom:10}}>                                            
+                                            <View style={{height:Dimensions.get("window").height - 620,marginLeft:20, marginRight:20, marginBottom:10}}>                                            
                                                 <View style={{flexDirection:'row'}}>
                                                     <Text style={{fontSize:15, fontWeight:'bold'}}>Zona de entrega: </Text>
                                                     <Text style={{fontSize:15}}>{this.state.zone.nombre}</Text>
@@ -314,7 +322,7 @@ class ShippingSelectionView extends React.PureComponent {
                                                 </View>
                                                 <Text style={{fontStyle:'italic'}}>{ this.state.zone.descripcion }</Text>
                                             </View>)
-                                            :(<View style={{marginLeft:20, marginRight:20, marginBottom:10}}>
+                                            :(<View style={{height:Dimensions.get("window").height - 620,marginLeft:20, marginRight:20, marginBottom:10}}>
                                                 {this.state.selectedAddress.length === 0 || this.state.loadingZone? 
                                                 (<Text>Seleccione una dirección para obtener mas información sobre la entrega</Text>)
                                                 :
@@ -323,7 +331,7 @@ class ShippingSelectionView extends React.PureComponent {
                                             
                                         </ScrollView>
                                         <View style={{borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}></View>
-                                <ScrollView style={{ height: Dimensions.get("window").height - 490 }}>
+                                <ScrollView style={{ height: Dimensions.get("window").height - this.getHeightValue() }}>
                                     
                                     <View style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}></View>
                                     
@@ -331,7 +339,7 @@ class ShippingSelectionView extends React.PureComponent {
                                         const index = this.addCheck(adress);
                                         
                                         return (
-                                            <TouchableOpacity key={adress.idDireccion} onPress={() => this.onCheckChangedAdress(adress.idDireccion)} style={{ flexDirection: "row", alignItems: 'center', height: 130, borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                            <TouchableOpacity key={adress.idDireccion} onPress={() => this.onCheckChangedAdress(adress.idDireccion)} style={{ flexDirection: "row", alignItems: 'center', height: 90, borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
                                                 <View style={{ flex: 1 }}>
                                                     <CheckBox
                                                         checked={this.state.dataChecksAdress[index].checked}

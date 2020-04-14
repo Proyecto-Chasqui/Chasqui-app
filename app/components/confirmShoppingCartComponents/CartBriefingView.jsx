@@ -37,13 +37,25 @@ class CartBriefingView extends React.PureComponent {
         }
     }
 
-    obtainTotalPrice(){
+    obtainTotalPrice() {
         if (this.props.shoppingCartSelected.montoActual !== undefined) {
             return (this.props.shoppingCartSelected.montoActual).toFixed(2)
         } else {
             return 0
         }
-        
+
+    }
+
+    showMinAmount() {
+        return this.props.vendorSelected.few.seleccionDeDireccionDelUsuario
+    }
+
+    setStyleDistance() {
+        if (this.showMinAmount()) {
+            return "space-evenly"
+        } else {
+            return "center"
+        }
     }
 
     render() {
@@ -71,15 +83,18 @@ class CartBriefingView extends React.PureComponent {
                             <View>
                                 <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {this.obtainTotalPrice()} </Text>
                             </View>
-                            <View style={{ backgroundColor: 'transparent', flexDirection: "row", alignItems: "center",  }}>
-                                <Text style={{fontSize: 15,}}> Min. Monto: </Text>
-                                <View style={{ flexDirection: "row" }}>
-                                    <Text style={{ textAlign: "center", marginRight:5}}>${this.props.vendorSelected.montoMinimo}</Text>
-                                    {this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo ? (
-                                        <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
-                                    ) : (<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
+                            {this.showMinAmount() ? (
+                                <View style={{ backgroundColor: 'transparent', flexDirection: "row", alignItems: "center", }}>
+                                    <Text style={{ fontSize: 15, }}> Min. Monto: </Text>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <Text style={{ textAlign: "center", marginRight: 5 }}>${this.props.vendorSelected.montoMinimo}</Text>
+                                        {this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo ? (
+                                            <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
+                                        ) : (<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
+                                    </View>
                                 </View>
-                            </View>
+                            ) : (null)}
+
                         </View>
                     </View>
                 </View>

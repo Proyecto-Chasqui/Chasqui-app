@@ -566,7 +566,7 @@ class AdressManagmentView extends React.PureComponent {
                     <View style={styles.titleContainer}>
                         <Text style={styles.adressTitle}>{this.state.titleText}</Text>
                     </View>
-                    <ScrollView style={{ height: Dimensions.get('window').height - 140 }}>
+                    <ScrollView style={{ height: Dimensions.get('window').height - 160 }}>
                         <View style={styles.soloInputContainer}>
                             <Text style={styles.fieldText}>{this.normalizeText(NAMEREMAINDER)}</Text>
                             <Input

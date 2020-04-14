@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet,Alert } from 'react-native'
+import { Text, View, StyleSheet,Alert, KeyboardAvoidingView } from 'react-native'
 import { Header, Button, Icon, ButtonGroup, Image } from 'react-native-elements';
 import PersonalDataView from '../containers/ConfigurationComponentsContainers/PersonalData';
 import PasswordConfigView from '../containers/ConfigurationComponentsContainers/PasswordConfig';

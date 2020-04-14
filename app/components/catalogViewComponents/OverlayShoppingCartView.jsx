@@ -163,9 +163,11 @@ class OverlayShoppingCartView extends React.PureComponent {
                                 }) 
                         ):( 
                         <View style={styles.selectorContainer}>    
-                        <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Abrir Pedido Individual"
+                        <Button titleStyle={styles.titleButtonNewCartReveal} buttonStyle={styles.buttonNewCartButton} containerStyle={styles.containerButtonNewCart} type="clear" title="Abrir Pedido Individual"
                         onPress={() => this.alertOpenCart()} icon={
+                            <View style={{backgroundColor:"white", borderColor:"black", borderRadius:5, borderWidth:1, marginLeft:10}}>
                             <Image style={styles.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_individual.png')} />
+                            </View>
                         } 
                          iconRight />
                          </View>
@@ -201,7 +203,12 @@ class OverlayShoppingCartView extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
-
+    titleButtonNewCartReveal:{
+        color:"white"
+    },
+    buttonNewCartButton:{
+        backgroundColor:'rgba(51, 102, 255, 1)'
+    },
     subMenuButtonContainer: {
         flex: 1
     },
