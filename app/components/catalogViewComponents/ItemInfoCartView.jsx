@@ -25,7 +25,7 @@ class ItemInfoCartView extends React.PureComponent {
     cancelCartAlert() {
         Alert.alert(
             'Pregunta',
-            '¿Esta seguro de cancelar su pedido individual?',
+            '¿Esta seguro de cancelar su pedido?',
             [
                 { text: 'No', onPress: () => null },
                 { text: 'Si', onPress: () => this.cancelCart() },
@@ -41,6 +41,18 @@ class ItemInfoCartView extends React.PureComponent {
         Alert.alert(
             'Aviso',
             'Debe agregar al menos un producto para confirmar',
+            [
+                { text: 'Entendido', onPress: () => null },
+
+            ],
+            { cancelable: false },
+        );
+    }
+
+    showAlert(text){
+        Alert.alert(
+            'Aviso',
+             text,
             [
                 { text: 'Entendido', onPress: () => null },
 
@@ -68,7 +80,7 @@ class ItemInfoCartView extends React.PureComponent {
     }
 
     getShoppingCarts() {
-        axios.post((this.serverBaseRoute + '/rest/user/pedido/conEstados'), {
+        axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'), {
             idVendedor: this.props.vendorSelected.id,
             estados: [
                 "ABIERTO"
@@ -116,12 +128,40 @@ class ItemInfoCartView extends React.PureComponent {
         });
     }
 
+    refreshExpiration(){
+        axios.post((this.serverBaseRoute + 'rest/user/pedido/refrescarVencimiento'),{
+            id:this.props.shoppingCartSelected.id
+        }).then(res => {
+        }).catch((error) => {
+            console.log("error", error);
+        });
+    }
+
+    goToConfirm(){
+        this.refreshExpiration()
+        this.props.functionShow();     
+        this.navigation.navigate('ConfirmarPedido')
+    }
+
     confirmCart(){
         if(this.props.shoppingCartSelected.productosResponse == 0){
             this.showAlertInvalidCart()
         }else{
-            this.props.functionShow();     
-            this.navigation.navigate('ConfirmarPedido')
+            if(this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega){
+                this.goToConfirm()
+            }
+
+            if(this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega){
+                if(this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo){
+                    this.goToConfirm()
+                }else{
+                    this.showAlert("Debe alcanzar el monto minímo para poder confirmar el pedido")
+                }
+            }
+
+            if(!this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega){
+                this.showAlert("No puede confirmar el pedido, por que el catálogo no esta configurado correctamente.")
+            }
         }
     }
 
@@ -136,6 +176,13 @@ class ItemInfoCartView extends React.PureComponent {
           return 0;
     }
 
+    typeShoppingCart(){
+        if(this.props.shoppingCartSelected.idGrupo === null){
+            return '../vendorsViewComponents/badge_icons/compra_individual.png'
+        }else{
+            return '../vendorsViewComponents/badge_icons/compra_grupal.png'
+        }
+    }
 
     render() {
         if (this.props.shoppingCartSelected.id === undefined) {
@@ -172,7 +219,7 @@ class ItemInfoCartView extends React.PureComponent {
 
                         </View>
                     </View>
-                    <View style={{ backgroundColor: '#ebedeb', height: Dimensions.get("window").height - 710, }}>
+                    <View style={{ backgroundColor: '#ebedeb', height: Dimensions.get("window").height - 570, }}>
                         <View style={{ marginTop: 15 }}>
                             <View style={stylesListCard.singleItemContainer}>
                                 <Text style={stylesListCard.totalPriceCartStyle}> Total : $ - - - </Text>
@@ -192,6 +239,26 @@ class ItemInfoCartView extends React.PureComponent {
             <View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
                 <View style={{ height: Dimensions.get("window").height - 270 }}>
+                    <View style={{ backgroundColor: '#ebedeb', flexDirection:"row", justifyContent:"space-evenly", borderBottomColor:"#dfdfdf", borderBottomWidth:1}}>
+                        <View style={{ backgroundColor: 'white', flexDirection:"row", borderRadius:5}}> 
+                            {this.props.shoppingCartSelected.idGrupo === null?
+                            (<Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_individual.png')}/>)
+                            :
+                            (<Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_grupal.png')}/>)}
+                        </View>
+                        <View style={{backgroundColor: 'white',flexDirection:"row", alignItems:"center", borderColor:"grey", borderWidth:1, borderRadius:5}}>
+                            <Text> Min. Monto: </Text>
+                            <View style={{  flexDirection:"row"}}>
+                                <Text style={{textAlign:"center", }}>${this.props.vendorSelected.montoMinimo}</Text>
+                                {this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo?(
+                                    <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
+                                ):(<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
+                            </View>
+                        </View>
+                        <View>
+
+                        </View>
+                    </View>
                     {this.props.shoppingCartSelected.productosResponse.length == 0 ?
                         (
                             <View style={stylesListCard.viewSearchErrorContainer}>
@@ -201,7 +268,7 @@ class ItemInfoCartView extends React.PureComponent {
                                     </View>
                                     <Text style={stylesListCard.errorText}>
                                         Ya puede agregar productos!
-                        </Text>
+                                    </Text>
 
                                 </View>
                             </View>
@@ -218,10 +285,10 @@ class ItemInfoCartView extends React.PureComponent {
                                 } />)
                     }
                 </View>
-                <View style={{ backgroundColor: '#ebedeb', height: Dimensions.get("window").height - 710, }}>
+                <View style={{ backgroundColor: '#ebedeb', height: Dimensions.get("window").height - 570, }}>
                     <View style={{ marginTop: 15 }}>
                         <View style={stylesListCard.singleItemContainer}>
-                            <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {this.props.shoppingCartSelected.montoActual} </Text>
+                            <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {(this.props.shoppingCartSelected.montoActual).toFixed(2)} </Text>
                         </View>
                         <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 2 }}>
                             <Button onPress={() => this.cancelCartAlert()} titleStyle={{ color: 'black', }} title='Cancelar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonNotStyle}></Button>
@@ -234,7 +301,15 @@ class ItemInfoCartView extends React.PureComponent {
     }
 }
 
-const stylesListCard = StyleSheet.create({
+const  stylesListCard = StyleSheet.create({
+
+    badgeImage: {
+        height: 30,
+        width: 30,
+        borderColor: "grey",
+        borderWidth:1,
+        borderRadius:5,
+    },
 
     viewSearchErrorContainer: {
         height: "100%"

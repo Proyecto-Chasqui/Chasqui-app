@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions, Alert, ActivityIndicator } from 'react-native';
-import { Header, Button, Icon, Image, Tooltip } from 'react-native-elements';
+import { Header, Button, Icon, Image, Tooltip, Badge } from 'react-native-elements';
 import GLOBALS from '../Globals';
 import SealsView from '../components/catalogViewComponents/SealsView';
 import QuantitySelector from '../components/catalogViewComponents/QuantitySelectorView';
@@ -179,7 +179,7 @@ class ProductView extends React.PureComponent {
     }
 
     getShoppingCarts() {
-        axios.post((this.serverBaseRoute + '/rest/user/pedido/conEstados'), {
+        axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'), {
             idVendedor: this.props.vendorSelected.id,
             estados: [
                 "ABIERTO"
@@ -300,6 +300,9 @@ class ProductView extends React.PureComponent {
                             loading={this.state.buttonLoading}
                             onPress={() => this.setState({ showShoppingCart: !this.state.showShoppingCart })}
                         />
+                                            {this.props.shoppingCarts.length > 0 ? (
+                    <Badge value={this.props.shoppingCarts.length} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }}/>
+                    ):(null)}
                         <View style={{position:'absolute',marginLeft:35,marginTop:75}}>
                             <Tooltip containerStyle={{borderColor:'black',borderWidth:1, backgroundColor:"white",height:150, width:300, marginLeft:-135}} ref={(ref) => { this.tooltipRef = ref }} withOverlay={false} 
                             pointerColor='rgba(51, 102, 255, 1)'

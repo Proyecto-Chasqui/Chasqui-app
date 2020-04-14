@@ -104,7 +104,7 @@ class LoginView extends React.PureComponent {
 
   render() {
     return (
-      <View style={styles.principalContainer}>
+      <KeyboardAvoidingView style={styles.principalContainer}>
         <Overlay
           isVisible={this.state.isVisible}
           width="90%"
@@ -198,7 +198,7 @@ class LoginView extends React.PureComponent {
             </View>
           )}
         </Formik>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }

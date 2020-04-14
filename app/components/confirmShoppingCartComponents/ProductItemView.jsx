@@ -78,7 +78,7 @@ class ProductItemView extends React.PureComponent {
     }
 
     getShoppingCarts() {
-        axios.post((this.serverBaseRoute + '/rest/user/pedido/conEstados'), {
+        axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'), {
             idVendedor: this.props.vendorSelected.id,
             estados: [
                 "ABIERTO"
@@ -158,7 +158,7 @@ class ProductItemView extends React.PureComponent {
                         </View>
                         <View style={{ flex: 1 }}>
                             <View >
-                                <Text style={stylesListCard.priceStyle}>{this.props.item.cantidad} x {this.props.item.precio} = $ {this.props.item.cantidad * this.props.item.precio}</Text>
+                                <Text style={stylesListCard.priceStyle}>{this.props.item.cantidad} x {this.props.item.precio} = $ {(this.props.item.cantidad * this.props.item.precio).toFixed(2)}</Text>
                             </View>
                             <View>
                                 <Text style={stylesListCard.nameTextStyle}>{this.props.item.nombre}</Text>

@@ -71,6 +71,19 @@ class ConfirmShoppingCartView extends React.PureComponent {
             });
     }
 
+    
+    showAlert(text){
+        Alert.alert(
+            'Aviso',
+             text,
+            [
+                { text: 'Entendido', onPress: () => this.props.navigation.goBack() },
+
+            ],
+            { cancelable: false },
+        );
+    }
+
     componentDidUpdate() {
         if (this.state.dataShippingChanged) {
             this.setAllowNext(1)
@@ -125,6 +138,11 @@ class ConfirmShoppingCartView extends React.PureComponent {
                 this.setState({ allownext: this.hasQuestionsAnswered() })
             }
         }
+        if(this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega){
+            if(this.props.shoppingCartSelected.montoActual < this.props.vendorSelected.montoMinimo){
+                this.showAlert("Debe alcanzar el monto minímo para poder confirmar el pedido")
+            }
+        }
     }
 
     back() {
@@ -169,7 +187,7 @@ class ConfirmShoppingCartView extends React.PureComponent {
     }
 
     getShoppingCarts() {
-        axios.post((this.serverBaseRoute + '/rest/user/pedido/conEstados'), {
+        axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'), {
             idVendedor: this.props.vendorSelected.id,
             estados: [
                 "ABIERTO"
@@ -222,6 +240,14 @@ class ConfirmShoppingCartView extends React.PureComponent {
             });
     }
 
+    modifyZone(vzone){
+        this.setState({zone:vzone})
+    }
+
+    modifyComment(vcomment){
+        this.setState({comment:vcomment})
+    }
+
     render() {
         return (
             <View>
@@ -241,17 +267,17 @@ class ConfirmShoppingCartView extends React.PureComponent {
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText={'Confirmando su pedido...'}></LoadingOverlayView>
                 <View>
                     {this.state.selectedIndex === 0 ? (<CartBriefingView></CartBriefingView>) : (null)}
-                    {this.state.selectedIndex === 1 ? (<ShippingSelectionView setZone={(vzone) => this.setState({zone:vzone})} spSelected={this.state.sellerPointSelected} adressSelected={this.state.adressSelected} selectedSPFunction={(sp) => this.setSellerPointSelected(sp)} selectedAdressFunction={(adress) => this.setAdressSelected(adress)} navigation={this.props.navigation}></ShippingSelectionView>) : (null)}
+                    {this.state.selectedIndex === 1 ? (<ShippingSelectionView setZone={(vzone) => this.modifyZone(vzone)} spSelected={this.state.sellerPointSelected} adressSelected={this.state.adressSelected} selectedSPFunction={(sp) => this.setSellerPointSelected(sp)} selectedAdressFunction={(adress) => this.setAdressSelected(adress)} navigation={this.props.navigation}></ShippingSelectionView>) : (null)}
                     {this.state.selectedIndex === 2 ? (<QuestionaryView questions={this.state.questions} answerSetFunction={(vanswers) => this.setAnswers(vanswers)}></QuestionaryView>) : (null)}
                     {this.state.selectedIndex === 3 ? (<ConfirmCartView navigation={this.props.navigation}
-                                                                        comment = {(vcomment) =>this.setState({comment:vcomment})}
+                                                                        comment = {(vcomment) => this.modifyComment(vcomment)}
                                                                         zone={this.state.zone}
                                                                         sellerPointSelected={this.state.sellerPointSelected}
                                                                         adressSelected={this.state.adressSelected}
                                                                         answers={this.state.answers}/>) : (null)}
-                    <View style={{ backgroundColor: '#ebedeb', height: Dimensions.get("window").height - 725 }}>
-                        <View style={{ marginTop: 15 }}>
-                            <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 15 }}>
+                    <View style={{ backgroundColor: '#ebedeb', height: Dimensions.get("window").height - 710 }}>
+                        <View style={{  marginTop: 15 }}>
+                            <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15}}>
                                 {this.state.showBack ? (<Button onPress={() => this.back()} titleStyle={{ color: 'black', }} title='Atras' containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonNotStyle}></Button>
                                 ) : (null)}
                                 {this.state.selectedIndex === this.state.maxIndex ? (

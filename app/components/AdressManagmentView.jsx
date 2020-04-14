@@ -389,10 +389,16 @@ class AdressManagmentView extends React.PureComponent {
             provincia: '',
         }).then(res => {
             this.updateAdressData(this.state.saveMessage);
-        }).catch(function (error) {
+        }).catch( (error) => {
             console.log(error);
             this.setState({isVisible:false})
-            Alert.alert('Error', 'ocurrio un error al enviar los datos de la direccion');
+            if (error.response) {
+                Alert.alert('Error', "Ocurrio un error al intentar enviar los datos de la dirección, si el problema persiste, intente cerrar la sesión y volver a ingresar.");
+              } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+              } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+              }
         });
         this.setState({ dataSended: false })
     }
@@ -420,7 +426,13 @@ class AdressManagmentView extends React.PureComponent {
         }).catch(function (error) {
             console.log(error);
             this.setState({isVisible:false})
-            Alert.alert('Error', 'ocurrio un error al enviar los datos de la direccion');
+            if (error.response) {
+                Alert.alert('Error', "Ocurrio un error al intentar enviar los datos de la dirección, si el problema persiste, intente cerrar la sesión y volver a ingresar.");
+              } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+              } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+              }
         });
         this.setState({ dataSended: false })
     }
@@ -454,8 +466,8 @@ class AdressManagmentView extends React.PureComponent {
     handleSubmit() {
         if (!this.state.dataSended) {
             this.setState({ dataSended: true })
-            this.showWait(GEOWAIT)
             if (this.dataValid()) {
+                this.showWait(GEOWAIT)
                 const instance = axios.create();
                 instance.defaults.timeout = 2500;
                 let encodedQuery = this.state.adressData.calle + '+' + this.state.adressData.altura + '+' + this.state.adressData.localidad + '+' + 'Argentina';

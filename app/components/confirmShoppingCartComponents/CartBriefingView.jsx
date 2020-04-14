@@ -19,46 +19,67 @@ class CartBriefingView extends React.PureComponent {
         }
     }
 
-    compareIds(a,b){
+    compareIds(a, b) {
         if (a.idVariante > b.idVariante) {
             return 1;
-          }
-          if (a.idVariante < b.idVariante) {
+        }
+        if (a.idVariante < b.idVariante) {
             return -1;
-          }
-          // a must be equal to b
-          return 0;
+        }
+        // a must be equal to b
+        return 0;
     }
-    getDataProducts(){
-        if (this.props.shoppingCartSelected.productosResponse !== undefined){
-        return this.props.shoppingCartSelected.productosResponse.sort((a, b) => this.compareIds(a, b))
-        }else{
+    getDataProducts() {
+        if (this.props.shoppingCartSelected.productosResponse !== undefined) {
+            return this.props.shoppingCartSelected.productosResponse.sort((a, b) => this.compareIds(a, b))
+        } else {
             return []
         }
+    }
+
+    obtainTotalPrice(){
+        if (this.props.shoppingCartSelected.montoActual !== undefined) {
+            return (this.props.shoppingCartSelected.montoActual).toFixed(2)
+        } else {
+            return 0
+        }
+        
     }
 
     render() {
 
         return (
             <View>
-                    <View style={stylesListCard.titleContainer}>
-                        <Text style={stylesListCard.adressTitle}>Verifique su compra</Text>
-                    </View>
-                <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
-                <View style={{ height: Dimensions.get("window").height - 320}}>
-                            <FlatList data={this.getDataProducts()} 
-                            keyExtractor={item => item.idVariante} windowSize={15}
-                                renderItem={({ item }) =>
-                                <View style={{ flex: 1, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
-                                <ProductItemView touchable={true} item={item}></ProductItemView>
-                                </View>
-                                } />
-                    
+                <View style={stylesListCard.titleContainer}>
+                    <Text style={stylesListCard.adressTitle}>Verifique su compra</Text>
                 </View>
-                <View style={{ backgroundColor: '#ebedeb'}}>
+                <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
+                <View style={{ height: Dimensions.get("window").height - 320 }}>
+                    <FlatList data={this.getDataProducts()}
+                        keyExtractor={item => item.idVariante} windowSize={15}
+                        renderItem={({ item }) =>
+                            <View style={{ flex: 1, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                <ProductItemView touchable={true} item={item}></ProductItemView>
+                            </View>
+                        } />
+
+                </View>
+                <View style={{ backgroundColor: '#ebedeb' }}>
                     <View style={{ marginTop: 15 }}>
+
                         <View style={stylesListCard.singleItemContainer}>
-                            <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {this.props.shoppingCartSelected.montoActual} </Text>
+                            <View>
+                                <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {this.obtainTotalPrice()} </Text>
+                            </View>
+                            <View style={{ backgroundColor: 'transparent', flexDirection: "row", alignItems: "center",  }}>
+                                <Text style={{fontSize: 15,}}> Min. Monto: </Text>
+                                <View style={{ flexDirection: "row" }}>
+                                    <Text style={{ textAlign: "center", marginRight:5}}>${this.props.vendorSelected.montoMinimo}</Text>
+                                    {this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo ? (
+                                        <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
+                                    ) : (<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
+                                </View>
+                            </View>
                         </View>
                     </View>
                 </View>
@@ -158,6 +179,8 @@ const stylesListCard = StyleSheet.create({
     },
 
     singleItemContainer: {
+        flexDirection: "row",
+        justifyContent: "space-evenly",
         marginBottom: 5,
         height: 40,
         borderRadius: 5,

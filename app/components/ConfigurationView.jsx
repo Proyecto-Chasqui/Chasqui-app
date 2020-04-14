@@ -23,9 +23,10 @@ class ConfigurationView extends React.PureComponent {
     }
 
     render() {
-        const buttons = ['Datos Personales', 'Direcciones', 'Contraseña']
+        const buttons = ['Datos', 'Direcciones', 'Contraseña']
         const { selectedIndex } = this.state
-        return (<View>
+        return (
+        <KeyboardAvoidingView>
             <View>
                 <Header containerStyle={styles.topHeader}>
                     <Button
@@ -54,7 +55,7 @@ class ConfigurationView extends React.PureComponent {
             {this.state.selectedIndex === 0 ? (<PersonalDataView></PersonalDataView>) : (null)}
             {this.state.selectedIndex === 1 ? (<DeliveryAdressConfigView navigation={this.props.navigation}></DeliveryAdressConfigView>) : (null)}
             {this.state.selectedIndex === 2 ? (<PasswordConfigView></PasswordConfigView>) : (null)}
-        </View>);
+        </KeyboardAvoidingView>);
     }
 }
 

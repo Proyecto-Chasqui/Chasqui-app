@@ -1,4 +1,6 @@
 export default {
+    //'http://69.61.93.71/chasqui-dev-panel/'
+    //local: 'http://192.168.0.25:8080/chasqui/'
     BASE_URL: 'http://69.61.93.71/chasqui-dev-panel/',
     CATALOG_VIEW_MODES : {
         TWOCARDS: "Mosaico",

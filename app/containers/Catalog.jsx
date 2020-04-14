@@ -8,6 +8,7 @@ const mapStateToProps = state => ({
   vendorSelected: state.vendorSelected,
   products: state.products,
   producers: state.producers,
+  shoppingCarts: state.shoppingCarts,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -45,7 +45,7 @@ class OverlayShoppingCartView extends React.PureComponent {
     }
 
     getShoppingCarts(){
-        axios.post((this.serverBaseRoute + '/rest/user/pedido/conEstados'),{
+        axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'),{
             idVendedor: this.props.vendorSelected.id,
             estados: [
               "ABIERTO"
@@ -69,7 +69,7 @@ class OverlayShoppingCartView extends React.PureComponent {
 
     openCart(){
         this.setState({showWaitSign:true})
-        axios.post((this.serverBaseRoute + '/rest/user/pedido/obtenerIndividual'),{
+        axios.post((this.serverBaseRoute + 'rest/user/pedido/obtenerIndividual'),{
             idVendedor: this.props.vendorSelected.id
         }).then(res => {
             this.shoppingCartSelected(res.data);
@@ -93,10 +93,16 @@ class OverlayShoppingCartView extends React.PureComponent {
         this.showShoppingCarts();
     }
 
-    render() {
-        if(this.props.user.id === 0){
-
+    validCatalog(){
+        if(this.props.vendorSelected.few.compraIndividual !== undefined){
+            return this.props.vendorSelected.few.compraIndividual
+        }else{
+            return false
         }
+    }
+
+    render() {
+
         return (
            
             <Overlay containerStyle={styles.overlayContainer}
@@ -128,6 +134,7 @@ class OverlayShoppingCartView extends React.PureComponent {
                 {this.state.showShoppingCarts ?
 
                     <View>
+                        {this.validCatalog() ? (
                         <ScrollView>
                         {this.props.shoppingCarts.length > 0 ? (
                                 this.props.shoppingCarts.map((cart, i) => {
@@ -137,7 +144,7 @@ class OverlayShoppingCartView extends React.PureComponent {
                                         <Text style={{fontWeight:'bold', fontSize:15, marginRight:20}}> Pedido {cart.idGrupo==null?('Individual'):('Colectivo')}</Text>
                                         <Image style={styles.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_individual.png')} />
                                         </View>
-                                        <Text> Total: ${cart.montoActual} </Text>                                      
+                                        <Text> Total: ${(cart.montoActual).toFixed(2)} </Text>                                      
                                         <Text> Creado el: {cart.fechaCreacion} </Text>
                                         { this.props.shoppingCartSelected.id === cart.id ?
                                         (null):
@@ -157,6 +164,17 @@ class OverlayShoppingCartView extends React.PureComponent {
                          )
                         }
                         </ScrollView>
+                        ):( <View style={styles.viewErrorContainer}>
+                            <View style={styles.searchIconErrorContainer}>
+                                <Icon name="exclamation" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
+                            </View>
+                            <Text style={styles.errorText}>
+                                Catálogo no soportado
+                            </Text>
+                            <Text style={styles.tipErrorText}>
+                                El catálogo no opera con pedidos <Text style={{ fontWeight: 'bold' }}>Individuales</Text>
+                            </Text>
+                        </View>)}
                     </View>
 
                     :
@@ -175,6 +193,47 @@ class OverlayShoppingCartView extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+    viewSearchErrorContainer: {
+        height: "100%"
+    },
+
+    viewErrorContainer: {
+        marginTop: 150
+    },
+
+    errorText: {
+        marginTop: 25,
+        fontSize: 15,
+        fontWeight: "bold",
+        alignSelf: 'center'
+    },
+
+    tipErrorText: {
+        marginTop: 25,
+        fontSize: 12,
+        alignSelf: 'center'
+    },
+
+    searchIconErrorContainer: {
+        backgroundColor: "grey",
+        borderRadius: 50,
+        width: 100,
+        height: 100,
+        alignSelf: 'center'
+    },
+
+    cartIconOkContainer: {
+        backgroundColor: "green",
+        borderRadius: 50,
+        width: 100,
+        height: 100,
+        alignSelf: 'center'
+    },
+
+    searchIconError: {
+        marginTop: 23,
+    },
+
     badgeImage: {
         height: 30,
         width: 30,

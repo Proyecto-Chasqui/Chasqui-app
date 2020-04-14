@@ -60,10 +60,16 @@ class ShippingSelectionView extends React.PureComponent {
     setVisualsBasedOnStrats() {
 
         if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega) {
-
+                if(this.props.shoppingCartSelected.montoActual < this.props.vendorSelected.montoMinimo){
+                    console.log("minimo menor")
+                    this.showMoreInfoSellerPoint()
+                    this.setState({ showRevert: false })
+                }
         } else {
             if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario) {
-                this.showMoreInfoAddress()
+                if(this.props.shoppingCartSelected.montoActual > this.props.vendorSelected.montoMinimo){
+                    this.showMoreInfoAddress()
+                }
             }
             if (this.props.vendorSelected.few.puntoDeEntrega) {
                 this.showMoreInfoSellerPoint()
@@ -208,20 +214,24 @@ class ShippingSelectionView extends React.PureComponent {
         });
     }
 
-    showZone(idDireccion){
-        let zone = this.getZoneOfAdress(idDireccion)
-        if(zone !== undefined){
-            return(<Text>{zone.nombre}</Text>)
-        }
-        return null
-    }
-
     parseDate(string) {
         let parts = string.split('-');
         let parsedDate = parts[0] + "/" + parts[1] + "/" + parts[2].split(' ')[0];
         return parsedDate;
     }
 
+    minAmount(){
+        return this.props.shoppingCartSelected.montoActual < this.props.vendorSelected.montoMinimo
+    }
+
+    setDimensionsOnSP(){
+        if(this.minAmount()){
+            return  Dimensions.get("window").height - 340
+        }else{
+            return  Dimensions.get("window").height - 300
+        }
+
+    }
     render() {
         return (
             <View style={{ height: Dimensions.get("window").height - 210 }}>
@@ -252,7 +262,16 @@ class ShippingSelectionView extends React.PureComponent {
                             </View>) : (null)}
 
                         {this.state.showSellerPoints ? (
-                            <ScrollView style={{ height: Dimensions.get("window").height - 330 }}>
+                            <View>
+                                <View style={{height:Dimensions.get("window").height - 730}}>
+                                { this.minAmount() ? (
+                                    <View style={{margin: 10}}>
+                                    <Text style={{fontSize:16, textAlign:"justify", fontStyle:"italic"}}> {"Debido a que su pedido no supera el monto minimo de $" + this.props.vendorSelected.montoMinimo +", solo puede pasar a retirar el pedido por alguno de los siguientes puntos de retiro."}</Text>
+                                    </View>
+                                ):(null)}            
+                                </View>                                                
+                            <ScrollView style={{ height: this.setDimensionsOnSP() }}>
+
                                 <View style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}></View>
                                 {this.props.sellerPoints.map((sellerPoint, i) => {
                                     return (
@@ -270,7 +289,8 @@ class ShippingSelectionView extends React.PureComponent {
                                             </View>
                                         </TouchableOpacity>)
                                 })}
-                            </ScrollView>) : (null)}
+                            </ScrollView>
+                            </View>) : (null)}
 
                         {this.state.showAdresses ? (
                             <View>

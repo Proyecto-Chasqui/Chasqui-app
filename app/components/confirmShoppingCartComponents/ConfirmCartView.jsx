@@ -36,34 +36,10 @@ class ConfirmCartView extends React.PureComponent {
         return 0;
     }
 
-    getZoneOfAdress(){
-        this.setState({loadingZone:true})
-        axios.post((this.serverBaseRoute + 'rest/client/vendedor/obtenerZonaDeDireccion'),
-        {
-            idDireccion: this.props.adressSelected.idDireccion,
-            idVendedor: this.props.vendorSelected.id
-        })
-        .then(res => {
-            if(this.props.adressSelected === undefined){
-                this.setState({zone:undefined, loadingZone:false});
-            }else{
-            this.setState({zone:res.data, loadingZone:false});
-            }
-        }).catch((error) => {
-            
-            if (error.response) {
-                this.setState({zone:undefined, loadingZone:false});
-            } 
-        });
-    
-}
     goToShippingMap(){
         this.navigation.navigate("Entregas")
     }
     parseAdress(adress) {
-        if(this.props.adressSelected !== undefined){
-            this.getZoneOfAdress();
-        }
         return adress.calle + ", " + adress.altura + ", " + adress.localidad
     }
 
@@ -75,8 +51,10 @@ class ConfirmCartView extends React.PureComponent {
     }
 
     updateText(text){
-        this.props.comment(text)
-        this.comment = text
+        if(this.comment !== text ){
+            this.props.comment(text)
+            this.comment = text 
+        }
     }
 
     getDataProducts(){
@@ -86,6 +64,15 @@ class ConfirmCartView extends React.PureComponent {
             return []
         }
     }
+
+    obtainTotalPrice(){
+        if (this.props.shoppingCartSelected.montoActual !== undefined) {
+            return (this.props.shoppingCartSelected.montoActual).toFixed(2)
+        } else {
+            return 0
+        }
+        
+    }
     render() {
 
         return (
@@ -94,7 +81,7 @@ class ConfirmCartView extends React.PureComponent {
                     <Text style={stylesListCard.adressTitle}>Los datos de su compra</Text>
                 </View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
-                <View style={{ height: Dimensions.get("window").height - 320 }}>
+                <View style={{ height: Dimensions.get("window").height - 300 }}>
                     <Text style={stylesListCard.sectionTitleTextStyle}>Su pedido</Text>
                     <FlatList data={this.getDataProducts()}
                         keyExtractor={item => item.idVariante} windowSize={15}
@@ -104,7 +91,7 @@ class ConfirmCartView extends React.PureComponent {
                             </View>
                         } />
                     {this.props.answers.length > 0 ? (
-                        <View>
+                        <View style={{height:65}}>
                             <Text style={stylesListCard.sectionTitleTextStyle} > Respuestas del cuestionario </Text>
                             <FlatList data={this.props.answers}
                                 keyExtractor={item => item.nombre} windowSize={15}
@@ -119,7 +106,7 @@ class ConfirmCartView extends React.PureComponent {
                         <View style={{height:150}}>
                         <Text style={stylesListCard.sectionTitleTextStyle}>Será entregado en</Text>
                         <View>
-                            <Text style={{ margin:5, color: "blue", fontSize:16,fontWeight:'bold' }}>{this.parseAdress(this.props.adressSelected)}</Text>
+                            <Text style={{ margin:5, color: "blue", fontSize:16,fontWeight:'bold', textAlign:"center" }}>{this.parseAdress(this.props.adressSelected)}</Text>
                             {this.props.zone != undefined ? (
                                 <View>
                                     <Text style={stylesListCard.sectionTitleTextStyle}> Detalles de la zona de entrega</Text>
@@ -136,7 +123,7 @@ class ConfirmCartView extends React.PureComponent {
                                     </TouchableOpacity>
                                  </View>
                             ):(
-                                <Text style={{fontSize:13, fontStyle:'italic', textAlign:"justify"}}>
+                                <Text style={{fontSize:13, marginLeft:20, marginRight:20, marginBottom:10, marginTop:10, fontStyle:'italic', textAlign:"justify"}}>
                                      La dirección seleccionada no se encuentra dentro del alcance de alguna zona de entrega, recuerde comunicarse con el vendedor para coordinar la entrega.
                                 </Text>
                             )}
@@ -154,19 +141,23 @@ class ConfirmCartView extends React.PureComponent {
                         </View>
                         ) : (null)}
                     <View>
-                    <Text style={stylesListCard.sectionTitleTextStyle}>Comentario</Text>
-                        <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                        placeholder={"Puede dejar un comentario para el pedido aqui."}
+                    <Text style={stylesListCard.sectionTitleTextStyle}>Comentario [ {this.comment.length} / 200 ]</Text>
+                        <TextInput style={{ height: 40, marginLeft:10, borderColor: 'gray', }}
+                        placeholder={"  Puede dejar un comentario para el pedido aqui."}
+                        placeholderTextColor="blue"
+                        multiline
+                        numberOfLines={3}
                         onChangeText={text => this.updateText(text)}
-                        value={this.comment}></TextInput>
+                        value={this.comment}
+                        maxLength = {200}></TextInput>
                     </View>
                     
 
                 </View>
                 <View style={{ backgroundColor: '#ebedeb' }}>
-                    <View style={{ marginTop: 15 }}>
+                    <View style={{ marginTop: 0 }}>
                         <View style={stylesListCard.singleItemContainer}>
-                            <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {this.props.shoppingCartSelected.montoActual} </Text>
+                            <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {this.obtainTotalPrice()} </Text>
                         </View>
                     </View>
                 </View>
@@ -277,7 +268,7 @@ const stylesListCard = StyleSheet.create({
     },
 
     singleItemContainer: {
-        marginBottom: 5,
+        marginTop: 5,
         height: 40,
         borderRadius: 5,
         borderWidth: 1,

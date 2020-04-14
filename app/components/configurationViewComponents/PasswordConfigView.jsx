@@ -245,9 +245,9 @@ class PasswordConfigView extends React.PureComponent {
     render() {
         const fields = [OLDPASSWORD, NEWPASSWORD, CONFIRMNEWPASSWORD]
         return (
-            <KeyboardAvoidingView>
+            <View>
                 <LoadingOverlayView isVisible={this.state.isVisible} loadingText={'Enviando sus datos al servidor...'}></LoadingOverlayView>
-                <ScrollView>
+                <ScrollView  style={{height:Dimensions.get("window").height - 167}}>
                     <View style={styles.stylesComment}>
                         <Text >La nueva contraseña debe tener entre 10 y 26 caracteres de largo. Recomendamos el uso de números, mayúsculas y minúsculas intercaladas y que la contraseña no se relacione directamente con el nombre de usuario ni con datos personales para mayor seguridad.</Text>
                     </View>
@@ -272,7 +272,7 @@ class PasswordConfigView extends React.PureComponent {
                         <Button loading={this.state.sendingData} disabled={!this.state.dataChange} buttonStyle={{ height: 60, backgroundColor: '#5ebb47', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={()=>this.handleSubmit()} title="Guardar" />
                     </View>
                 </ScrollView>
-            </KeyboardAvoidingView>
+            </View>
         )
     }
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Alert, Dimensions, BackHandler } from 'react-native';
-import { Header, Button, Icon, SearchBar, Image } from 'react-native-elements';
+import { Header, Button, Icon, SearchBar, Image,Badge } from 'react-native-elements';
 import GLOBALS from '../Globals';
 import ProductCardsView from '../containers/CatalogComponentsContainers/ProductCards';
 import LoadingView from '../components/LoadingView';
@@ -147,28 +147,38 @@ class CatalogView extends React.Component {
     }
    
     getShoppingCarts(props){
-        axios.post((this.serverBaseRoute + '/rest/user/pedido/conEstados'),{
+        console.log("props", props.vendorSelected)
+        axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'),{
             idVendedor: props.vendorSelected.id,
             estados: [
               "ABIERTO"
             ]
           }).then(res => {
+              
+            console.log("carts", res.data);
             this.shoppingCarts(res.data);
         }).catch(function (error) {
             console.log(error);
+            if (error.response) {
+                
             Alert.alert(
                 'Error',
-                'Ocurrio un error al obtener los pedidos del servidor, vuelva a intentar más tarde.',
+                error.response.data.error,
                 [
                     { text: 'Entendido', onPress: () => props.actions.logout() },
                 ],
                 { cancelable: false },
             );
+              } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+              } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+              }
         });
     }
 
     getSeals(props) {
-        axios.get((this.serverBaseRoute + 'rest/client/medalla/all')).then(res => {
+        axios.get((this.serverBaseRoute + 'rest/client/medalla/all/')).then(res => {
             this.seals(res.data);
         }).catch(function (error) {
             Alert.alert(
@@ -228,7 +238,7 @@ class CatalogView extends React.Component {
     }
 
     getProducts(props) {
-        axios.post(this.serverBaseRoute + 'rest/client/producto/productosByMultiplesFiltros', {
+        axios.post(this.serverBaseRoute + 'rest/client/producto/productosByMultiplesFiltros/', {
             idVendedor: this.props.vendorSelected.id,
             idCategoria: null,
             idsSellosProducto: [],
@@ -311,6 +321,7 @@ class CatalogView extends React.Component {
                         style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
                         source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                     />
+                    <View>
                     <Button
                         icon={
                             <Icon name="shopping-cart" size={20} color="white" type='font-awesome' />
@@ -318,6 +329,10 @@ class CatalogView extends React.Component {
                         buttonStyle={styles.leftHeaderButton}
                         onPress={() => this.setState({showShoppingCart: !this.state.showShoppingCart})}
                     />
+                    {this.props.shoppingCarts.length > 0 ? (
+                    <Badge value={this.props.shoppingCarts.length} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }}/>
+                    ):(null)}
+                    </View>
                 </Header>
                 <Header backgroundColor='white' containerStyle={styles.lowerHeaderStyle}
                     leftComponent={

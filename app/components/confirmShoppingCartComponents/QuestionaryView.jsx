@@ -1,6 +1,7 @@
 import React from 'react'
 import RNPickerSelect from 'react-native-picker-select';
 import { Text, View, Dimensions, StyleSheet } from 'react-native';
+import { Icon,  } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 
 class QuestionaryView extends React.PureComponent {
@@ -8,7 +9,7 @@ class QuestionaryView extends React.PureComponent {
         super(props)
         this.state = {
             questions: [],
-            answers: []
+            answers: [],
         }
     }
     componentDidMount(){
@@ -42,6 +43,10 @@ class QuestionaryView extends React.PureComponent {
         this.props.answerSetFunction(copyAnswers)   
     }
 
+    setColor(i){
+        
+    }
+
     render() {
         return (
             <View style={{ height: Dimensions.get("window").height - 210 }}>
@@ -54,20 +59,28 @@ class QuestionaryView extends React.PureComponent {
                 <ScrollView>
                 {this.state.questions.map((question, i) => {
                     return (
-                        <View key={i} style={{
-                            borderColor: "black", borderWidth: 1, borderRadius: 10, margin: 8
-                        }}>
-                            <RNPickerSelect
-                                onValueChange={(value) => this.setAnswer(question.nameQuestion, value)}
-                                items={question.options}
-                                placeholder={{
-                                    label: question.nameQuestion,
-                                    value: null,
-                                    color: "blue"
-                                }}
-                                value={this.state.answers[i].opcionSeleccionada}
-                                useNativeAndroidPickerStyle={true}
-                            />
+                        <View key={i} style={{flexDirection:"row", alignItems:"center"}}>
+                            <View style={{marginLeft:10, flex:2,flexDirection:"row"}}>
+                                {this.state.answers[i].opcionSeleccionada !== null ?(
+                                    <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
+                                ):(<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
+                                <Text style={{textAlign:"center"}}> {i+1}. </Text>
+                            </View>
+                            <View key={i} style={{ flex:14,
+                                borderColor: this.state.answers[i].opcionSeleccionada === null ? "black" : "blue", borderWidth: 1, borderRadius: 10, margin: 8, marginRight:15
+                            }}>
+                                <RNPickerSelect
+                                    onValueChange={(value) => this.setAnswer(question.nameQuestion, value)}
+                                    items={question.options}
+                                    placeholder={{
+                                        label: question.nameQuestion,
+                                        value: null,
+                                        color: "blue"
+                                    }}
+                                    value={this.state.answers[i].opcionSeleccionada}
+                                    useNativeAndroidPickerStyle={true}
+                                />
+                            </View>
                         </View>
                     )
                 })}

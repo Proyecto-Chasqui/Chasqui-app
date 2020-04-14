@@ -346,9 +346,9 @@ class PersonalDataView extends React.PureComponent {
     render() {
         const fields = [APODO, NOMBRE, APELLIDO];
         return (
-            <KeyboardAvoidingView>
+            <View>
                 <LoadingOverlayView isVisible={this.state.isVisible} loadingText={'Enviando sus datos al servidor...'}></LoadingOverlayView>
-                <ScrollView>
+                <ScrollView style={{height:Dimensions.get("window").height - 167}}>
                     {fields.map((field, i) => {
                         return (
                             <View style={styles.inputContainer}>
@@ -405,7 +405,7 @@ class PersonalDataView extends React.PureComponent {
                         <Button loading={this.state.sendingData} disabled={!this.state.dataChange} buttonStyle={{ height: 60, backgroundColor: '#5ebb47', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={this.handleSubmit} title="Guardar" />
                     </View>
                 </ScrollView>
-            </KeyboardAvoidingView>
+            </View>
         );
     }
 }
@@ -454,6 +454,7 @@ const styles = StyleSheet.create({
 
     buttonContainer: {
         marginTop: '2%',
+        marginBottom: '4%',
         width: "90%",
         alignSelf: 'center'
     },
