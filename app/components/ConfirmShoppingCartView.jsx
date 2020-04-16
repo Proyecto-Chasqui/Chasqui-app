@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet, Alert, Dimensions } from 'react-native'
+import { Text, View, StyleSheet, Alert, Dimensions, KeyboardAvoidingView } from 'react-native'
 import { Header, Button, Icon, ButtonGroup, Image } from 'react-native-elements';
 import CartBriefingView from '../containers/ConfirmShoppingCartContainers/CartBriefing';
 import ShippingSelectionView from '../containers/ConfirmShoppingCartContainers/ShippingSelection';
@@ -250,7 +250,7 @@ class ConfirmShoppingCartView extends React.PureComponent {
 
     render() {
         return (
-            <View>
+            <KeyboardAvoidingView style={{flex:1}}>
                 <Header containerStyle={styles.topHeader}>
                     <Button
                         icon={
@@ -275,8 +275,8 @@ class ConfirmShoppingCartView extends React.PureComponent {
                                                                         sellerPointSelected={this.state.sellerPointSelected}
                                                                         adressSelected={this.state.adressSelected}
                                                                         answers={this.state.answers}/>) : (null)}
-                    <View style={{ backgroundColor: '#ebedeb', height: Dimensions.get("window").height - 710 }}>
-                        <View style={{  marginTop: 15 }}>
+                    <View style={{ }}>
+                        <View style={{   }}>
                             <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15}}>
                                 {this.state.showBack ? (<Button onPress={() => this.back()} titleStyle={{ color: 'black', }} title='Atras' containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonNotStyle}></Button>
                                 ) : (null)}
@@ -303,7 +303,7 @@ class ConfirmShoppingCartView extends React.PureComponent {
                         </View>
                     </View>
                 </View>
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }

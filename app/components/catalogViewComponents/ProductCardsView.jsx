@@ -45,7 +45,7 @@ class ProductCardsView extends React.PureComponent {
             let stylesCards = this.props.viewSelected === this.catalogViewModes.TWOCARDS ? stylesMultipleCards : stylesSingleCards;
             return (
                 <FlatList numColumns={this.props.size} key={this.props.size} windowSize={15} data={this.props.products} renderItem={({ item }) =>
-                    <View style={stylesCards.wiewCard}>
+                    <TouchableOpacity onPress={() => this.goToProductDetails(item)} style={stylesCards.wiewCard}>
                         <Card containerStyle={stylesCards.card}>
                             <View style={stylesCards.cardImageView}>
                                 <Image onStartShouldSetResponder={() => null} style={stylesCards.cardImage} PlaceholderContent={<ActivityIndicator size="large" color="#0000ff" />} source={{ uri: (this.normalizeText(this.serverBaseRoute + item.imagenPrincipal)) }} />
@@ -60,10 +60,10 @@ class ProductCardsView extends React.PureComponent {
                                 <View>
                                     <Text style={stylesCards.priceStyle}>$ {item.precio}</Text>
                                 </View>
-                                <ScrollView style={{ height: 50 }}>
+                                <ScrollView style={{ height: 55 }}>
                                     <Text style={stylesCards.nameTextStyle}>{item.nombreProducto}</Text>
                                 </ScrollView>
-                                <ScrollView style={{ height: 30 }}>
+                                <ScrollView style={{ height: 50}}>
                                     <Text style={stylesCards.nameProducerTextStyle}>{item.nombreFabricante}</Text>
                                 </ScrollView>
                                 <SealsView sealsContainer={stylesCards.sealContainerStyle}
@@ -71,13 +71,9 @@ class ProductCardsView extends React.PureComponent {
                                     productSeals={item.medallasProducto}
                                     producerSeals={item.medallasProductor} >
                                 </SealsView>
-                                <View style={{ flexDirection: "row", width: "100%", alignSelf: "flex-start" }}>
-                                    <Button titleStyle={{ color: "black" }} containerStyle={stylesCards.containerButtonStyle} buttonStyle={stylesCards.buttonStyle} title="Agregar"
-                                        onPress={() => this.goToProductDetails(item)} />
-                                </View>
                             </View>
                         </Card>
-                    </View>
+                    </TouchableOpacity>
                 }
                     keyExtractor={item => item.idProducto}
                 >
@@ -98,8 +94,8 @@ class ProductCardsView extends React.PureComponent {
                                 ) : (
                                     null)
                             }
-                        <View style={{ flex:2, height: 150 }}>                            
-                            <ScrollView style={{ height: 120}}>
+                        <View style={{ flex:2, height: 170 }}>                            
+                            <ScrollView style={{ height: 120 }}>
                                 <Text style={stylesListCard.nameTextStyle}>{item.nombreProducto}</Text>
                             </ScrollView>
                             <ScrollView style={{ height: 100, }}>
@@ -471,7 +467,7 @@ const stylesMultipleCards = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         marginBottom: 3,
-        height: 40
+        height: 55
     },
 
     sealStyle: {

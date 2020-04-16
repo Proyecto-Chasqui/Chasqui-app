@@ -26,7 +26,7 @@ class ConfigurationView extends React.PureComponent {
         const buttons = ['Datos', 'Direcciones', 'Contraseña']
         const { selectedIndex } = this.state
         return (
-        <KeyboardAvoidingView>
+        <KeyboardAvoidingView style={{flex:1}}>
             <View>
                 <Header containerStyle={styles.topHeader}>
                     <Button

@@ -66,7 +66,7 @@ class CartBriefingView extends React.PureComponent {
                     <Text style={stylesListCard.adressTitle}>Verifique su compra</Text>
                 </View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
-                <View style={{ height: Dimensions.get("window").height - 320 }}>
+                <View style={{ height: Dimensions.get("window").height - 265 }}>
                     <FlatList data={this.getDataProducts()}
                         keyExtractor={item => item.idVariante} windowSize={15}
                         renderItem={({ item }) =>
@@ -76,7 +76,7 @@ class CartBriefingView extends React.PureComponent {
                         } />
 
                 </View>
-                <View style={{ backgroundColor: '#ebedeb' }}>
+                <View style={{ }}>
                     <View style={{ marginTop: 15 }}>
 
                         <View style={stylesListCard.singleItemContainer}>

@@ -235,14 +235,14 @@ class ShippingSelectionView extends React.PureComponent {
 
     getHeightValue(){
         if(this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega){
-            return 510
+            return 460
         }else{
             return 440
         }
     }
     render() {
         return (
-            <View style={{ height: Dimensions.get("window").height - 210 }}>
+            <View style={{ height: Dimensions.get("window").height - 155}}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.adressTitle}>{this.state.title}</Text>
                 </View>
@@ -271,7 +271,7 @@ class ShippingSelectionView extends React.PureComponent {
 
                         {this.state.showSellerPoints ? (
                             <View>
-                                <View style={{height:Dimensions.get("window").height - 730}}>
+                                <View >
                                 { this.minAmount() ? (
                                     <View style={{margin: 10}}>
                                     <Text style={{fontSize:16, textAlign:"justify", fontStyle:"italic"}}> {"Debido a que su pedido no supera el monto minimo de $" + this.props.vendorSelected.montoMinimo +", solo puede pasar a retirar el pedido por alguno de los siguientes puntos de retiro."}</Text>
@@ -307,11 +307,11 @@ class ShippingSelectionView extends React.PureComponent {
                                     buttonStyle={styles.buttonNewAddressStyle}
                                     onPress={() => this.goToNewAdress()} title="Nueva dirección">
                                 </Button>
-                                        <ScrollView style={{height:Dimensions.get("window").height - 720}}>
+                                        <ScrollView style={{height:120}}>
                                             <View style={{borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}></View>
                                             <View style={{marginLeft:20, marginRight:20, marginTop:10}}><Text style={{textAlign:"center", fontSize:15, fontWeight:"bold"}}>Información sobre la entrega</Text></View>
                                             {this.state.zone !== undefined?(
-                                            <View style={{height:Dimensions.get("window").height - 620,marginLeft:20, marginRight:20, marginBottom:10}}>                                            
+                                            <View style={{marginLeft:20, marginRight:20, marginBottom:10}}>                                            
                                                 <View style={{flexDirection:'row'}}>
                                                     <Text style={{fontSize:15, fontWeight:'bold'}}>Zona de entrega: </Text>
                                                     <Text style={{fontSize:15}}>{this.state.zone.nombre}</Text>
@@ -322,7 +322,7 @@ class ShippingSelectionView extends React.PureComponent {
                                                 </View>
                                                 <Text style={{fontStyle:'italic'}}>{ this.state.zone.descripcion }</Text>
                                             </View>)
-                                            :(<View style={{height:Dimensions.get("window").height - 620,marginLeft:20, marginRight:20, marginBottom:10}}>
+                                            :(<View style={{marginLeft:20, marginRight:20, marginBottom:10}}>
                                                 {this.state.selectedAddress.length === 0 || this.state.loadingZone? 
                                                 (<Text>Seleccione una dirección para obtener mas información sobre la entrega</Text>)
                                                 :

@@ -203,7 +203,7 @@ class ItemInfoCartView extends React.PureComponent {
         if (this.props.shoppingCartSelected.id === undefined) {
             return (
                 <View>
-                    <View style={{ height: Dimensions.get("window").height - 270 }}>
+                    <View style={{ height: Dimensions.get("window").height - 255 }}>
                         <View style={stylesListCard.viewSearchErrorContainer}>
                             {this.state.guest ?
                                 (
@@ -234,12 +234,12 @@ class ItemInfoCartView extends React.PureComponent {
 
                         </View>
                     </View>
-                    <View style={{ backgroundColor: '#ebedeb', height: Dimensions.get("window").height - 570, }}>
-                        <View style={{ marginTop: 15 }}>
+                    <View style={{ backgroundColor: '#ebedeb' }}>
+                        <View style={{ }}>
                             <View style={stylesListCard.singleItemContainer}>
                                 <Text style={stylesListCard.totalPriceCartStyle}> Total : $ - - - </Text>
                             </View>
-                            <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 2 }}>
+                            <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginBottom:10}}>
                                 <Button disabled={true} titleStyle={{ color: 'black', }} title='Cancelar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonNotStyle}></Button>
                                 <Button disabled={true} titleStyle={{ color: 'white', }} title='Confirmar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonOkStyle}></Button>
                             </View>
@@ -253,7 +253,7 @@ class ItemInfoCartView extends React.PureComponent {
         return (
             <View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
-                <View style={{ height: Dimensions.get("window").height - 270 }}>
+                <View style={{ height: Dimensions.get("window").height - 255 }}>
                     <View style={{ backgroundColor: '#ebedeb', flexDirection:"row", justifyContent: this.setStyleDistance(), borderBottomColor:"#dfdfdf", borderBottomWidth:1}}>
                         <View style={{ backgroundColor: 'white', flexDirection:"row", borderRadius:5, marginTop:5, marginBottom:5 }}> 
                             {this.props.shoppingCartSelected.idGrupo === null?
@@ -307,12 +307,12 @@ class ItemInfoCartView extends React.PureComponent {
                                 } />)
                     }
                 </View>
-                <View style={{ backgroundColor: '#ebedeb', height: Dimensions.get("window").height - 570, }}>
-                    <View style={{ marginTop: 15 }}>
+                <View style={{  backgroundColor: '#ebedeb' }}>
+                    <View >
                         <View style={stylesListCard.singleItemContainer}>
                             <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {(this.props.shoppingCartSelected.montoActual).toFixed(2)} </Text>
                         </View>
-                        <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginTop: 2 }}>
+                        <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15,marginBottom:10 }}>
                             <Button onPress={() => this.cancelCartAlert()} titleStyle={{ color: 'black', }} title='Cancelar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonNotStyle}></Button>
                             <Button onPress={() => this.confirmCart()} titleStyle={{ color: 'white', }} title='Confirmar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonOkStyle}></Button>
                         </View>
@@ -334,11 +334,12 @@ const  stylesListCard = StyleSheet.create({
     },
 
     viewSearchErrorContainer: {
-        height: "100%"
+        height:"100%",
+        justifyContent:"center",
     },
 
     viewErrorContainer: {
-        marginTop: 150
+        marginTop: 0
     },
 
     errorText: {
@@ -401,7 +402,8 @@ const  stylesListCard = StyleSheet.create({
     },
 
     singleItemContainer: {
-        marginBottom: 5,
+        marginTop:10,
+        marginBottom: 10,
         height: 40,
         borderRadius: 5,
         borderWidth: 1,

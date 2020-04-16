@@ -1,10 +1,11 @@
 import React from 'react'
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, FlatList, ActivityIndicator, Dimensions, Alert, TextInput } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, FlatList, ActivityIndicator, Dimensions, Alert, TextInput, KeyboardAvoidingView } from 'react-native';
 import { Card, Badge, Icon, Image, Button, Avatar, Input } from 'react-native-elements';
 import GLOBAL from '../../Globals';
 import axios from 'axios';
 import LoadingOverlayView from '../generalComponents/LoadingOverlayView';
 import ProductItemView from '../../containers/ConfirmShoppingCartContainers/ProductItem';
+
 
 class ConfirmCartView extends React.PureComponent {
     constructor(props) {
@@ -81,7 +82,7 @@ class ConfirmCartView extends React.PureComponent {
                     <Text style={stylesListCard.adressTitle}>Los datos de su compra</Text>
                 </View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
-                <View style={{ height: Dimensions.get("window").height - 300 }}>
+                <View style={{ height: Dimensions.get("window").height - 255 }}>
                     <Text style={stylesListCard.sectionTitleTextStyle}>Su pedido</Text>
                     <FlatList data={this.getDataProducts()}
                         keyExtractor={item => item.idVariante} windowSize={15}
@@ -154,7 +155,7 @@ class ConfirmCartView extends React.PureComponent {
                     
 
                 </View>
-                <View style={{ backgroundColor: '#ebedeb' }}>
+                <View style={{ marginBottom:5 }}>
                     <View style={{ marginTop: 0 }}>
                         <View style={stylesListCard.singleItemContainer}>
                             <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {this.obtainTotalPrice()} </Text>

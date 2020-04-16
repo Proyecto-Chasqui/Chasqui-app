@@ -140,21 +140,22 @@ class LoginView extends React.PureComponent {
             </View>
           </View>
         </Overlay>
-        <Formik
-          initialValues={{ email: '', contraseña: '' }}
-          onSubmit={values => this.handleSubmit(values)}
-        >
-          {({ handleChange, handleBlur, handleSubmit, values }) => (
-            <View>
-              <View style={styles.titleContainer}>
+        <View style={styles.titleContainer}>
                 <Text style={styles.title}>Bienvenidxs</Text>
-              </View>
+        </View>
               <View style={styles.imageContainer}>
                 <Image
                   source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                   style={styles.image}
                 />
               </View>
+        <Formik
+          initialValues={{ email: '', contraseña: '' }}
+          onSubmit={values => this.handleSubmit(values)}
+        >
+          {({ handleChange, handleBlur, handleSubmit, values }) => (
+            <View>
+
               <View style={styles.inputContainer}>
                 <Input
                   inputStyle={{ color: "white", marginLeft: 10 }}
@@ -229,7 +230,7 @@ const styles = StyleSheet.create({
   },
 
   principalContainer: {
-    flex: 1,
+    flex:1,
     flexDirection: 'column',
     justifyContent: 'center',
     backgroundColor: 'rgba(51, 102, 255, 1)',
@@ -250,8 +251,8 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: 278 / 2,
-    height: 321 / 2,
+    width: 278 / 2.5,
+    height: 321 /  2.5,
     resizeMode: 'contain',
   },
 
@@ -308,7 +309,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     height: 25,
-    marginTop: 20,
+    marginTop: 10,
     marginLeft: 0,
     alignSelf: 'center'
   },
