@@ -48,8 +48,24 @@ class VendorsView extends React.PureComponent {
         })
     }
 
+    resetVendorSelected(){
+        let idVendor = this.props.vendorSelected.id
+        this.props.vendors.map((vendor, i)=>{
+            if(idVendor === vendor.id){
+                this.props.actions.vendorSelected(vendor)
+            }
+        })
+    }
+
+    componentDidUpdate(){
+        if(this.props.resetState.reset){
+            this.getVendors();
+            this.props.actions.resetState({reset:false})
+        }
+    }
+
     componentDidMount() {
-        this.getVendors(this.props);
+        this.getVendors();
     }
 
     screenLowerThan(value, styleA, styleB) {
@@ -60,19 +76,20 @@ class VendorsView extends React.PureComponent {
     }
 
 
-    getVendors(props) {
+    getVendors() {
         axios.get(this.serverBaseRoute + 'rest/client/vendedor/all')
             .then(res => {
                 this.vendors(res.data);
                 this.setState({
                     isLoadingVendors: false,
-                });
-            }).catch(function (error) {
+                });                
+                this.resetVendorSelected();
+            }).catch((error) => {
                 Alert.alert(
                     'Error',
                     'Ocurrio un error al obtener los datos del servidor, vuelva a intentar más tarde.',
                     [
-                        { text: 'Entendido', onPress: () => props.actions.logout() },
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
                     ],
                     { cancelable: false },
                 );

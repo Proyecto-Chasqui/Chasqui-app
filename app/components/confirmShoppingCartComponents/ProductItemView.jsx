@@ -100,6 +100,26 @@ class ProductItemView extends React.PureComponent {
         });
     }
 
+    doRemove(){
+        axios.put((this.serverBaseRoute + 'rest/user/pedido/individual/eliminar-producto'), {
+            idPedido: this.props.shoppingCartSelected.id,
+            idVariante: this.props.item.idVariante,
+            cantidad: this.state.initialValue - this.state.quantityValue,
+        }).then(res => {
+            this.getShoppingCarts();
+        }).catch((error) => {
+            console.log(error);
+            this.setState({ buttonLoading: false, buttonDisabled: false })
+            if (error.response) {
+                Alert.alert('Aviso', error.response.data.error);
+            } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+            } else {
+                Alert.alert('Error', "Ocurrio un error al intentar comunicarse con el servidor, intente más tarde o verifique su conectividad.");
+            }
+        });
+    }
+    
     addProductToCart() {
         console.log("state at sending",this.state)
         console.log("item", this.props.item)
@@ -112,9 +132,15 @@ class ProductItemView extends React.PureComponent {
             }).then(res => {
                 this.getShoppingCarts()
             }).catch((error) => {
+                console.log(error.response)
                 this.setState({ buttonLoading: false, buttonDisabled: false })
                 if (error.response) {
-                    Alert.alert('Aviso', error.response.data.error);
+                    if(error.response.data.error === "El vendedor por el momento no permite hacer compras o agregar mas productos, intentelo mas tarde."){
+                        this.props.actions.resetState({reset:true})
+                        Alert.alert('Aviso', "No se permiten hacer compras por el momento, solo puede remover productos. Tenga en cuenta que si remueve productos no podrá agregarlos luego.");
+                    }else{                        
+                        Alert.alert('Aviso', error.response.data.error);
+                    }
                 } else if (error.request) {
                     Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
                 } else {
@@ -122,23 +148,20 @@ class ProductItemView extends React.PureComponent {
                 }
             });
         } else {
-            axios.put((this.serverBaseRoute + 'rest/user/pedido/individual/eliminar-producto'), {
-                idPedido: this.props.shoppingCartSelected.id,
-                idVariante: this.props.item.idVariante,
-                cantidad: this.state.initialValue - this.state.quantityValue,
-            }).then(res => {
-                this.getShoppingCarts();
-            }).catch((error) => {
-                console.log(error);
-                this.setState({ buttonLoading: false, buttonDisabled: false })
-                if (error.response) {
-                    Alert.alert('Aviso', error.response.data.error);
-                } else if (error.request) {
-                    Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-                } else {
-                    Alert.alert('Error', "Ocurrio un error al intentar comunicarse con el servidor, intente más tarde o verifique su conectividad.");
-                }
-            });
+            console.log("vendorSelected",this.props.vendorSelected.ventasHabilitadas )
+            if(!this.props.vendorSelected.ventasHabilitadas){
+                Alert.alert(
+                    'Advertencia',
+                    'Si remueve el producto, no podrá volverlo a agregar. ¿Esta seguro de removerlo?',
+                    [
+                        { text: 'No', onPress: () =>  this.setState({ buttonLoading: false, buttonDisabled: false }) },
+                        { text: 'Si', onPress: () => this.doRemove() },
+                    ],
+                    { cancelable: false },
+                );
+            }else{
+                this.doRemove()
+            }
         }
     }
 
@@ -170,7 +193,7 @@ class ProductItemView extends React.PureComponent {
                     <View style={{ flex: 1, backgroundColor: '#ebedeb', borderBottomWidth:2, borderColor:'black'}}>
                         <View  style={{ backgroundColor: '#ebedeb', marginTop:10,marginBottom:10, flexDirection:'row'}}>
                         <View style={stylesListCard.quantityContainer}>
-                            <QuantitySelector disabled={false} functionValueComunicator={(value, change) => this.setQuantityValue(value, change)} text={""} initialValue={this.state.initialValue.toString()}></QuantitySelector>
+                            <QuantitySelector disabled={false} vendorAllowSells={this.props.vendorSelected.ventasHabilitadas} functionValueComunicator={(value, change) => this.setQuantityValue(value, change)} text={""} initialValue={this.state.initialValue.toString()}></QuantitySelector>
                         </View>
                         <View style={stylesListCard.singleItemContainer}>
                             <Button

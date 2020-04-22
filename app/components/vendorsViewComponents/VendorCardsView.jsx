@@ -73,6 +73,11 @@ class VendorMultipleCardsView extends React.PureComponent {
                                                 <Image style={stylesCards.cardImage} source={{ uri: (this.serverBaseRoute + u.imagen) }} />
                                             </TouchableOpacity>
                                             </View>
+                                            <View style={{position:"absolute"}}>
+                                                <View>
+                                                {! u.ventasHabilitadas ? (<View style={stylesCards.backgroundBadge}><Image style={stylesCards.badgeImage} source={require('./badge_icons/no-sells.png')} /></View>):(null)}
+                                                </View>                                                
+                                            </View>
                                             <View style={stylesCards.viewTagsOrgAndSellStrat}>
                                                 <View style={stylesCards.viewBadgesTOrg}>
                                                     {(u.tagsTipoOrganizacion.map((tag) =>

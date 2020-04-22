@@ -66,11 +66,19 @@ class QuantitySelectorView extends React.PureComponent{
         
     }
 
+    allowAdd(){
+        if(this.props.vendorAllowSells){
+            return true
+        }else{
+            return this.state.initialValue > this.state.value
+        }
+    }
+
     render(){
         return(
         <View style={{flexDirection:"row", flex:1}}>
             <View style={{flex:3}} >
-            <Button buttonStyle={{height:"100%", backgroundColor:"transparent", }}
+            <Button disabled={this.props.disabled} buttonStyle={{height:"100%", backgroundColor:"transparent", }}
                 icon={
                     <Icon
                     name='caret-left'
@@ -79,7 +87,6 @@ class QuantitySelectorView extends React.PureComponent{
                     size={30}
                     />
                 }
-                disabled={this.props.disabled}
                 onPress={() => this.substract()}
                 />
             </View>
@@ -96,7 +103,7 @@ class QuantitySelectorView extends React.PureComponent{
             </View>
             <View style={styles.verticalDivisor} />
             <View style={{flex:3}} >
-            <Button buttonStyle={{height:"100%", backgroundColor:"transparent"}}
+            <Button disabled={!this.allowAdd() || this.props.disabled} buttonStyle={{height:"100%", backgroundColor:"transparent"}}
                 icon={
                         <Icon
                         name='caret-right'
@@ -105,7 +112,6 @@ class QuantitySelectorView extends React.PureComponent{
                         size={30}
                         />
                 }
-                disabled={this.props.disabled}
                 onPress={() => this.add()}
                 />
             </View>

@@ -4,6 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { Button, Icon, Overlay, CheckBox, Image, Header } from 'react-native-elements';
 import ItemInfoCartView from '../../containers/CatalogComponentsContainers/ItemInfoCart';
 import LoadingOverlayView from '../generalComponents/LoadingOverlayView';
+import ButtonOpenIndividualCart from '../../containers/CatalogComponentsContainers/OverlayShoppingCartComponentsContainers/ButtonOpenIndividualCart'
 import GLOBAL from '../../Globals';
 import axios from 'axios';
 
@@ -15,6 +16,7 @@ class OverlayShoppingCartView extends React.PureComponent {
         this.shoppingCartSelected = this.props.actions.shoppingCartSelected;
         this.shoppingCarts = this.props.actions.shoppingCarts;
         this.vendorSelected = this.props.vendorSelected
+        console.log("vendorSelected", this.props.vendorSelected)
         this.state = {
             showShoppingCarts: false,
             shoppingCartTypeSelected: 'Ver pedidos',
@@ -103,6 +105,15 @@ class OverlayShoppingCartView extends React.PureComponent {
         }
     }
 
+    canShowCartBasedOnVendorState(cart){
+        if(!this.props.vendorSelected.ventasHabilitadas){
+            return (cart.estado === "ABIERTO")
+        }else{
+            return true
+        }
+       
+    }
+
     render() {
 
         return (
@@ -136,8 +147,15 @@ class OverlayShoppingCartView extends React.PureComponent {
                 {this.state.showShoppingCarts ?
 
                     <View>
+
                         {this.validCatalog() ? (
                         <ScrollView>
+                        { (! this.props.vendorSelected.ventasHabilitadas) ? (
+                            <View style={styles.selectorContainer}>
+                                <Text style={{marginTop:5,marginLeft:5, marginRight:5, fontSize:16, fontStyle:'italic', textAlign:"center", fontWeight:"bold"}}>Las ventas estan deshabilitadas</Text>
+                                <Text style={{marginBottom:5, marginLeft:5, marginRight:5, fontStyle:'italic', textAlign:"justify"}}>Por el momento no podrá abrir nuevos pedidos, pero podra gestionar los pedidos abiertos existentes</Text>
+                            </View>
+                        ):(null)}            
                         {this.props.shoppingCarts.length > 0 ? (
                                 this.props.shoppingCarts.map((cart, i) => {
                                     return (
@@ -162,15 +180,9 @@ class OverlayShoppingCartView extends React.PureComponent {
                                     )
                                 }) 
                         ):( 
-                        <View style={styles.selectorContainer}>    
-                        <Button titleStyle={styles.titleButtonNewCartReveal} buttonStyle={styles.buttonNewCartButton} containerStyle={styles.containerButtonNewCart} type="clear" title="Abrir Pedido Individual"
-                        onPress={() => this.alertOpenCart()} icon={
-                            <View style={{backgroundColor:"white", borderColor:"black", borderRadius:5, borderWidth:1, marginLeft:10}}>
-                            <Image style={styles.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_individual.png')} />
+                            <View>
+                                <ButtonOpenIndividualCart actionFunction={() => this.alertOpenCart()}></ButtonOpenIndividualCart>
                             </View>
-                        } 
-                         iconRight />
-                         </View>
                          )
                         }
                         </ScrollView>

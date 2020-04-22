@@ -8,6 +8,7 @@ import ProductFilterView from '../containers/CatalogComponentsContainers/Product
 import OverlayShoppingCartView from '../containers/CatalogComponentsContainers/OverlayShoppingCart';
 import base64 from 'react-native-base64'
 import axios from 'axios';
+import NoSellsWarnOverlayView from '../components/generalComponents/NoSellsWarnOverlayView'
 
 class CatalogView extends React.Component {
     constructor(props) {
@@ -334,6 +335,7 @@ class CatalogView extends React.Component {
                     ):(null)}
                     </View>
                 </Header>
+                <NoSellsWarnOverlayView isVisible={!this.props.vendorSelected.ventasHabilitadas} message={this.props.vendorSelected.mensajeVentasDeshabilitadas}></NoSellsWarnOverlayView>
                 <Header backgroundColor='white' containerStyle={styles.lowerHeaderStyle}
                     leftComponent={
                         <SearchBar

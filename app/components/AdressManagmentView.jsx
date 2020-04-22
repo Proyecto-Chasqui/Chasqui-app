@@ -534,7 +534,7 @@ class AdressManagmentView extends React.PureComponent {
         const fields = [STREET, ELEVATION, DEPARTMENT, LOCATION];
         const fields_2 = [STREETONE, STREETTWO, POSTALCODE]
         return (
-            <View>
+            <View style={{flex:1}}>
                 <View>
                     <Header containerStyle={styles.topHeader}>
                     <Button
@@ -562,11 +562,11 @@ class AdressManagmentView extends React.PureComponent {
                     </Header>
                 </View>
                 <LoadingOverlayView isVisible={this.state.isVisible} loadingText={this.state.loadingText}></LoadingOverlayView>
-                <KeyboardAvoidingView>
+                <KeyboardAvoidingView style={{flex:1}}>
                     <View style={styles.titleContainer}>
                         <Text style={styles.adressTitle}>{this.state.titleText}</Text>
                     </View>
-                    <ScrollView style={{ height: Dimensions.get('window').height - 160 }}>
+                    <ScrollView style={{}}>
                         <View style={styles.soloInputContainer}>
                             <Text style={styles.fieldText}>{this.normalizeText(NAMEREMAINDER)}</Text>
                             <Input
@@ -754,7 +754,8 @@ const styles = StyleSheet.create({
     buttonContainer: {
         marginTop: '2%',
         width: "95%",
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginBottom:15 
     },
 
     TextStyle: {

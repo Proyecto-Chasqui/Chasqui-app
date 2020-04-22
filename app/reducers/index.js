@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 
+import resetState from './resetState';
 import user from './user';
 import vendors from './vendors';
 import vendorTags from './vendorTags';
@@ -21,7 +22,7 @@ import shoppingCartSelected from './shoppingCartSelected';
 import shoppingCarts from './shoppingCarts';
 import allProducts from './allProducts';
 
-const rootReducer = combineReducers({user, vendors, vendorTags,
+const rootReducer = combineReducers({resetState, user, vendors, vendorTags,
      products, seals, sealsSelected, vendorSelected, productSelected, producers,
      producerSelected, productSeals, productionSeals, productCategories, zones, sellerPoints,
      personalData, adressesData, shoppingCartSelected, shoppingCarts, allProducts });

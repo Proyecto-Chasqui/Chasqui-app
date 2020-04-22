@@ -1,3 +1,4 @@
+export const RESETSTATE = 'RESETSTATE';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const SETPASSWORD = 'SETPASSWORD';
@@ -29,6 +30,7 @@ export const SHOPPINGCARTS = 'SHOPPINGCARTS';
 export const SHOPPINGCARTSELECTED = 'SHOPPINGCARTSELECTED';
 export const SHOPPINGCARTUNSELECTED = 'SHOPPINGCARTUNSELECTED';
 
+export const resetState = (resetDataState) => ({type:RESETSTATE, resetDataState})
 export const login = userData => ({type: LOGIN, userData});
 export const logout = () => ({type: LOGOUT});
 export const setPassword = (passwordData) => ({type: SETPASSWORD, passwordData});

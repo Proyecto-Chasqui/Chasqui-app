@@ -572,7 +572,7 @@ class UserRegisterView extends React.PureComponent {
         const fields_2 = [EMAIL, CONFIRM_EMAIL]
         const fields_3 = [PASSWORD, CONFIRM_PASSWORD]
         return (
-            <KeyboardAvoidingView style={{flex:1}}>
+            <View style={{flex:1}}>
                 <View>
                     <Header containerStyle={styles.topHeader}>
                         <Button
@@ -592,8 +592,8 @@ class UserRegisterView extends React.PureComponent {
                 <View style={styles.titleContainer}>
                     <Text style={styles.headerTitle}> Registro de usuario </Text>
                 </View>
-                <View>
-                    <ScrollView style={{ height: Dimensions.get('window').height - 135 }}>
+                <KeyboardAvoidingView style={{flex:1}}>
+                    <ScrollView style={{ }}>
                         <View style={styles.formContainer}>
                             <View style={styles.soloInputContainer}>
                                 <Text style={styles.fieldText}>{this.normalizeText(APODO)}</Text>
@@ -702,8 +702,8 @@ class UserRegisterView extends React.PureComponent {
                             </View>
                         </View>
                     </ScrollView>
-                </View>
-            </KeyboardAvoidingView>
+                </KeyboardAvoidingView>
+            </View>
         );
     }
 }
@@ -795,7 +795,8 @@ const styles = StyleSheet.create({
     buttonContainer: {
         marginTop: '2%',
         width: "95%",
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginBottom:15 
     },
 
     lowerButtonsContainer: {

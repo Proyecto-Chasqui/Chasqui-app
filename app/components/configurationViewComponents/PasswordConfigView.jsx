@@ -245,7 +245,7 @@ class PasswordConfigView extends React.PureComponent {
     render() {
         const fields = [OLDPASSWORD, NEWPASSWORD, CONFIRMNEWPASSWORD]
         return (
-            <View>
+            <KeyboardAvoidingView style={{flex:1}}>
                 <LoadingOverlayView isVisible={this.state.isVisible} loadingText={'Enviando sus datos al servidor...'}></LoadingOverlayView>
                 <ScrollView  style={{height:Dimensions.get("window").height - 167}}>
                     <View style={styles.stylesComment}>
@@ -272,7 +272,7 @@ class PasswordConfigView extends React.PureComponent {
                         <Button loading={this.state.sendingData} disabled={!this.state.dataChange} buttonStyle={{ height: 60, backgroundColor: '#5ebb47', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={()=>this.handleSubmit()} title="Guardar" />
                     </View>
                 </ScrollView>
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }
@@ -331,7 +331,8 @@ const styles = StyleSheet.create({
     buttonContainer: {
         marginTop: '2%',
         width: "90%",
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginBottom:15 
     },
 
     lowerButtonsContainer: {
