@@ -1,6 +1,6 @@
 import React from 'react'
 import { Overlay, Button } from 'react-native-elements'
-import {Text, View, StyleSheet, } from 'react-native'
+import {Text, View, StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 
 class NoSellsVarnOverlayView extends React.PureComponent {

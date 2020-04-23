@@ -1,6 +1,6 @@
 import React from 'react';
 import { View , StyleSheet, Alert} from 'react-native';
-import { Text, Header, Button, Icon } from 'react-native-elements';
+import { Text, Header, Button, Icon, Badge } from 'react-native-elements';
 
 class NavigationOptionItemsView extends React.PureComponent{
     constructor(props){
@@ -31,6 +31,10 @@ class NavigationOptionItemsView extends React.PureComponent{
       this.navigation.navigate('Configuración');
     }
 
+    goToNotifications(){
+      this.navigation.navigate('Notificaciones');
+    }
+
     render(){
         return(
             <View style={{marginTop:10}}>
@@ -44,15 +48,18 @@ class NavigationOptionItemsView extends React.PureComponent{
                         title="Configuración"
                         titleStyle = {styles.menuButtonTitle}
                     />
-                <Button icon={<Icon name="bell" type='font-awesome' size={20} iconStyle={styles.iconMenuButton} />}
+                <Button icon={
+                <Icon name="bell" type='font-awesome' size={20} iconStyle={styles.iconMenuButton} />}
                     buttonStyle={styles.menuButton}
-                    onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
+                    onPress={() => this.goToNotifications()}
                     title="Notificaciones"
                     titleStyle = {styles.menuButtonTitle}
                 />
+                {this.props.unreadNotifications.length > 0 ? (
+                    <Badge value={this.props.unreadNotifications.length} status="error" containerStyle={{ position: 'absolute', top: 54, left:150 }}/>
+                    ):(null)}
                 </View>
                     ):(null)}
-
                 <Button icon={<Icon name="question-circle" type='font-awesome' size={20} iconStyle={styles.iconMenuButton}/>}
                         buttonStyle={styles.menuButton}
                         onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}

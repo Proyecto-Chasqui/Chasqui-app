@@ -5,7 +5,8 @@ import NavigationOptionItemsView from '../../components/navigatorViewComponents/
 
 const mapStateToProps = state => ({
   vendorSelected: state.vendorSelected,
-  user: state.user
+  user: state.user,
+  unreadNotifications: state.unreadNotifications,
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -21,8 +21,9 @@ import adressesData from './adressesData';
 import shoppingCartSelected from './shoppingCartSelected';
 import shoppingCarts from './shoppingCarts';
 import allProducts from './allProducts';
+import unreadNotifications from './unreadNotifications';
 
-const rootReducer = combineReducers({resetState, user, vendors, vendorTags,
+const rootReducer = combineReducers({unreadNotifications, resetState, user, vendors, vendorTags,
      products, seals, sealsSelected, vendorSelected, productSelected, producers,
      producerSelected, productSeals, productionSeals, productCategories, zones, sellerPoints,
      personalData, adressesData, shoppingCartSelected, shoppingCarts, allProducts });

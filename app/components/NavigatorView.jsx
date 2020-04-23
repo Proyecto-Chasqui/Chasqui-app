@@ -15,14 +15,30 @@ import GLOBALS from '../Globals';
 const StackLogin = createStackNavigator();
 
 const DrawerCatalogs = createDrawerNavigator();
-const state = {};
 
 class NavigatorView extends React.PureComponent {
   constructor(props) {
     super(props);
     this.logout = props.actions.logout;
-    state.isSignout = props.user.token == "";
+    this.state = {
+      isSignout: this.props.user.token == "",
+      nickname: this.props.user.nickname,
+    }
     this.serverBaseRoute = GLOBALS.BASE_URL;
+    console.log("navigator", this.props.user.nickname)
+  }
+
+  componentDidUpdate(){
+    if(this.state.nickname != this.props.user.nickname){
+      this.forceUpdate();
+      this.setState({nickname: this.props.user.nickname})
+    }
+  }
+
+  createImageUrl(){
+     let url = this.serverBaseRoute + (this.props.user.avatar.substring(1))
+     url += '?random_number=' + new Date().getTime();
+     return url
   }
 
   sideMenuComponent(props) {
@@ -30,12 +46,12 @@ class NavigatorView extends React.PureComponent {
       <ScrollView style={{ backgroundColor: "#ededed" }}>
         <Header containerStyle={{ backgroundColor: 'rgba(51, 102, 255, 1)' }}  >
           {this.props.user.id != 0 ? (
-            <Image style={styles.userAvatar} source={{ uri: (this.serverBaseRoute + (this.props.user.avatar.substring(1))) }}></Image>
+            <Image style={styles.userAvatar} source={{ uri: this.createImageUrl()}}></Image>
           ) : (
               <Image style={styles.userAvatar} source={require('./configurationViewComponents/configurationAssets/avatar_4.png')}></Image>
             )}
 
-          <Text style={styles.nickText}>{(this.props.user.nickname).toUpperCase()}</Text>
+          <Text style={styles.nickText}>{this.state.nickname}</Text>
         </Header>
         <NavigationItems navigation={props.navigation}></NavigationItems>
         <NavigationOptionItems navigation={props.navigation}></NavigationOptionItems>
@@ -56,7 +72,7 @@ class NavigatorView extends React.PureComponent {
               options={{
                 headerShown: false,
                 title: 'Bienvenidxs',
-                animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+                animationTypeForReplace: this.state.isSignout ? 'pop' : 'push',
               }}
             />
             <StackLogin.Screen
@@ -65,7 +81,7 @@ class NavigatorView extends React.PureComponent {
               options={{
                 headerShown: false,
                 title: 'Registro',
-                animationTypeForReplace: state.isSignout ? 'pop' : 'push',
+                animationTypeForReplace: this.state.isSignout ? 'pop' : 'push',
               }}
             />
           </StackLogin.Navigator>
@@ -100,6 +116,7 @@ const styles = StyleSheet.create({
     color: "white",
     width: 150,
     marginLeft: 30,
+    textTransform: "uppercase"
   },
   menuButton: {
     backgroundColor: '#66000000',

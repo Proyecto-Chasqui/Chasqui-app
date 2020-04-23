@@ -8,6 +8,7 @@ import Configuration from '../containers/Configuration';
 import AdressManagment from '../containers/AdressManagment';
 import MapAdressConfig from '../components/MapAdressConfig';
 import ConfirShoppingCart from '../containers/ConfirmShoppingCart';
+import Notifications from '../containers/Notifications';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
@@ -55,6 +56,7 @@ class SubNavigatorView extends React.PureComponent{
                   <Stack.Screen name='GestiónDeDirección' component={AdressManagment} options ={{headerShown:false}} />
                   <Stack.Screen name='MapaDeDirección' component={MapAdressConfig} options={{headerShown:false}} />
                   <Stack.Screen name='ConfirmarPedido' component={ConfirShoppingCart} options={{headerShown:false}} />
+                  <Stack.Screen name='Notificaciones' component={Notifications} options={{headerShown:false}} />
              </Stack.Navigator>
           );
     }

@@ -63,6 +63,7 @@ class CatalogView extends React.Component {
             }
             if(this.props.user.id !== 0){
                 this.getShoppingCarts(this.props);
+                this.getUnreadNotifications();
                 this.props.actions.shoppingCartUnselected();
                 this.getPersonalData(this.props);
                 this.getAdressesData(this.props);
@@ -85,6 +86,14 @@ class CatalogView extends React.Component {
             this.adressesData(res.data);
         }).catch(function (error) {
             Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
+        });
+    }
+
+    getUnreadNotifications() {
+        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas').then(res => {
+            this.props.actions.unreadNotifications(res.data);
+        }).catch((error) => {
+            console.log(error);
         });
     }
 

@@ -192,6 +192,14 @@ class PersonalDataView extends React.PureComponent {
         })
     }
 
+    getPersonalData() {
+        axios.get(this.serverBaseRoute + 'rest/user/adm/read').then(res => {
+            this.personalData(res.data);
+        }).catch((error) => {
+            Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
+        });
+    }
+
     handleSubmit() {
         if (!this.state.sendingData) {
             if (this.dataValid()) {
@@ -210,12 +218,15 @@ class PersonalDataView extends React.PureComponent {
 
                 })
                     .then(res => {
-                        this.login(res.data);
+                        res.data.nickname = this.state.userData.apodo,
+                        this.props.actions.login(res.data);
                         this.setState({
                             sendingData: false,
                             dataChange: false,
                             isVisible: false,
                         })
+                        this.login
+                        this.getPersonalData()
                         this.flushErrors();
                         Alert.alert('Aviso', 'Los datos fueron actualizados correctamente');
                     }).catch(function (error) {
