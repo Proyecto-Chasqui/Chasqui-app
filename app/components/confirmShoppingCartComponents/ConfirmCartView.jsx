@@ -114,13 +114,13 @@ class ConfirmCartView extends React.PureComponent {
                                     <ScrollView style={{marginLeft:20, marginRight:20, marginBottom:10, marginTop:10}}>                                            
                                                 <View style={{flexDirection:'row'}}>
                                                     <Text style={{fontSize:12, fontWeight:'bold'}}>Zona de entrega: </Text>
-                                                    <Text style={{fontSize:12}}>{this.props.zone .nombre}</Text>
+                                                    <Text style={{fontSize:12}}>{this.props.zone.nombre}</Text>
                                                 </View>
                                                 <View  style={{flexDirection:'row'}}>
                                                     <Text style={{fontSize:12, fontWeight:'bold'}}>Cierre de pedidos: </Text>
-                                                    <Text style={{fontSize:12}}>{this.parseDate(this.props.zone .fechaCierrePedidos)}</Text>
+                                                    <Text style={{fontSize:12}}>{this.parseDate(this.props.zone.fechaCierrePedidos)}</Text>
                                                 </View>
-                                                <Text style={{fontStyle:'italic'}}>{ this.props.zone .descripcion }</Text>
+                                                <Text style={{fontStyle:'italic'}}>{ this.props.zone.descripcion }</Text>
                                     </ScrollView>
                                  </View>
                             ):(

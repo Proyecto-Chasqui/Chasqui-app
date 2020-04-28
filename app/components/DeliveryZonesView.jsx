@@ -251,7 +251,7 @@ class DeliveryZonesView extends React.PureComponent {
                         })}
 
                         {this.state.sellerPoints.map((sellerPoint, i) => {
-                            if (sellerPoint.direccion.latitud !== null && !sellerPoint.direccion.habilitado) {
+                            if (sellerPoint.direccion.latitud !== null) {
                                 return (
                                     <Marker
                                         coordinate={this.createCoordinateParse(sellerPoint.direccion.latitud, sellerPoint.direccion.longitud)}
@@ -379,7 +379,8 @@ const styles = StyleSheet.create({
     },
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)'
+        backgroundColor: 'rgba(51, 102, 255, 1)',
+        borderBottomWidth:0,
     },
     rightHeaderButton: {
         backgroundColor: '#66000000',

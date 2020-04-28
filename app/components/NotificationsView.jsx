@@ -234,6 +234,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5.46,
 
         elevation: 9,
+        borderBottomWidth:0,
     },
     rightHeaderButton: {
         backgroundColor: '#66000000',

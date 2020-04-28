@@ -22,10 +22,15 @@ import shoppingCartSelected from './shoppingCartSelected';
 import shoppingCarts from './shoppingCarts';
 import allProducts from './allProducts';
 import unreadNotifications from './unreadNotifications';
+import historyShoppingCarts from './historyShoppingCarts';
+import historyCartSelected from './historyCartSelected';
 
-const rootReducer = combineReducers({unreadNotifications, resetState, user, vendors, vendorTags,
+const rootReducer = combineReducers({
+     unreadNotifications, resetState, user, vendors, vendorTags,
      products, seals, sealsSelected, vendorSelected, productSelected, producers,
      producerSelected, productSeals, productionSeals, productCategories, zones, sellerPoints,
-     personalData, adressesData, shoppingCartSelected, shoppingCarts, allProducts });
+     personalData, adressesData, shoppingCartSelected, shoppingCarts,historyShoppingCarts, allProducts,
+     historyCartSelected
+});
 
 export default rootReducer;

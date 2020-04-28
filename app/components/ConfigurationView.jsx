@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet,Alert, KeyboardAvoidingView } from 'react-native'
+import { Text, View, StyleSheet, Alert, KeyboardAvoidingView } from 'react-native'
 import { Header, Button, Icon, ButtonGroup, Image } from 'react-native-elements';
 import PersonalDataView from '../containers/ConfigurationComponentsContainers/PersonalData';
 import PasswordConfigView from '../containers/ConfigurationComponentsContainers/PasswordConfig';
@@ -26,36 +26,36 @@ class ConfigurationView extends React.PureComponent {
         const buttons = ['Datos', 'Direcciones', 'Contraseña']
         const { selectedIndex } = this.state
         return (
-        <KeyboardAvoidingView style={{flex:1}}>
-            <View>
-                <Header containerStyle={styles.topHeader}>
-                    <Button
-                        icon={
-                            <Icon name="bars" size={20} color="white" type='font-awesome' />
-                        }
-                        buttonStyle={styles.rightHeaderButton}
-                        onPress={() => this.props.navigation.openDrawer()}
-                    />
-                    <Image
-                        style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                        source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
-                    />
-                </Header>
-            </View>
-            <View>
-                <ButtonGroup
-                textStyle={{fontWeight:'bold'}}
-                selectedTextStyle={{fontWeight:'bold'}}
-                selectedButtonStyle={{ backgroundColor:"#5ebb47"}}
-                    onPress={this.updateIndex}
-                    selectedIndex={selectedIndex}
-                    buttons={buttons}
-                    containerStyle={{ height: 50 }} />
-            </View>
-            {this.state.selectedIndex === 0 ? (<PersonalDataView></PersonalDataView>) : (null)}
-            {this.state.selectedIndex === 1 ? (<DeliveryAdressConfigView navigation={this.props.navigation}></DeliveryAdressConfigView>) : (null)}
-            {this.state.selectedIndex === 2 ? (<PasswordConfigView></PasswordConfigView>) : (null)}
-        </KeyboardAvoidingView>);
+            <KeyboardAvoidingView style={{ flex: 1 }}>
+                <View>
+                    <Header containerStyle={styles.topHeader}>
+                        <Button
+                            icon={
+                                <Icon name="arrow-left" size={20} color="white" type='font-awesome' />
+                            }
+                            buttonStyle={styles.rightHeaderButton}
+                            onPress={() => this.props.navigation.goBack()}
+                        />
+                        <Image
+                            style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
+                            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                        />
+                    </Header>
+                </View>
+                <View>
+                    <ButtonGroup
+                        textStyle={{ fontWeight: 'bold' }}
+                        selectedTextStyle={{ fontWeight: 'bold' }}
+                        selectedButtonStyle={{ backgroundColor: "#5ebb47" }}
+                        onPress={this.updateIndex}
+                        selectedIndex={selectedIndex}
+                        buttons={buttons}
+                        containerStyle={{ height: 50 }} />
+                </View>
+                {this.state.selectedIndex === 0 ? (<PersonalDataView></PersonalDataView>) : (null)}
+                {this.state.selectedIndex === 1 ? (<DeliveryAdressConfigView navigation={this.props.navigation}></DeliveryAdressConfigView>) : (null)}
+                {this.state.selectedIndex === 2 ? (<PasswordConfigView></PasswordConfigView>) : (null)}
+            </KeyboardAvoidingView>);
     }
 }
 
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5.46,
 
         elevation: 9,
+        borderBottomWidth:0,
     },
 
     lowerHeaderStyle: {

@@ -4,7 +4,8 @@ import {vendorUnSelected,flushproducts, shoppingCartUnselected} from '../../acti
 import NavigationItemsView from '../../components/navigatorViewComponents/NavigationItemsView';
 
 const mapStateToProps = state => ({
-  vendorSelected: state.vendorSelected
+  vendorSelected: state.vendorSelected,
+  user: state.user,
 });
 
 const mapDispatchToProps = dispatch => ({

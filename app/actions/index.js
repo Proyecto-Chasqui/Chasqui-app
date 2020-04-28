@@ -27,9 +27,12 @@ export const CLEANSELLERPOINT = 'CLEANSELLERPOINT';
 export const PERSONALDATA = 'PERSONALDATA';
 export const ADRESSESDATA = 'ADRESSESDATA';
 export const SHOPPINGCARTS = 'SHOPPINGCARTS';
+export const HISTORYSHOPPINGCARTS = 'HISTORYSHOPPINGCARTS';
+export const HISTORYCARTSELECTED = 'HISTORYCARTSELECTED';
 export const SHOPPINGCARTSELECTED = 'SHOPPINGCARTSELECTED';
 export const SHOPPINGCARTUNSELECTED = 'SHOPPINGCARTUNSELECTED';
 export const UNREADNOTIFICATIONS = 'UNREADNOTIFICATIONS';
+
 
 export const resetState = (resetDataState) => ({type:RESETSTATE, resetDataState})
 export const login = userData => ({type: LOGIN, userData});
@@ -63,3 +66,5 @@ export const shoppingCarts = (shoppingCartsStack) => ({type:SHOPPINGCARTS, shopp
 export const shoppingCartSelected = (dataShoppingCartSelected) => ({type:SHOPPINGCARTSELECTED, dataShoppingCartSelected});
 export const shoppingCartUnselected = () => ({type:SHOPPINGCARTUNSELECTED});
 export const unreadNotifications = (unreadNotificationsData) => ({type:UNREADNOTIFICATIONS, unreadNotificationsData});
+export const historyShoppingCarts = (historyShoppingCartsStack) => ({type:HISTORYSHOPPINGCARTS, historyShoppingCartsStack});
+export const historyCartSelected = (historyCartSelectedData) => ({type:HISTORYCARTSELECTED, historyCartSelectedData})

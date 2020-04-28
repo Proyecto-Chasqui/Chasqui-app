@@ -27,6 +27,10 @@ class NavigationItemsView extends React.PureComponent {
         this.navigation.navigate('Productos');
     }
 
+    goToShoppingCartsHistory(){
+        this.navigation.navigate('HistorialPedidos');
+    }
+
     showControls(){
         return this.props.vendorSelected.id !== undefined;
     }
@@ -52,12 +56,14 @@ class NavigationItemsView extends React.PureComponent {
                         />
                         ) : (null)
                         }
+                        {this.props.user.id != 0 ? (                        
                         <Button
                             buttonStyle={styles.menuButtonSection}
-                            onPress={() => this.goToProducts()}
-                            title="Productos"
+                            onPress={() => this.goToShoppingCartsHistory()}
+                            title="Historial de pedidos"
                             titleStyle={styles.menuButtonTitleSection}
                         />
+                        ) : (null)}
                     </View>
                 ) : (
                         null
