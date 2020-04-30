@@ -44,9 +44,11 @@ class PasswordConfigView extends React.PureComponent {
                 axios.put(this.serverBaseRoute + 'rest/user/adm/editpassword', {
                     password: this.state.passwordData.confirm_password,
                     oldPassword: this.state.passwordData.old_password
-                })
+                },{withCredentials: true})
                     .then(res => {
-                        this.login(res.data);
+                        let userData = res.data
+                        userData.password = this.state.passwordData.confirm_password
+                        this.login(userData);
                         this.setPassword(this.state.passwordData.confirm_password)                        
                         this.flushPasswords()
                         this.flushErrors()

@@ -81,7 +81,8 @@ class CatalogView extends React.Component {
             headers: {
                 'Content-Type':'application/json',
                 'Authorization': `Basic ${token}`
-            }
+            },
+            withCredentials: true
         }).then(res => {
             this.adressesData(res.data);
         }).catch(function (error) {
@@ -90,7 +91,7 @@ class CatalogView extends React.Component {
     }
 
     getUnreadNotifications() {
-        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas').then(res => {
+        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas',{withCredentials: true}).then(res => {
             this.props.actions.unreadNotifications(res.data);
         }).catch((error) => {
             console.log(error);
@@ -104,6 +105,7 @@ class CatalogView extends React.Component {
                 'Content-Type':'application/json',
                 'Authorization': `Basic ${token}`
             }
+            ,withCredentials: true
         }).then(res => {
             this.personalData(res.data);
         }).catch(function (error) {
@@ -157,15 +159,12 @@ class CatalogView extends React.Component {
     }
    
     getShoppingCarts(props){
-        console.log("props", props.vendorSelected)
         axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'),{
             idVendedor: props.vendorSelected.id,
             estados: [
               "ABIERTO"
             ]
-          }).then(res => {
-              
-            console.log("carts", res.data);
+          },{withCredentials: true}).then(res => {
             this.shoppingCarts(res.data);
         }).catch(function (error) {
             console.log(error);
@@ -190,7 +189,7 @@ class CatalogView extends React.Component {
     getSeals(props) {
         axios.get((this.serverBaseRoute + 'rest/client/medalla/all/')).then(res => {
             this.seals(res.data);
-        }).catch(function (error) {
+        }, {withCredentials: true}).catch(function (error) {
             Alert.alert(
                 'Error',
                 'Ocurrio un error al obtener los productos del servidor, vuelva a intentar más tarde.',
@@ -318,7 +317,7 @@ class CatalogView extends React.Component {
         }
 
         return (
-            <View style={{ height: Dimensions.get("window").height }}>
+            <View style={{ flex:1}}>
                 <Header containerStyle={styles.topHeader}>
                     <Button
                         icon={

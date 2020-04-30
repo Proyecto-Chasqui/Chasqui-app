@@ -16,7 +16,6 @@ class OverlayShoppingCartView extends React.PureComponent {
         this.shoppingCartSelected = this.props.actions.shoppingCartSelected;
         this.shoppingCarts = this.props.actions.shoppingCarts;
         this.vendorSelected = this.props.vendorSelected
-        console.log("vendorSelected", this.props.vendorSelected)
         this.state = {
             showShoppingCarts: false,
             shoppingCartTypeSelected: 'Ver pedidos',
@@ -53,7 +52,7 @@ class OverlayShoppingCartView extends React.PureComponent {
             estados: [
               "ABIERTO"
             ]
-          }).then(res => {
+          },{withCredentials: true}).then(res => {
             this.shoppingCarts(res.data);
             this.setState({showWaitSign:false});
             this.showShoppingCarts();
@@ -74,7 +73,7 @@ class OverlayShoppingCartView extends React.PureComponent {
         this.setState({showWaitSign:true})
         axios.post((this.serverBaseRoute + 'rest/user/pedido/obtenerIndividual'),{
             idVendedor: this.props.vendorSelected.id
-        }).then(res => {
+        },{withCredentials: true}).then(res => {
             this.shoppingCartSelected(res.data);
             this.getShoppingCarts();
         }).catch((error) => {
@@ -97,7 +96,6 @@ class OverlayShoppingCartView extends React.PureComponent {
     }
 
     validCatalog(){
-        console.log("VALID")
         if(this.vendorSelected.few.compraIndividual !== undefined){
             return this.vendorSelected.few.compraIndividual
         }else{

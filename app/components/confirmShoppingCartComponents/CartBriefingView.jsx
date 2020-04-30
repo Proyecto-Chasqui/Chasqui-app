@@ -60,7 +60,7 @@ class CartBriefingView extends React.PureComponent {
     render() {
 
         return (
-            <View>
+            <View style={{flex:1}}>
                 <View style={stylesListCard.titleContainer}>
                     <Text style={stylesListCard.adressTitle}>Verifique su compra</Text>
                 </View>
@@ -188,13 +188,13 @@ const stylesListCard = StyleSheet.create({
     ,
     totalPriceCartStyle: {
         textAlign: 'center',
-        marginTop: 7,
         fontSize: 15,
     },
 
     singleItemContainer: {
         flexDirection: "row",
         justifyContent: "space-evenly",
+        alignItems:"center",
         marginBottom: 5,
         height: 40,
         borderRadius: 5,

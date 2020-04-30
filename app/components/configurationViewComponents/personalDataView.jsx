@@ -193,7 +193,7 @@ class PersonalDataView extends React.PureComponent {
     }
 
     getPersonalData() {
-        axios.get(this.serverBaseRoute + 'rest/user/adm/read').then(res => {
+        axios.get(this.serverBaseRoute + 'rest/user/adm/read',{withCredentials: true}).then(res => {
             this.personalData(res.data);
         }).catch((error) => {
             Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
@@ -216,7 +216,7 @@ class PersonalDataView extends React.PureComponent {
                     extension: ".jpg",
                     avatar: this.state.imageRoutesHashPng[this.state.avatarSelected]
 
-                })
+                },{withCredentials: true})
                     .then(res => {
                         res.data.nickname = this.state.userData.apodo,
                         this.props.actions.login(res.data);

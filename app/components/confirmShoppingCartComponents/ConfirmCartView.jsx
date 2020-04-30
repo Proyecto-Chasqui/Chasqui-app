@@ -77,27 +77,27 @@ class ConfirmCartView extends React.PureComponent {
     render() {
 
         return (
-            <View>
+            <ScrollView style={{flex:1}} >
                 <View style={stylesListCard.titleContainer}>
                     <Text style={stylesListCard.adressTitle}>Los datos de su compra</Text>
                 </View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
-                <View style={{ height: Dimensions.get("window").height - 255 }}>
+                <View >
                     <Text style={stylesListCard.sectionTitleTextStyle}>Su pedido</Text>
                     <FlatList data={this.getDataProducts()}
                         keyExtractor={item => item.idVariante} windowSize={15}
                         renderItem={({ item }) =>
-                            <View style={{ flex: 1, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                            <View style={{ backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
                                 <ProductItemView touchable={false} item={item}></ProductItemView>
                             </View>
                         } />
                     {this.props.answers.length > 0 ? (
-                        <View style={{height:65}}>
+                        <View style={{flex:1}}>
                             <Text style={stylesListCard.sectionTitleTextStyle} > Respuestas del cuestionario </Text>
                             <FlatList data={this.props.answers}
                                 keyExtractor={item => item.nombre} windowSize={15}
                                 renderItem={({ item }) =>
-                                    <View style={{flex: 1, flexDirection: "row", backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                    <View style={{ flexDirection: "row", marginLeft:5, marginRight:5, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
                                         <Text style={{color:"black",fontWeight:"bold"}}>{item.nombre} : </Text><Text  style={{color:"blue",fontWeight:"bold"}}>{item.opcionSeleccionada}</Text>
                                     </View>
                                 } />
@@ -134,35 +134,36 @@ class ConfirmCartView extends React.PureComponent {
                     {this.props.sellerPointSelected !== undefined ? (
                         <View style={{height:130}}>
                         <Text style={stylesListCard.sectionTitleTextStyle}>Lo pasa a retirar en</Text>
-                        <ScrollView style={{ flex: 5, marginLeft:20, marginRight:10, marginBottom:10, marginTop:10 }}>
+                        <ScrollView style={{  marginLeft:20, marginRight:10, marginBottom:10, marginTop:10 }}>
                             <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{this.props.sellerPointSelected.nombre}</Text>
                             <Text style={{ color: "blue" }}>{this.parseAdress(this.props.sellerPointSelected.direccion)}</Text>
                             <Text style={{ fontSize: 14,  }}>{this.props.sellerPointSelected.mensaje}</Text>
                         </ScrollView>
                         </View>
                         ) : (null)}
-                    <View>
-                    <Text style={stylesListCard.sectionTitleTextStyle}>Comentario [ {this.comment.length} / 200 ]</Text>
-                        <TextInput style={{ height: 40, marginLeft:10, borderColor: 'gray', }}
-                        placeholder={"  Puede dejar un comentario para el pedido aqui."}
-                        placeholderTextColor="blue"
-                        multiline
-                        numberOfLines={3}
-                        onChangeText={text => this.updateText(text)}
-                        value={this.comment}
-                        maxLength = {200}></TextInput>
+                    <View style={{justifyContent:"center"}}>
+                        <Text style={stylesListCard.sectionTitleTextStyle}>Comentario [ {this.comment.length} / 200 ]</Text>
+                        <TextInput style={{ marginLeft:10, alignSelf:"flex-start", borderColor: 'gray', }}
+                                placeholder={"  Puede dejar un comentario para el pedido aqui."}
+                                placeholderTextColor="blue"
+                                multiline
+                                numberOfLines={4}
+                                onChangeText={text => this.updateText(text)}
+                                value={this.comment}
+                                maxLength = {200}>                            
+                        </TextInput>
                     </View>
                     
 
                 </View>
-                <View style={{ marginBottom:5 }}>
-                    <View style={{ marginTop: 0 }}>
-                        <View style={stylesListCard.singleItemContainer}>
-                            <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {this.obtainTotalPrice()} </Text>
-                        </View>
-                    </View>
-                </View>
-            </View>
+                            <View style={{backgroundColor: "black",  }}>
+                                <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1,}}>
+                                    <View style={stylesListCard.singleItemContainer}>
+                                        <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {this.obtainTotalPrice()} </Text>
+                                    </View>
+                                </View>
+                            </View>
+            </ScrollView>
         )
     }
 }
@@ -243,7 +244,6 @@ const stylesListCard = StyleSheet.create({
     },
 
     subMenuButtonContainer: {
-        flex: 1
     },
 
     subMenuButtonOkStyle: {
@@ -264,16 +264,17 @@ const stylesListCard = StyleSheet.create({
     ,
     totalPriceCartStyle: {
         textAlign: 'center',
-        marginTop: 7,
         fontSize: 15,
     },
 
     singleItemContainer: {
-        marginTop: 5,
+        justifyContent:"center",
+        margin: 5,
         height: 40,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "grey",
+        backgroundColor:"white",
         marginLeft: 20,
         marginRight: 20,
     },
@@ -288,7 +289,6 @@ const stylesListCard = StyleSheet.create({
     },
 
     overlayAvatarContainer: {
-        flex: 1,
         backgroundColor: 'transparent',
         marginRight: 7,
         marginLeft: -7,

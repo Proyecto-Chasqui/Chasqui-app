@@ -83,7 +83,7 @@ class ProductItemView extends React.PureComponent {
             estados: [
                 "ABIERTO"
             ]
-        }).then(res => {
+        },{withCredentials: true}).then(res => {
             this.shoppingCarts(res.data);
             this.updateCartSelected();
             this.setState({ showWaitSign: false, idPedido: 0 })
@@ -105,7 +105,7 @@ class ProductItemView extends React.PureComponent {
             idPedido: this.props.shoppingCartSelected.id,
             idVariante: this.props.item.idVariante,
             cantidad: this.state.initialValue - this.state.quantityValue,
-        }).then(res => {
+        },{withCredentials: true}).then(res => {
             this.getShoppingCarts();
         }).catch((error) => {
             console.log(error);
@@ -121,15 +121,13 @@ class ProductItemView extends React.PureComponent {
     }
     
     addProductToCart() {
-        console.log("state at sending",this.state)
-        console.log("item", this.props.item)
         this.setState({ buttonLoading: true, buttonDisabled: true })
         if (this.state.quantityValue > this.state.initialValue) {
             axios.put((this.serverBaseRoute + 'rest/user/pedido/individual/agregar-producto'), {
                 idPedido: this.props.shoppingCartSelected.id,
                 idVariante: this.props.item.idVariante,
                 cantidad: this.state.quantityValue - this.state.initialValue,
-            }).then(res => {
+            },{withCredentials: true}).then(res => {
                 this.getShoppingCarts()
             }).catch((error) => {
                 console.log(error.response)
@@ -148,7 +146,6 @@ class ProductItemView extends React.PureComponent {
                 }
             });
         } else {
-            console.log("vendorSelected",this.props.vendorSelected.ventasHabilitadas )
             if(!this.props.vendorSelected.ventasHabilitadas){
                 Alert.alert(
                     'Advertencia',

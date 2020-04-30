@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { historyShoppingCarts, historyCartSelected } from '../actions';
+import { historyShoppingCarts, historyCartSelected, logout, login, setPassword } from '../actions';
 import ShoppingCartsHistoryView from '../components/ShoppingCartsHistoryView';
 
 const mapStateToProps = state => ({
@@ -11,7 +11,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({ historyShoppingCarts, historyCartSelected }, dispatch),
+  actions: bindActionCreators({ historyShoppingCarts, historyCartSelected, logout, login, setPassword }, dispatch),
 });
 
 export default connect(

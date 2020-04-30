@@ -358,7 +358,7 @@ class AdressManagmentView extends React.PureComponent {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${token}`
-            }
+            },withCredentials: true
         }).then(res => {
             this.adressesData(res.data);
             this.showAlertActionComplete(text);
@@ -387,7 +387,7 @@ class AdressManagmentView extends React.PureComponent {
             comentario: this.state.adressData.comentarios,
             pais: '',
             provincia: '',
-        }).then(res => {
+        },{withCredentials: true}).then(res => {
             this.updateAdressData(this.state.saveMessage);
         }).catch( (error) => {
             console.log(error);
@@ -421,7 +421,7 @@ class AdressManagmentView extends React.PureComponent {
             comentario: this.state.adressData.comentarios,
             pais: '',
             provincia: '',
-        }).then(res => {
+        },{withCredentials: true}).then(res => {
             this.updateAdressData(this.state.saveMessage);
         }).catch(function (error) {
             console.log(error);
@@ -512,7 +512,7 @@ class AdressManagmentView extends React.PureComponent {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Basic ${token}`
-                }
+                },withCredentials: true
             }).then(res => {
                 this.updateAdressData(this.state.deleteMessage);
             }).catch(function (error) {

@@ -49,7 +49,7 @@ class QuestionaryView extends React.PureComponent {
 
     render() {
         return (
-            <View style={{ height: Dimensions.get("window").height - 155 }}>
+            <View style={{flex:1}}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.adressTitle}>Preguntas de consumo</Text>
                 </View>

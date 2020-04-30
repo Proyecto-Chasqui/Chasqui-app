@@ -25,7 +25,6 @@ class NavigatorView extends React.PureComponent {
       nickname: this.props.user.nickname,
     }
     this.serverBaseRoute = GLOBALS.BASE_URL;
-    console.log("navigator", this.props.user.nickname)
   }
 
   componentDidUpdate(){

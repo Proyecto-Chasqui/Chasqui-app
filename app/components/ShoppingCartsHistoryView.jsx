@@ -1,7 +1,8 @@
 import React from 'react'
-import { Text, View, StyleSheet, FlatList, Dimensions, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, FlatList, Dimensions, TouchableOpacity, Alert } from 'react-native'
 import { Header, Button, Icon, SearchBar, Image, Badge } from 'react-native-elements';
 import OverlayShoppingCartView from '../containers/CatalogComponentsContainers/OverlayShoppingCart';
+import LoadingView from '../components/LoadingView'
 import axios from 'axios'
 import GLOBALS from '../Globals'
 import { createIconSet } from 'react-native-vector-icons';
@@ -12,7 +13,7 @@ class ShoppingCartsHistoryView extends React.PureComponent {
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.state = {
             search: '',
-            isLoading: true,
+            isLoading: false,
             isVisible: false,
             showShoppingCart: false,
             searchHasChanged: false,
@@ -20,6 +21,7 @@ class ShoppingCartsHistoryView extends React.PureComponent {
     }
 
     componentDidMount() {
+        this.setState({ isLoading: true })
         this.getShoppingCarts();
     }
 
@@ -119,11 +121,11 @@ class ShoppingCartsHistoryView extends React.PureComponent {
         }
     }
 
-    goToCart(item){
-        if(item.estado !== "ABIERTO"){
+    goToCart(item) {
+        if (item.estado !== "ABIERTO") {
             this.props.actions.historyCartSelected(item)
             this.props.navigation.navigate("HistorialDePedido")
-        }else{
+        } else {
             this.setState({ showShoppingCart: !this.state.showShoppingCart })
         }
     }
@@ -131,7 +133,7 @@ class ShoppingCartsHistoryView extends React.PureComponent {
     renderItem = ({ item }) => (
         <View>
             {this.showCart(item) ? (
-                <TouchableOpacity onPress={()=>this.goToCart(item)} style={styles.notificationItem}>
+                <TouchableOpacity onPress={() => this.goToCart(item)} style={styles.notificationItem}>
                     <View style={{ flex: 4, marginLeft: 20 }}>
                         <View style={{ alingItems: "center", flexDirection: "row" }}>
                             <Text style={{ fontSize: 11 }}>Tipo de pedido:</Text>
@@ -172,23 +174,31 @@ class ShoppingCartsHistoryView extends React.PureComponent {
                 "ABIERTO",
                 "ENVIADO",
             ]
-        }).then(res => {
+        }, { withCredentials: true }).then(res => {
             this.props.actions.historyShoppingCarts(res.data);
-            this.setState({ isLoading: false });
+            this.setState({ isLoading: false })
         }).catch((error) => {
-            console.log(error);
-            Alert.alert(
-                'Error',
-                'Ocurrio un error al obtener los pedidos del servidor, vuelva a intentar más tarde.',
-                [
-                    { text: 'Entendido', onPress: () => null },
-                ],
-                { cancelable: false },
-            );
+            console.log("error en history_ relogin", error);
+            this.setState({ isLoading: false })
+            if (error.response) {
+                Alert.alert(
+                    'Advertencia',
+                    'La sesión expiro, debe re ingresar',
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+            } else {
+                Alert.alert('Error', "Ocurrio un error al intentar ingresar, intente más tarde o verifique su conectividad.");
+            }
         });
     }
 
     render() {
+
         return (
             <View style={{ flex: 1 }}>
                 <View>
@@ -223,33 +233,37 @@ class ShoppingCartsHistoryView extends React.PureComponent {
                     isVisible={this.state.showShoppingCart}
                     navigation={this.props.navigation}>
                 </OverlayShoppingCartView>
-                {this.props.historyShoppingCarts.length > 0 ? (
-                <View style={{ flex: 1 }}>
-                    <FlatList
-                        ListHeaderComponent={
-                            <View style={styles.titleContainer}>
-                                <Text style={styles.adressTitle}>Historial de pedidos</Text>
-                            </View>}
-                        keyExtractor={this.keyExtractor}
-                        data={this.props.historyShoppingCarts.sort((a, b) => this.compareIds(a, b))}
-                        renderItem={(item) => this.renderItem(item)}
-                    />
-                </View>
-                ):(
-                    <View style={styles.viewErrorContainer}>
-                            <View style={styles.searchIconErrorContainer}>
-                                <Icon name="exclamation" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
+                {this.state.isLoading ? (<LoadingView></LoadingView>) : (
+                    <View style={{ flex: 1 }}>
+                        {this.props.historyShoppingCarts.length > 0 ? (
+                            <View >
+                                <FlatList
+                                    ListHeaderComponent={
+                                        <View style={styles.titleContainer}>
+                                            <Text style={styles.adressTitle}>Historial de pedidos</Text>
+                                        </View>}
+                                    keyExtractor={this.keyExtractor}
+                                    data={this.props.historyShoppingCarts.sort((a, b) => this.compareIds(a, b))}
+                                    renderItem={(item) => this.renderItem(item)}
+                                />
                             </View>
-                            <Text style={styles.errorText}>
-                                No posee pedidos
+                        ) : (
+                                <View style={styles.viewErrorContainer}>
+                                    <View style={styles.searchIconErrorContainer}>
+                                        <Icon name="exclamation" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
+                                    </View>
+                                    <Text style={styles.errorText}>
+                                        No posee pedidos
                             </Text>
-                            <View style={{flexDirection:"row", justifyContent:"center"}}>
-                            <Text style={styles.tipErrorText}>
-                                Aún no ha <Text style={{fontWeight:"bold"}}>abierto</Text> o <Text style={{fontWeight:"bold"}}>confirmado</Text> un pedido para este catálogo
+                                    <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                                        <Text style={styles.tipErrorText}>
+                                            Aún no ha <Text style={{ fontWeight: "bold" }}>abierto</Text> o <Text style={{ fontWeight: "bold" }}>confirmado</Text> un pedido para este catálogo
                             </Text>
-                            </View>
-                            
-                        </View>
+                                    </View>
+
+                                </View>
+                            )}
+                    </View>
                 )}
             </View>
         )
@@ -269,7 +283,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5.46,
 
         elevation: 9,
-        borderBottomWidth:0,
+        borderBottomWidth: 0,
     },
     rightHeaderButton: {
         backgroundColor: '#66000000',

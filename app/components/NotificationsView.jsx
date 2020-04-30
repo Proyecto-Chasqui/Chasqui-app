@@ -4,6 +4,7 @@ import { Header, Button, Icon, Image, ListItem, Badge } from 'react-native-eleme
 import axios from 'axios'
 import GLOBALS from '../Globals'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import LoadingView from '../components/LoadingView'
 
 class NotificationsView extends React.PureComponent {
     constructor(props) {
@@ -11,6 +12,7 @@ class NotificationsView extends React.PureComponent {
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.state = {
             loading: false,
+            firstLoading:false,
             notifications: [],
             page: 1,
             totalNotifications: 1,
@@ -18,13 +20,13 @@ class NotificationsView extends React.PureComponent {
     }
 
     componentDidMount() {
-        this.setState({ loading: true })
+        this.setState({ firstLoading: true })
         this.getNotifications(this.state.page)
         this.getTotalNotifications()
     }
 
     getUnreadNotifications() {
-        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas').then(res => {
+        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas',{withCredentials: true}).then(res => {
             this.props.actions.unreadNotifications(res.data);
         }).catch((error) => {
             console.log(error);
@@ -32,7 +34,7 @@ class NotificationsView extends React.PureComponent {
     }
 
     getTotalNotifications() {
-        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/total')
+        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/total',{withCredentials: true})
             .then(res => {
                 this.setState({ totalNotifications: res.data })
             }).catch((error) => {
@@ -43,12 +45,11 @@ class NotificationsView extends React.PureComponent {
 
     getNotifications(page) {
         this.setState({ loading: true })
-        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/' + page)
+        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/' + page,{withCredentials: true})
             .then(res => {
-                console.log("Notifications", res.data)
-                this.setState({ notifications: this.state.notifications.concat(res.data), loading: false });
+                this.setState({ notifications: this.state.notifications.concat(res.data), loading: false, firstLoading:false });
             }).catch((error) => {
-                this.setState({ loading: false })
+                this.setState({ loading: false, firstLoading:false })
                 Alert.alert('Error', 'No se logro obtener sus notificaciones, intente mas tarde.');
             });
     }
@@ -58,7 +59,6 @@ class NotificationsView extends React.PureComponent {
         let notificationsCopy = this.state.notifications
         notificationsCopy.map((notification, i) => {
             if (notification.id === id) {
-                console.log("marked", id);
                 notification.estado = "Leído"
             }
             array.push(notification)
@@ -66,13 +66,12 @@ class NotificationsView extends React.PureComponent {
         this.setState({
             notificacions: array
         })
-        console.log(this.state.notifications)
         this.setState({ loading: false })
     }
 
     markViewedNotification(id) {
         this.setState({ loading: true })
-        axios.post(this.serverBaseRoute + 'rest/user/adm/notificacion/' + id)
+        axios.post(this.serverBaseRoute + 'rest/user/adm/notificacion/' + id,{},{withCredentials: true})
             .then(res => {
                 this.markNotification(id)
                 this.getUnreadNotifications();
@@ -190,6 +189,7 @@ class NotificationsView extends React.PureComponent {
                         </View>
                     </Header>
                 </View>
+                {this.state.firstLoading ? (<LoadingView></LoadingView>):(<View style={{flex:1}}>
                 {this.state.notifications.length === 0 && !this.state.loading ? (
                     <View style={styles.viewErrorContainer}>
                         <View style={styles.searchIconErrorContainer}>
@@ -216,6 +216,8 @@ class NotificationsView extends React.PureComponent {
                                 }
                             />
                         </View>)}
+                    </View>
+                    )}
             </View>
         )
     }

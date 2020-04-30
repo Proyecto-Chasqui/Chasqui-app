@@ -7,7 +7,6 @@ class HistoryCartBriefingView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.serverBaseRoute = GLOBALS.BASE_URL;
-        this.updateIndex = this.updateIndex.bind(this)
     }
 
     normalizeText(text) {
@@ -99,9 +98,9 @@ class HistoryCartBriefingView extends React.PureComponent {
                             <View style={{ height: 150 }}>
                                 <Text style={styles.sectionTitleTextStyle}>Dirección de entrega</Text>
                                 <Text style={{ margin: 5, color: "blue", fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.parseAdress(this.props.historyCartSelected.direccion)}</Text>
-                                <View>
+                                <View style={{flex:1}}>
                                     {this.props.historyCartSelected.zona != undefined ? (
-                                        <View>
+                                        <View style={{flex:1}}>
                                             <Text style={styles.sectionTitleTextStyle}> Detalles de la zona de entrega</Text>
                                             <ScrollView style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10 }}>
                                                 <View style={{ flexDirection: 'row' }}>
@@ -116,9 +115,12 @@ class HistoryCartBriefingView extends React.PureComponent {
                                             </ScrollView>
                                         </View>
                                     ) : (
+                                        <View style={{flex:1}}>
+                                            <Text style={styles.sectionTitleTextStyle}> Detalles de la zona de entrega</Text>
                                             <Text style={{ fontSize: 13, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10, fontStyle: 'italic', textAlign: "center" }}>
                                                 La entrega fue coordinada con el vendedor
                                             </Text>
+                                        </View>
                                         )}
                                 </View>
                             </View>

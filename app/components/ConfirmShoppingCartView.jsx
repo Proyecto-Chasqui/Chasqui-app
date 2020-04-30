@@ -8,6 +8,7 @@ import ConfirmCartView from '../containers/ConfirmShoppingCartContainers/Confirm
 import axios from 'axios'
 import GLOBALS from '../Globals';
 import LoadingOverlayView from '../components/generalComponents/LoadingOverlayView';
+import { ScrollView } from 'react-native-gesture-handler';
 
 class ConfirmShoppingCartView extends React.PureComponent {
     constructor(props) {
@@ -115,7 +116,6 @@ class ConfirmShoppingCartView extends React.PureComponent {
     hasQuestionsAnswered() {
         let allAnswered = true
         this.state.answers.map((answer) => {
-            console.log("respuesta en cart", answer);
             if (answer.opcionSeleccionada === null) {
                 allAnswered = false
             }
@@ -192,7 +192,7 @@ class ConfirmShoppingCartView extends React.PureComponent {
             estados: [
                 "ABIERTO"
             ]
-        }).then(res => {
+        },{withCredentials: true}).then(res => {
             this.props.actions.shoppingCarts(res.data);
             this.setState({ showWaitSign: false, loading:false, allownext:false})
             Alert.alert(
@@ -225,7 +225,7 @@ class ConfirmShoppingCartView extends React.PureComponent {
             opcionesSeleccionadas: this.state.answers,
             idZona: null,
             comentario: this.state.comment,
-        }).then(res => {
+        },{withCredentials: true}).then(res => {
                 this.getShoppingCarts();
         }).catch((error) => {
             this.setState({ showWaitSign: false, loading:false, allownext:true})
@@ -250,7 +250,7 @@ class ConfirmShoppingCartView extends React.PureComponent {
 
     render() {
         return (
-            <KeyboardAvoidingView style={{flex:1}}>
+            <KeyboardAvoidingView style={{ flex: 1 }} >
                 <Header containerStyle={styles.topHeader}>
                     <Button
                         icon={
@@ -265,7 +265,7 @@ class ConfirmShoppingCartView extends React.PureComponent {
                     />
                 </Header>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText={'Confirmando su pedido...'}></LoadingOverlayView>
-                <View>
+                <View  style={{flex:1}} >
                     {this.state.selectedIndex === 0 ? (<CartBriefingView></CartBriefingView>) : (null)}
                     {this.state.selectedIndex === 1 ? (<ShippingSelectionView setZone={(vzone) => this.modifyZone(vzone)} spSelected={this.state.sellerPointSelected} adressSelected={this.state.adressSelected} selectedSPFunction={(sp) => this.setSellerPointSelected(sp)} selectedAdressFunction={(adress) => this.setAdressSelected(adress)} navigation={this.props.navigation}></ShippingSelectionView>) : (null)}
                     {this.state.selectedIndex === 2 ? (<QuestionaryView questions={this.state.questions} answerSetFunction={(vanswers) => this.setAnswers(vanswers)}></QuestionaryView>) : (null)}
@@ -275,8 +275,8 @@ class ConfirmShoppingCartView extends React.PureComponent {
                                                                         sellerPointSelected={this.state.sellerPointSelected}
                                                                         adressSelected={this.state.adressSelected}
                                                                         answers={this.state.answers}/>) : (null)}
-                    <View style={{ }}>
-                        <View style={{   }}>
+                    <View style={{ marginBottom: 5, marginTop:5 }}>
+                        <View >
                             <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15}}>
                                 {this.state.showBack ? (<Button onPress={() => this.back()} titleStyle={{ color: 'black', }} title='Atras' containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonNotStyle}></Button>
                                 ) : (null)}
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.32,
         shadowRadius: 5.46,
-
+        borderBottomWidth:0,
         elevation: 9,
     },
 

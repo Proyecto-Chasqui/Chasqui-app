@@ -32,17 +32,49 @@ class LoginView extends React.PureComponent {
     });
   }
 
+  reLogin(){
+    axios.post(this.serverBaseRoute + 'rest/client/sso/singIn', {
+        email: this.props.user.email,
+        password: this.props.user.password
+      },{withCredentials: true,})
+        .then(res => {
+          let userData = res.data
+          userData.password = values.contraseña
+          this.login(userData);
+          this.setPassword(values.contraseña);
+        }).catch((error) => {
+            console.log("password", this.props.user)
+            console.log("error on log relogin", error.request)
+          if (error.response) {
+            Alert.alert(
+                'Advertencia',
+                'ocurrio un error al tratar de comunicarse con el servidor, debe re ingresar',
+                [
+                    { text: 'Entendido', onPress: () => null },
+                ],
+                { cancelable: false },
+            );
+          } else if (error.request) {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+          } else {
+            Alert.alert('Error', "Ocurrio un error al intentar ingresar, intente más tarde o verifique su conectividad.");
+          }
+        });
+  }
+
   handleSubmit(values) {
     axios.post(this.serverBaseRoute + 'rest/client/sso/singIn', {
       email: values.email,
       password: values.contraseña
-    })
+    },{withCredentials: true})
       .then(res => {
-        this.login(res.data);
+        let userData = res.data
+        userData.password = values.contraseña
+        this.login(userData);
         this.setPassword(values.contraseña);
-      }).catch(function (error) {
+      }).catch( (error) => {
         if (error.response) {
-          Alert.alert('Error', error.response.data.error);
+          this.reLogin()
         } else if (error.request) {
           Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
         } else {

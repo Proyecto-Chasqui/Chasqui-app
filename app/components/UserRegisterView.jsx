@@ -352,7 +352,6 @@ class UserRegisterView extends React.PureComponent {
     }
 
     showAlertRegistered() {
-        console.log("warn alert");
         this.setState({
             sendingData: false,
             dataChange: false,

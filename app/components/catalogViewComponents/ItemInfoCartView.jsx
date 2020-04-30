@@ -85,7 +85,7 @@ class ItemInfoCartView extends React.PureComponent {
             estados: [
                 "ABIERTO"
             ]
-        }).then(res => {
+        },{withCredentials: true}).then(res => {
             this.shoppingCarts(res.data);
             this.setState({ showWaitSign: false })
             Alert.alert(
@@ -114,7 +114,7 @@ class ItemInfoCartView extends React.PureComponent {
         axios.delete((this.serverBaseRoute + 'rest/user/pedido/individual/' + this.props.shoppingCartSelected.id)).then(res => {
             this.props.actions.shoppingCartUnselected();
             this.getShoppingCarts();
-        }).catch((error) => {
+        },{withCredentials: true}).catch((error) => {
             this.setState({ showWaitSign: false })
             console.log("error", error);
             Alert.alert(
@@ -131,7 +131,7 @@ class ItemInfoCartView extends React.PureComponent {
     refreshExpiration(){
         axios.post((this.serverBaseRoute + 'rest/user/pedido/refrescarVencimiento'),{
             id:this.props.shoppingCartSelected.id
-        }).then(res => {
+        },{withCredentials: true}).then(res => {
         }).catch((error) => {
             console.log("error", error);
         });
@@ -262,9 +262,9 @@ class ItemInfoCartView extends React.PureComponent {
                         </View>
                         {this.showMinAmount() ? 
                         (
-                            <View style={{backgroundColor: 'white',marginTop:5, marginBottom:5,flexDirection:"row", alignItems:"center", borderColor:"grey", borderWidth:1, borderRadius:5}}>
+                        <View style={{backgroundColor: 'white',marginTop:5, marginBottom:5,flexDirection:"row", justifyContent:"center", alignItems:"center", borderColor:"grey", borderWidth:1, borderRadius:5}}>
                             <Text> Min. Monto: </Text>
-                            <View style={{  flexDirection:"row"}}>
+                            <View style={{  flexDirection:"row", }}>
                                 <Text style={{textAlign:"center", }}>${this.props.vendorSelected.montoMinimo}</Text>
                                 <View style={{marginLeft:5, marginRight:5}}>
                                 {this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo?(
@@ -306,8 +306,8 @@ class ItemInfoCartView extends React.PureComponent {
                                 } />)
                     }
                 </View>
-                <View style={{  backgroundColor: '#ebedeb' }}>
-                    <View >
+                <View style={{  backgroundColor: '#ebedeb',  }}>
+                    <View style={{justifyContent:"center"}}>
                         <View style={stylesListCard.singleItemContainer}>
                             <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {(this.props.shoppingCartSelected.montoActual).toFixed(2)} </Text>
                         </View>

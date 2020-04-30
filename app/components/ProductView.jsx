@@ -184,7 +184,7 @@ class ProductView extends React.PureComponent {
             estados: [
                 "ABIERTO"
             ]
-        }).then(res => {
+        },{withCredentials: true}).then(res => {
             this.shoppingCarts(res.data);
             this.updateCartSelected();
             this.setState({ showWaitSign: false, idPedido: 0 })
@@ -202,12 +202,12 @@ class ProductView extends React.PureComponent {
         });
     }
 
-    doRemove(){
+    doRemove() {
         axios.put((this.serverBaseRoute + 'rest/user/pedido/individual/eliminar-producto'), {
             idPedido: this.props.shoppingCartSelected.id,
             idVariante: this.props.productSelected.idVariante,
             cantidad: this.state.initialValue - this.state.quantityValue,
-        }).then(res => {
+        },{withCredentials: true}).then(res => {
             this.getShoppingCarts();
         }).catch((error) => {
             console.log(error);
@@ -229,16 +229,16 @@ class ProductView extends React.PureComponent {
                 idPedido: this.props.shoppingCartSelected.id,
                 idVariante: this.props.productSelected.idVariante,
                 cantidad: this.state.quantityValue - this.state.initialValue,
-            }).then(res => {
+            },{withCredentials: true}).then(res => {
                 this.getShoppingCarts()
             }).catch((error) => {
                 this.setState({ buttonLoading: false, buttonDisabled: false })
-                if (error.response) {                    
-                    if(error.response.data.error === "El vendedor por el momento no permite hacer compras o agregar mas productos, intentelo mas tarde."){
-                        this.props.actions.resetState({reset:true})
+                if (error.response) {
+                    if (error.response.data.error === "El vendedor por el momento no permite hacer compras o agregar mas productos, intentelo mas tarde.") {
+                        this.props.actions.resetState({ reset: true })
                         Alert.alert('Aviso', "No se permiten hacer compras por el momento, solo puede remover productos. Tenga en cuenta que si remueve productos no podrá agregarlos luego.");
-                    }else{  
-                    Alert.alert('Aviso', error.response.data.error);
+                    } else {
+                        Alert.alert('Aviso', error.response.data.error);
                     }
                 } else if (error.request) {
                     Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
@@ -247,8 +247,7 @@ class ProductView extends React.PureComponent {
                 }
             });
         } else {
-            console.log("vendorSelected",this.props.vendorSelected.ventasHabilitadas )
-            if(!this.props.vendorSelected.ventasHabilitadas){
+            if (!this.props.vendorSelected.ventasHabilitadas) {
                 Alert.alert(
                     'Advertencia',
                     'Si remueve el producto, no podrá volverlo a agregar. ¿Esta seguro de removerlo?',
@@ -258,7 +257,7 @@ class ProductView extends React.PureComponent {
                     ],
                     { cancelable: false },
                 );
-            }else{
+            } else {
                 this.doRemove()
             }
 
@@ -270,7 +269,7 @@ class ProductView extends React.PureComponent {
     }
 
 
-    parseProduct(){
+    parseProduct() {
         let item = {
             nombre: this.props.productSelected.nombreProducto,
             idVariante: this.props.productSelected.idVariante,
@@ -281,13 +280,13 @@ class ProductView extends React.PureComponent {
         return item
     }
 
-    defineText(){
+    defineText() {
         let text = "Producto Agregado al pedido!";
 
-        if(this.state.quantityValue > this.state.initialValue || this.state.quantityValue < this.state.initialValue){
+        if (this.state.quantityValue > this.state.initialValue || this.state.quantityValue < this.state.initialValue) {
             text = "Producto Modificado!"
         }
-        if(this.state.quantityValue == 0){
+        if (this.state.quantityValue == 0) {
             text = "Producto Removido del pedido"
         }
         return text;
@@ -300,13 +299,10 @@ class ProductView extends React.PureComponent {
                 <Header containerStyle={styles.topHeader}>
                     <Button
                         icon={
-                            <Icon name="bars" size={20} color="white" type='font-awesome' />
+                            <Icon name="arrow-left" size={20} color="white" type='font-awesome' />
                         }
                         buttonStyle={styles.rightHeaderButton}
-                        disabledStyle={styles.rightHeaderButton}
-                        disabled={this.state.buttonLoading}
-                        loading={this.state.buttonLoading}
-                        onPress={() => this.props.navigation.openDrawer()}
+                        onPress={() => this.props.navigation.goBack()}
                     />
                     <Image
                         style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'contain' }}
@@ -323,26 +319,26 @@ class ProductView extends React.PureComponent {
                             loading={this.state.buttonLoading}
                             onPress={() => this.setState({ showShoppingCart: !this.state.showShoppingCart })}
                         />
-                                            {this.props.shoppingCarts.length > 0 ? (
-                    <Badge value={this.props.shoppingCarts.length} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }}/>
-                    ):(null)}
-                        <View style={{position:'absolute',marginLeft:35,marginTop:55}}>
-                            <Tooltip containerStyle={{borderColor:'black',borderWidth:1, backgroundColor:"white",height:150, width:300, marginLeft:-135}} ref={(ref) => { this.tooltipRef = ref }} withOverlay={false} 
-                            pointerColor='rgba(51, 102, 255, 1)'
-                            popover={
-                            <View style={{ width:"100%"}}>
-                                <View style={{marginTop:5}}>
-                                    <Text style={{textAlign:"center", fontWeight:"bold", }}>
-                                    {this.defineText()}
-                                    </Text>
-                                </View>
-                                <ProductItemView touchable={false} item={this.parseProduct()}></ProductItemView>
-                            </View>
-                            }>                                
+                        {this.props.shoppingCarts.length > 0 ? (
+                            <Badge value={this.props.shoppingCarts.length} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }} />
+                        ) : (null)}
+                        <View style={{ position: 'absolute', marginLeft: 35, marginTop: 55 }}>
+                            <Tooltip containerStyle={{ borderColor: 'black', borderWidth: 1, backgroundColor: "white", height: 150, width: 300, marginLeft: -135 }} ref={(ref) => { this.tooltipRef = ref }} withOverlay={false}
+                                pointerColor='rgba(51, 102, 255, 1)'
+                                popover={
+                                    <View style={{ width: "100%" }}>
+                                        <View style={{ marginTop: 5 }}>
+                                            <Text style={{ textAlign: "center", fontWeight: "bold", }}>
+                                                {this.defineText()}
+                                            </Text>
+                                        </View>
+                                        <ProductItemView touchable={false} item={this.parseProduct()}></ProductItemView>
+                                    </View>
+                                }>
                             </Tooltip>
                         </View>
                     </View>
-                    
+
                 </Header>
 
 

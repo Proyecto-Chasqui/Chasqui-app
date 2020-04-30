@@ -61,7 +61,6 @@ class ShippingSelectionView extends React.PureComponent {
 
         if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega) {
                 if(this.props.shoppingCartSelected.montoActual < this.props.vendorSelected.montoMinimo){
-                    console.log("minimo menor")
                     this.showMoreInfoSellerPoint()
                     this.setState({ showRevert: false })
                 }
@@ -242,7 +241,7 @@ class ShippingSelectionView extends React.PureComponent {
     }
     render() {
         return (
-            <View style={{ height: Dimensions.get("window").height - 155}}>
+            <View style={{flex:1}}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.adressTitle}>{this.state.title}</Text>
                 </View>
