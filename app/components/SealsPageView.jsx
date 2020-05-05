@@ -12,9 +12,10 @@ class SealsPageView extends React.PureComponent {
     }
 
     render() {
+        const INJECTEDJAVASCRIPT = "document.body.style.userSelect = 'none'";
         return (
-            <ScrollView>
-            <View style={{marginTop:25, marginBottom:25}}>
+            <ScrollView horizontal={true}>
+            <View style={{flexDirection:"row"}}>
             {this.props.sealsSelected.map((seal, i) => {
                 return (
                     <View key={seal.idMedalla + i}> 
@@ -27,11 +28,13 @@ class SealsPageView extends React.PureComponent {
                                     source={{ uri: this.serverBaseRoute + seal.pathImagen }}
                                 />
                             </View>
-                            <View  style={{ height: 200 }}>
+                            <View  style={{ height: Dimensions.get("window").height - 100}}>
                                 <WebView
                                     originWhitelist= {["*"]}
                                     scalesPageToFit={false}
                                     containerStyle={{ height: 100, }}
+                                    injectedJavaScript={INJECTEDJAVASCRIPT}
+                                    style={{flex: 1}}
                                     source={{ html: seal.descripcion }}
                                 />
                             </View>
@@ -47,6 +50,8 @@ class SealsPageView extends React.PureComponent {
 
 const styles = StyleSheet.create({
     cardStyle:{
+        height: Dimensions.get("window").height - 50,
+        
         alignSelf: 'center', shadowColor: "#000",
         shadowOffset: {
             width: 0,

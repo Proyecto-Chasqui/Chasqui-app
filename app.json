@@ -4,7 +4,7 @@
     "slug": "chasqui-app",
     "privacy": "unlisted",
     "owner": "dev_david",
-    "sdkVersion": "36.0.0",
+    "sdkVersion": "37.0.0",
     "platforms": [
       "ios",
       "android",
@@ -31,7 +31,7 @@
       "package": "org.proyectochasqui.ar",
       "versionCode": 1,
       "config": {
-        "googleMaps": { "apiKey": "yourapikey" }   
+        "googleMaps": { "apiKey": "AIzaSyDKYdSX41XjXn_ZGk9uS5sgsyRSN028GI0" }   
      }
     },
     "description": ""

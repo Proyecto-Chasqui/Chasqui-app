@@ -381,6 +381,7 @@ const styles = StyleSheet.create({
     topHeader: {
         backgroundColor: 'rgba(51, 102, 255, 1)',
         borderBottomWidth:0,
+        marginTop: -25,
     },
     rightHeaderButton: {
         backgroundColor: '#66000000',

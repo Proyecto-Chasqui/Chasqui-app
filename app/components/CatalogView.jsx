@@ -318,7 +318,7 @@ class CatalogView extends React.Component {
 
         return (
             <View style={{ flex:1}}>
-                <Header containerStyle={styles.topHeader}>
+                <Header barStyle="light-content" containerStyle={styles.topHeader}>
                     <Button
                         icon={
                             <Icon name="bars" size={20} color="white" type='font-awesome' />
@@ -398,7 +398,8 @@ class CatalogView extends React.Component {
 const styles = StyleSheet.create({
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)'
+        backgroundColor: 'rgba(51, 102, 255, 1)',
+        marginTop: -25
     },
 
     lowerHeaderStyle: {

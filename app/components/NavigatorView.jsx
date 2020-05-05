@@ -43,7 +43,7 @@ class NavigatorView extends React.PureComponent {
   sideMenuComponent(props) {
     return (
       <ScrollView style={{ backgroundColor: "#ededed" }}>
-        <Header containerStyle={{ backgroundColor: 'rgba(51, 102, 255, 1)' }}  >
+        <Header containerStyle={{ backgroundColor: 'rgba(51, 102, 255, 1)', marginTop:-25 }}  >
           {this.props.user.id != 0 ? (
             <Image style={styles.userAvatar} source={{ uri: this.createImageUrl()}}></Image>
           ) : (

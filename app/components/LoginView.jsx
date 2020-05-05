@@ -43,10 +43,20 @@ class LoginView extends React.PureComponent {
           this.login(userData);
           this.setPassword(values.contraseña);
         }).catch((error) => {
-            console.log("password", this.props.user)
+            console.log("password", error.response.data)
             console.log("error on log relogin", error.request)
           if (error.response) {
-            Alert.alert(
+            if( error.response.data.error === "Usuario o Password incorrectos!"){
+              Alert.alert(
+                'Advertencia',
+                'Usuario o Password incorrectos!',
+                [
+                    { text: 'Entendido', onPress: () => null },
+                ],
+                { cancelable: false },
+            );
+            }else{
+              Alert.alert(
                 'Advertencia',
                 'ocurrio un error al tratar de comunicarse con el servidor, debe re ingresar',
                 [
@@ -54,6 +64,8 @@ class LoginView extends React.PureComponent {
                 ],
                 { cancelable: false },
             );
+            }
+            
           } else if (error.request) {
             Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
           } else {

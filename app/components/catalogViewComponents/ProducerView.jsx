@@ -17,12 +17,13 @@ class ProducerView extends React.PureComponent{
     }
 
     render(){
+        const INJECTEDJAVASCRIPT = "document.body.style.userSelect = 'none'";
         return (
-            <View style={{backgroundColor:"white"}}>
-                <View style={{marginTop:25, marginBottom:25}}>
-                <ScrollView style={styles.producerNameContainer}>
+            <View style={{ flex:1}}>
+                <View>
+                <View style={styles.producerNameContainer}>
                     <Text style={styles.producerName}>{this.props.producerSelected.nombreProductor}</Text>
-                </ScrollView>
+                </View>
                 {this.props.producerSelected.pathImagen === null ? 
                 (
                     <Image onStartShouldSetResponder={() =>null} style={{ width: Dimensions.get("window").width, height: 300, alignSelf: 'center', resizeMode: 'contain' }}
@@ -37,12 +38,14 @@ class ProducerView extends React.PureComponent{
                     />
                     )
                 }
-                <ScrollView style={styles.producerDescriptionSWContainer}>
-                    <View style={{ height: Dimensions.get('window').height-410, }}>
+                <ScrollView >
+                    <View style={{ height: Dimensions.get('window').height-355, }}>
                                 <WebView
                                     scalesPageToFit={false}
                                     style={{backgroundColor:"transparent"}}
                                     containerStyle={{ }}
+                                    injectedJavaScript={INJECTEDJAVASCRIPT}
+                                    style={{flex: 1}}
                                     source={{ html: this.props.producerSelected.descripcionLarga }}
                                 />
                     </View>
@@ -57,7 +60,6 @@ class ProducerView extends React.PureComponent{
 const styles = StyleSheet.create({
     producerNameContainer:{
         alignContent:"center",
-        height: 60,
     },
     producerName:{
         fontSize:22,

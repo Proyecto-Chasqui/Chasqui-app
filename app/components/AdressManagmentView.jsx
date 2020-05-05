@@ -669,9 +669,9 @@ class AdressManagmentView extends React.PureComponent {
 export default AdressManagmentView
 
 const styles = StyleSheet.create({
-
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)'
+        backgroundColor: 'rgba(51, 102, 255, 1)',
+        marginTop: -25
     },
 
     lowerHeaderStyle: {

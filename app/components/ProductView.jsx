@@ -19,16 +19,20 @@ class ProductView extends React.PureComponent {
                 showCaracteristics: false,
                 images: [],
                 showShoppingCart: false,
+                maxTimeSecondsPopUp:3,
+                timerTick:0,
                 initialValue: 0,
                 quantityValue: 0,
                 idPedido: 0,
                 buttonDisabled: true,
                 intentAddingWithOutCart: false,
                 idProduct: 0,
+                interval:null,
             }
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.shoppingCarts = this.props.actions.shoppingCarts
     }
+
 
     setQuantityValue(value, equals) {
         this.setState({ quantityValue: value, buttonDisabled: equals })
@@ -40,6 +44,11 @@ class ProductView extends React.PureComponent {
     }
 
     componentDidUpdate() {
+        if(this.state.timerTick >= this.state.maxTimeSecondsPopUp){
+            this.setState({timerTick:0})
+            clearInterval(this.state.interval);
+            this.tooltipRef.toggleTooltip();
+        }
         if (this.props.shoppingCartSelected.id !== undefined) {
             if (this.state.idPedido !== this.props.shoppingCartSelected.id) {
                 this.setProductQuantity()
@@ -178,6 +187,21 @@ class ProductView extends React.PureComponent {
         this.setState({ buttonLoading: false })
     }
 
+    toogleClosedHandler(){
+        this.setState({timerTick:0})
+        clearInterval(this.state.interval);
+    }
+
+    openTooltip(){
+        this.tooltipRef.toggleTooltip();
+        this.setState({timerTick:0})
+        this.state.interval = setInterval(() => {
+            this.setState({
+              timerTick: this.state.timerTick + 1,
+           })
+        }, 1000);
+    }
+
     getShoppingCarts() {
         axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'), {
             idVendedor: this.props.vendorSelected.id,
@@ -188,7 +212,7 @@ class ProductView extends React.PureComponent {
             this.shoppingCarts(res.data);
             this.updateCartSelected();
             this.setState({ showWaitSign: false, idPedido: 0 })
-            this.tooltipRef.toggleTooltip();
+            this.openTooltip()
         }).catch((error) => {
             console.log(error);
             Alert.alert(
@@ -293,9 +317,10 @@ class ProductView extends React.PureComponent {
     }
 
     render() {
+        const INJECTEDJAVASCRIPT = "document.body.style.userSelect = 'none'";
         return (
 
-            <View>
+            <View style={{flex:1, backgroundColor:"white"}}>
                 <Header containerStyle={styles.topHeader}>
                     <Button
                         icon={
@@ -322,8 +347,8 @@ class ProductView extends React.PureComponent {
                         {this.props.shoppingCarts.length > 0 ? (
                             <Badge value={this.props.shoppingCarts.length} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }} />
                         ) : (null)}
-                        <View style={{ position: 'absolute', marginLeft: 35, marginTop: 55 }}>
-                            <Tooltip containerStyle={{ borderColor: 'black', borderWidth: 1, backgroundColor: "white", height: 150, width: 300, marginLeft: -135 }} ref={(ref) => { this.tooltipRef = ref }} withOverlay={false}
+                        <View style={{ position: 'absolute', marginLeft: 35, marginTop: 75 }}>
+                            <Tooltip onClose={()=> this.toogleClosedHandler()}containerStyle={{ borderColor: 'black', borderWidth: 1, backgroundColor: "white", height: 150, width: 300, marginLeft: -135 }} ref={(ref) => { this.tooltipRef = ref }} withOverlay={false}
                                 pointerColor='rgba(51, 102, 255, 1)'
                                 popover={
                                     <View style={{ width: "100%" }}>
@@ -343,7 +368,7 @@ class ProductView extends React.PureComponent {
 
 
 
-                <ScrollView style={styles.productPageContainer} >
+                <ScrollView  >
 
                     <View style={styles.topSectionContainer}>
                         {this.props.productSelected.destacado ? (<Text style={styles.featuredTag}>Destacado</Text>) : (<Text style={{ marginTop: -10 }}></Text>)}
@@ -368,7 +393,9 @@ class ProductView extends React.PureComponent {
                             <WebView
                                 originWhitelist={["*"]}
                                 scalesPageToFit={false}
-                                style={{ backgroundColor: "transparent" }}
+                                style={{ backgroundColor: "transparent" }}                                
+                                injectedJavaScript={INJECTEDJAVASCRIPT}
+                                style={{flex: 1}}
                                 containerStyle={{}}
                                 source={{ html: this.props.productSelected.descripcion }}
                             />
@@ -489,6 +516,8 @@ const styles = StyleSheet.create({
 
     topHeader: {
         backgroundColor: 'rgba(51, 102, 255, 1)',
+        marginTop: -25,
+        borderBottomWidth:0,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -542,7 +571,7 @@ const styles = StyleSheet.create({
     },
 
     productPageContainer: {
-        marginBottom: 80,
+        flex:1
     },
 
     topSectionContainer: {
