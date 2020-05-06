@@ -61,6 +61,9 @@ class CatalogView extends React.Component {
             if (this.props.vendorSelected.few.puntoDeEntrega) {
                 this.getSellerPoints(this.props);
             }
+            if(this.props.vendorSelected.few.gcc){
+                this.getGroups();
+            }
             if(this.props.user.id !== 0){
                 this.getShoppingCarts(this.props);
                 this.getUnreadNotifications();
@@ -72,6 +75,29 @@ class CatalogView extends React.Component {
                 this.shoppingCarts([]);
             }
         }
+    }
+
+    getGroups(){
+        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
+            this.props.actions.groupsData(res.data);
+            console.log(res.data);
+        }).catch( (error) => {
+            console.log(error);
+            if (error.response) {                
+            Alert.alert(
+                'Error Grupos',
+                error.response.data.error,
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+              } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+              } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+              }
+        });
     }
 
     

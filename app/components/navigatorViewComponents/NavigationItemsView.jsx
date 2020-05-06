@@ -16,30 +16,34 @@ class NavigationItemsView extends React.PureComponent {
         this.navigation.reset({
             index: 0,
             routes: [{ name: 'Catalogos' }],
-          });
+        });
     }
 
     goToDeliveryZones() {
         this.navigation.navigate('Entregas');
     }
 
-    goToProducts(){
+    goToProducts() {
         this.navigation.navigate('Productos');
     }
 
-    goToShoppingCartsHistory(){
+    goToShoppingCartsHistory() {
         this.navigation.navigate('HistorialPedidos');
     }
 
-    showControls(){
+    showControls() {
         return this.props.vendorSelected.id !== undefined;
+    }
+
+    goToGroups() {
+        this.navigation.navigate('MisGrupos');
     }
 
     render() {
         return (
-            <View style={{ backgroundColor: "white"}}>
+            <View style={{ backgroundColor: "white" }}>
                 {this.showControls() ? (
-                    <View style={{ backgroundColor: "white",marginTop:10,marginBottom:10, alignItems:"flex-start", }}>
+                    <View style={{ backgroundColor: "white", marginTop: 10, marginBottom: 10, alignItems: "flex-start", }}>
                         <Button
                             buttonStyle={styles.menuButtonSection}
                             onPress={() => this.goToCatalogs()}
@@ -47,22 +51,31 @@ class NavigationItemsView extends React.PureComponent {
                             titleStyle={styles.menuButtonTitleSection}
                         />
                         {this.props.vendorSelected.few.seleccionDeDireccionDelUsuario || this.props.vendorSelected.few.puntoDeEntrega ?
-                        (                        
-                        <Button
-                                buttonStyle={styles.menuButtonSection}
-                                onPress={() => this.goToDeliveryZones()}
-                                title="Entregas"
-                                titleStyle={styles.menuButtonTitleSection}
-                        />
-                        ) : (null)
+                            (
+                                <Button
+                                    buttonStyle={styles.menuButtonSection}
+                                    onPress={() => this.goToDeliveryZones()}
+                                    title="Entregas"
+                                    titleStyle={styles.menuButtonTitleSection}
+                                />
+                            ) : (null)
                         }
-                        {this.props.user.id != 0 ? (                        
-                        <Button
-                            buttonStyle={styles.menuButtonSection}
-                            onPress={() => this.goToShoppingCartsHistory()}
-                            title="Historial de pedidos"
-                            titleStyle={styles.menuButtonTitleSection}
-                        />
+                        {this.props.user.id != 0 ? (
+                            <View style={{alignItems:"center"}}>
+                                <Button
+                                    buttonStyle={styles.menuButtonSection}
+                                    onPress={() => this.goToShoppingCartsHistory()}
+                                    title="Historial de pedidos"
+                                    titleStyle={styles.menuButtonTitleSection}
+                                />
+                                {this.props.vendorSelected.few.gcc ? (
+                                <Button
+                                    buttonStyle={styles.menuButtonSection}
+                                    onPress={() => this.goToGroups()}
+                                    title="Mis grupos"
+                                    titleStyle={styles.menuButtonTitleFixedSection}
+                                />) : (null)}
+                            </View>
                         ) : (null)}
                     </View>
                 ) : (
@@ -82,6 +95,10 @@ const styles = StyleSheet.create({
     menuButtonTitleSection: {
         color: "black",
         marginLeft: 50
+    },
+    menuButtonTitleFixedSection: {
+        color: "black",
+        marginLeft: -10
     }
 });
 

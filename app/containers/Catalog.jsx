@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { unreadNotifications, resetState, allProducts, shoppingCarts, shoppingCartUnselected, vendorSelected, personalData, adressesData, sellerPoints, products,vendorUnSelected,cleanZones,cleanSellerPoints, flushproducts, producers, logout, seals, productionSeals, productSeals, productCategories, zones } from '../actions';
+import { groupsData, unreadNotifications, resetState, allProducts, shoppingCarts, shoppingCartUnselected, vendorSelected, personalData, adressesData, sellerPoints, products,vendorUnSelected,cleanZones,cleanSellerPoints, flushproducts, producers, logout, seals, productionSeals, productSeals, productCategories, zones } from '../actions';
 import CatalogView from '../components/CatalogView';
 
 const mapStateToProps = state => ({
@@ -13,7 +13,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({resetState,
+  actions: bindActionCreators({groupsData, resetState,
     vendorSelected, products,
     flushproducts, producers, logout, seals, productionSeals,
     cleanZones,cleanSellerPoints, vendorUnSelected, productSeals,

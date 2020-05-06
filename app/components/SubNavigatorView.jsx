@@ -10,7 +10,8 @@ import MapAdressConfig from '../components/MapAdressConfig';
 import ConfirShoppingCart from '../containers/ConfirmShoppingCart';
 import Notifications from '../containers/Notifications';
 import ShoppingCartsHistory from '../containers/ShoppingCartsHistory';
-import HistoryCartBreifing from '../containers/ShoppingCartsHistoryContainers/HistoryCartBriefingContainer'
+import HistoryCartBreifing from '../containers/ShoppingCartsHistoryContainers/HistoryCartBriefingContainer';
+import GroupsView from '../containers/GroupsContainer';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
@@ -61,6 +62,7 @@ class SubNavigatorView extends React.PureComponent{
                   <Stack.Screen name='Notificaciones' component={Notifications} options={{headerShown:false}} />
                   <Stack.Screen name='HistorialPedidos' component={ShoppingCartsHistory} options={{headerShown:false}}  />
                   <Stack.Screen name='HistorialDePedido' component={HistoryCartBreifing} options={{headerShown:false}}  />
+                  <Stack.Screen name='MisGrupos' component={GroupsView} options={{headerShown:false}}  />
              </Stack.Navigator>
           );
     }
