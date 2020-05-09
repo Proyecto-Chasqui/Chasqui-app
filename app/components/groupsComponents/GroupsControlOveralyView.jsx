@@ -1,0 +1,95 @@
+import React from 'react'
+import { View, Text, StyleSheet, Dimensions } from 'react-native'
+import { Button, Icon, Overlay, CheckBox, Image, Header } from 'react-native-elements';
+
+class GroupsControlsOverlayView extends React.PureComponent {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            <Overlay containerStyle={styles.overlayContainer}
+                overlayStyle={styles.overlay}
+                windowBackgroundColor="rgba(0, 0, 0, 0.2)"
+                onBackdropPress={() => this.props.showControls()} isVisible={this.props.isVisible}
+                animationType="slide"
+            >
+                <View style={{ flex: 1 }}>
+                    <View style={styles.topHeader}>
+                        <Text style={{ fontSize: 20, margin: 15, textAlign: "center", color: "white", fontWeight: "bold" }}> Acciones </Text>
+                    </View>
+                    <View style={{ justifyContent: "space-evenly", flex: 1, marginTop: 5 }}>
+                                <View style={{ justifyContent: "space-evenly", flex: 1 }}>
+
+                                <Button
+                                    title="Crear grupo"
+                                    titleStyle={styles.normalTitleButton}
+                                    buttonStyle={styles.normalButtonStyle}
+                                    containerStyle={styles.contanierNormalButton}
+                                    raised
+                                    icon={                                        
+                                        <Icon
+                                        containerStyle={styles.iconContainerStyle}
+                                        name='group-add'
+                                        type='material'
+                                        color='white'
+                                        size={35}
+                                        />
+                                    }
+                                />
+                                    <Button
+                                        title="Ver invitaciones"
+                                        titleStyle={styles.normalTitleButton}
+                                        buttonStyle={styles.normalButtonStyle}
+                                        containerStyle={styles.contanierNormalButton}
+                                        icon={                                        
+                                            <Icon
+                                            containerStyle={styles.iconContainerStyle}
+                                            name='envelope'
+                                            type='font-awesome'
+                                            color='white'
+                                            />
+                                        }
+                                        raised
+                                    />
+                                </View>                     
+                    </View>
+                </View>
+            </Overlay>
+        )
+    }
+}
+
+const styles = StyleSheet.create({
+    overlayContainer: { flexDirection: "column", alignItems: "flex-end" },
+    overlay: {
+        maxHeight: 200,
+    },
+    topHeader: {
+        backgroundColor: 'rgba(51, 102, 255, 1)',
+        borderTopEndRadius:3,
+        borderTopStartRadius:3,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.32,
+        shadowRadius: 5.46,
+
+        elevation: 9,
+        borderBottomWidth: 0,
+        marginStart: -10,
+        marginEnd:-10,
+        marginTop: -10,
+    },
+
+    normalTitleButton: { fontWeight: "bold", fontSize: 18 },
+    normalButtonStyle: { backgroundColor: "rgba(51, 102, 255, 1)" },
+    contanierNormalButton: { marginTop: 5 },
+    iconContainerStyle:{marginEnd:10},
+
+})
+
+export default GroupsControlsOverlayView;

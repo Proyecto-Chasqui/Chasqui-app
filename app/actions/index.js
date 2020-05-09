@@ -33,6 +33,8 @@ export const SHOPPINGCARTSELECTED = 'SHOPPINGCARTSELECTED';
 export const SHOPPINGCARTUNSELECTED = 'SHOPPINGCARTUNSELECTED';
 export const UNREADNOTIFICATIONS = 'UNREADNOTIFICATIONS';
 export const GROUPSDATA = 'GROUPSDATA';
+export const GROUPSELECTED = 'GROUPSELECTED';
+export const MEMBERSELECTED = 'MEMBERSELECTED';
 
 
 export const resetState = (resetDataState) => ({type:RESETSTATE, resetDataState})
@@ -69,4 +71,6 @@ export const shoppingCartUnselected = () => ({type:SHOPPINGCARTUNSELECTED});
 export const unreadNotifications = (unreadNotificationsData) => ({type:UNREADNOTIFICATIONS, unreadNotificationsData});
 export const historyShoppingCarts = (historyShoppingCartsStack) => ({type:HISTORYSHOPPINGCARTS, historyShoppingCartsStack});
 export const historyCartSelected = (historyCartSelectedData) => ({type:HISTORYCARTSELECTED, historyCartSelectedData});
-export const groupsData = (groupsStack) => ({type:GROUPSDATA, groupsStack})
+export const groupsData = (groupsStack) => ({type:GROUPSDATA, groupsStack});
+export const groupSelected = (groupSelectedData) => ({type: GROUPSELECTED, groupSelectedData});
+export const memberSelected = (memberData) => ({type:MEMBERSELECTED, memberData});

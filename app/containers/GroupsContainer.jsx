@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {groupsData} from '../actions';
+import {groupsData, groupSelected} from '../actions';
 import GroupsView from '../components/GroupsView';
 
 const mapStateToProps = state => ({
@@ -9,7 +9,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({groupsData}, dispatch),
+  actions: bindActionCreators({groupsData, groupSelected}, dispatch),
 });
 
 export default connect(
