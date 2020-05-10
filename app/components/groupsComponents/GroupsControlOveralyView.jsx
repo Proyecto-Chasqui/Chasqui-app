@@ -7,6 +7,17 @@ class GroupsControlsOverlayView extends React.PureComponent {
         super(props)
     }
 
+    goToNewGroup() {
+        this.props.showControls();
+        this.props.showNewGroup();
+    }
+
+    updateGroupsData(){
+        this.props.showControls();
+        this.props.updateData();
+    }
+
+
     render() {
         return (
             <Overlay containerStyle={styles.overlayContainer}
@@ -20,40 +31,59 @@ class GroupsControlsOverlayView extends React.PureComponent {
                         <Text style={{ fontSize: 20, margin: 15, textAlign: "center", color: "white", fontWeight: "bold" }}> Acciones </Text>
                     </View>
                     <View style={{ justifyContent: "space-evenly", flex: 1, marginTop: 5 }}>
-                                <View style={{ justifyContent: "space-evenly", flex: 1 }}>
-
+                        <View style={{ justifyContent: "space-evenly", flex: 1 }}>
+                            {this.props.groupsData.length > 0 ? (
                                 <Button
-                                    title="Crear grupo"
+                                    title="Actualizar grupos"
                                     titleStyle={styles.normalTitleButton}
                                     buttonStyle={styles.normalButtonStyle}
                                     containerStyle={styles.contanierNormalButton}
-                                    raised
-                                    icon={                                        
+                                    icon={
                                         <Icon
+                                            containerStyle={styles.iconContainerStyle}
+                                            name='history'
+                                            type='font-awesome'
+                                            color='white'
+                                        />
+                                    }
+                                    raised
+                                    onPress={()=>this.updateGroupsData()}
+                                />
+                            ) : (null)}
+                            <Button
+                                title="Crear grupo"
+                                titleStyle={styles.normalTitleButton}
+                                buttonStyle={styles.normalButtonStyle}
+                                containerStyle={styles.contanierNormalButton}
+                                onPress={() => this.goToNewGroup()}
+                                raised
+                                icon={
+                                    <Icon
                                         containerStyle={styles.iconContainerStyle}
                                         name='group-add'
                                         type='material'
                                         color='white'
                                         size={35}
-                                        />
-                                    }
-                                />
-                                    <Button
-                                        title="Ver invitaciones"
-                                        titleStyle={styles.normalTitleButton}
-                                        buttonStyle={styles.normalButtonStyle}
-                                        containerStyle={styles.contanierNormalButton}
-                                        icon={                                        
-                                            <Icon
-                                            containerStyle={styles.iconContainerStyle}
-                                            name='envelope'
-                                            type='font-awesome'
-                                            color='white'
-                                            />
-                                        }
-                                        raised
                                     />
-                                </View>                     
+                                }
+                            />
+                            <Button
+                                title="Ver invitaciones"
+                                titleStyle={styles.normalTitleButton}
+                                buttonStyle={styles.normalButtonStyle}
+                                containerStyle={styles.contanierNormalButton}
+                                icon={
+                                    <Icon
+                                        containerStyle={styles.iconContainerStyle}
+                                        name='envelope'
+                                        type='font-awesome'
+                                        color='white'
+                                    />
+                                }
+                                raised
+                            />
+
+                        </View>
                     </View>
                 </View>
             </Overlay>
@@ -64,12 +94,12 @@ class GroupsControlsOverlayView extends React.PureComponent {
 const styles = StyleSheet.create({
     overlayContainer: { flexDirection: "column", alignItems: "flex-end" },
     overlay: {
-        maxHeight: 200,
+        maxHeight: 250,
     },
     topHeader: {
         backgroundColor: 'rgba(51, 102, 255, 1)',
-        borderTopEndRadius:3,
-        borderTopStartRadius:3,
+        borderTopEndRadius: 3,
+        borderTopStartRadius: 3,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -81,14 +111,14 @@ const styles = StyleSheet.create({
         elevation: 9,
         borderBottomWidth: 0,
         marginStart: -10,
-        marginEnd:-10,
+        marginEnd: -10,
         marginTop: -10,
     },
 
     normalTitleButton: { fontWeight: "bold", fontSize: 18 },
     normalButtonStyle: { backgroundColor: "rgba(51, 102, 255, 1)" },
     contanierNormalButton: { marginTop: 5 },
-    iconContainerStyle:{marginEnd:10},
+    iconContainerStyle: { marginEnd: 10 },
 
 })
 

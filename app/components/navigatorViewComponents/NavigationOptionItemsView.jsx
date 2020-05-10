@@ -14,6 +14,7 @@ class NavigationOptionItemsView extends React.PureComponent {
     this.props.actions.vendorUnSelected()
     this.props.actions.shoppingCarts([])
     this.props.actions.shoppingCartUnselected()
+    this.props.actions.groupsData([])
     this.logout()
   }
 

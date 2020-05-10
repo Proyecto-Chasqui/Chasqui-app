@@ -1,9 +1,12 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions, FlatList, Alert } from 'react-native'
 import { Header, Button, Icon, Image, ListItem, Badge } from 'react-native-elements'
-import GLOBALS from '../Globals'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import GroupsControlsOverlayView from '../containers/GroupsComponentsContainers/GroupsControlsOverlay'
+import NewGroupView from '../containers/GroupsComponentsContainers/NewGroup';
+import LoadingView from '../components/LoadingView';
+import GLOBALS from '../Globals'
+import axios from 'axios'
 
 class GroupsView extends React.PureComponent {
     constructor(props) {
@@ -11,7 +14,38 @@ class GroupsView extends React.PureComponent {
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.state = {
             showControls: false,
+            showNewGroup: false,
+            loading:false,
         }
+    }
+
+    componentDidMount(){
+        this.getGroups();
+    }
+
+    getGroups(){
+        this.setState({loading:true})
+        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
+            this.props.actions.groupsData(res.data);
+            this.setState({loading:false})        
+        }).catch( (error) => {
+            this.setState({loading:false})
+            console.log(error);
+            if (error.response) {                
+            Alert.alert(
+                'Error Grupos',
+                error.response.data.error,
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+              } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+              } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+              }
+        });
     }
 
     normalizeText(text) {
@@ -68,6 +102,14 @@ class GroupsView extends React.PureComponent {
 
     showControls() {
         this.setState({ showControls: !this.state.showControls })
+    }
+
+    showNewGroup() {
+        this.setState({ showNewGroup: !this.state.showNewGroup })
+    }
+
+    updateData(){
+        this.getGroups();
     }
 
     renderItem = ({ item }) => (
@@ -159,7 +201,10 @@ class GroupsView extends React.PureComponent {
                         onPress={() => this.showControls()}
                     />
                 </Header>
-                <GroupsControlsOverlayView showControls={() => this.showControls()} isVisible={this.state.showControls}></GroupsControlsOverlayView>
+                <GroupsControlsOverlayView navigation={this.props.navigation} updateData={()=>this.updateData()} showNewGroup={()=>this.showNewGroup()} showControls={() => this.showControls()} isVisible={this.state.showControls}></GroupsControlsOverlayView>
+                <NewGroupView navigation={this.props.navigation} showNewGroup={() => this.showNewGroup()} isVisible={this.state.showNewGroup}></NewGroupView>
+                
+                {this.state.loading ? (<LoadingView></LoadingView>):(
                 <View style={{ flex: 1 }}>
                     {this.props.groupsData.length > 0 ? (
                         <FlatList
@@ -194,7 +239,7 @@ class GroupsView extends React.PureComponent {
 
                         )}
                 </View>
-
+                )}
             </View>
         )
     }

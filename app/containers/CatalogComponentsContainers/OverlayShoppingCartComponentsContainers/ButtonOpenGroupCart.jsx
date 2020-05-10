@@ -1,12 +1,13 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {  } from '../../../actions';
-import ButtonOpenIndividualCart from '../../../components/catalogViewComponents/overlayShoppingCartViewComponents/ButtonOpenIndividualCart'
+import ButtonOpenGroupCart from '../../../components/catalogViewComponents/overlayShoppingCartViewComponents/ButtonOpenGroupCart'
 
 const mapStateToProps = state => ({
   vendorSelected: state.vendorSelected,
   shoppingCarts: state.shoppingCarts,
-  shoppingCartSelected: state.shoppingCartSelected
+  shoppingCartSelected: state.shoppingCartSelected,
+  user: state.user,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -17,4 +18,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ButtonOpenIndividualCart);
+)(ButtonOpenGroupCart);

@@ -5,6 +5,7 @@ import { Button, Icon, Overlay, CheckBox, Image, Header } from 'react-native-ele
 import ItemInfoCartView from '../../containers/CatalogComponentsContainers/ItemInfoCart';
 import LoadingOverlayView from '../generalComponents/LoadingOverlayView';
 import ButtonOpenIndividualCart from '../../containers/CatalogComponentsContainers/OverlayShoppingCartComponentsContainers/ButtonOpenIndividualCart'
+import ButtonOpenGroupCart from '../../containers/CatalogComponentsContainers/OverlayShoppingCartComponentsContainers/ButtonOpenGroupCart'
 import GLOBAL from '../../Globals';
 import axios from 'axios';
 
@@ -37,13 +38,63 @@ class OverlayShoppingCartView extends React.PureComponent {
     alertOpenCart(){
         Alert.alert(
             'Aviso',
-            '¿Seguro que desea abrir un pedido Individual?',
+            '¿Seguro que desea abrir un pedido individual?' ,
             [
                 { text: 'Si', onPress: () => this.openCart() },
                 { text: 'No', onPress: () => null},
             ],
             { cancelable: false },
         );
+    }
+
+    alertOpenGroupCart(group){
+        Alert.alert(
+            'Aviso',
+            '¿Seguro que desea abrir un pedido para el grupo ' + group.alias + '?' ,
+            [
+                { text: 'Si', onPress: () => this.openCartOnGroup(group) },
+                { text: 'No', onPress: () => null},
+            ],
+            { cancelable: false },
+        );
+    }
+
+    openCartOnGroup(group){
+        console.log("grupo", group);
+        this.setState({showWaitSign:true})
+        axios.post((this.serverBaseRoute + 'rest/user/gcc/individual'),{
+            idGrupo:group.id,
+            idVendedor: this.props.vendorSelected.id
+        },{withCredentials: true}).then(res => {
+            this.shoppingCartSelected(res.data);
+            this.getShoppingCarts();
+        }).catch((error) => {
+            this.setState({showWaitSign:false})
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+              } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+              } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+              }
+              console.log(error.config);
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al crear el pedido para el grupo, vuelva a intentar más tarde.',
+                [
+                    { text: 'Entendido', onPress: () => null },
+                ],
+                { cancelable: false },
+            );
+        });
     }
 
     getShoppingCarts(){
@@ -88,6 +139,18 @@ class OverlayShoppingCartView extends React.PureComponent {
                 { cancelable: false },
             );
         });
+    }
+
+    selectCartById(id){
+        console.log("select cart", id)
+        this.props.shoppingCarts.map((vcart, i) => {
+            console.log("cartid", vcart.id)
+            if (vcart.id === id) {
+                console.log("cartDetected", vcart.id)
+                this.shoppingCartSelected(vcart);
+                this.showShoppingCarts();
+            }
+        })
     }
 
     selectCart(cart){
@@ -144,45 +207,22 @@ class OverlayShoppingCartView extends React.PureComponent {
 
                 {this.state.showShoppingCarts ?
 
-                    <View>
+                    <View style={{flex:1}}>
 
                         {this.validCatalog() ? (
-                        <ScrollView>
+                        <ScrollView style={{flex:1}}>
                         { (! this.props.vendorSelected.ventasHabilitadas) ? (
                             <View style={styles.selectorContainer}>
                                 <Text style={{marginTop:5,marginLeft:5, marginRight:5, fontSize:16, fontStyle:'italic', textAlign:"center", fontWeight:"bold"}}>Las ventas estan deshabilitadas</Text>
                                 <Text style={{marginBottom:5, marginLeft:5, marginRight:5, fontStyle:'italic', textAlign:"justify"}}>Por el momento no podrá abrir nuevos pedidos, pero podra gestionar los pedidos abiertos existentes</Text>
                             </View>
-                        ):(null)}            
-                        {this.props.shoppingCarts.length > 0 ? (
-                                this.props.shoppingCarts.map((cart, i) => {
-                                    return (
-                                    <View style={styles.selectorContainer}>
-                                        <View style={{flex:1, justifyContent:"center", borderColor:"#D8D8D8", borderWidth:2, borderBottomWidth:0, borderTopRightRadius:5, borderTopLeftRadius:5, marginLeft:-2, marginRight:-2, marginTop:-2, alignItems:'center', flexDirection:"row", backgroundColor:'rgba(51, 102, 255, 1)'}}>
-                                            <Text style={{fontWeight:'bold', color:"white", fontSize:15, marginRight:20, }}> Pedido {cart.idGrupo==null?('Individual'):('Colectivo')}</Text>
-                                            <View style={{backgroundColor:"white", borderColor:"black", borderRadius:5, borderWidth:1, margin:4}}>
-                                                <Image style={styles.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_individual.png')} />
-                                            </View>
-                                        </View>
-                                        <View style={{margin:5}}>
-                                        <Text style={{textAlign:"center"}}> Total: ${(cart.montoActual).toFixed(2)} </Text>                                      
-                                        <Text style={{textAlign:"center"}}> Creado el: {cart.fechaCreacion} </Text>
-                                        </View>
-                                        <View style={{margin:5}}>
-                                            { this.props.shoppingCartSelected.id === cart.id ?
-                                            (null):
-                                            (<Button onPress={()=>this.selectCart(cart)} title="Seleccionar" titleStyle={{ color: 'white', }}  containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonOkStyle}></Button>)                                                                                 
-                                            }
-                                        </View>
-                                         </View>
+                        ):(null)}
+                                <ButtonOpenIndividualCart selectCart={(id)=>this.selectCartById(id)} actionFunction={() => this.alertOpenCart()}></ButtonOpenIndividualCart>
+                                {this.props.groupsData.map((group, i) => {
+                                    return(
+                                        <ButtonOpenGroupCart group={group} selectCart={(id)=>this.selectCartById(id)} actionFunction={() => this.alertOpenGroupCart(group)}></ButtonOpenGroupCart>
                                     )
-                                }) 
-                        ):( 
-                            <View>
-                                <ButtonOpenIndividualCart actionFunction={() => this.alertOpenCart()}></ButtonOpenIndividualCart>
-                            </View>
-                         )
-                        }
+                                })}
                         </ScrollView>
                         ):( <View style={styles.viewErrorContainer}>
                             <View style={styles.searchIconErrorContainer}>
@@ -298,7 +338,6 @@ const styles = StyleSheet.create({
     },
 
     overlayContainer: {
-        
     },
 
     containerIconStyle: {
@@ -329,6 +368,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(51, 102, 255, 1)',
         marginLeft: -10,
         marginRight: -10,
+        marginTop:-12,
         height: 58,
     },
 
@@ -337,6 +377,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get("window").width - 100,
         height: Dimensions.get("window").height,
 
+        flex:1,
     },
 
     scrollViewFilters: {
