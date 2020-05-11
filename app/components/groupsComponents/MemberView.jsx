@@ -19,10 +19,23 @@ class MemberView extends React.PureComponent {
         return url
     }
 
+    cartNotConfirmed(){
+        return this.props.memberSelected.pedido.estado === "VENCIDO" || this.props.memberSelected.pedido.estado === "CANCELADO"
+    }
+
+    createText(){
+        if(this.props.memberSelected.pedido.estado === "VENCIDO"){
+            return "El pedido de " + this.props.memberSelected.nickname + " se ha vencido"
+        }
+        if(this.props.memberSelected.pedido.estado === "CANCELADO"){
+            return  this.props.memberSelected.nickname + " ha cancelado su pedido"
+        }
+    }
+
     keyExtractor = (item, index) => index.toString()
 
     renderItem = ({ item }) => (
-        <View style={{ flex: 1, backgroundColor: 'white', borderBottomColor: "#e1e1e1", borderBottomWidth: 2, opacity: this.props.memberSelected.pedido.estado === 'VENCIDO'?(0.25):(1)}}>
+        <View style={{ flex: 1, backgroundColor: 'white', borderBottomColor: "#e1e1e1", borderBottomWidth: 2, opacity: this.cartNotConfirmed()?(0.25):(1)}}>
             <View>
                 <View style={styles.containerList}>
                     <View style={styles.cardImageView}>
@@ -80,7 +93,7 @@ class MemberView extends React.PureComponent {
                 <View >
                     {this.props.memberSelected.pedido != null ? (
                         <View>
-                        {this.props.memberSelected.pedido.estado === "VENCIDO"?(
+                        {this.cartNotConfirmed()?(
                             <View style={{position:"absolute", zIndex:1, width:Dimensions.get("window").width}}>
                             <View style={styles.viewErrorContainer}>
 
@@ -88,7 +101,7 @@ class MemberView extends React.PureComponent {
                                     <Icon name="exclamation" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
                                 </View>
                                 <Text style={styles.errorText}>
-                                    El pedido de {this.props.memberSelected.nickname} se ha vencido
+                                    {this.createText()}
                             </Text>
                                 <Text style={styles.tipErrorText}>
                                     Deberá iniciar un nuevo pedido

@@ -5,9 +5,10 @@ import GLOBAL from '../../Globals';
 import axios from 'axios';
 import LoadingOverlayView from '../generalComponents/LoadingOverlayView';
 import ProductItemView from '../../containers/ConfirmShoppingCartContainers/ProductItem';
+import DetailGroupView from '../../containers/GroupsComponentsContainers/GroupDetail'
 
 
-class ConfirmCartView extends React.PureComponent {
+class ConfirmGroupCartView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.navigation = this.props.navigation;
@@ -67,12 +68,15 @@ class ConfirmCartView extends React.PureComponent {
     }
 
     obtainTotalPrice(){
-        if (this.props.shoppingCartSelected.montoActual !== undefined) {
-            return (this.props.shoppingCartSelected.montoActual).toFixed(2)
-        } else {
-            return 0
-        }
-        
+        let total = 0;
+        this.props.groupSelected.miembros.map((member)=>{
+            if(member.pedido !== null){
+                if(member.pedido.estado === "CONFIRMADO"){
+                    total = total + member.pedido.montoActual
+                }
+            }
+        })    
+        return total
     }
     render() {
 
@@ -84,13 +88,7 @@ class ConfirmCartView extends React.PureComponent {
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
                 <View >
                     <Text style={stylesListCard.sectionTitleTextStyle}>Su pedido</Text>
-                    <FlatList data={this.getDataProducts()}
-                        keyExtractor={item => item.idVariante} windowSize={15}
-                        renderItem={({ item }) =>
-                            <View style={{ backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
-                                <ProductItemView touchable={false} item={item}></ProductItemView>
-                            </View>
-                        } />
+                    <DetailGroupView onlyConfirmed={true} disabledPress={true} hideHeaders={true}></DetailGroupView>
                     {this.props.answers.length > 0 ? (
                         <View style={{flex:1}}>
                             <Text style={stylesListCard.sectionTitleTextStyle} > Respuestas del cuestionario </Text>
@@ -106,12 +104,12 @@ class ConfirmCartView extends React.PureComponent {
                     {this.props.adressSelected !== undefined ? (
                         <View style={{flex:1}}>
                         <Text style={stylesListCard.sectionTitleTextStyle}>Será entregado en</Text>
-                        <View>
+                        <View style={{flex:1}}>
                             <Text style={{ margin:5, color: "blue", fontSize:16,fontWeight:'bold', textAlign:"center" }}>{this.parseAdress(this.props.adressSelected)}</Text>
                             {this.props.zone != undefined ? (
-                                <View style={{flex:1}}>
+                                <View style={{flex:1,}}>
                                     <Text style={stylesListCard.sectionTitleTextStyle}> Detalles de la zona de entrega</Text>
-                                    <View style={{flex:1, marginLeft:20, marginRight:20, marginBottom:10, marginTop:10}}>                                            
+                                    <View style={{  flex:1,marginLeft:20, marginRight:20, marginBottom:10, marginTop:10}}>                                            
                                                 <View style={{flexDirection:'row'}}>
                                                     <Text style={{fontSize:12, fontWeight:'bold'}}>Zona de entrega: </Text>
                                                     <Text style={{fontSize:12}}>{this.props.zone.nombre}</Text>
@@ -137,7 +135,7 @@ class ConfirmCartView extends React.PureComponent {
                         <ScrollView style={{  marginLeft:20, marginRight:10, marginBottom:10, marginTop:10 }}>
                             <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{this.props.sellerPointSelected.nombre}</Text>
                             <Text style={{ color: "blue" }}>{this.parseAdress(this.props.sellerPointSelected.direccion)}</Text>
-                            <Text style={{ fontSize: 14,  }}>{this.props.sellerPointSelected.mensaje}</Text>
+                            <Text style={{ fontSize: 14,}}>{this.props.sellerPointSelected.mensaje}</Text>
                         </ScrollView>
                         </View>
                         ) : (null)}
@@ -389,4 +387,4 @@ const stylesListCard = StyleSheet.create({
     },
 
 })
-export default ConfirmCartView
+export default ConfirmGroupCartView

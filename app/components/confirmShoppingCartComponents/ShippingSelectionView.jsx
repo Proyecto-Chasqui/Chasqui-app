@@ -52,29 +52,60 @@ class ShippingSelectionView extends React.PureComponent {
         
     }
 
+    calculateActualAmountOnGroup(){
+        let amount = 0
+        this.props.groupSelected.miembros.map((miembro, i)=>{
+            if(miembro.pedido !== null){
+                if(miembro.pedido.estado === "CONFIRMADO"){
+                    amount = amount + miembro.pedido.montoActual
+                }
+            }
+        })
+        return amount;
+    }
+
     componentDidMount() {
         this.constructDataForChecked()
         this.setVisualsBasedOnStrats()
     }
 
     setVisualsBasedOnStrats() {
-
-        if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega) {
-                if(this.props.shoppingCartSelected.montoActual < this.props.vendorSelected.montoMinimo){
+        if(!this.props.isGroup){
+            if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega) {
+                    if(this.props.shoppingCartSelected.montoActual < this.props.vendorSelected.montoMinimo){
+                        this.showMoreInfoSellerPoint()
+                        this.setState({ showRevert: false })
+                    }
+            } else {
+                if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario) {
+                    if(this.props.shoppingCartSelected.montoActual > this.props.vendorSelected.montoMinimo){
+                        this.showMoreInfoAddress()
+                    }
+                }
+                if (this.props.vendorSelected.few.puntoDeEntrega) {
                     this.showMoreInfoSellerPoint()
-                    this.setState({ showRevert: false })
                 }
-        } else {
-            if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario) {
-                if(this.props.shoppingCartSelected.montoActual > this.props.vendorSelected.montoMinimo){
-                    this.showMoreInfoAddress()
-                }
-            }
-            if (this.props.vendorSelected.few.puntoDeEntrega) {
-                this.showMoreInfoSellerPoint()
-            }
 
-            this.setState({ showRevert: false })
+                this.setState({ showRevert: false })
+            }
+        }else{
+            if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega) {
+                    if(this.calculateActualAmountOnGroup() < this.props.vendorSelected.montoMinimo){
+                        this.showMoreInfoSellerPoint()
+                        this.setState({ showRevert: false })
+                    }
+            } else {
+                if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario) {
+                    if(this.calculateActualAmountOnGroup() > this.props.vendorSelected.montoMinimo){
+                        this.showMoreInfoAddress()
+                    }
+                }
+                if (this.props.vendorSelected.few.puntoDeEntrega) {
+                    this.showMoreInfoSellerPoint()
+                }
+
+                this.setState({ showRevert: false })
+            }
         }
     }
 

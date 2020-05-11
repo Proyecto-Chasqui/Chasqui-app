@@ -4,6 +4,7 @@ import { Header, Button, Icon, Image, ListItem, Badge } from 'react-native-eleme
 import GLOBALS from '../../Globals'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import GroupControlsOverlayView from '../../containers/GroupsComponentsContainers/GroupControlsOverlay'
+import EditGroupView from '../../containers/GroupsComponentsContainers/EditGroup'
 
 class DetailGroupView extends React.PureComponent {
     constructor(props) {
@@ -11,6 +12,7 @@ class DetailGroupView extends React.PureComponent {
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.state={
             showControls:false,
+            showEditGroup:false,
         }
     }
 
@@ -35,8 +37,38 @@ class DetailGroupView extends React.PureComponent {
         this.setState({showControls:!this.state.showControls})
     }
 
+    showEditGroupFromControl(){
+        this.showControls()
+        this.setState({showEditGroup:!this.state.showEditGroup})
+    }
+
+    filterConfirmed(members){
+        let confirmedMemebers = []
+        members.map((member)=>{
+            if(member.pedido !== null){
+                if(member.pedido.estado === "CONFIRMADO"){
+                    confirmedMemebers.push(member)
+                }
+            }
+        })
+        return confirmedMemebers
+    }
+
+    obtainMembers(){
+        if(this.props.onlyConfirmed){
+            return this.filterConfirmed(this.props.groupSelected.miembros)
+        }else{
+            return this.props.groupSelected.miembros
+        }
+    }
+    
+    showEditGroup(){
+        this.setState({showEditGroup:!this.state.showEditGroup})
+    }
+
+
     renderItem = ({ item }) => (
-        <TouchableOpacity onPress={()=>(this.goToMember(item))} style={styles.groupItem}>
+        <TouchableOpacity disabled={this.props.disabledPress} onPress={()=>(this.goToMember(item))} style={styles.groupItem}>
             <View style={{ margin: 2, marginStart:10, flexDirection: "row", alignItems: "center", alignSelf:"stretch" }}>
                 <Image
                     style={{ width: 50, height: 50, resizeMode: 'center',  }}
@@ -55,6 +87,7 @@ class DetailGroupView extends React.PureComponent {
                         }
                     </View>
                 </View>
+                {!this.props.disabledPress?(
                 <View style={{flex:1,alignItems:"flex-end", marginEnd:5}}>
                 <Icon                    
                     name='chevron-right'
@@ -62,6 +95,7 @@ class DetailGroupView extends React.PureComponent {
                     color='blue'
                     />
                 </View>
+                ):(null)}
             </View>
         </TouchableOpacity>
     )
@@ -69,6 +103,8 @@ class DetailGroupView extends React.PureComponent {
     render() {
         return (
             <View style={{flex:1}}>
+                {this.props.hideHeaders?(null):(
+                <View>
                 <Header containerStyle={styles.topHeader}>
                     <Button
                         icon={
@@ -89,15 +125,22 @@ class DetailGroupView extends React.PureComponent {
                         onPress={() => this.showControls()}
                     />
                 </Header>
-                <GroupControlsOverlayView showControls={()=>this.showControls()} isVisible={this.state.showControls}></GroupControlsOverlayView>
+                <GroupControlsOverlayView showEditGroup={() => this.showEditGroupFromControl()} showControls={()=>this.showControls()} isVisible={this.state.showControls}></GroupControlsOverlayView>
+                <EditGroupView navigation={this.props.navigation} showEditGroup={() => this.showEditGroup()} isVisible={this.state.showEditGroup}></EditGroupView>
+                </View>
+                )}
                 <View>
                     <FlatList
                         ListHeaderComponent={
+                            <View>
+                            {this.props.hideHeaders?(null):(
                             <View style={styles.titleContainer}>
                                 <Text style={styles.adressTitle}>{this.props.groupSelected.alias}</Text>
-                            </View>}
+                            </View>)}
+                            </View>
+                            }
                         keyExtractor={this.keyExtractor}
-                        data={this.props.groupSelected.miembros}
+                        data={this.obtainMembers()}
                         renderItem={(item) => this.renderItem(item)}
                     />
                 </View>

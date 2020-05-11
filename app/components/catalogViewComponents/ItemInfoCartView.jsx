@@ -35,9 +35,29 @@ class ItemInfoCartView extends React.PureComponent {
         );
     }
 
+    getGroups(){
+        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
+            this.props.actions.groupsData(res.data);     
+        }).catch( (error) => {
+            console.log(error);
+            if (error.response) {                
+            Alert.alert(
+                'Error Grupos',
+                error.response.data.error,
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+              } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+              } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+              }
+        });
+    }
 
-
-    showAlertInvalidCart(){
+    showAlertInvalidCart() {
         Alert.alert(
             'Aviso',
             'Debe agregar al menos un producto para confirmar',
@@ -49,10 +69,10 @@ class ItemInfoCartView extends React.PureComponent {
         );
     }
 
-    showAlert(text){
+    showAlert(text) {
         Alert.alert(
             'Aviso',
-             text,
+            text,
             [
                 { text: 'Entendido', onPress: () => null },
 
@@ -62,35 +82,35 @@ class ItemInfoCartView extends React.PureComponent {
     }
 
     goToProduct(idVariante) {
-        this.props.allProducts.map((product) =>{
-            if(product.idProducto === idVariante){
+        this.props.allProducts.map((product) => {
+            if (product.idProducto === idVariante) {
                 this.props.actions.productSelected(product);
             }
         })
         this.goProduct();
-        this.props.functionShow();        
+        this.props.functionShow();
     }
 
-    goProduct(){
+    goProduct() {
         this.navigation.navigate("Producto");
     }
 
-    goToRegister(){
+    goToRegister() {
         this.props.actions.logout();
     }
 
-    getShoppingCarts() {
+    getShoppingCarts(alertText) {
         axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'), {
             idVendedor: this.props.vendorSelected.id,
             estados: [
                 "ABIERTO"
             ]
-        },{withCredentials: true}).then(res => {
+        }, { withCredentials: true }).then(res => {
             this.shoppingCarts(res.data);
             this.setState({ showWaitSign: false })
             Alert.alert(
                 'Aviso',
-                'El pedido ha sido cancelado correctamente',
+                alertText,
                 [
                     { text: 'Entendido', onPress: () => null },
                 ],
@@ -113,8 +133,8 @@ class ItemInfoCartView extends React.PureComponent {
         this.setState({ showWaitSign: true })
         axios.delete((this.serverBaseRoute + 'rest/user/pedido/individual/' + this.props.shoppingCartSelected.id)).then(res => {
             this.props.actions.shoppingCartUnselected();
-            this.getShoppingCarts();
-        },{withCredentials: true}).catch((error) => {
+            this.getShoppingCarts('El pedido ha sido cancelado correctamente');
+        }, { withCredentials: true }).catch((error) => {
             this.setState({ showWaitSign: false })
             console.log("error", error);
             Alert.alert(
@@ -128,72 +148,107 @@ class ItemInfoCartView extends React.PureComponent {
         });
     }
 
-    refreshExpiration(){
-        axios.post((this.serverBaseRoute + 'rest/user/pedido/refrescarVencimiento'),{
-            id:this.props.shoppingCartSelected.id
-        },{withCredentials: true}).then(res => {
+    refreshExpiration() {
+        axios.post((this.serverBaseRoute + 'rest/user/pedido/refrescarVencimiento'), {
+            id: this.props.shoppingCartSelected.id
+        }, { withCredentials: true }).then(res => {
         }).catch((error) => {
             console.log("error", error);
         });
     }
-
-    goToConfirm(){
-        this.refreshExpiration()
-        this.props.functionShow();     
-        this.navigation.navigate('ConfirmarPedido')
+    alertGroupConfirm(){
+        Alert.alert(
+            'Aviso',
+            '¿Esta seguro de confirmar el pedido del grupo '+ this.props.shoppingCartSelected.aliasGrupo + '? una vez confirmado, no podrá cambiarlo.',
+            [
+                { text: 'No', onPress: () => null },
+                { text: 'Si', onPress: () => this.confirmCartOnGroup('Su pedido en el grupo '+ this.props.shoppingCartSelected.aliasGrupo +' fue confirmado correctamente. Deberá esperar a que el administrador confirme el pedido colectivo para que se confirme por completo.')},
+            ],
+            { cancelable: false },
+        );
+        
     }
 
-    confirmCart(){
-        if(this.props.shoppingCartSelected.productosResponse == 0){
+    goToConfirm() {
+        if(this.props.shoppingCartSelected.idGrupo !==null){
+            //validar que sea admin del grupo y advertir que no esta alcanzando el monto minimo.
+            this.refreshExpiration();
+            this.alertGroupConfirm();
+            }else{
+            this.refreshExpiration()
+            this.props.functionShow();
+            this.navigation.navigate('ConfirmarPedido')
+         }
+    }
+
+    confirmCartOnGroup(text) {
+        this.setState({ showWaitSign: true })
+        if (this.props.shoppingCartSelected.idGrupo !== null) {
+            axios.post((this.serverBaseRoute + 'rest/user/pedido/individualEnGrupo/confirmar'), {
+                idPedido: this.props.shoppingCartSelected.id
+            }, { withCredentials: true }).then(res => {
+                this.getShoppingCarts(text);
+                this.props.actions.shoppingCartUnselected();
+                this.getGroups()
+            }).catch((error) => {
+                this.setState({ showWaitSign: false })
+                console.log("error en confirm cart group", error);
+                this.showAlert("ocurrio un error al confirmar el pedido en el grupo")
+            });
+        }
+    }
+
+    confirmCart() {
+        if (this.props.shoppingCartSelected.productosResponse == 0) {
             this.showAlertInvalidCart()
-        }else{
-            if(this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega){
+        } else {
+            if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega) {
                 this.goToConfirm()
             }
 
-            if(this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega){
-                if(this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo){
+            if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega) {
+                if (this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo) {
                     this.goToConfirm()
-                }else{
+                } else {
                     this.showAlert("Debe alcanzar el monto minímo para poder confirmar el pedido")
                 }
             }
 
-            if(!this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega){
+            if (!this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega) {
                 this.showAlert("No puede confirmar el pedido, por que el catálogo no esta configurado correctamente.")
             }
-            if(!this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega){
+            if (!this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega) {
                 this.goToConfirm()
             }
         }
     }
 
-    compareIds(a,b){
+    compareIds(a, b) {
         if (a.idVariante > b.idVariante) {
             return 1;
-          }
-          if (a.idVariante < b.idVariante) {
+        }
+        if (a.idVariante < b.idVariante) {
             return -1;
-          }
-          return 0;
+        }
+        return 0;
     }
 
-    typeShoppingCart(){
-        if(this.props.shoppingCartSelected.idGrupo === null){
+    typeShoppingCart() {
+        if (this.props.shoppingCartSelected.idGrupo === null) {
             return '../vendorsViewComponents/badge_icons/compra_individual.png'
-        }else{
+        } else {
             return '../vendorsViewComponents/badge_icons/compra_grupal.png'
         }
     }
 
-    showMinAmount(){
+    showMinAmount() {
         return this.props.vendorSelected.few.seleccionDeDireccionDelUsuario
     }
 
-    setStyleDistance(){
-        if(this.showMinAmount()){
+    setStyleDistance() {
+        if (this.showMinAmount()) {
             return "space-evenly"
-        }else{
+        } else {
             return "center"
         }
     }
@@ -212,7 +267,7 @@ class ItemInfoCartView extends React.PureComponent {
                                         </View>
                                         <Text style={stylesListCard.errorText}>
                                             Debe ingresar con una cuenta
-                                        </Text><Button onPress={()=>this.goToRegister()}title="Ingresar" type="clear"/>
+                                        </Text><Button onPress={() => this.goToRegister()} title="Ingresar" type="clear" />
                                     </View>
                                 )
                                 :
@@ -234,11 +289,11 @@ class ItemInfoCartView extends React.PureComponent {
                         </View>
                     </View>
                     <View style={{ backgroundColor: '#ebedeb' }}>
-                        <View style={{ }}>
+                        <View style={{}}>
                             <View style={stylesListCard.singleItemContainer}>
                                 <Text style={stylesListCard.totalPriceCartStyle}> Total : $ - - - </Text>
                             </View>
-                            <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginBottom:10}}>
+                            <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginBottom: 10 }}>
                                 <Button disabled={true} titleStyle={{ color: 'black', }} title='Cancelar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonNotStyle}></Button>
                                 <Button disabled={true} titleStyle={{ color: 'white', }} title='Confirmar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonOkStyle}></Button>
                             </View>
@@ -253,29 +308,29 @@ class ItemInfoCartView extends React.PureComponent {
             <View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
                 <View style={{ height: Dimensions.get("window").height - 255 }}>
-                    <View style={{ backgroundColor: '#ebedeb', flexDirection:"row", justifyContent: this.setStyleDistance(), borderBottomColor:"#dfdfdf", borderBottomWidth:1}}>
-                        <View style={{ backgroundColor: 'white', flexDirection:"row", borderRadius:5, marginTop:5, marginBottom:5 }}> 
-                            {this.props.shoppingCartSelected.idGrupo === null?
-                            (<Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_individual.png')}/>)
-                            :
-                            (<Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_grupal.png')}/>)}
+                    <View style={{ backgroundColor: '#ebedeb', flexDirection: "row", justifyContent: this.setStyleDistance(), borderBottomColor: "#dfdfdf", borderBottomWidth: 1 }}>
+                        <View style={{ backgroundColor: 'white', flexDirection: "row", borderRadius: 5, marginTop: 5, marginBottom: 5 }}>
+                            {this.props.shoppingCartSelected.idGrupo === null ?
+                                (<Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_individual.png')} />)
+                                :
+                                (<Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_grupal.png')} />)}
                         </View>
-                        {this.showMinAmount() ? 
-                        (
-                        <View style={{backgroundColor: 'white',marginTop:5, marginBottom:5,flexDirection:"row", justifyContent:"center", alignItems:"center", borderColor:"grey", borderWidth:1, borderRadius:5}}>
-                            <Text> Min. Monto: </Text>
-                            <View style={{  flexDirection:"row", }}>
-                                <Text style={{textAlign:"center", }}>${this.props.vendorSelected.montoMinimo}</Text>
-                                <View style={{marginLeft:5, marginRight:5}}>
-                                {this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo?(
-                                    <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
-                                ):(<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
+                        {this.showMinAmount() ?
+                            (
+                                <View style={{ backgroundColor: 'white', marginTop: 5, marginBottom: 5, flexDirection: "row", justifyContent: "center", alignItems: "center", borderColor: "grey", borderWidth: 1, borderRadius: 5 }}>
+                                    <Text> Min. Monto: </Text>
+                                    <View style={{ flexDirection: "row", }}>
+                                        <Text style={{ textAlign: "center", }}>${this.props.vendorSelected.montoMinimo}</Text>
+                                        <View style={{ marginLeft: 5, marginRight: 5 }}>
+                                            {this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo ? (
+                                                <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
+                                            ) : (<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
+                                        </View>
+                                    </View>
                                 </View>
-                            </View>
-                        </View>
-                        )
-                        :
-                        (null)}
+                            )
+                            :
+                            (null)}
                         <View>
 
                         </View>
@@ -295,23 +350,23 @@ class ItemInfoCartView extends React.PureComponent {
                             </View>
                         )
                         : (
-                            <FlatList data={this.props.shoppingCartSelected.productosResponse.sort((a, b) => this.compareIds(a,b))} keyExtractor={item => item.idVariante} windowSize={15}
+                            <FlatList data={this.props.shoppingCartSelected.productosResponse.sort((a, b) => this.compareIds(a, b))} keyExtractor={item => item.idVariante} windowSize={15}
                                 renderItem={({ item }) =>
-                                
-                                 <View style={{ flex: 1, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
-                                <ProductItemView  touchable={true} item={item}></ProductItemView>
-                                </View>
-                                    
+
+                                    <View style={{ flex: 1, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                        <ProductItemView touchable={true} item={item}></ProductItemView>
+                                    </View>
+
 
                                 } />)
                     }
                 </View>
-                <View style={{  backgroundColor: '#ebedeb',  }}>
-                    <View style={{justifyContent:"center"}}>
+                <View style={{ backgroundColor: '#ebedeb', }}>
+                    <View style={{ justifyContent: "center" }}>
                         <View style={stylesListCard.singleItemContainer}>
                             <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {(this.props.shoppingCartSelected.montoActual).toFixed(2)} </Text>
                         </View>
-                        <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15,marginBottom:10 }}>
+                        <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginBottom: 10 }}>
                             <Button onPress={() => this.cancelCartAlert()} titleStyle={{ color: 'black', }} title='Cancelar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonNotStyle}></Button>
                             <Button onPress={() => this.confirmCart()} titleStyle={{ color: 'white', }} title='Confirmar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonOkStyle}></Button>
                         </View>
@@ -322,19 +377,19 @@ class ItemInfoCartView extends React.PureComponent {
     }
 }
 
-const  stylesListCard = StyleSheet.create({
+const stylesListCard = StyleSheet.create({
 
     badgeImage: {
         height: 30,
         width: 30,
         borderColor: "grey",
-        borderWidth:1,
-        borderRadius:5,
+        borderWidth: 1,
+        borderRadius: 5,
     },
 
     viewSearchErrorContainer: {
-        height:"100%",
-        justifyContent:"center",
+        height: "100%",
+        justifyContent: "center",
     },
 
     viewErrorContainer: {
@@ -401,7 +456,7 @@ const  stylesListCard = StyleSheet.create({
     },
 
     singleItemContainer: {
-        marginTop:10,
+        marginTop: 10,
         marginBottom: 10,
         height: 40,
         borderRadius: 5,

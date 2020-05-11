@@ -111,6 +111,50 @@ class GroupsView extends React.PureComponent {
     updateData(){
         this.getGroups();
     }
+    goToConfirmGroup(group){
+        if(this.groupValidToConfirm(group)){
+            this.props.actions.groupSelected(group)
+            this.props.navigation.navigate("ConfirmarColectivo")
+        }else{
+            Alert.alert(
+                'Aviso',
+                "El pedido colectivo no se puede confirmar, debido a que hay uno o mas pedidos abiertos y/o no supera el monto mínimo para el envío a domicilio. Si cree que esto se cumple, utilice la acción 'actualizar' para obtener los ultimos datos del grupo.",
+                [
+                    {text: 'Actualizar', onPress: () => this.updateData()},
+                    { text: 'Entendido', onPress: () => null },
+                ],
+                { cancelable: false },
+            );
+        }
+    }
+    atLeastOneConfirmed(group){
+        let valid = false
+        group.miembros.map((miembro)=>{
+            if(miembro.pedido !== null){
+                if(miembro.pedido.estado === "CONFIRMADO"){
+                    valid = true
+                }
+            }
+        })
+        return valid
+    }
+
+    groupValidToConfirm(group){
+        let valid = true
+        group.miembros.map((miembro)=>{
+            if(miembro.pedido !== null){
+                if(miembro.pedido.estado === "ABIERTO"){
+                    valid = false
+                }
+            }
+        })
+        if(valid && this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega){
+            if(this.calculateAmount(group.miembros) < this.props.vendorSelected.montoMinimo){
+                valid = false
+            }
+         }
+        return valid 
+    }
 
     renderItem = ({ item }) => (
         <View style={styles.groupItem}>
@@ -171,7 +215,15 @@ class GroupsView extends React.PureComponent {
                 </TouchableOpacity>
                 {item.esAdministrador ? (
                     <Button titleStyle={{ color: 'white', }} containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonOkStyle}
-                        title="Confirmar pedido grupal"
+                        title="Confirmar pedido grupal" onPress={()=>this.goToConfirmGroup(item)}
+                        disabled={!this.atLeastOneConfirmed(item)}
+                        icon={
+                            <View>
+                                {this.groupValidToConfirm(item) && this.atLeastOneConfirmed(item)?(
+                                <Icon name="done-all" size={20} color="white" type='material' />                                  
+                                ):(null)}
+                            </View>
+                        }
                     />
                 ) : (null)}
             </View>

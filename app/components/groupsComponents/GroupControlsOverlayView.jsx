@@ -52,6 +52,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                                         color='white'
                                         />
                                     }
+                                    onPress={()=>this.props.showEditGroup()}
                                     raised
                                 />
 
