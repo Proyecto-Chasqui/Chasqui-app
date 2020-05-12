@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import GroupControlsOverlayView from '../../containers/GroupsComponentsContainers/GroupControlsOverlay'
 import EditGroupView from '../../containers/GroupsComponentsContainers/EditGroup'
 
-class DetailGroupView extends React.PureComponent {
+class AdministrationMembersView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.serverBaseRoute = GLOBALS.BASE_URL;
@@ -68,7 +68,7 @@ class DetailGroupView extends React.PureComponent {
 
 
     renderItem = ({ item }) => (
-        <TouchableOpacity disabled={this.props.disabledPress} onPress={()=>(this.goToMember(item))} style={styles.groupItem}>
+        <TouchableOpacity disabled={this.props.disabledPress} onPress={()=>null} style={styles.groupItem}>
             <View style={{ margin: 2, marginStart:10, flexDirection: "row", alignItems: "center", alignSelf:"stretch" }}>
                 <Image
                     style={{ width: 50, height: 50, resizeMode: 'center',  }}
@@ -81,21 +81,11 @@ class DetailGroupView extends React.PureComponent {
                         {item.pedido != null ?(
                         <View style={{ flexDirection: "row" }}>
                             <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Pedido: {item.pedido.estado}</Text>
-                            <Text style={{ fontSize: 14, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>Total: ${item.pedido.montoActual}</Text>
                         </View>)
                             : (<Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Sin pedido</Text>)
                         }
                     </View>
                 </View>
-                {!this.props.disabledPress?(
-                <View style={{flex:1,alignItems:"flex-end", marginEnd:5}}>
-                <Icon                    
-                    name='chevron-right'
-                    type='font-awesome'
-                    color='blue'
-                    />
-                </View>
-                ):(null)}
             </View>
         </TouchableOpacity>
     )
@@ -117,16 +107,7 @@ class DetailGroupView extends React.PureComponent {
                         style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
                         source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                     />
-                    <Button
-                        icon={
-                            <Icon name="cogs" size={20} color="white" type='font-awesome' />
-                        }
-                        buttonStyle={styles.rightHeaderButton}
-                        onPress={() => this.showControls()}
-                    />
                 </Header>
-                <GroupControlsOverlayView navigation={this.props.navigation} showEditGroup={() => this.showEditGroupFromControl()} showControls={()=>this.showControls()} isVisible={this.state.showControls}></GroupControlsOverlayView>
-                <EditGroupView navigation={this.props.navigation} showEditGroup={() => this.showEditGroup()} isVisible={this.state.showEditGroup}></EditGroupView>
                 </View>
                 )}
                 <View>
@@ -135,7 +116,7 @@ class DetailGroupView extends React.PureComponent {
                             <View>
                             {this.props.hideHeaders?(null):(
                             <View style={styles.titleContainer}>
-                                <Text style={styles.adressTitle}>{this.props.groupSelected.alias}</Text>
+                                <Text style={styles.adressTitle}>Administración de integrantes</Text>
                             </View>)}
                             </View>
                             }
@@ -298,4 +279,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default DetailGroupView
+export default AdministrationMembersView

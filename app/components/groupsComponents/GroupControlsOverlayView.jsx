@@ -1,11 +1,164 @@
 import React from 'react'
-import { View, Text, StyleSheet, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, Alert } from 'react-native'
 import { Button, Icon, Overlay, CheckBox, Image, Header } from 'react-native-elements';
+import axios from 'axios'
+import GLOBALS from '../../Globals'
+import LoadingOverlayView from '../generalComponents/LoadingOverlayView'
 
 class GroupControlsOverlayView extends React.PureComponent {
     constructor(props) {
         super(props)
+        this.serverBaseRoute = GLOBALS.BASE_URL;
         console.log("group in control", this.props.groupSelected)
+        console.log("vendor", this.props.vendorSelected)
+        this.state={
+            showWaitSign:false,
+        }
+    }
+
+    hasCartOpen(){
+        let confirmed = false;
+        this.props.groupSelected.miembros.map((miembro)=>{
+            if(miembro.pedido != null){
+                if(miembro.email === this.props.user.email && miembro.pedido.estado === "ABIERTO"){
+                    confirmed = true;
+                }
+            }
+        })
+        return confirmed
+    }
+
+    hasCartConfirmed(){
+        let confirmed = false;
+        this.props.groupSelected.miembros.map((miembro)=>{
+            if(miembro.pedido != null){
+                if(miembro.email === this.props.user.email && miembro.pedido.estado === "CONFIRMADO"){
+                    confirmed = true;
+                }
+            }
+        })
+        return confirmed
+    }
+
+    openCartOnGroup(group) {
+        console.log("grupo", group);
+        this.setState({ showWaitSign: true })
+        axios.post((this.serverBaseRoute + 'rest/user/gcc/individual'), {
+            idGrupo: group.id,
+            idVendedor: this.props.vendorSelected.id
+        }, { withCredentials: true }).then(res => {
+            this.props.actions.shoppingCartSelected(res.data);
+            this.getShoppingCarts();
+        }).catch((error) => {
+            this.setState({ showWaitSign: false })
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al crear el pedido para el grupo, vuelva a intentar más tarde.',
+                [
+                    { text: 'Entendido', onPress: () => null },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
+
+    getShoppingCarts() {
+        axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'), {
+            idVendedor: this.props.vendorSelected.id,
+            estados: [
+                "ABIERTO"
+            ]
+        }, { withCredentials: true }).then(res => {
+            this.props.actions.shoppingCarts(res.data);
+            this.setState({ showWaitSign: false });
+            this.gotToCatalog();
+        }).catch((error) => {
+            console.log(error);
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al obtener los pedidos del servidor, vuelva a intentar más tarde.',
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
+
+    gotToCatalog(){
+        this.setState({ showWaitSign: false });
+        Alert.alert(
+            'Aviso',
+            'Pedido creado, será enviado a la catálogo para comenzar su compra.',
+            [
+                { text: 'Entendido', onPress: () => this.props.navigation.navigate("Productos") },
+            ],
+            { cancelable: false },
+        );        
+    }
+
+    findOpenCart(){
+        let openFinded = false;
+        this.props.shoppingCarts.map((cart)=>{
+            if(cart.idGrupo != null){
+                if(cart.cliente.email === this.props.user.email && cart.idGrupo === this.props.groupSelected.id){
+                    this.props.actions.shoppingCartSelected(cart)
+                    openFinded = true
+                }
+            }            
+        })
+        if(!openFinded){
+            this.openCartOnGroup(this.props.groupSelected)
+        }else{
+            this.gotToCatalog();
+        }
+    }
+
+    selectOpenCart(){
+        console.log("SELECCIONANDO UN PEDIDO ABIERTO")
+        axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'), {
+            idVendedor: this.props.vendorSelected.id,
+            estados: [
+                "ABIERTO"
+            ]
+        }, { withCredentials: true }).then(res => {
+            this.props.actions.shoppingCarts(res.data);
+            this.findOpenCart()
+        }).catch((error) => {
+            console.log(error);
+            Alert.alert(
+                'Error',
+                'Ocurrio un error al obtener los pedidos del servidor, vuelva a intentar más tarde.',
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
+
+    openCart(){
+        this.setState({ showWaitSign: true });
+        if(!this.hasCartOpen()){
+            this.openCartOnGroup(this.props.groupSelected)
+        }else{
+            this.selectOpenCart();
+        }
+    }
+
+    goToAdminMembers(){
+        this.props.showControls()
+        this.props.navigation.navigate("GestionarMiembros")
     }
 
     render() {
@@ -16,6 +169,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                 onBackdropPress={() => this.props.showControls()} isVisible={this.props.isVisible}
                 animationType="slide"
             >
+                <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText={"Comunicandose con el servidor..."}></LoadingOverlayView>
                 <View style={{ flex: 1 }}>
                     <View style={styles.topHeader}>
                         <Text style={{ fontSize: 20, margin: 15, textAlign: "center", color: "white", fontWeight: "bold" }}> Opciones del grupo</Text>
@@ -70,9 +224,11 @@ class GroupControlsOverlayView extends React.PureComponent {
                                         color='white'
                                         />
                                     }
+                                    onPress={()=>this.goToAdminMembers()}
                                 />
-
+                                
                                 <Button
+                                    disabled = {this.hasCartConfirmed()}
                                     title="Comenzar mi pedido"
                                     titleStyle={styles.normalTitleButton}
                                     buttonStyle={styles.normalButtonStyle}
@@ -85,9 +241,9 @@ class GroupControlsOverlayView extends React.PureComponent {
                                         color='white'
                                         />
                                     }
+                                    onPress={()=>this.openCart()}
                                     raised
-                                />
-
+                                />       
                             </View>
                         ) : (
                                 <View style={{ justifyContent: "space-evenly", flex: 1 }}>
