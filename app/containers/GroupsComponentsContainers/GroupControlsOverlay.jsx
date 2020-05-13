@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import GroupControlsOverlayView from '../../components/groupsComponents/GroupControlsOverlayView';
-import { memberSelected,  logout, shoppingCartSelected, shoppingCarts } from '../../actions';
+import { memberSelected,  logout, shoppingCartSelected, shoppingCarts, groupsData, groupSelected } from '../../actions';
 
 const mapStateToProps = state => ({
     groupSelected : state.groupSelected,
@@ -12,7 +12,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators({shoppingCartSelected, shoppingCarts}, dispatch),
+    actions: bindActionCreators({shoppingCartSelected, shoppingCarts,groupsData,groupSelected}, dispatch),
 });
 
 export default connect(

@@ -49,6 +49,12 @@ class NotificationsView extends React.PureComponent {
         );
     }
 
+    restartNotifications(){
+        this.setState({notifications:[],page:1,firstLoading: true});
+        this.getNotifications(this.state.page)
+        this.getTotalNotifications()
+    }
+
     sendAccept(id){
         axios.post(this.serverBaseRoute + 'rest/user/gcc/aceptar',{
             idInvitacion : id,
@@ -64,6 +70,14 @@ class NotificationsView extends React.PureComponent {
             );
         }).catch((error) => {
             console.log(error.response);
+            Alert.alert(
+                'Error',
+                "Ocurrio un error, es probable que la invitación haya sido cancelada por el remitente",
+                [
+                    { text: 'Entendido', onPress: () =>  this.restartNotifications() },
+                ],
+                { cancelable: false },
+            );
         });
     }
 
@@ -82,6 +96,14 @@ class NotificationsView extends React.PureComponent {
             );
         }).catch((error) => {
             console.log(error.response);
+            Alert.alert(
+                'Error',
+                "Ocurrio un error, es probable que la invitación haya sido cancelada por el remitente",
+                [
+                    { text: 'Entendido', onPress: () =>  this.restartNotifications() },
+                ],
+                { cancelable: false },
+            );
         });
     }
 

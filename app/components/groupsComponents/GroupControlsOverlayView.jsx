@@ -11,16 +11,16 @@ class GroupControlsOverlayView extends React.PureComponent {
         this.serverBaseRoute = GLOBALS.BASE_URL;
         console.log("group in control", this.props.groupSelected)
         console.log("vendor", this.props.vendorSelected)
-        this.state={
-            showWaitSign:false,
+        this.state = {
+            showWaitSign: false,
         }
     }
 
-    hasCartOpen(){
+    hasCartOpenOrConfirmed() {
         let confirmed = false;
-        this.props.groupSelected.miembros.map((miembro)=>{
-            if(miembro.pedido != null){
-                if(miembro.email === this.props.user.email && miembro.pedido.estado === "ABIERTO"){
+        this.props.groupSelected.miembros.map((miembro) => {
+            if (miembro.pedido != null) {
+                if (miembro.email === this.props.user.email && (miembro.pedido.estado === "ABIERTO" || miembro.pedido.estado === "CONFIRMADO")) {
                     confirmed = true;
                 }
             }
@@ -28,11 +28,23 @@ class GroupControlsOverlayView extends React.PureComponent {
         return confirmed
     }
 
-    hasCartConfirmed(){
+    hasCartOpen() {
         let confirmed = false;
-        this.props.groupSelected.miembros.map((miembro)=>{
-            if(miembro.pedido != null){
-                if(miembro.email === this.props.user.email && miembro.pedido.estado === "CONFIRMADO"){
+        this.props.groupSelected.miembros.map((miembro) => {
+            if (miembro.pedido != null) {
+                if (miembro.email === this.props.user.email && miembro.pedido.estado === "ABIERTO") {
+                    confirmed = true;
+                }
+            }
+        })
+        return confirmed
+    }
+
+    hasCartConfirmed() {
+        let confirmed = false;
+        this.props.groupSelected.miembros.map((miembro) => {
+            if (miembro.pedido != null) {
+                if (miembro.email === this.props.user.email && miembro.pedido.estado === "CONFIRMADO") {
                     confirmed = true;
                 }
             }
@@ -95,7 +107,7 @@ class GroupControlsOverlayView extends React.PureComponent {
         });
     }
 
-    gotToCatalog(){
+    gotToCatalog() {
         this.setState({ showWaitSign: false });
         Alert.alert(
             'Aviso',
@@ -104,27 +116,27 @@ class GroupControlsOverlayView extends React.PureComponent {
                 { text: 'Entendido', onPress: () => this.props.navigation.navigate("Productos") },
             ],
             { cancelable: false },
-        );        
+        );
     }
 
-    findOpenCart(){
+    findOpenCart() {
         let openFinded = false;
-        this.props.shoppingCarts.map((cart)=>{
-            if(cart.idGrupo != null){
-                if(cart.cliente.email === this.props.user.email && cart.idGrupo === this.props.groupSelected.id){
+        this.props.shoppingCarts.map((cart) => {
+            if (cart.idGrupo != null) {
+                if (cart.cliente.email === this.props.user.email && cart.idGrupo === this.props.groupSelected.id) {
                     this.props.actions.shoppingCartSelected(cart)
                     openFinded = true
                 }
-            }            
+            }
         })
-        if(!openFinded){
+        if (!openFinded) {
             this.openCartOnGroup(this.props.groupSelected)
-        }else{
+        } else {
             this.gotToCatalog();
         }
     }
 
-    selectOpenCart(){
+    selectOpenCart() {
         axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'), {
             idVendedor: this.props.vendorSelected.id,
             estados: [
@@ -146,18 +158,108 @@ class GroupControlsOverlayView extends React.PureComponent {
         });
     }
 
-    openCart(){
+    openCart() {
         this.setState({ showWaitSign: true });
-        if(!this.hasCartOpen()){
+        if (!this.hasCartOpen()) {
             this.openCartOnGroup(this.props.groupSelected)
-        }else{
+        } else {
             this.selectOpenCart();
         }
     }
 
-    goToAdminMembers(){
+    goToAdminMembers() {
         this.props.showControls()
         this.props.navigation.navigate("GestionarMiembros")
+    }
+
+    goToGroups() {
+        this.setState({ loading: true })
+        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
+            this.props.actions.groupsData(res.data);
+            this.setState({ loading: false })
+            this.props.navigation.goBack();
+        }).catch((error) => {
+            this.setState({ loading: false })
+            console.log(error);
+            if (error.response) {
+                Alert.alert(
+                    'Error Grupos',
+                    error.response.data.error,
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+            } else {
+                Alert.alert('Error', "Ocurrio un error, intente más tarde o verifique su conectividad.");
+            }
+        });
+    }
+
+    getOutOfGroup() {
+        axios.post((this.serverBaseRoute + 'rest/user/gcc/quitarMiembro'), {
+            idGrupo: this.props.groupSelected.id,
+            emailCliente: this.props.user.email
+        }, { withCredentials: true }).then(res => {
+            this.goToGroups()
+        }).catch((error) => {
+            this.setState({ showWaitSign: false })
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                console.log(error.request);
+            } else {
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+            Alert.alert(
+                'Error',
+                'Ocurrio un error, vuelva a intentar más tarde.',
+                [
+                    { text: 'Entendido', onPress: () => null },
+                ],
+                { cancelable: false },
+            );
+        });
+    }
+
+    getOut() {
+        if (!this.hasCartOpenOrConfirmed()) {
+            Alert.alert(
+                'Aviso',
+                '¿Esta seguro que desea irse del grupo?',
+                [
+                    { text: 'No', onPress: () => null },
+                    { text: 'Si', onPress: () => this.getOutOfGroup() },
+                ],
+                { cancelable: false },
+            );
+        } else {
+            if (this.hasCartOpen()) {
+                Alert.alert(
+                    'Aviso',
+                    'No puede irse del grupo debido a que tiene un pedido abierto. Deberá cancelar su pedido para poder salir.',
+                    [
+                        { text: 'Entendido', onPress: () => null },
+                    ],
+                    { cancelable: false },
+                );
+            } else {
+                Alert.alert(
+                    'Aviso',
+                    'No puede irse del grupo, debido a que tiene un pedido confirmado. Deberá esperar que el ciclo de compra este grupo finalice para poder salir.',
+                    [
+                        { text: 'Entendido', onPress: () => null },
+                    ],
+                    { cancelable: false },
+                );
+            }
+
+        }
     }
 
     render() {
@@ -182,12 +284,12 @@ class GroupControlsOverlayView extends React.PureComponent {
                                     titleStyle={styles.normalTitleButton}
                                     buttonStyle={styles.normalButtonStyle}
                                     containerStyle={styles.contanierNormalButton}
-                                    icon={                                        
+                                    icon={
                                         <Icon
-                                        containerStyle={styles.iconContainerStyle}
-                                        name='archive'
-                                        type='font-awesome'
-                                        color='white'
+                                            containerStyle={styles.iconContainerStyle}
+                                            name='archive'
+                                            type='font-awesome'
+                                            color='white'
                                         />
                                     }
                                     raised
@@ -197,15 +299,15 @@ class GroupControlsOverlayView extends React.PureComponent {
                                     titleStyle={styles.normalTitleButton}
                                     buttonStyle={styles.normalButtonStyle}
                                     containerStyle={styles.contanierNormalButton}
-                                    icon={                                        
+                                    icon={
                                         <Icon
-                                        containerStyle={styles.iconContainerStyle}
-                                        name='clipboard'
-                                        type='font-awesome'
-                                        color='white'
+                                            containerStyle={styles.iconContainerStyle}
+                                            name='clipboard'
+                                            type='font-awesome'
+                                            color='white'
                                         />
                                     }
-                                    onPress={()=>this.props.showEditGroup()}
+                                    onPress={() => this.props.showEditGroup()}
                                     raised
                                 />
 
@@ -215,34 +317,34 @@ class GroupControlsOverlayView extends React.PureComponent {
                                     buttonStyle={styles.normalButtonStyle}
                                     containerStyle={styles.contanierNormalButton}
                                     raised
-                                    icon={                                        
+                                    icon={
                                         <Icon
-                                        containerStyle={styles.iconContainerStyle}
-                                        name='users'
-                                        type='font-awesome'
-                                        color='white'
+                                            containerStyle={styles.iconContainerStyle}
+                                            name='users'
+                                            type='font-awesome'
+                                            color='white'
                                         />
                                     }
-                                    onPress={()=>this.goToAdminMembers()}
+                                    onPress={() => this.goToAdminMembers()}
                                 />
-                                
+
                                 <Button
-                                    disabled = {this.hasCartConfirmed()}
+                                    disabled={this.hasCartConfirmed()}
                                     title="Comenzar mi pedido"
                                     titleStyle={styles.normalTitleButton}
                                     buttonStyle={styles.normalButtonStyle}
                                     containerStyle={styles.contanierNormalButton}
-                                    icon={                                        
+                                    icon={
                                         <Icon
-                                        containerStyle={styles.iconContainerStyle}
-                                        name='shopping-cart'
-                                        type='font-awesome'
-                                        color='white'
+                                            containerStyle={styles.iconContainerStyle}
+                                            name='shopping-cart'
+                                            type='font-awesome'
+                                            color='white'
                                         />
                                     }
-                                    onPress={()=>this.openCart()}
+                                    onPress={() => this.openCart()}
                                     raised
-                                />       
+                                />
                             </View>
                         ) : (
                                 <View style={{ justifyContent: "space-evenly", flex: 1 }}>
@@ -251,31 +353,31 @@ class GroupControlsOverlayView extends React.PureComponent {
                                         titleStyle={styles.normalTitleButton}
                                         buttonStyle={styles.normalButtonStyle}
                                         containerStyle={styles.contanierNormalButton}
-                                        icon={                                        
+                                        icon={
                                             <Icon
-                                            containerStyle={styles.iconContainerStyle}
-                                            name='archive'
-                                            type='font-awesome'
-                                            color='white'
+                                                containerStyle={styles.iconContainerStyle}
+                                                name='archive'
+                                                type='font-awesome'
+                                                color='white'
                                             />
                                         }
                                         raised
                                     />
                                     <Button
-                                        disabled = {this.hasCartConfirmed()}
+                                        disabled={this.hasCartConfirmed()}
                                         title="Comenzar mi pedido"
                                         titleStyle={styles.normalTitleButton}
                                         buttonStyle={styles.normalButtonStyle}
                                         containerStyle={styles.contanierNormalButton}
-                                        icon={                                        
+                                        icon={
                                             <Icon
-                                            containerStyle={styles.iconContainerStyle}
-                                            name='shopping-cart'
-                                            type='font-awesome'
-                                            color='white'
+                                                containerStyle={styles.iconContainerStyle}
+                                                name='shopping-cart'
+                                                type='font-awesome'
+                                                color='white'
                                             />
                                         }
-                                        onPress={()=>this.openCart()}
+                                        onPress={() => this.openCart()}
                                         raised
                                     />
 
@@ -284,14 +386,15 @@ class GroupControlsOverlayView extends React.PureComponent {
                                         titleStyle={styles.normalTitleButton}
                                         buttonStyle={styles.normalButtonStyle}
                                         containerStyle={styles.contanierNormalButton}
-                                        icon={                                        
+                                        icon={
                                             <Icon
-                                            containerStyle={styles.iconContainerStyle}
-                                            name='sign-out'
-                                            type='font-awesome'
-                                            color='white'
+                                                containerStyle={styles.iconContainerStyle}
+                                                name='sign-out'
+                                                type='font-awesome'
+                                                color='white'
                                             />
                                         }
+                                        onPress={() => this.getOut()}
                                         raised
                                     />
                                 </View>
@@ -310,8 +413,8 @@ const styles = StyleSheet.create({
     },
     topHeader: {
         backgroundColor: 'rgba(51, 102, 255, 1)',
-        borderTopEndRadius:3,
-        borderTopStartRadius:3,
+        borderTopEndRadius: 3,
+        borderTopStartRadius: 3,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -323,14 +426,14 @@ const styles = StyleSheet.create({
         elevation: 9,
         borderBottomWidth: 0,
         marginStart: -10,
-        marginEnd:-10,
+        marginEnd: -10,
         marginTop: -10,
     },
 
     normalTitleButton: { fontWeight: "bold", fontSize: 18 },
     normalButtonStyle: { backgroundColor: "rgba(51, 102, 255, 1)" },
     contanierNormalButton: { marginTop: 5 },
-    iconContainerStyle:{marginEnd:10},
+    iconContainerStyle: { marginEnd: 10 },
 
 })
 

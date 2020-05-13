@@ -27,8 +27,9 @@ import historyCartSelected from './historyCartSelected';
 import groupsData from './groupsData';
 import groupSelected from './groupSelected';
 import memberSelected from './memberSelected';
+import invitationsData from './invitationsData';
 
-const rootReducer = combineReducers({groupsData,groupSelected,memberSelected,
+const rootReducer = combineReducers({invitationsData, groupsData,groupSelected,memberSelected,
      unreadNotifications, resetState, user, vendors, vendorTags,
      products, seals, sealsSelected, vendorSelected, productSelected, producers,
      producerSelected, productSeals, productionSeals, productCategories, zones, sellerPoints,

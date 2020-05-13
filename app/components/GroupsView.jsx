@@ -19,8 +19,37 @@ class GroupsView extends React.PureComponent {
         }
     }
 
+    
+
     componentDidMount(){
         this.getGroups();
+        this.getInvitations();
+    }
+
+    isInvitationOf(name, message){
+        return message.includes(name);
+    }
+    isInvitation(message) {
+        return message.includes('invitado al grupo de compras');
+    }
+
+    filterInvitations(notificacions){
+        let vinvitations = []
+        notificacions.map((notification)=>{
+            let message = notification.mensaje
+            if(this.isInvitation(message) && this.isInvitationOf(this.props.vendorSelected.nombre, message)){
+                vinvitations.push(notification)
+            }
+        })
+        this.props.actions.invitationsData(vinvitations)
+    }
+
+    getInvitations() {
+        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas', { withCredentials: true }).then(res => {
+            this.filterInvitations(res.data);
+        }).catch((error) => {
+            console.log(error);
+        });
     }
 
     getGroups(){
@@ -110,6 +139,7 @@ class GroupsView extends React.PureComponent {
 
     updateData(){
         this.getGroups();
+        this.getInvitations()
     }
     goToConfirmGroup(group){
         if(this.groupValidToConfirm(group)){
@@ -240,6 +270,7 @@ class GroupsView extends React.PureComponent {
                         style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
                         source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                     />
+                    <View>
                     <Button
                         icon={
                             <Icon name='users' size={20} color="white" type='font-awesome' />
@@ -247,6 +278,10 @@ class GroupsView extends React.PureComponent {
                         buttonStyle={styles.rightHeaderButton}
                         onPress={() => this.showControls()}
                     />
+                    {this.props.invitationsData.length > 0 ? (
+                    <Badge value={this.props.invitationsData.length} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }}/>
+                    ):(null)}
+                    </View>
                 </Header>
                 <GroupsControlsOverlayView navigation={this.props.navigation} updateData={()=>this.updateData()} showNewGroup={()=>this.showNewGroup()} showControls={() => this.showControls()} isVisible={this.state.showControls}></GroupsControlsOverlayView>
                 <NewGroupView navigation={this.props.navigation} showNewGroup={() => this.showNewGroup()} isVisible={this.state.showNewGroup}></NewGroupView>

@@ -16,7 +16,8 @@ import GroupDetail from '../containers/GroupsComponentsContainers/GroupDetail';
 import Member from '../containers/GroupsComponentsContainers/Member';
 import NewGroup from '../containers/GroupsComponentsContainers/NewGroup';
 import confirmCartGroupView from '../containers/ConfirmCartGroup';
-import AdministrationMembersView from '../containers/GroupsComponentsContainers/AdministrationMembers'
+import AdministrationMembersView from '../containers/GroupsComponentsContainers/AdministrationMembers';
+import InvitationsView from '../containers/GroupsComponentsContainers/Invitations';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
@@ -73,6 +74,8 @@ class SubNavigatorView extends React.PureComponent{
                   <Stack.Screen name='NuevoGrupo' component={NewGroup} options={{headerShown:false}}  />   
                   <Stack.Screen name='ConfirmarColectivo' component={confirmCartGroupView} options={{headerShown:false}}  />  
                   <Stack.Screen name='GestionarMiembros' component={AdministrationMembersView} options={{headerShown:false}}  />                   
+                  <Stack.Screen name='Invitaciones' component={InvitationsView} options={{headerShown:false}}  />                   
+                  
              </Stack.Navigator>
           );
     }

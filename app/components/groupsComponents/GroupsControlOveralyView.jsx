@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
-import { Button, Icon, Overlay, CheckBox, Image, Header } from 'react-native-elements';
+import { Button, Icon, Overlay, CheckBox, Image, Header, Badge } from 'react-native-elements';
 
 class GroupsControlsOverlayView extends React.PureComponent {
     constructor(props) {
@@ -15,6 +15,11 @@ class GroupsControlsOverlayView extends React.PureComponent {
     updateGroupsData(){
         this.props.showControls();
         this.props.updateData();
+    }
+
+    goToInvitations(){
+        this.props.showControls();
+        this.props.navigation.navigate("Invitaciones")
     }
 
     render() {
@@ -66,22 +71,30 @@ class GroupsControlsOverlayView extends React.PureComponent {
                                     />
                                 }
                             />
+                            <View>
                             <Button
                                 title="Ver invitaciones"
                                 titleStyle={styles.normalTitleButton}
                                 buttonStyle={styles.normalButtonStyle}
                                 containerStyle={styles.contanierNormalButton}
                                 icon={
+                                    <View>
                                     <Icon
                                         containerStyle={styles.iconContainerStyle}
                                         name='envelope'
                                         type='font-awesome'
                                         color='white'
                                     />
+                                    {this.props.invitationsData.length > 0 ? (
+                                        <Badge value={this.props.invitationsData.length} status="error" containerStyle={{ position: 'absolute', left:-7, top:-5  }}/>
+                                    ):(null)}
+                                    </View>
                                 }
                                 raised
+                                onPress={()=>this.goToInvitations()}
                             />
 
+                            </View>
                         </View>
                     </View>
                 </View>

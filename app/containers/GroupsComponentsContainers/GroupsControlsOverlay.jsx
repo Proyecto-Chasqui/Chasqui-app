@@ -6,6 +6,7 @@ import { groupsData,  logout, shoppingCarts, shoppingCartSelected } from '../../
 const mapStateToProps = state => ({
     groupsData : state.groupsData,
     shoppingCarts: state.shoppingCarts,
+    invitationsData: state.invitationsData,
 });
 
 const mapDispatchToProps = dispatch => ({
