@@ -301,7 +301,7 @@ class EditGroupView extends React.PureComponent {
             if (this.validGroupForDelete()) {
                 Alert.alert(
                     'Aviso',
-                    '¿Está seguro de eliminar el grupo' + this.props.groupSelected.alias + '?, Los pedidos de sus integrantes en curso o confirmados se perderán y no se podrán recuperar.',
+                    '¿Está seguro de eliminar el grupo?',
                     [
                         { text: 'No', onPress: () => null },
                         { text: 'Si', onPress: () => this.deleteGroupOnServer() },

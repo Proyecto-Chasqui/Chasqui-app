@@ -19,23 +19,23 @@ class MemberView extends React.PureComponent {
         return url
     }
 
-    cartNotConfirmed(){
+    cartNotConfirmed() {
         return this.props.memberSelected.pedido.estado === "VENCIDO" || this.props.memberSelected.pedido.estado === "CANCELADO"
     }
 
-    createText(){
-        if(this.props.memberSelected.pedido.estado === "VENCIDO"){
+    createText() {
+        if (this.props.memberSelected.pedido.estado === "VENCIDO") {
             return "El pedido de " + this.props.memberSelected.nickname + " se ha vencido"
         }
-        if(this.props.memberSelected.pedido.estado === "CANCELADO"){
-            return  this.props.memberSelected.nickname + " ha cancelado su pedido"
+        if (this.props.memberSelected.pedido.estado === "CANCELADO") {
+            return this.props.memberSelected.nickname + " ha cancelado su pedido"
         }
     }
 
     keyExtractor = (item, index) => index.toString()
 
     renderItem = ({ item }) => (
-        <View style={{ flex: 1, backgroundColor: 'white', borderBottomColor: "#e1e1e1", borderBottomWidth: 2, opacity: this.cartNotConfirmed()?(0.25):(1)}}>
+        <View style={{ flex: 1, backgroundColor: 'white', borderBottomColor: "#e1e1e1", borderBottomWidth: 2, opacity: this.cartNotConfirmed() ? (0.25) : (1) }}>
             <View>
                 <View style={styles.containerList}>
                     <View style={styles.cardImageView}>
@@ -53,7 +53,9 @@ class MemberView extends React.PureComponent {
             </View>
         </View>
     )
-
+    isAdministrator(){
+        return this.props.groupSelected.emailAdministrador === this.props.memberSelected.email
+    }
 
     render() {
         return (
@@ -77,6 +79,11 @@ class MemberView extends React.PureComponent {
                             style={{ width: 50, height: 50, resizeMode: 'center', }}
                             source={{ uri: (this.normalizeText(this.createImageUrl(this.props.memberSelected.avatar))) }}
                         />
+                        {this.isAdministrator() ? (
+                            <View style={{ position: "absolute", alignSelf: "flex-start", marginStart: -4, marginTop: 1, borderWidth: 1, borderRadius: 10, backgroundColor: "#5ebb47" }}>
+                                <Icon containerStyle={{ margin: 1 }} name="star" size={15} color="blue" type='font-awesome' />
+                            </View>
+                        ) : (null)}
                         <View style={{ marginStart: 10, flex: 1 }}>
                             <Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", }}>{this.props.memberSelected.nickname}</Text>
                             <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>{this.props.memberSelected.email}</Text>
@@ -93,31 +100,31 @@ class MemberView extends React.PureComponent {
                 <View >
                     {this.props.memberSelected.pedido != null ? (
                         <View>
-                        {this.cartNotConfirmed()?(
-                            <View style={{position:"absolute", zIndex:1, width:Dimensions.get("window").width}}>
-                            <View style={styles.viewErrorContainer}>
+                            {this.cartNotConfirmed() ? (
+                                <View style={{ position: "absolute", zIndex: 1, width: Dimensions.get("window").width }}>
+                                    <View style={styles.viewErrorContainer}>
 
-                                <View style={styles.searchIconErrorContainer}>
-                                    <Icon name="exclamation" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
+                                        <View style={styles.searchIconErrorContainer}>
+                                            <Icon name="exclamation" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
+                                        </View>
+                                        <Text style={styles.errorText}>
+                                            {this.createText()}
+                                        </Text>
+                                        <Text style={styles.tipErrorText}>
+                                            Deberá iniciar un nuevo pedido
+                            </Text>
+                                    </View>
                                 </View>
-                                <Text style={styles.errorText}>
-                                    {this.createText()}
-                            </Text>
-                                <Text style={styles.tipErrorText}>
-                                    Deberá iniciar un nuevo pedido
-                            </Text>
-                            </View>
-                        </View>
-                        ):(null)}
-                        <FlatList
-                            ListHeaderComponent={
-                                <View style={styles.titleContainer}>
-                                    <Text style={styles.sectionTitleTextStyle}>Pedido</Text>
-                                </View>}
-                            keyExtractor={this.keyExtractor}
-                            data={this.props.memberSelected.pedido.productosResponse}
-                            renderItem={(item) => this.renderItem(item)}
-                        />
+                            ) : (null)}
+                            <FlatList
+                                ListHeaderComponent={
+                                    <View style={styles.titleContainer}>
+                                        <Text style={styles.sectionTitleTextStyle}>Pedido</Text>
+                                    </View>}
+                                keyExtractor={this.keyExtractor}
+                                data={this.props.memberSelected.pedido.productosResponse}
+                                renderItem={(item) => this.renderItem(item)}
+                            />
                         </View>
                     ) : (
                             <View>

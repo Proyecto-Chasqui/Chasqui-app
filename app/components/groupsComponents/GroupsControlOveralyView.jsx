@@ -17,7 +17,6 @@ class GroupsControlsOverlayView extends React.PureComponent {
         this.props.updateData();
     }
 
-
     render() {
         return (
             <Overlay containerStyle={styles.overlayContainer}

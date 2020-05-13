@@ -1,8 +1,7 @@
 import React from 'react'
-import { View, Text, StyleSheet, Dimensions, FlatList, Alert } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, FlatList, Alert, TouchableOpacity } from 'react-native'
 import { Header, Button, Icon, Image, ListItem, Badge } from 'react-native-elements'
 import GLOBALS from '../../Globals'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import GroupControlsOverlayView from '../../containers/GroupsComponentsContainers/GroupControlsOverlay'
 import EditGroupView from '../../containers/GroupsComponentsContainers/EditGroup'
 
@@ -65,15 +64,24 @@ class DetailGroupView extends React.PureComponent {
     showEditGroup(){
         this.setState({showEditGroup:!this.state.showEditGroup})
     }
-
+    isAdministrator(member){
+        return this.props.groupSelected.emailAdministrador === member.email
+    }
 
     renderItem = ({ item }) => (
+        <View>
+        { item.invitacion !== "NOTIFICACION_NO_LEIDA" ?(
         <TouchableOpacity disabled={this.props.disabledPress} onPress={()=>(this.goToMember(item))} style={styles.groupItem}>
             <View style={{ margin: 2, marginStart:10, flexDirection: "row", alignItems: "center", alignSelf:"stretch" }}>
                 <Image
                     style={{ width: 50, height: 50, resizeMode: 'center',  }}
                     source={{ uri: (this.normalizeText(this.createImageUrl(item.avatar))) }}
                 />
+                {this.isAdministrator(item)?(
+                <View style={{position:"absolute", alignSelf:"flex-start", marginStart:-4, marginTop:1,borderWidth:1, borderRadius:10, backgroundColor:"#5ebb47" }}>
+                    <Icon containerStyle={{margin:1}} name="star" size={15} color="blue" type='font-awesome' />
+                </View>
+                ):(null)}
                 <View style={{ marginStart: 10,flex:1  }}>
                     <Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", }}>{item.nickname}</Text>
                     <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>{item.email}</Text>
@@ -97,7 +105,7 @@ class DetailGroupView extends React.PureComponent {
                 </View>
                 ):(null)}
             </View>
-        </TouchableOpacity>
+        </TouchableOpacity>):(null)}</View>
     )
 
     render() {

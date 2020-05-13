@@ -125,7 +125,6 @@ class GroupControlsOverlayView extends React.PureComponent {
     }
 
     selectOpenCart(){
-        console.log("SELECCIONANDO UN PEDIDO ABIERTO")
         axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'), {
             idVendedor: this.props.vendorSelected.id,
             estados: [
@@ -263,6 +262,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                                         raised
                                     />
                                     <Button
+                                        disabled = {this.hasCartConfirmed()}
                                         title="Comenzar mi pedido"
                                         titleStyle={styles.normalTitleButton}
                                         buttonStyle={styles.normalButtonStyle}
@@ -275,6 +275,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                                             color='white'
                                             />
                                         }
+                                        onPress={()=>this.openCart()}
                                         raised
                                     />
 

@@ -1,19 +1,21 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions, FlatList, Alert } from 'react-native'
-import { Header, Button, Icon, Image, ListItem, Badge } from 'react-native-elements'
+import { Header, Button, Icon, Image, Overlay, Input } from 'react-native-elements'
 import GLOBALS from '../../Globals'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import GroupControlsOverlayView from '../../containers/GroupsComponentsContainers/GroupControlsOverlay'
-import EditGroupView from '../../containers/GroupsComponentsContainers/EditGroup'
-
+import axios from 'axios'
 class AdministrationMembersView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.serverBaseRoute = GLOBALS.BASE_URL;
-        this.state={
-            showControls:false,
-            showEditGroup:false,
+        this.state = {
+            isVisible: false,
+            showEditGroup: false,
+            email: "",
+            dataChange: false,
+            emailError: "",
+            loading: false,
         }
+        console.log("grupo", this.props.groupSelected)
     }
 
     normalizeText(text) {
@@ -28,100 +30,391 @@ class AdministrationMembersView extends React.PureComponent {
 
     keyExtractor = (item, index) => index.toString()
 
-    goToMember(member){
+    goToMember(member) {
         this.props.actions.memberSelected(member);
         this.props.navigation.navigate("Miembro");
     }
 
-    showControls(){
-        this.setState({showControls:!this.state.showControls})
+    showAlert(message) {
+        Alert.alert(
+            'Aviso',
+            message,
+            [
+                { text: 'Entendido', onPress: () => null },
+            ],
+            { cancelable: false },
+        );
     }
 
-    showEditGroupFromControl(){
-        this.showControls()
-        this.setState({showEditGroup:!this.state.showEditGroup})
-    }
-
-    filterConfirmed(members){
-        let confirmedMemebers = []
-        members.map((member)=>{
-            if(member.pedido !== null){
-                if(member.pedido.estado === "CONFIRMADO"){
-                    confirmedMemebers.push(member)
-                }
-            }
-        })
-        return confirmedMemebers
-    }
-
-    obtainMembers(){
-        if(this.props.onlyConfirmed){
-            return this.filterConfirmed(this.props.groupSelected.miembros)
-        }else{
-            return this.props.groupSelected.miembros
+    defineMessage(member) {
+        if (member.nickname == null) {
+            return "al usuario ".concat(member.email)
+        } else {
+            return "al usuario ".concat(member.nickname)
         }
     }
-    
-    showEditGroup(){
-        this.setState({showEditGroup:!this.state.showEditGroup})
+
+    askActionRemoveMember(member) {
+        Alert.alert(
+            'Pregunta',
+            "¿Esta seguro de remover " + this.defineMessage(member) + " del grupo ?",
+            [
+                { text: 'No', onPress: () => null },
+                { text: 'Si', onPress: () => this.sendRemoveMember(member.email) },
+            ],
+            { cancelable: false },
+        );
     }
 
+    removeMember(member) {
+        if (!this.state.loading) {
+            if (member.pedido !== null) {
+                if (!(member.pedido.estado == "ABIERTO" || member.pedido.estado == "CONFIRMADO")) {
+                    this.askActionRemoveMember(member)
+                } else {
+                    this.showAlert('No puede eliminar un miembro que posee un pedido ' + member.pedido.estado.toLowerCase() + '.')
+                }
+            } else {
+                this.askActionRemoveMember(member)
+            }
+        }
+    }
+
+    passAdministration(member) {
+        if (!this.state.loading) {
+            Alert.alert(
+                'Pregunta',
+                "¿Esta seguro que desea ceder la administración a " + member.nickname + " ?",
+                [
+                    { text: 'No', onPress: () => null },
+                    { text: 'Si', onPress: () => this.sendPassAdministration(member.email) },
+                ],
+                { cancelable: false },
+            );
+        }
+    }
+
+    validEmail() {
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+        return reg.test(this.state.email)
+    }
+    resetInvitation() {
+        this.setState({ email: '', isVisible: false, emailError: '', loading: false })
+    }
+    showErrorEmail() {
+        this.setState({ emailError: 'Ingrese un email valido' })
+    }
+
+    handleSubmit() {
+        this.setState({ loading: true })
+        if (this.validEmail()) {
+            axios.post((this.serverBaseRoute + 'rest/user/gcc/invitacion'), {
+                idGrupo: this.props.groupSelected.id,
+                emailInvitado: this.state.email
+            }, { withCredentials: true }).then(res => {
+                this.getGroups()
+                Alert.alert('Aviso', 'La invitación fue enviada correctamente', [
+                    { text: 'Entendido', onPress: () => this.resetInvitation() }
+                ],
+                    { cancelable: false });
+            }).catch((error) => {
+                this.resetInvitation();
+                if (error.response) {
+                    Alert.alert('Error', error.response.data.error);
+                } else if (error.request) {
+                    Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+                } else {
+                    Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+                }
+            });
+        } else {
+            this.setState({ loading: false })
+            this.showErrorEmail()
+        }
+
+    }
+
+    sendPassAdministration(email) {
+        this.setState({ loading: true })
+        axios.post((this.serverBaseRoute + '/rest/user/gcc/cederAdministracion'), {
+            idGrupo: this.props.groupSelected.id,
+            emailCliente: email
+        }, { withCredentials: true }).then(res => {
+            this.getGroups()
+            this.setState({ loading: false })
+            Alert.alert(
+                'Aviso',
+                'La administración fue cedida con exito',
+                [
+                    { text: 'Entendido', onPress: () => this.props.navigation.goBack() },
+                ],
+                { cancelable: false },
+            );
+
+        }).catch((error) => {
+            this.setState({ loading: false })
+            console.log(error);
+            if (error.response) {
+                console.log(error.response)
+                Alert.alert(
+                    'Error',
+                    error.response.data.error,
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+            } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+            }
+        });
+    }
+
+    sendRemoveMember(email) {
+        this.setState({ loading: true })
+        axios.post((this.serverBaseRoute + 'rest/user/gcc/quitarMiembro'), {
+            idGrupo: this.props.groupSelected.id,
+            emailCliente: email
+        }, { withCredentials: true }).then(res => {
+            this.getGroups()
+            Alert.alert(
+                'Aviso',
+                "Usuario removido del grupo con exito",
+                [
+                    { text: 'Entendido', onPress: () => this.setState({ loading: false }) },
+                ],
+                { cancelable: false },
+            );
+        }).catch((error) => {
+            this.setState({ loading: false })
+            console.log(error);
+            if (error.response) {
+                console.log(error.response)
+                Alert.alert(
+                    'Error Grupos',
+                    error.response.data.error,
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+            } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+            }
+        });
+    }
+
+    getGroups() {
+        this.setState({ loading: true })
+        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
+            this.props.actions.groupsData(res.data);
+            this.setState({ loading: false })
+            this.findSelectedGroup()
+        }).catch((error) => {
+            this.setState({ loading: false })
+            console.log(error);
+            if (error.response) {
+                Alert.alert(
+                    'Error Grupos',
+                    error.response.data.error,
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+            } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+            }
+        });
+    }
+
+    findSelectedGroup() {
+        this.props.groupsData.map((group) => {
+            if (group.id === this.props.groupSelected.id) {
+                this.props.actions.groupSelected(group);
+            }
+        })
+    }
+
+    showEditGroup() {
+        this.setState({ showEditGroup: !this.state.showEditGroup })
+    }
+
+    isAdministrator(member) {
+        return this.props.groupSelected.emailAdministrador === member.email
+    }
+
+    handleChange(text) {
+        this.setState({ email: text, dataChange: true })
+    }
+
+    showOverlayInvitation() {
+        this.setState({ isVisible: !this.state.isVisible })
+    }
+
+    isInvited(member) {
+        return member.invitacion === "NOTIFICACION_NO_LEIDA";
+    }
 
     renderItem = ({ item }) => (
-        <TouchableOpacity disabled={this.props.disabledPress} onPress={()=>null} style={styles.groupItem}>
-            <View style={{ margin: 2, marginStart:10, flexDirection: "row", alignItems: "center", alignSelf:"stretch" }}>
-                <Image
-                    style={{ width: 50, height: 50, resizeMode: 'center',  }}
-                    source={{ uri: (this.normalizeText(this.createImageUrl(item.avatar))) }}
-                />
-                <View style={{ marginStart: 10,flex:1  }}>
-                    <Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", }}>{item.nickname}</Text>
+        <View style={styles.groupItem}>
+            <View style={{ margin: 2, marginStart: 10, flexDirection: "row", alignItems: "center", alignSelf: "stretch" }}>
+                {item.avatar !== null ? (
+                    <Image
+                        style={{ width: 50, height: 50, resizeMode: 'center', }}
+                        source={{ cache: 'relaod', uri: (this.normalizeText(this.createImageUrl(item.avatar))) }}
+                    />) : (
+                        <Image
+                            style={{ width: 50, height: 50, resizeMode: 'center', }}
+                            source={{ cache: 'relaod', uri: (this.normalizeText(this.createImageUrl(this.props.user.avatar))) }}
+                        />
+                    )}
+                {this.isAdministrator(item) ? (
+                    <View style={{ position: "absolute", alignSelf: "flex-start", marginStart: -4, marginTop: 1, borderWidth: 1, borderRadius: 10, backgroundColor: "#5ebb47" }}>
+                        <Icon containerStyle={{ margin: 1 }} name="star" size={15} color="blue" type='font-awesome' />
+                    </View>
+                ) : (null)}
+                {this.isInvited(item) ? (
+                    <View style={{ position: "absolute", alignSelf: "flex-start", marginStart: -4, marginTop: 1, borderWidth: 1, borderRadius: 10, backgroundColor: "#5ebb47" }}>
+                        <Icon containerStyle={{ margin: 1 }} name="email-plus" size={15} color="blue" type='material-community' />
+                    </View>
+                ) : (null)}
+                <View style={{ marginStart: 10, flex: 1 }}>
+                    {item.nickname == null ? (<Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", color: "black" }}>Usuario no registrado</Text>) : (
+                        <Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", }}>{item.nickname}</Text>
+                    )}
                     <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>{item.email}</Text>
                     <View>
-                        {item.pedido != null ?(
-                        <View style={{ flexDirection: "row" }}>
-                            <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Pedido: {item.pedido.estado}</Text>
-                        </View>)
-                            : (<Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Sin pedido</Text>)
+                        {item.pedido != null ? (
+                            <View style={{ flexDirection: "row" }}>
+                                <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Pedido: {item.pedido.estado}</Text>
+                            </View>)
+                            : (
+                                <View>
+                                    {this.isInvited(item) ? (
+                                        <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "blue" }} >Invitación enviada</Text>
+                                    ) : (
+                                            <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Sin pedido</Text>
+                                        )}
+                                </View>
+                            )
                         }
                     </View>
                 </View>
+                {!this.isAdministrator(item) ? (
+                    <View style={{ margin: 2, marginStart: 10, justifyContent: "center", flexDirection: "row" }}>
+                        <Button icon={
+                            <Icon name="account-minus" size={25} color="white" type='material-community' />
+                        }
+                            containerStyle={{ margin: 2 }}
+                            buttonStyle={{ backgroundColor: "#5ebb47", borderColor: "black", borderWidth: 1, borderRadius: 7 }}
+                            onPress={() => this.removeMember(item)}
+                            loading={this.state.loading}
+                        >
+                        </Button>
+                        {item.invitacion !== "NOTIFICACION_NO_LEIDA" ? (
+                            <Button icon={
+                                <Icon name="account-star" size={25} color="white" type='material-community' />
+                            }
+                                buttonStyle={{ backgroundColor: "#5ebb47", borderColor: "black", borderWidth: 1, borderRadius: 7 }}
+                                onPress={() => this.passAdministration(item)}
+                                loading={this.state.loading}
+                                containerStyle={{ margin: 2 }}>
+                            </Button>) : (
+                                null
+                            )}
+                    </View>
+                ) : (
+                        <View style={{ marginEnd: 12 }}>
+                            <Icon name="account-star" size={25} color="blue" type='material-community' />
+                        </View>)}
             </View>
-        </TouchableOpacity>
+        </View>
     )
 
     render() {
         return (
-            <View style={{flex:1}}>
-                {this.props.hideHeaders?(null):(
-                <View>
-                <Header containerStyle={styles.topHeader}>
-                    <Button
-                        icon={
-                            <Icon name="arrow-left" size={20} color="white" type='font-awesome' />
-                        }
-                        buttonStyle={styles.rightHeaderButton}
-                        onPress={() => this.props.navigation.goBack()}
-                    />
-                    <Image
-                        style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                        source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
-                    />
-                </Header>
-                </View>
+            <View style={{ flex: 1 }}>
+                <Overlay
+                    isVisible={this.state.isVisible}
+                    width="90%"
+                    height={290}
+                    onBackdropPress={() => this.resetInvitation()}
+                    animationType="fade"
+                >
+                    <View style={{ height: "25%" }}>
+                        <View style={styles.infoTextContainer}>
+                            <Text style={styles.infoText}>Invitar</Text>
+                        </View>
+                        <View style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}>
+                            <Text style={{ fontSize: 18, alignSelf: 'center' }}>Escriba el correo del usuario al que desea invitar.</Text>
+                        </View>
+                        <View>
+                            <Text style={styles.emailTitle}>Correo</Text>
+                        </View>
+                        <View style={{ height: 60 }}>
+                            <Input
+                                inputStyle={{ color: "black", marginLeft: 10, }}
+                                placeholderTextColor="black"
+                                onChangeText={text => this.handleChange(text)}
+                                placeholder=''
+                                errorStyle={{ color: 'red' }}
+                                errorMessage={this.state.emailError}
+                                leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+                                value={this.state.email}
+                            />
+                        </View>
+                        <View style={styles.buttonRecoverContainer}>
+                            <Button buttonStyle={{ width: 140, backgroundColor: 'transparent', borderColor: "grey", borderWidth: 1 }} titleStyle={{ fontSize: 20, color: "black" }} disabled={this.state.loading} onPress={() => this.resetInvitation()} title="Cancelar" />
+                            <Button buttonStyle={{ width: 140, backgroundColor: '#5ebb47', borderColor: "grey", borderWidth: 1, marginLeft: 5 }} titleStyle={{ fontSize: 20, }} disabled={this.state.loading} onPress={() => this.handleSubmit()} title="Enviar" />
+                        </View>
+                    </View>
+                </Overlay>
+                {this.props.hideHeaders ? (null) : (
+                    <View>
+                        <Header containerStyle={styles.topHeader}>
+                            <Button
+                                icon={
+                                    <Icon name="arrow-left" size={20} color="white" type='font-awesome' />
+                                }
+                                loading={this.state.loading}
+                                buttonStyle={styles.rightHeaderButton}
+                                onPress={() => this.props.navigation.goBack()}
+                            />
+                            <Image
+                                style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
+                                source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                            />
+                            <Button
+                                icon={
+                                    <Icon name="user-plus" size={20} color="white" type='font-awesome' />
+                                }
+                                loading={this.state.loading}
+                                buttonStyle={styles.rightHeaderButton}
+                                onPress={() => this.showOverlayInvitation()}
+                            />
+                        </Header>
+                    </View>
                 )}
+
                 <View>
                     <FlatList
                         ListHeaderComponent={
                             <View>
-                            {this.props.hideHeaders?(null):(
-                            <View style={styles.titleContainer}>
-                                <Text style={styles.adressTitle}>Administración de integrantes</Text>
-                            </View>)}
+                                {this.props.hideHeaders ? (null) : (
+                                    <View style={styles.titleContainer}>
+                                        <Text style={styles.adressTitle}>Administración de integrantes</Text>
+                                    </View>)}
                             </View>
-                            }
+                        }
                         keyExtractor={this.keyExtractor}
-                        data={this.obtainMembers()}
+                        data={this.props.groupSelected.miembros}
                         renderItem={(item) => this.renderItem(item)}
                     />
                 </View>
@@ -132,7 +425,55 @@ class AdministrationMembersView extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+    subMenuButtonOkStyle: {
+        backgroundColor: "#5ebb47",
+        borderColor: 'black',
+        borderTopWidth: 1,
+        marginBottom: 1,
+        borderRadius: 0,
+        borderBottomLeftRadius: 5,
+        borderBottomRightRadius: 5,
+    },
+    overlayContainer: {
 
+    },
+    overlay: {
+        height: 200,
+    },
+    buttonRecoverContainer: {
+        flexDirection: "row",
+        marginTop: 15,
+        alignSelf: 'center',
+    },
+    emailTitle: {
+        marginTop: 10,
+        alignSelf: 'center',
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+
+    infoTextContainer: {
+        backgroundColor: "rgba(51, 102, 255, 1)",
+        marginTop: -10,
+        marginLeft: -10,
+        marginRight: -10,
+        height: 50,
+        alignItems: "center"
+    },
+
+    infoText: {
+        marginTop: 10,
+        fontSize: 19,
+        fontWeight: "bold",
+        color: "white"
+    },
+
+    principalContainer: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(51, 102, 255, 1)',
+    },
     topHeader: {
         backgroundColor: 'rgba(51, 102, 255, 1)',
         marginTop: -25,

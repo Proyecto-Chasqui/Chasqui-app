@@ -12,7 +12,7 @@ class NotificationsView extends React.PureComponent {
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.state = {
             loading: false,
-            firstLoading:false,
+            firstLoading: false,
             notifications: [],
             page: 1,
             totalNotifications: 1,
@@ -25,8 +25,68 @@ class NotificationsView extends React.PureComponent {
         this.getTotalNotifications()
     }
 
+    acceptInvitation(notification){
+        Alert.alert(
+            'Aviso',
+            "¿Esta seguro de aceptar la invitación?",
+            [
+                { text: 'No', onPress: () => null },
+                { text: 'Si', onPress: () =>  this.sendAccept(notification.id) },
+            ],
+            { cancelable: false },
+        );
+    }
+
+    declineInvitation(notification){
+        Alert.alert(
+            'Aviso',
+            "¿Esta seguro de rechazar la invitación?",
+            [
+                { text: 'No', onPress: () => null },
+                { text: 'Si', onPress: () =>  this.sendDeclined(notification.id) },
+            ],
+            { cancelable: false },
+        );
+    }
+
+    sendAccept(id){
+        axios.post(this.serverBaseRoute + 'rest/user/gcc/aceptar',{
+            idInvitacion : id,
+        }, { withCredentials: true }).then(res => {
+            this.markNotification(id,"NOTIFICACION_ACEPTADA");
+            Alert.alert(
+                'Aviso',
+                "Invitación aceptada!",
+                [
+                    { text: 'Entendido', onPress: () =>  null },
+                ],
+                { cancelable: false },
+            );
+        }).catch((error) => {
+            console.log(error.response);
+        });
+    }
+
+    sendDeclined(id){
+        axios.post(this.serverBaseRoute + 'rest/user/gcc/rechazar',{
+            idInvitacion : id,
+        }, { withCredentials: true }).then(res => {
+            this.markNotification(id,"NOTIFICACION_RECHAZADA");
+            Alert.alert(
+                'Aviso',
+                "Invitación rechazada",
+                [
+                    { text: 'Entendido', onPress: () =>  null },
+                ],
+                { cancelable: false },
+            );
+        }).catch((error) => {
+            console.log(error.response);
+        });
+    }
+
     getUnreadNotifications() {
-        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas',{withCredentials: true}).then(res => {
+        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas', { withCredentials: true }).then(res => {
             this.props.actions.unreadNotifications(res.data);
         }).catch((error) => {
             console.log(error);
@@ -34,7 +94,7 @@ class NotificationsView extends React.PureComponent {
     }
 
     getTotalNotifications() {
-        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/total',{withCredentials: true})
+        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/total', { withCredentials: true })
             .then(res => {
                 this.setState({ totalNotifications: res.data })
             }).catch((error) => {
@@ -45,21 +105,22 @@ class NotificationsView extends React.PureComponent {
 
     getNotifications(page) {
         this.setState({ loading: true })
-        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/' + page,{withCredentials: true})
+        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/' + page, { withCredentials: true })
             .then(res => {
-                this.setState({ notifications: this.state.notifications.concat(res.data), loading: false, firstLoading:false });
+                this.setState({ notifications: this.state.notifications.concat(res.data), loading: false, firstLoading: false });
+                console.log("notificaciones",res.data)
             }).catch((error) => {
-                this.setState({ loading: false, firstLoading:false })
+                this.setState({ loading: false, firstLoading: false })
                 Alert.alert('Error', 'No se logro obtener sus notificaciones, intente mas tarde.');
             });
     }
-
-    markNotification(id) {
+    
+    markNotification(id, value) {
         let array = [];
         let notificationsCopy = this.state.notifications
         notificationsCopy.map((notification, i) => {
             if (notification.id === id) {
-                notification.estado = "Leído"
+                notification.estado = value
             }
             array.push(notification)
         })
@@ -69,11 +130,11 @@ class NotificationsView extends React.PureComponent {
         this.setState({ loading: false })
     }
 
-    markViewedNotification(id) {
+    markViewedNotification(id, value) {
         this.setState({ loading: true })
-        axios.post(this.serverBaseRoute + 'rest/user/adm/notificacion/' + id,{},{withCredentials: true})
+        axios.post(this.serverBaseRoute + 'rest/user/adm/notificacion/' + id, {}, { withCredentials: true })
             .then(res => {
-                this.markNotification(id)
+                this.markNotification(id,value)
                 this.getUnreadNotifications();
             }).catch((error) => {
                 this.setState({ loading: false })
@@ -88,8 +149,8 @@ class NotificationsView extends React.PureComponent {
     keyExtractor = (item, index) => index.toString()
 
     renderItem = ({ item }) => (
-        <TouchableOpacity onPress={() => this.markViewedNotification(item.id)} disabled={this.isInvitation(item.mensaje)} style={styles.notificationItem}>
-            <View style={{ flex: 4, marginLeft:20 }}>
+        <TouchableOpacity onPress={() => this.markViewedNotification(item.id, "Leido")} disabled={this.isInvitation(item.mensaje)} style={styles.notificationItem}>
+            <View style={{ flex: 4,  marginLeft: 20 }}>
                 <View style={{ alingItems: "center", flexDirection: "row" }}>
                     <Text style={{ fontSize: 11 }}>De:</Text>
                     <Text style={{ fontSize: 11, fontWeight: "bold", color: "blue" }}> {item.usuarioOrigen}</Text>
@@ -104,31 +165,64 @@ class NotificationsView extends React.PureComponent {
                     <Text style={{ fontSize: 11, fontWeight: "bold", color: "blue" }}> {item.fechaCreacion}</Text>
                 </View>
                 <Text style={{ fontSize: 13 }}>{item.mensaje}</Text>
+                {this.isInvitation(item.mensaje) ? (
+                    <View style={{}}>
+                        {item.estado === "NOTIFICACION_NO_LEIDA" ? (
+                            <View style={{ marginTop:5, flexDirection: "row", justifyContent: "space-evenly" }}>
+                                <Button title="Rechazar"
+                                    buttonStyle={{ backgroundColor: "transparent", borderColor: "black", borderWidth: 2, borderRadius:8 }}
+                                    titleStyle={{ color: "red" }}
+                                    icon={
+                                        <Icon
+                                            containerStyle={{ marginEnd: 5 }}
+                                            size={20}
+                                            name='user-times'
+                                            type='font-awesome'
+                                            color='red'
+                                        />
+                                    }
+                                    onPress={()=>this.declineInvitation(item)}
+                                ></Button>
+                                <Button title="Aceptar"
+                                    buttonStyle={{ backgroundColor: "transparent", borderColor: "black", borderWidth: 2 ,borderRadius:8}}
+                                    titleStyle={{ color: "green" }}
+                                    icon={<Icon
+                                        containerStyle={{ marginEnd: 5 }}
+                                        size={20}
+                                        name='user-plus'
+                                        type='font-awesome'
+                                        color='green'
+                                    />}
+                                    onPress={()=>this.acceptInvitation(item)}
+                                ></Button>
+                            </View>) : (null)}
+                    </View>
+                ) : (null)}
             </View>
             {this.isInvitation(item.mensaje) ? (
                 <View style={{ marginRight: 20, marginLeft: 10 }}>
-                        {item.estado === "NOTIFICACION_NO_LEIDA" ? (
-                            <Icon
-                                size={30}
-                                name='user-plus'
-                                type='font-awesome'
-                                color='black'
-                            />) : (
-                                <View>
+                    {item.estado === "NOTIFICACION_NO_LEIDA" ? (
+                        <Icon
+                            size={30}
+                            name='user-plus'
+                            type='font-awesome'
+                            color='black'
+                        />) : (
+                            <View>
                                 {item.estado === "NOTIFICACION_RECHAZADA" ? (
-                                <Icon
-                                    size={30}
-                                    name='user-times'
-                                    type='font-awesome'
-                                    color='red'
-                                />):(<Icon
-                                    size={30}
-                                    name='user-plus'
-                                    type='font-awesome'
-                                    color='green'
-                                />)}
-                                </View>
-                            )}
+                                    <Icon
+                                        size={30}
+                                        name='user-times'
+                                        type='font-awesome'
+                                        color='red'
+                                    />) : (<Icon
+                                        size={30}
+                                        name='user-plus'
+                                        type='font-awesome'
+                                        color='green'
+                                    />)}
+                            </View>
+                        )}
                 </View>
             ) : (
                     <View style={{ marginRight: 20, marginLeft: 10 }}>
@@ -149,12 +243,13 @@ class NotificationsView extends React.PureComponent {
                     </View>
 
                 )}
+
         </TouchableOpacity>
     )
 
     addNotification() {
-        this.setState({loading:true})
-        if(!this.state.loading){
+        this.setState({ loading: true })
+        if (!this.state.loading) {
             this.getNotifications(this.state.page + 1)
             this.setState({ page: this.state.page + 1 })
         }
@@ -177,47 +272,47 @@ class NotificationsView extends React.PureComponent {
                             source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                         />
                         <View>
-                        <Button
-                            icon={
-                                <Icon name="bell" size={20} color="white" type='font-awesome' />
-                            }
-                            buttonStyle={styles.rightHeaderButton}
-                        />
-                        {this.props.unreadNotifications.length > 0 ? (
-                            <Badge value={this.props.unreadNotifications.length} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }}/>
-                            ):(null)}
+                            <Button
+                                icon={
+                                    <Icon name="bell" size={20} color="white" type='font-awesome' />
+                                }
+                                buttonStyle={styles.rightHeaderButton}
+                            />
+                            {this.props.unreadNotifications.length > 0 ? (
+                                <Badge value={this.props.unreadNotifications.length} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }} />
+                            ) : (null)}
                         </View>
                     </Header>
                 </View>
-                {this.state.firstLoading ? (<LoadingView></LoadingView>):(<View style={{flex:1}}>
-                {this.state.notifications.length === 0 && !this.state.loading ? (
-                    <View style={styles.viewErrorContainer}>
-                        <View style={styles.searchIconErrorContainer}>
-                            <Icon name="bell" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
-                        </View>
-                        <Text style={styles.errorText}>
-                            No hay notificaciones
+                {this.state.firstLoading ? (<LoadingView></LoadingView>) : (<View style={{ flex: 1 }}>
+                    {this.state.notifications.length === 0 && !this.state.loading ? (
+                        <View style={styles.viewErrorContainer}>
+                            <View style={styles.searchIconErrorContainer}>
+                                <Icon name="bell" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
+                            </View>
+                            <Text style={styles.errorText}>
+                                No hay notificaciones
                             </Text>
-                        <Text style={styles.tipErrorText}>
-                            No posee notificaciones hasta el momento
+                            <Text style={styles.tipErrorText}>
+                                No posee notificaciones hasta el momento
                             </Text>
-                    </View>) : (
-                        <View style={{ flex: 1 }}>
-                            <FlatList
-                                ListHeaderComponent={
-                                    <View style={styles.titleContainer}>
-                                        <Text style={styles.adressTitle}>Notificaciones</Text>
-                                    </View>}
-                                keyExtractor={this.keyExtractor}
-                                data={this.state.notifications}
-                                renderItem={(item) => this.renderItem(item)}
-                                ListFooterComponent={
-                                    <Button titleStyle={{ fontSize: 20, color: 'white' }} buttonStyle={styles.buttonMore} loading={this.state.loading} containerStyle={{ margin: 5 }} onPress={() => this.addNotification()} disabled={this.state.notifications.length >= this.state.totalNotifications} title={"Ver mas notificaciones"}></Button>
-                                }
-                            />
-                        </View>)}
-                    </View>
-                    )}
+                        </View>) : (
+                            <View style={{ flex: 1 }}>
+                                <FlatList
+                                    ListHeaderComponent={
+                                        <View style={styles.titleContainer}>
+                                            <Text style={styles.adressTitle}>Notificaciones</Text>
+                                        </View>}
+                                    keyExtractor={this.keyExtractor}
+                                    data={this.state.notifications}
+                                    renderItem={(item) => this.renderItem(item)}
+                                    ListFooterComponent={
+                                        <Button titleStyle={{ fontSize: 20, color: 'white' }} buttonStyle={styles.buttonMore} loading={this.state.loading} containerStyle={{ margin: 5 }} onPress={() => this.addNotification()} disabled={this.state.notifications.length >= this.state.totalNotifications} title={"Ver mas notificaciones"}></Button>
+                                    }
+                                />
+                            </View>)}
+                </View>
+                )}
             </View>
         )
     }
@@ -237,7 +332,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5.46,
 
         elevation: 9,
-        borderBottomWidth:0,
+        borderBottomWidth: 0,
     },
     rightHeaderButton: {
         backgroundColor: '#66000000',
@@ -287,7 +382,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         margin: 4,
         borderRadius: 5,
-        height: Dimensions.get("window").height / 5.5,
+        height: Dimensions.get("window").height / 4.5,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

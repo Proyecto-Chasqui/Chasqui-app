@@ -1,7 +1,6 @@
 import React from 'react'
-import { View, Text, StyleSheet, Dimensions, FlatList, Alert } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, FlatList, Alert, TouchableOpacity } from 'react-native'
 import { Header, Button, Icon, Image, ListItem, Badge } from 'react-native-elements'
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import GroupsControlsOverlayView from '../containers/GroupsComponentsContainers/GroupsControlsOverlay'
 import NewGroupView from '../containers/GroupsComponentsContainers/NewGroup';
 import LoadingView from '../components/LoadingView';
@@ -16,6 +15,7 @@ class GroupsView extends React.PureComponent {
             showControls: false,
             showNewGroup: false,
             loading:false,
+            disabledOpacity:false,
         }
     }
 
@@ -162,18 +162,13 @@ class GroupsView extends React.PureComponent {
                 <Text style={{ textAlign: "center", fontSize: 18, margin: 2, fontWeight: "bold", color: "white" }}> {item.alias} </Text>
             </View>
             <View style={{ flex: 3, width: "100%" }}>
-                <TouchableOpacity onPress={() => (this.goToMembers(item))}>
+                <TouchableOpacity disabled={this.state.disabledOpacity} onPress={() => (this.goToMembers(item))}>
                     <View style={{ borderBottomWidth: 2 }}></View>
                     <Text style={{ backgroundColor: "#ebedeb", fontSize: 15, textAlign: "center", fontWeight: "bold" }}> {item.descripcion}</Text>
                     <View style={{ borderBottomWidth: 1 }}></View>
                     <View style={{ justifyContent: "center", backgroundColor: "#ebedeb", borderBottomWidth: 1, borderColor: "black", flexDirection: "row", alignItems: "center" }}>
                         <View style={{ margin: 3, flexDirection: "row", alignItems: "center" }}>
-                            <Icon
-                                name='user'
-                                type='font-awesome'
-                                color='blue'
-                                size={22}
-                            />
+                            <Icon name="account-star" size={25} color="blue" type='material-community' />
                             <Text style={{ fontWeight: "bold", fontSize: 15 }}> {item.emailAdministrador}</Text>
                         </View>
                     </View>
