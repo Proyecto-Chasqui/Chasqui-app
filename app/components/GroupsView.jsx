@@ -186,6 +186,16 @@ class GroupsView extends React.PureComponent {
         return valid 
     }
 
+    numberOfActiveMembers(members){
+        let count = 0
+        members.map((member)=>{
+            if(member.invitacion === "NOTIFICACION_ACEPTADA"){
+                count = count + 1;
+            }
+        })
+        return count;
+    }
+
     renderItem = ({ item }) => (
         <View style={styles.groupItem}>
             <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", flexDirection: "row", alignItems: "center", justifyContent: "center", borderTopStartRadius: 3, borderTopEndRadius: 3, flex: 1, width: "100%" }}>
@@ -206,7 +216,7 @@ class GroupsView extends React.PureComponent {
                         <View style={{ backgroundColor: "#ebedeb", marginBottom: 3, borderWidth: 1, borderColor: "black", borderRadius: 5, flexDirection: "row", alignItems: "center" }}>
                             <View style={{ margin: 3, flexDirection: "row", alignItems: "center" }}>
                                 <Image style={{ height: 25, width: 25 }} source={require('../components/vendorsViewComponents/badge_icons/compra_grupal.png')} />
-                                <Text style={{ fontWeight: "bold", marginRight: 2 }}> {item.miembros.length}</Text>
+                                <Text style={{ fontWeight: "bold", marginRight: 2 }}> {this.numberOfActiveMembers(item.miembros)}</Text>
                             </View>
                         </View>
                         <View style={{ backgroundColor: "#ebedeb", marginBottom: 3, borderWidth: 1, borderColor: "black", borderRadius: 5, flexDirection: "row", alignItems: "center" }}>
@@ -217,7 +227,7 @@ class GroupsView extends React.PureComponent {
                                     color='black'
                                     size={20}
                                 />
-                                <Text style={{ fontSize: 16, fontWeight: "bold" }}> Confirmados: {this.calcularPedidosConfirmados(item.miembros)} / {item.miembros.length}</Text>
+                                <Text style={{ fontSize: 16, fontWeight: "bold" }}> Confirmados: {this.calcularPedidosConfirmados(item.miembros)} / {this.numberOfActiveMembers(item.miembros)}</Text>
                             </View>
                         </View>
                         <View style={{ backgroundColor: "#ebedeb", marginBottom: 3, flexDirection: "row", justifyContent: "center", alignItems: "center", borderColor: "black", borderWidth: 1, borderRadius: 5 }}>

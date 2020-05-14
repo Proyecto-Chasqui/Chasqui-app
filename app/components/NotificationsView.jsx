@@ -60,6 +60,7 @@ class NotificationsView extends React.PureComponent {
             idInvitacion : id,
         }, { withCredentials: true }).then(res => {
             this.markNotification(id,"NOTIFICACION_ACEPTADA");
+            this.getUnreadNotifications();
             Alert.alert(
                 'Aviso',
                 "Invitación aceptada!",
@@ -86,6 +87,7 @@ class NotificationsView extends React.PureComponent {
             idInvitacion : id,
         }, { withCredentials: true }).then(res => {
             this.markNotification(id,"NOTIFICACION_RECHAZADA");
+            this.getUnreadNotifications();
             Alert.alert(
                 'Aviso',
                 "Invitación rechazada",

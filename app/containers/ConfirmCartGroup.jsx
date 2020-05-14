@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {shoppingCartSelected, shoppingCarts, groupSelected,groupsData} from '../actions';
+import {shoppingCartSelected, shoppingCarts, groupSelected,groupsData, unreadNotifications} from '../actions';
 import ConfirmCartGroupView from '../components/ConfirmCartGroupView';
 
 const mapStateToProps = state => ({
@@ -12,7 +12,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({shoppingCartSelected,shoppingCarts,groupSelected,groupsData}, dispatch),
+  actions: bindActionCreators({shoppingCartSelected,shoppingCarts,groupSelected,groupsData, unreadNotifications}, dispatch),
 });
 
 export default connect(

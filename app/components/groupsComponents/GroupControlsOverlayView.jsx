@@ -176,6 +176,7 @@ class GroupControlsOverlayView extends React.PureComponent {
         this.setState({ loading: true })
         axios.get((this.serverBaseRoute + 'rest/user/gcc/all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
             this.props.actions.groupsData(res.data);
+            Alert.alert('Aviso', "Salio del grupo con exito");
             this.setState({ loading: false })
             this.props.navigation.goBack();
         }).catch((error) => {

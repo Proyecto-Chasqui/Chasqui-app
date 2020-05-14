@@ -7,6 +7,7 @@ class HistoryCartBriefingView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.serverBaseRoute = GLOBALS.BASE_URL;
+        console.log("cart", this.props.historyCartSelected)
     }
 
     normalizeText(text) {
@@ -41,13 +42,13 @@ class HistoryCartBriefingView extends React.PureComponent {
         return adress.calle + ", " + adress.altura + ", " + adress.localidad
     }
 
-    obtainTotalPrice(){
+    obtainTotalPrice() {
         if (this.props.historyCartSelected.montoActual !== undefined) {
             return (this.props.historyCartSelected.montoActual).toFixed(2)
         } else {
             return 0
         }
-        
+
     }
 
     render() {
@@ -69,83 +70,92 @@ class HistoryCartBriefingView extends React.PureComponent {
                     </Header>
                 </View>
                 <Text style={styles.sectionTitleTextStyle}>Productos</Text>
-                    <View style={{ flex: 1 }}>
-                        <FlatList data={this.getDataProducts()}
-                            keyExtractor={item => item.idVariante} windowSize={15}
-                            renderItem={({ item }) =>
-                                <View style={{ flex: 1, backgroundColor: 'white', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
-                                    <View>
-                                        <View style={styles.containerList}>
-                                            <View style={styles.cardImageView}>
-                                                <Avatar overlayContainerStyle={styles.overlayAvatarContainer} rounded size={80} source={{ uri: (this.normalizeText(this.serverBaseRoute + item.imagen)) }} renderPlaceholderContent={<ActivityIndicator size="large" color="#0000ff" />} />
+                <View style={{ flex: 1 }}>
+                    <FlatList data={this.getDataProducts()}
+                        keyExtractor={item => item.idVariante} windowSize={15}
+                        renderItem={({ item }) =>
+                            <View style={{ flex: 1, backgroundColor: 'white', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                <View>
+                                    <View style={styles.containerList}>
+                                        <View style={styles.cardImageView}>
+                                            <Avatar overlayContainerStyle={styles.overlayAvatarContainer} rounded size={80} source={{ uri: (this.normalizeText(this.serverBaseRoute + item.imagen)) }} renderPlaceholderContent={<ActivityIndicator size="large" color="#0000ff" />} />
+                                        </View>
+                                        <View style={{ flex: 1 }}>
+                                            <View >
+                                                <Text style={styles.priceStyle}>{item.cantidad} x {item.precio} = $ {(item.cantidad * item.precio).toFixed(2)}</Text>
                                             </View>
-                                            <View style={{ flex: 1 }}>
-                                                <View >
-                                                    <Text style={styles.priceStyle}>{item.cantidad} x {item.precio} = $ {(item.cantidad * item.precio).toFixed(2)}</Text>
-                                                </View>
-                                                <View>
-                                                    <Text style={styles.nameTextStyle}>{item.nombre}</Text>
-                                                </View>
+                                            <View>
+                                                <Text style={styles.nameTextStyle}>{item.nombre}</Text>
                                             </View>
                                         </View>
                                     </View>
                                 </View>
-                            } />
+                            </View>
+                        } />
 
-                    </View>
-                        <View >
-                            {this.props.historyCartSelected.direccion !== null ? (
-                            <View style={{ height: 150 }}>
-                                <Text style={styles.sectionTitleTextStyle}>Dirección de entrega</Text>
-                                <Text style={{ margin: 5, color: "blue", fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.parseAdress(this.props.historyCartSelected.direccion)}</Text>
-                                <View style={{flex:1}}>
-                                    {this.props.historyCartSelected.zona != undefined ? (
-                                        <View style={{flex:1}}>
-                                            <Text style={styles.sectionTitleTextStyle}> Detalles de la zona de entrega</Text>
-                                            <ScrollView style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10 }}>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={{ fontSize: 12, fontWeight: 'bold' }}>Zona de entrega: </Text>
-                                                    <Text style={{ fontSize: 12 }}>{this.props.historyCartSelected.zona.nombre}</Text>
-                                                </View>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <Text style={{ fontSize: 12, fontWeight: 'bold' }}>Cierre de pedidos: </Text>
-                                                    <Text style={{ fontSize: 12 }}>{this.parseDate(this.props.historyCartSelected.zona.fechaCierrePedidos)}</Text>
-                                                </View>
-                                                <Text style={{ fontStyle: 'italic' }}>{this.props.historyCartSelected.zona.descripcion}</Text>
-                                            </ScrollView>
-                                        </View>
-                                    ) : (
-                                        <View style={{flex:1}}>
+                </View>
+                {this.props.historyCartSelected.aliasGrupo !== null ?
+                    (
+                        <View>
+                            <Text style={styles.sectionTitleTextStyle}>Realizado en el grupo</Text>
+                            <Text style={{ margin: 5, color: "blue", fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.props.historyCartSelected.aliasGrupo}</Text>
+                        </View>
+                    )
+                    : (null)
+                }
+                <View >
+                    {this.props.historyCartSelected.direccion !== null ? (
+                        <View style={{ height: 150 }}>
+                            <Text style={styles.sectionTitleTextStyle}>Dirección de entrega</Text>
+                            <Text style={{ margin: 5, color: "blue", fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.parseAdress(this.props.historyCartSelected.direccion)}</Text>
+                            <View style={{ flex: 1 }}>
+                                {this.props.historyCartSelected.zona != undefined ? (
+                                    <View style={{ flex: 1 }}>
+                                        <Text style={styles.sectionTitleTextStyle}> Detalles de la zona de entrega</Text>
+                                        <ScrollView style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10 }}>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text style={{ fontSize: 12, fontWeight: 'bold' }}>Zona de entrega: </Text>
+                                                <Text style={{ fontSize: 12 }}>{this.props.historyCartSelected.zona.nombre}</Text>
+                                            </View>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text style={{ fontSize: 12, fontWeight: 'bold' }}>Cierre de pedidos: </Text>
+                                                <Text style={{ fontSize: 12 }}>{this.parseDate(this.props.historyCartSelected.zona.fechaCierrePedidos)}</Text>
+                                            </View>
+                                            <Text style={{ fontStyle: 'italic' }}>{this.props.historyCartSelected.zona.descripcion}</Text>
+                                        </ScrollView>
+                                    </View>
+                                ) : (
+                                        <View style={{ flex: 1 }}>
                                             <Text style={styles.sectionTitleTextStyle}> Detalles de la zona de entrega</Text>
                                             <Text style={{ fontSize: 13, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10, fontStyle: 'italic', textAlign: "center" }}>
                                                 La entrega fue coordinada con el vendedor
                                             </Text>
                                         </View>
-                                        )}
-                                </View>
-                            </View>
-                            ):(
-                                <View>
-                                {this.props.historyCartSelected.puntoDeRetiro !== undefined ? (
-                                    <View style={{height:130}}>
-                                    <Text style={styles.sectionTitleTextStyle}>Punto de retiro seleccionado</Text>
-                                    <ScrollView style={{ flex: 5, marginLeft:20, marginRight:10, marginBottom:10, marginTop:10 }}>
-                                        <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{this.props.historyCartSelected.puntoDeRetiro.nombre}</Text>
-                                        <Text style={{ color: "blue" }}>{this.parseAdress(this.props.historyCartSelected.puntoDeRetiro.direccion)}</Text>
-                                        <Text style={{ fontSize: 14,  }}>{this.props.historyCartSelected.puntoDeRetiro.mensaje}</Text>
-                                    </ScrollView>
-                                    </View>
-                                    ) : (null)}
-                                </View>
-                            )}
-                            <View style={{backgroundColor: "black", }}>
-                                <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1,}}>
-                                    <View style={styles.singleItemContainer}>
-                                        <Text style={styles.totalPriceCartStyle}> Total : $ {this.obtainTotalPrice()} </Text>
-                                    </View>
-                                </View>
+                                    )}
                             </View>
                         </View>
+                    ) : (
+                            <View>
+                                {this.props.historyCartSelected.puntoDeRetiro !== undefined ? (
+                                    <View style={{ height: 130 }}>
+                                        <Text style={styles.sectionTitleTextStyle}>Punto de retiro seleccionado</Text>
+                                        <ScrollView style={{ flex: 5, marginLeft: 20, marginRight: 10, marginBottom: 10, marginTop: 10 }}>
+                                            <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{this.props.historyCartSelected.puntoDeRetiro.nombre}</Text>
+                                            <Text style={{ color: "blue" }}>{this.parseAdress(this.props.historyCartSelected.puntoDeRetiro.direccion)}</Text>
+                                            <Text style={{ fontSize: 14, }}>{this.props.historyCartSelected.puntoDeRetiro.mensaje}</Text>
+                                        </ScrollView>
+                                    </View>
+                                ) : (null)}
+                            </View>
+                        )}
+                    <View style={{ backgroundColor: "black", }}>
+                        <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                            <View style={styles.singleItemContainer}>
+                                <Text style={styles.totalPriceCartStyle}> Total : $ {this.obtainTotalPrice()} </Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
             </View>
         )
     }
@@ -175,7 +185,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5.46,
 
         elevation: 9,
-        borderBottomWidth:0,
+        borderBottomWidth: 0,
     },
     rightHeaderButton: {
         backgroundColor: '#66000000',
@@ -277,7 +287,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "grey",
-        backgroundColor:"white",
+        backgroundColor: "white",
         marginLeft: 20,
         marginRight: 20,
     },

@@ -1,5 +1,3 @@
-import Invitations from "../containers/GroupsComponentsContainers/Invitations";
-
 export const RESETSTATE = 'RESETSTATE';
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';

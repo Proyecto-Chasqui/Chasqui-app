@@ -35,25 +35,25 @@ class ItemInfoCartView extends React.PureComponent {
         );
     }
 
-    getGroups(){
-        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
-            this.props.actions.groupsData(res.data);     
-        }).catch( (error) => {
+    getGroups() {
+        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
+            this.props.actions.groupsData(res.data);
+        }).catch((error) => {
             console.log(error);
-            if (error.response) {                
-            Alert.alert(
-                'Error Grupos',
-                error.response.data.error,
-                [
-                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
-                ],
-                { cancelable: false },
-            );
-              } else if (error.request) {
+            if (error.response) {
+                Alert.alert(
+                    'Error Grupos',
+                    error.response.data.error,
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            } else if (error.request) {
                 Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-              } else {
+            } else {
                 Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
-              }
+            }
         });
     }
 
@@ -156,29 +156,37 @@ class ItemInfoCartView extends React.PureComponent {
             console.log("error", error);
         });
     }
-    alertGroupConfirm(){
+    alertGroupConfirm() {
         Alert.alert(
             'Aviso',
-            '¿Esta seguro de confirmar el pedido del grupo '+ this.props.shoppingCartSelected.aliasGrupo + '? una vez confirmado, no podrá cambiarlo.',
+            '¿Esta seguro de confirmar el pedido del grupo ' + this.props.shoppingCartSelected.aliasGrupo + '? una vez confirmado, no podrá cambiarlo.',
             [
                 { text: 'No', onPress: () => null },
-                { text: 'Si', onPress: () => this.confirmCartOnGroup('Su pedido en el grupo '+ this.props.shoppingCartSelected.aliasGrupo +' fue confirmado correctamente. Deberá esperar a que el administrador confirme el pedido colectivo para que se confirme por completo.')},
+                { text: 'Si', onPress: () => this.confirmCartOnGroup('Su pedido en el grupo ' + this.props.shoppingCartSelected.aliasGrupo + ' fue confirmado correctamente. Deberá esperar a que el administrador confirme el pedido colectivo para que se confirme por completo.') },
             ],
             { cancelable: false },
         );
-        
+
     }
 
     goToConfirm() {
-        if(this.props.shoppingCartSelected.idGrupo !==null){
+        if (this.props.shoppingCartSelected.idGrupo !== null) {
             //validar que sea admin del grupo y advertir que no esta alcanzando el monto minimo.
             this.refreshExpiration();
             this.alertGroupConfirm();
-            }else{
+        } else {
             this.refreshExpiration()
             this.props.functionShow();
             this.navigation.navigate('ConfirmarPedido')
-         }
+        }
+    }
+
+    getUnreadNotifications() {
+        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas', { withCredentials: true }).then(res => {
+            this.props.actions.unreadNotifications(res.data);
+        }).catch((error) => {
+            console.log(error);
+        });
     }
 
     confirmCartOnGroup(text) {
@@ -189,7 +197,8 @@ class ItemInfoCartView extends React.PureComponent {
             }, { withCredentials: true }).then(res => {
                 this.getShoppingCarts(text);
                 this.props.actions.shoppingCartUnselected();
-                this.getGroups()
+                this.getUnreadNotifications();
+                this.getGroups();
             }).catch((error) => {
                 this.setState({ showWaitSign: false })
                 console.log("error en confirm cart group", error);
@@ -253,6 +262,17 @@ class ItemInfoCartView extends React.PureComponent {
         }
     }
 
+    findGroupName() {
+        let nombre = "Error grupo desconocido"
+        let idGrupo = this.props.shoppingCartSelected.idGrupo
+        this.props.groupsData.map((group)=>{
+            if(group.id === idGrupo){
+                nombre = group.alias;
+            }
+        })
+        return nombre;
+    }
+
     render() {
         if (this.props.shoppingCartSelected.id === undefined) {
             return (
@@ -308,6 +328,19 @@ class ItemInfoCartView extends React.PureComponent {
             <View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
                 <View style={{ height: Dimensions.get("window").height - 255 }}>
+
+
+                    {this.props.shoppingCartSelected.idGrupo === null ? (null) : (
+                        <View style={{ backgroundColor: '#ebedeb', flexDirection: "row", justifyContent: this.setStyleDistance(), borderBottomColor: "#dfdfdf", borderBottomWidth: 1 }}>
+                            <View style={{ backgroundColor: 'transparent', flexDirection: "row", borderRadius: 5, marginTop: 5, marginBottom: 5 }}>
+                                <Text style={{ fontSize: 15, fontWeight: "bold", textAlign:"center", marginStart:5,marginEnd:5 }}> {this.findGroupName()} </Text>
+                            </View>
+                            <View>
+
+                            </View>
+                        </View>
+                    )}
+
                     <View style={{ backgroundColor: '#ebedeb', flexDirection: "row", justifyContent: this.setStyleDistance(), borderBottomColor: "#dfdfdf", borderBottomWidth: 1 }}>
                         <View style={{ backgroundColor: 'white', flexDirection: "row", borderRadius: 5, marginTop: 5, marginBottom: 5 }}>
                             {this.props.shoppingCartSelected.idGrupo === null ?
@@ -315,6 +348,7 @@ class ItemInfoCartView extends React.PureComponent {
                                 :
                                 (<Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_grupal.png')} />)}
                         </View>
+
                         {this.showMinAmount() ?
                             (
                                 <View style={{ backgroundColor: 'white', marginTop: 5, marginBottom: 5, flexDirection: "row", justifyContent: "center", alignItems: "center", borderColor: "grey", borderWidth: 1, borderRadius: 5 }}>
@@ -335,6 +369,8 @@ class ItemInfoCartView extends React.PureComponent {
 
                         </View>
                     </View>
+
+
                     {this.props.shoppingCartSelected.productosResponse.length == 0 ?
                         (
                             <View style={stylesListCard.viewSearchErrorContainer}>
@@ -390,10 +426,11 @@ const stylesListCard = StyleSheet.create({
     viewSearchErrorContainer: {
         height: "100%",
         justifyContent: "center",
+        flex:1,
     },
 
     viewErrorContainer: {
-        marginTop: 0
+        marginTop: 0,
     },
 
     errorText: {
@@ -414,7 +451,8 @@ const stylesListCard = StyleSheet.create({
         borderRadius: 50,
         width: 100,
         height: 100,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        borderWidth:2,
     },
 
     cartIconOkContainer: {
@@ -422,7 +460,8 @@ const stylesListCard = StyleSheet.create({
         borderRadius: 50,
         width: 100,
         height: 100,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        borderWidth:2,
     },
 
     searchIconError: {

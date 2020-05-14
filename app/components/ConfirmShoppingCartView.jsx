@@ -216,6 +216,14 @@ class ConfirmShoppingCartView extends React.PureComponent {
         });
     }
 
+    getUnreadNotifications() {
+        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas', { withCredentials: true }).then(res => {
+            this.props.actions.unreadNotifications(res.data);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     confirmCart(){        
         this.setState({ showWaitSign: true, loading:true, allownext:false})
         axios.post((this.serverBaseRoute + 'rest/user/pedido/individual/confirmar'),{
@@ -227,6 +235,7 @@ class ConfirmShoppingCartView extends React.PureComponent {
             comentario: this.state.comment,
         },{withCredentials: true}).then(res => {
                 this.getShoppingCarts();
+                this.getUnreadNotifications();
         }).catch((error) => {
             this.setState({ showWaitSign: false, loading:false, allownext:true})
             Alert.alert(
