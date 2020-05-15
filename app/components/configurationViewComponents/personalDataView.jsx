@@ -229,9 +229,13 @@ class PersonalDataView extends React.PureComponent {
                         this.getPersonalData()
                         this.flushErrors();
                         Alert.alert('Aviso', 'Los datos fueron actualizados correctamente');
-                    }).catch(function (error) {
+                    }).catch((error) =>{
                         this.flushErrors();
-                        this.setState({ dataChange: true, isVisible: false })
+                        this.setState({
+                            sendingData: false,
+                            dataChange: false,
+                            isVisible: false,
+                        })
                         Alert.alert('Error', 'ocurrio un error al intentar actualizar los datos');
                     });
             } else {

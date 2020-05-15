@@ -4,7 +4,7 @@ import { Input, Image, Button, Overlay } from 'react-native-elements';
 import { Formik } from 'formik';
 import axios from 'axios';
 import GLOBALS from '../Globals';
-
+import base64 from 'react-native-base64';
 
 class LoginView extends React.PureComponent {
   constructor(props) {
@@ -17,7 +17,7 @@ class LoginView extends React.PureComponent {
     this.state = {
       emailRecover: '',
       isVisible: false,
-      emailErrorRecover:'',
+      emailErrorRecover: '',
       dataChange: false,
     }
   }
@@ -32,61 +32,99 @@ class LoginView extends React.PureComponent {
     });
   }
 
-  reLogin(){
+  reLogin() {
     axios.post(this.serverBaseRoute + 'rest/client/sso/singIn', {
-        email: this.props.user.email,
-        password: this.props.user.password
-      },{withCredentials: true,})
-        .then(res => {
-          let userData = res.data
-          userData.password = values.contraseña
-          this.login(userData);
-          this.setPassword(values.contraseña);
-        }).catch((error) => {
-            console.log("password", error.response.data)
-            console.log("error on log relogin", error.request)
-          if (error.response) {
-            if( error.response.data.error === "Usuario o Password incorrectos!"){
-              Alert.alert(
-                'Advertencia',
-                'Usuario o Password incorrectos!',
-                [
-                    { text: 'Entendido', onPress: () => null },
-                ],
-                { cancelable: false },
+      email: this.props.user.email,
+      password: this.props.user.password
+    }, { withCredentials: true, })
+      .then(res => {
+        let userData = res.data
+        userData.password = values.contraseña
+        this.login(userData);
+        this.setPassword(values.contraseña);
+      }).catch((error) => {
+        console.log("password", error.response.data)
+        console.log("error on log relogin", error.request)
+        if (error.response) {
+          if (error.response.data.error === "Usuario o Password incorrectos!") {
+            Alert.alert(
+              'Advertencia',
+              'Usuario o Password incorrectos!',
+              [
+                { text: 'Entendido', onPress: () => null },
+              ],
+              { cancelable: false },
             );
-            }else{
-              Alert.alert(
-                'Advertencia',
-                'ocurrio un error al tratar de comunicarse con el servidor, debe re ingresar',
-                [
-                    { text: 'Entendido', onPress: () => null },
-                ],
-                { cancelable: false },
-            );
-            }
-            
-          } else if (error.request) {
-            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
           } else {
-            Alert.alert('Error', "Ocurrio un error al intentar ingresar, intente más tarde o verifique su conectividad.");
+            Alert.alert(
+              'Advertencia',
+              'ocurrio un error al tratar de comunicarse con el servidor, debe re ingresar',
+              [
+                { text: 'Entendido', onPress: () => null },
+              ],
+              { cancelable: false },
+            );
           }
-        });
+
+        } else if (error.request) {
+          Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+        } else {
+          Alert.alert('Error', "Ocurrio un error al intentar ingresar, intente más tarde o verifique su conectividad.");
+        }
+      });
+  }
+  //usado para registrar en el server su "login", probablemente sea necesario crear una contramedida
+  // del lado del servidor cuando se crean 401 unautorized.
+  getPersonalData(data, values) {
+    console.log("getting personal data", data);
+    const token = base64.encode(`${data.email}:${data.token}`);
+    axios.get(this.serverBaseRoute + 'rest/user/adm/read', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${token}`
+      }
+      , withCredentials: true
+    }).then(res => {
+      let userData = data
+      userData.password = values.contraseña
+      this.setPassword(values.contraseña);
+      this.login(userData);
+    }).catch((error) => {
+      Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
+    });
   }
 
   handleSubmit(values) {
     axios.post(this.serverBaseRoute + 'rest/client/sso/singIn', {
       email: values.email,
       password: values.contraseña
-    },{withCredentials: true})
+    }, { withCredentials: true })
       .then(res => {
-        let userData = res.data
-        userData.password = values.contraseña
-        this.login(userData);
-        this.setPassword(values.contraseña);
-      }).catch( (error) => {
+        this.getPersonalData(res.data, values)
+      }).catch((error) => {
+        console.log("password", error.response.data)
+        console.log("error on log relogin", error.request)
         if (error.response) {
-          this.reLogin()
+          if (error.response.data.error === "Usuario o Password incorrectos!") {
+            Alert.alert(
+              'Advertencia',
+              'Usuario o Password incorrectos!',
+              [
+                { text: 'Entendido', onPress: () => null },
+              ],
+              { cancelable: false },
+            );
+          } else {
+            Alert.alert(
+              'Advertencia',
+              'ocurrio un error al tratar de comunicarse con el servidor, debe re ingresar',
+              [
+                { text: 'Entendido', onPress: () => null },
+              ],
+              { cancelable: false },
+            );
+          }
+
         } else if (error.request) {
           Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
         } else {
@@ -100,13 +138,13 @@ class LoginView extends React.PureComponent {
     this.setState({ emailRecover: '', isVisible: false })
   }
 
-  validRecoverEmail(){
+  validRecoverEmail() {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
     return reg.test(this.state.emailRecover)
   }
 
-  showErrorEmailRecover(){
-    this.setState({emailErrorRecover: 'Ingrese un email valido'})
+  showErrorEmailRecover() {
+    this.setState({ emailErrorRecover: 'Ingrese un email valido' })
   }
 
   handleSubmitRecover() {
@@ -117,9 +155,9 @@ class LoginView extends React.PureComponent {
             { text: 'Entendido', onPress: () => this.resetRecover() }
           ],
             { cancelable: false });
-            this.setState({emailErrorRecover: ''})
+          this.setState({ emailErrorRecover: '' })
         }).catch((error) => {
-          this.setState({emailErrorRecover: ''})
+          this.setState({ emailErrorRecover: '' })
           if (error.response) {
             Alert.alert('Error', error.response.data.error);
           } else if (error.request) {
@@ -128,14 +166,14 @@ class LoginView extends React.PureComponent {
             Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
           }
         });
-    }else{
+    } else {
       this.showErrorEmailRecover()
     }
 
   }
 
   handleChangeRecover(text) {
-    this.setState({ emailRecover: text, dataChange:true})
+    this.setState({ emailRecover: text, dataChange: true })
   }
 
   goToRegister() {
@@ -166,17 +204,17 @@ class LoginView extends React.PureComponent {
             <View>
               <Text style={styles.emailTitle}>Ingrese su correo</Text>
             </View>
-            <View style={{height:60}}>
-            <Input
-              inputStyle={{ color: "black", marginLeft: 10, }}
-              placeholderTextColor="black"
-              onChangeText={text => this.handleChangeRecover(text)}
-              placeholder=''
-              errorStyle={{ color: 'red' }}
-              errorMessage={this.state.emailErrorRecover}
-              leftIcon={{ type: 'font-awesome', name: 'envelope' }}
-              value={this.state.emailRecover}
-            />
+            <View style={{ height: 60 }}>
+              <Input
+                inputStyle={{ color: "black", marginLeft: 10, }}
+                placeholderTextColor="black"
+                onChangeText={text => this.handleChangeRecover(text)}
+                placeholder=''
+                errorStyle={{ color: 'red' }}
+                errorMessage={this.state.emailErrorRecover}
+                leftIcon={{ type: 'font-awesome', name: 'envelope' }}
+                value={this.state.emailRecover}
+              />
             </View>
             <View style={styles.buttonRecoverContainer}>
               <Button buttonStyle={{ width: 140, backgroundColor: 'transparent', borderColor: "grey", borderWidth: 1 }} titleStyle={{ fontSize: 20, color: "black" }} onPress={() => this.resetRecover()} title="Cancelar" />
@@ -185,14 +223,14 @@ class LoginView extends React.PureComponent {
           </View>
         </Overlay>
         <View style={styles.titleContainer}>
-                <Text style={styles.title}>Bienvenidxs</Text>
+          <Text style={styles.title}>Bienvenidxs</Text>
         </View>
-              <View style={styles.imageContainer}>
-                <Image
-                  source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
-                  style={styles.image}
-                />
-              </View>
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+            style={styles.image}
+          />
+        </View>
         <Formik
           initialValues={{ email: '', contraseña: '' }}
           onSubmit={values => this.handleSubmit(values)}
@@ -274,7 +312,7 @@ const styles = StyleSheet.create({
   },
 
   principalContainer: {
-    flex:1,
+    flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
     backgroundColor: 'rgba(51, 102, 255, 1)',
@@ -296,7 +334,7 @@ const styles = StyleSheet.create({
 
   image: {
     width: 278 / 2.5,
-    height: 321 /  2.5,
+    height: 321 / 2.5,
     resizeMode: 'contain',
   },
 

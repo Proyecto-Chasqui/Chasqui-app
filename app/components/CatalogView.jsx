@@ -49,6 +49,16 @@ class CatalogView extends React.Component {
 
     load() {
         if (this.props.vendorSelected.id !== undefined) {
+            if(this.props.user.id !== 0){
+                this.getShoppingCarts(this.props);
+                this.getUnreadNotifications();
+                this.props.actions.shoppingCartUnselected();
+                this.getPersonalData(this.props);
+                this.getAdressesData(this.props);
+            }else{
+                this.props.actions.shoppingCartUnselected();
+                this.shoppingCarts([]);
+            }
             this.vendorId = this.props.vendorSelected.id;
             this.getProducts(this.props);
             this.getProducers(this.props);
@@ -64,16 +74,7 @@ class CatalogView extends React.Component {
             if(this.props.vendorSelected.few.gcc){
                 this.getGroups();
             }
-            if(this.props.user.id !== 0){
-                this.getShoppingCarts(this.props);
-                this.getUnreadNotifications();
-                this.props.actions.shoppingCartUnselected();
-                this.getPersonalData(this.props);
-                this.getAdressesData(this.props);
-            }else{
-                this.props.actions.shoppingCartUnselected();
-                this.shoppingCarts([]);
-            }
+
         }
     }
 

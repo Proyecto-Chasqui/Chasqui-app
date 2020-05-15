@@ -269,7 +269,8 @@ const styles = StyleSheet.create({
     },
 
     viewErrorContainer: {
-        marginTop: 150
+        flex:1,
+        justifyContent:"center"
     },
 
     errorText: {
@@ -290,7 +291,8 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         width: 100,
         height: 100,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        borderWidth:2,
     },
 
     cartIconOkContainer: {
