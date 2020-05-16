@@ -113,7 +113,7 @@ class GroupsView extends React.PureComponent {
     calculateAmount(miembros) {
         let count = 0
         miembros.map((miembro) => {
-            if (miembro.pedido != null) {
+            if (miembro.pedido !== null) {
                 if (miembro.pedido.estado === "CONFIRMADO") {
                     count = count + miembro.pedido.montoActual
                 }

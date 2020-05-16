@@ -51,14 +51,23 @@ class ButtonOpenIndividualCart extends React.PureComponent {
                 </View>)
         } else {
             return (
-                <View style={styles.selectorContainer}>
-                    <Button disabled={!this.props.vendorSelected.ventasHabilitadas} titleStyle={styles.titleButtonNewCartReveal} buttonStyle={styles.buttonNewCartButton} containerStyle={styles.containerButtonNewCart} type="clear" title="Abrir Pedido Individual"
-                        onPress={() => this.props.actionFunction()} icon={
-                            <View style={{ backgroundColor: "white", borderColor: "black", borderRadius: 5, borderWidth: 1, marginLeft: 10 }}>
-                                <Image style={styles.badgeImage} source={require('../../vendorsViewComponents/badge_icons/compra_individual.png')} />
-                            </View>
-                        }
+                <View style={{
+                    borderWidth: 2,
+                    borderRadius: 3,
+                    margin: 10,
+                    borderColor: "#D8D8D8",
+                }}>
+                <View style={{ flex: 1, justifyContent: "center", borderColor: "#D8D8D8", borderWidth: 2, borderBottomWidth: 0, borderTopRightRadius: 5, borderTopLeftRadius: 5, marginLeft: -2, marginRight: -2, marginTop: -2, alignItems: 'center', flexDirection: "row", backgroundColor: 'rgba(51, 102, 255, 1)' }}>
+                        <Text style={{ fontWeight: 'bold', color: "white", fontSize: 15, marginRight: 20, textAlign:"center" }}> Pedido Individual </Text>
+                        <View style={{ backgroundColor: "white", borderColor: "black", borderRadius: 5, borderWidth: 1, margin: 4 }}>
+                            <Image style={styles.badgeImage} source={require('../../vendorsViewComponents/badge_icons/compra_individual.png')} />
+                        </View>
+                    </View>
+                    <View style={{ margin: 15 , borderWidth:2, borderRadius:5, borderColor:"#D8D8D8"}}>
+                    <Button disabled={!this.props.vendorSelected.ventasHabilitadas} titleStyle={styles.titleButtonNewCartReveal} buttonStyle={styles.buttonNewCartButton} containerStyle={styles.containerButtonNewCart} type="clear" title="Abrir Pedido"
+                        onPress={() => this.props.actionFunction()} 
                         iconRight />
+                    </View>
                 </View>
             )
         }
@@ -85,7 +94,8 @@ const styles = StyleSheet.create({
     },
 
     buttonNewCartButton: {
-        backgroundColor: 'rgba(51, 102, 255, 1)'
+        backgroundColor: 'rgba(51, 102, 255, 1)',
+
     },
     badgeImage: { height: 25, width: 25 },
     titleButtonNewCartReveal: {

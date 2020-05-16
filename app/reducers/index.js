@@ -28,13 +28,15 @@ import groupsData from './groupsData';
 import groupSelected from './groupSelected';
 import memberSelected from './memberSelected';
 import invitationsData from './invitationsData';
+import groupHistoryShoppingCarts from './groupHistoryShoppingCarts';
+import groupHistoryShoppingCartSelected from './groupHistoryShoppingCartSelected';
 
 const rootReducer = combineReducers({invitationsData, groupsData,groupSelected,memberSelected,
      unreadNotifications, resetState, user, vendors, vendorTags,
      products, seals, sealsSelected, vendorSelected, productSelected, producers,
      producerSelected, productSeals, productionSeals, productCategories, zones, sellerPoints,
      personalData, adressesData, shoppingCartSelected, shoppingCarts,historyShoppingCarts, allProducts,
-     historyCartSelected
+     historyCartSelected, groupHistoryShoppingCarts, groupHistoryShoppingCartSelected
 });
 
 export default rootReducer;

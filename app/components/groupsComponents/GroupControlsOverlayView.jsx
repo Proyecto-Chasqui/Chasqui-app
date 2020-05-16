@@ -172,6 +172,11 @@ class GroupControlsOverlayView extends React.PureComponent {
         this.props.navigation.navigate("GestionarMiembros")
     }
 
+    goToHistory(){
+        this.props.showControls()
+        this.props.navigation.navigate("HistorialPedidosGrupo")
+    }
+
     goToGroups(text) {
         this.setState({ loading: true })
         axios.get((this.serverBaseRoute + 'rest/user/gcc/all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
@@ -266,6 +271,8 @@ class GroupControlsOverlayView extends React.PureComponent {
         }
     }
 
+
+
     render() {
         return (
             <Overlay containerStyle={styles.overlayContainer}
@@ -297,6 +304,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                                         />
                                     }
                                     raised
+                                    onPress={()=>this.goToHistory()}
                                 />
                                 <Button
                                     title="Gestionar grupo"
@@ -366,6 +374,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                                             />
                                         }
                                         raised
+                                        onPress={()=>this.goToHistory()}
                                     />
                                     <Button
                                         disabled={this.hasCartConfirmed()}

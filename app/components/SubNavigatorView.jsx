@@ -18,6 +18,8 @@ import NewGroup from '../containers/GroupsComponentsContainers/NewGroup';
 import confirmCartGroupView from '../containers/ConfirmCartGroup';
 import AdministrationMembersView from '../containers/GroupsComponentsContainers/AdministrationMembers';
 import InvitationsView from '../containers/GroupsComponentsContainers/Invitations';
+import GroupHistoryShoppingCartsView from '../containers/GroupsComponentsContainers/GroupHistoryShoppingCarts';
+import GroupHistoryShoppingCartDetailView from '../containers/GroupsComponentsContainers/GroupHistoryShoppingCartDetail';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
@@ -75,6 +77,8 @@ class SubNavigatorView extends React.PureComponent{
                   <Stack.Screen name='ConfirmarColectivo' component={confirmCartGroupView} options={{headerShown:false}}  />  
                   <Stack.Screen name='GestionarMiembros' component={AdministrationMembersView} options={{headerShown:false}}  />                   
                   <Stack.Screen name='Invitaciones' component={InvitationsView} options={{headerShown:false}}  />                   
+                  <Stack.Screen name='HistorialPedidosGrupo' component={GroupHistoryShoppingCartsView} options={{headerShown:false}}  />                   
+                  <Stack.Screen name='DetalleHistorialPedidosGrupo' component={GroupHistoryShoppingCartDetailView} options={{headerShown:false}}  />                   
                   
              </Stack.Navigator>
           );
