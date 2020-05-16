@@ -196,7 +196,7 @@ class AdministrationMembersView extends React.PureComponent {
                     'Error Grupos',
                     error.response.data.error,
                     [
-                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        { text: 'Entendido', onPress: () => null },
                     ],
                     { cancelable: false },
                 );
@@ -262,8 +262,52 @@ class AdministrationMembersView extends React.PureComponent {
         return member.invitacion === "NOTIFICACION_NO_LEIDA";
     }
 
+    isUser(member){
+        if(member.email === this.props.user.email){
+            return(
+                {
+                    backgroundColor: "white",
+                    alignItems: "center",
+                    flex: 1,
+                    borderWidth: 2,
+                    margin: 4,
+                    borderRadius: 5,
+                    shadowColor: "#000",
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    borderColor:"blue",
+                    elevation: 5,
+                }
+            )
+        }else{
+            return(
+                {
+                    backgroundColor: "white",
+                    alignItems: "center",
+                    flex: 1,
+                    borderWidth: 1,
+                    margin: 4,
+                    borderRadius: 5,
+                    shadowColor: "#000",
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+            
+                    elevation: 5,
+                }
+            )
+        }
+    }
+
     renderItem = ({ item }) => (
-        <View style={styles.groupItem}>
+        <View style={this.isUser(item)}>
             <View style={{ margin: 2, marginStart: 10, flexDirection: "row", alignItems: "center", alignSelf: "stretch" }}>
                 {item.avatar !== null ? (
                     <Image
@@ -344,7 +388,7 @@ class AdministrationMembersView extends React.PureComponent {
                 <Overlay
                     isVisible={this.state.isVisible}
                     width="90%"
-                    height={290}
+                    height={245}
                     onBackdropPress={() => this.resetInvitation()}
                     animationType="fade"
                 >
@@ -354,9 +398,6 @@ class AdministrationMembersView extends React.PureComponent {
                         </View>
                         <View style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}>
                             <Text style={{ fontSize: 18, alignSelf: 'center' }}>Escriba el correo del usuario al que desea invitar.</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.emailTitle}>Correo</Text>
                         </View>
                         <View style={{ height: 60 }}>
                             <Input

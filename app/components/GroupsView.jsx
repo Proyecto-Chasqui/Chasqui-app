@@ -231,7 +231,7 @@ class GroupsView extends React.PureComponent {
                             </View>
                         </View>
                         <View style={{ backgroundColor: "#ebedeb", marginBottom: 3, flexDirection: "row", justifyContent: "center", alignItems: "center", borderColor: "black", borderWidth: 1, borderRadius: 5 }}>
-                            <Text style={{ fontSize: 16, fontWeight: "bold" }}> Min. Monto: </Text>
+                            <Text style={{ fontSize: 16, fontWeight: "bold" }}> Min. Monto Grupal: </Text>
                             <View style={{ flexDirection: "row", margin: 3 }}>
                                 <Text style={{ textAlign: "center", fontSize: 16, fontWeight: "bold" }}>${this.props.vendorSelected.montoMinimo}</Text>
                                 <View style={{ marginLeft: 5, marginRight: 5 }}>
@@ -274,7 +274,7 @@ class GroupsView extends React.PureComponent {
                             <Icon name="arrow-left" size={20} color="white" type='font-awesome' />
                         }
                         buttonStyle={styles.rightHeaderButton}
-                        onPress={() => this.props.navigation.goBack()}
+                        onPress={() => this.props.navigation.popToTop()}
                     />
                     <Image
                         style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}

@@ -19,19 +19,23 @@ class LoginView extends React.PureComponent {
       isVisible: false,
       emailErrorRecover: '',
       dataChange: false,
+      loading: false,
     }
   }
 
   loginAsGuest() {
-    this.login({
-      email: "invitadx@invitadx.com",
-      token: "invitado",
-      id: 0,
-      nickname: "invitadx",
-      avatar: "",
-    });
+    
+    if(!this.state.loading){
+      this.login({
+        email: "invitadx@invitadx.com",
+        token: "invitado",
+        id: 0,
+        nickname: "invitadx",
+        avatar: "",
+      });
+    }
   }
-
+  //deprecado
   reLogin() {
     axios.post(this.serverBaseRoute + 'rest/client/sso/singIn', {
       email: this.props.user.email,
@@ -89,49 +93,53 @@ class LoginView extends React.PureComponent {
       userData.password = values.contraseña
       this.setPassword(values.contraseña);
       this.login(userData);
+      this.setState({loading:false})
     }).catch((error) => {
       Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
     });
   }
 
   handleSubmit(values) {
-    axios.post(this.serverBaseRoute + 'rest/client/sso/singIn', {
-      email: values.email,
-      password: values.contraseña
-    }, { withCredentials: true })
-      .then(res => {
-        this.getPersonalData(res.data, values)
-      }).catch((error) => {
-        console.log("password", error.response.data)
-        console.log("error on log relogin", error.request)
-        if (error.response) {
-          if (error.response.data.error === "Usuario o Password incorrectos!") {
-            Alert.alert(
-              'Advertencia',
-              'Usuario o Password incorrectos!',
-              [
-                { text: 'Entendido', onPress: () => null },
-              ],
-              { cancelable: false },
-            );
+    if (!this.state.loading) {
+      this.setState({loading:true})
+      axios.post(this.serverBaseRoute + 'rest/client/sso/singIn', {
+        email: values.email,
+        password: values.contraseña
+      }, { withCredentials: true })
+        .then(res => {
+          this.getPersonalData(res.data, values)
+        }).catch((error) => {
+          this.setState({loading:false})
+          console.log("password", error.response.data)
+          console.log("error on log relogin", error.request)
+          if (error.response) {
+            if (error.response.data.error === "Usuario o Password incorrectos!") {
+              Alert.alert(
+                'Advertencia',
+                'Usuario o Password incorrectos!',
+                [
+                  { text: 'Entendido', onPress: () => null },
+                ],
+                { cancelable: false },
+              );
+            } else {
+              Alert.alert(
+                'Advertencia',
+                'ocurrio un error al tratar de comunicarse con el servidor, debe re ingresar',
+                [
+                  { text: 'Entendido', onPress: () => null },
+                ],
+                { cancelable: false },
+              );
+            }
+
+          } else if (error.request) {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
           } else {
-            Alert.alert(
-              'Advertencia',
-              'ocurrio un error al tratar de comunicarse con el servidor, debe re ingresar',
-              [
-                { text: 'Entendido', onPress: () => null },
-              ],
-              { cancelable: false },
-            );
+            Alert.alert('Error', "Ocurrio un error al intentar ingresar, intente más tarde o verifique su conectividad.");
           }
-
-        } else if (error.request) {
-          Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-        } else {
-          Alert.alert('Error', "Ocurrio un error al intentar ingresar, intente más tarde o verifique su conectividad.");
-        }
-      });
-
+        });
+    }
   }
 
   resetRecover() {
@@ -177,11 +185,16 @@ class LoginView extends React.PureComponent {
   }
 
   goToRegister() {
+    
+    if(!this.state.loading){
     this.navigation.navigate('Registrarse')
+    }
   }
 
   hideShowPop() {
-    this.setState({ isVisible: !this.state.isVisible })
+    if(!this.state.loading){
+      this.setState({ isVisible: !this.state.isVisible })
+    }
   }
 
   render() {
@@ -262,7 +275,7 @@ class LoginView extends React.PureComponent {
                 />
               </View>
               <View style={styles.buttonContainer}>
-                <Button buttonStyle={{ height: 60, backgroundColor: '#80bfff', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={handleSubmit} title="INGRESAR" />
+                <Button disabled={this.state.loading} loading={this.state.loading} buttonStyle={{ height: 60, backgroundColor: '#80bfff', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={handleSubmit} title="INGRESAR" />
               </View>
               <View style={styles.lowerButtonsContainer} >
                 <View style={styles.leftButton}>

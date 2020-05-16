@@ -1,13 +1,21 @@
 import React from 'react'
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, FlatList, ActivityIndicator, Dimensions, Alert } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, FlatList, ActivityIndicator, Dimensions, Alert,  } from 'react-native';
 import { Card, Badge, Icon, Image, Button, Avatar, Header, ButtonGroup } from 'react-native-elements';
+import {NavigationActions, StackActions} from '@react-navigation/native';
 import GLOBALS from '../../Globals'
+
 
 class HistoryCartBriefingView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.serverBaseRoute = GLOBALS.BASE_URL;
         console.log("cart", this.props.historyCartSelected)
+    }
+
+    goToGroups(){
+        this.props.navigation.dispatch(
+            StackActions.replace('MisGrupos')
+        );
     }
 
     normalizeText(text) {
@@ -49,6 +57,11 @@ class HistoryCartBriefingView extends React.PureComponent {
             return 0
         }
 
+    }
+
+    inWaitingOfGroupConfirmation(){
+        console.log(this.props.historyCartSelected.direccion === null && this.props.historyCartSelected.puntoDeRetiro === null && this.props.historyCartSelected.idGrupo !== null)
+        return (this.props.historyCartSelected.direccion === null && this.props.historyCartSelected.puntoDeRetiro === null && this.props.historyCartSelected.idGrupo !== null)
     }
 
     render() {
@@ -103,13 +116,26 @@ class HistoryCartBriefingView extends React.PureComponent {
                     )
                     : (null)
                 }
+                    {this.inWaitingOfGroupConfirmation()?(
+                        <TouchableOpacity onPress={()=>this.goToGroups()} style={{}}>
+                            <Text style={styles.sectionTitleTextStyle}> Aviso </Text>
+                                <Text style={{ fontSize: 15, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10, fontStyle: 'italic', textAlign: "auto" }}>
+                                    Su pedido dentro del grupo esta confirmado, pero esta a la espera de la <Text style={{fontWeight:"bold", color:"blue"}}> confirmación grupal</Text> por parte del administrador.
+                                </Text>
+                                <Text  style={{ fontSize: 15, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10, fontStyle: 'italic', textAlign: "center" }}>    
+                                    Puede presionar aquí para ir a <Text style={{fontWeight:"bold", color:"blue"}}>Mis grupos</Text>.
+                                </Text>
+                        </TouchableOpacity>
+                    ):(
+                        null
+                    )}
                 <View >
                     {this.props.historyCartSelected.direccion !== null ? (
                         <View style={{ height: 150 }}>
                             <Text style={styles.sectionTitleTextStyle}>Dirección de entrega</Text>
                             <Text style={{ margin: 5, color: "blue", fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.parseAdress(this.props.historyCartSelected.direccion)}</Text>
                             <View style={{ flex: 1 }}>
-                                {this.props.historyCartSelected.zona != undefined ? (
+                                {this.props.historyCartSelected.zona != null ? (
                                     <View style={{ flex: 1 }}>
                                         <Text style={styles.sectionTitleTextStyle}> Detalles de la zona de entrega</Text>
                                         <ScrollView style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10 }}>
@@ -136,7 +162,7 @@ class HistoryCartBriefingView extends React.PureComponent {
                         </View>
                     ) : (
                             <View>
-                                {this.props.historyCartSelected.puntoDeRetiro !== undefined ? (
+                                {this.props.historyCartSelected.puntoDeRetiro !== null ? (
                                     <View style={{ height: 130 }}>
                                         <Text style={styles.sectionTitleTextStyle}>Punto de retiro seleccionado</Text>
                                         <ScrollView style={{ flex: 5, marginLeft: 20, marginRight: 10, marginBottom: 10, marginTop: 10 }}>
@@ -148,6 +174,7 @@ class HistoryCartBriefingView extends React.PureComponent {
                                 ) : (null)}
                             </View>
                         )}
+
                     <View style={{ backgroundColor: "black", }}>
                         <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
                             <View style={styles.singleItemContainer}>

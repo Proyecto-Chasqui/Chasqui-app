@@ -251,7 +251,7 @@ class ItemInfoCartView extends React.PureComponent {
     }
 
     showMinAmount() {
-        return this.props.vendorSelected.few.seleccionDeDireccionDelUsuario
+        return this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.montoMinimo >= 1;
     }
 
     setStyleDistance() {
@@ -271,6 +271,31 @@ class ItemInfoCartView extends React.PureComponent {
             }
         })
         return nombre;
+    }
+    validateGroupAmount(){
+        let idGroup = this.props.shoppingCartSelected.idGrupo;
+        let vgroup = null;
+        let totalAmount = 0;
+        this.props.groupsData.map((group)=>{
+            if(group.id === idGroup){
+                vgroup = group
+            }
+        })
+        if(vgroup !== null){
+            vgroup.miembros.map((member)=>{
+                if(member.pedido !== null){
+                    if(member.pedido.estado === "CONFIRMADO"){
+                        totalAmount = totalAmount + member.pedido.montoActual;
+                    }
+                }
+            })
+        }
+        if(this.props.shoppingCartSelected.idGrupo !== null){
+            if(this.props.shoppingCartSelected.idGrupo === idGroup){
+                totalAmount = totalAmount + this.props.shoppingCartSelected.montoActual;
+            }
+        }
+        return totalAmount > this.props.vendorSelected.montoMinimo;
     }
 
     render() {
@@ -355,11 +380,19 @@ class ItemInfoCartView extends React.PureComponent {
                                     <Text> Min. Monto: </Text>
                                     <View style={{ flexDirection: "row", }}>
                                         <Text style={{ textAlign: "center", }}>${this.props.vendorSelected.montoMinimo}</Text>
+                                        {this.props.shoppingCartSelected.idGrupo === null ? (
                                         <View style={{ marginLeft: 5, marginRight: 5 }}>
                                             {this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo ? (
                                                 <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
                                             ) : (<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
                                         </View>
+                                        ):(
+                                        <View style={{ marginLeft: 5, marginRight: 5 }}>
+                                            {this.validateGroupAmount() ? (
+                                                <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
+                                            ) : (<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
+                                        </View>
+                                        )}
                                     </View>
                                 </View>
                             )

@@ -77,7 +77,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                 'Error',
                 'Ocurrio un error al crear el pedido para el grupo, vuelva a intentar más tarde.',
                 [
-                    { text: 'Entendido', onPress: () => null },
+                    { text: 'Entendido', onPress: () => this.goToGroups("") },
                 ],
                 { cancelable: false },
             );
@@ -172,11 +172,14 @@ class GroupControlsOverlayView extends React.PureComponent {
         this.props.navigation.navigate("GestionarMiembros")
     }
 
-    goToGroups() {
+    goToGroups(text) {
         this.setState({ loading: true })
         axios.get((this.serverBaseRoute + 'rest/user/gcc/all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
             this.props.actions.groupsData(res.data);
-            Alert.alert('Aviso', "Salio del grupo con exito");
+            if(text.length > 0){
+                Alert.alert('Aviso', text);
+            }
+           
             this.setState({ loading: false })
             this.props.navigation.goBack();
         }).catch((error) => {
@@ -204,7 +207,7 @@ class GroupControlsOverlayView extends React.PureComponent {
             idGrupo: this.props.groupSelected.id,
             emailCliente: this.props.user.email
         }, { withCredentials: true }).then(res => {
-            this.goToGroups()
+            this.goToGroups("Salio del grupo con exito")
         }).catch((error) => {
             this.setState({ showWaitSign: false })
             if (error.response) {

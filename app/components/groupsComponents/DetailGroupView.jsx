@@ -68,10 +68,54 @@ class DetailGroupView extends React.PureComponent {
         return this.props.groupSelected.emailAdministrador === member.email
     }
 
+    isUser(member){
+        if(member.email === this.props.user.email){
+            return(
+                {
+                    backgroundColor: "white",
+                    alignItems: "center",
+                    flex: 1,
+                    borderWidth: 2,
+                    margin: 4,
+                    borderRadius: 5,
+                    shadowColor: "#000",
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    borderColor:"blue",
+                    elevation: 5,
+                }
+            )
+        }else{
+            return(
+                {
+                    backgroundColor: "white",
+                    alignItems: "center",
+                    flex: 1,
+                    borderWidth: 1,
+                    margin: 4,
+                    borderRadius: 5,
+                    shadowColor: "#000",
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+            
+                    elevation: 5,
+                }
+            )
+        }
+    }
+
     renderItem = ({ item }) => (
         <View>
         { item.invitacion !== "NOTIFICACION_NO_LEIDA" ?(
-        <TouchableOpacity disabled={this.props.disabledPress} onPress={()=>(this.goToMember(item))} style={styles.groupItem}>
+        <TouchableOpacity disabled={this.props.disabledPress} onPress={()=>(this.goToMember(item))} style={this.isUser(item)}>
             <View style={{ margin: 2, marginStart:10, flexDirection: "row", alignItems: "center", alignSelf:"stretch" }}>
                 <Image
                     style={{ width: 50, height: 50, resizeMode: 'center',  }}

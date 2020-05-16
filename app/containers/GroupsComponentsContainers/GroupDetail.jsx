@@ -5,6 +5,7 @@ import { memberSelected,  logout } from '../../actions';
 
 const mapStateToProps = state => ({
     groupSelected : state.groupSelected,
+    user: state.user,
 });
 
 const mapDispatchToProps = dispatch => ({
