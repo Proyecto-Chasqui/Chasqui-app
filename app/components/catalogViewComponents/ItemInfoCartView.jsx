@@ -207,6 +207,17 @@ class ItemInfoCartView extends React.PureComponent {
         }
     }
 
+    validToConfirm(){
+        if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega) {
+            if (this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo) {
+                this.goToConfirm()
+            } else {
+                this.showAlert("Debe alcanzar el monto minímo para poder confirmar el pedido")
+            }
+        }
+    }
+
+
     confirmCart() {
         if (this.props.shoppingCartSelected.productosResponse == 0) {
             this.showAlertInvalidCart()
@@ -214,12 +225,13 @@ class ItemInfoCartView extends React.PureComponent {
             if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega) {
                 this.goToConfirm()
             }
-
-            if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega) {
-                if (this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo) {
-                    this.goToConfirm()
-                } else {
-                    this.showAlert("Debe alcanzar el monto minímo para poder confirmar el pedido")
+            if(this.props.shoppingCartSelected.idGrupo === null){
+                this.validToConfirm()
+            }else{
+                if(this.isAdminOfGroup()){
+                    this.validToConfirm();
+                }else{
+                    this.goToConfirm();
                 }
             }
 
@@ -250,8 +262,22 @@ class ItemInfoCartView extends React.PureComponent {
         }
     }
 
+    isAdminOfGroup(){
+        let isAdmin = false;
+        this.props.groupsData.map((group)=>{
+            if(group.emailAdministrador === this.props.shoppingCartSelected.cliente.email){
+                isAdmin = true;
+            }
+        })
+        return isAdmin;
+    }
+
     showMinAmount() {
-        return this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.montoMinimo >= 1;
+        if(this.props.shoppingCartSelected.idGrupo !== null){
+            return this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.montoMinimo >= 1 && this.isAdminOfGroup();
+        }else{
+            return this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.montoMinimo >= 1;
+        }
     }
 
     setStyleDistance() {
@@ -296,6 +322,14 @@ class ItemInfoCartView extends React.PureComponent {
             }
         }
         return totalAmount > this.props.vendorSelected.montoMinimo;
+    }
+
+    definteText(){
+        if(this.props.shoppingCartSelected.idGrupo === null){
+            return "Min. Monto: "
+        }else{
+            return "Min. Monto grupal: "
+        }
     }
 
     render() {
@@ -354,17 +388,15 @@ class ItemInfoCartView extends React.PureComponent {
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
                 <View style={{ height: Dimensions.get("window").height - 255 }}>
 
-
-                    {this.props.shoppingCartSelected.idGrupo === null ? (null) : (
+                {this.props.shoppingCartSelected.idGrupo === null ? (null) : (
                         <View style={{ backgroundColor: '#ebedeb', flexDirection: "row", justifyContent: this.setStyleDistance(), borderBottomColor: "#dfdfdf", borderBottomWidth: 1 }}>
-                            <View style={{ backgroundColor: 'transparent', flexDirection: "row", borderRadius: 5, marginTop: 5, marginBottom: 5 }}>
+                            <View style={{flex:1}}>
+                            <Text style={stylesListCard.sectionTitleTextStyle}> Comprando en el grupo </Text>
                                 <Text style={{ fontSize: 15, fontWeight: "bold", textAlign:"center", marginStart:5,marginEnd:5 }}> {this.findGroupName()} </Text>
-                            </View>
-                            <View>
-
                             </View>
                         </View>
                     )}
+
 
                     <View style={{ backgroundColor: '#ebedeb', flexDirection: "row", justifyContent: this.setStyleDistance(), borderBottomColor: "#dfdfdf", borderBottomWidth: 1 }}>
                         <View style={{ backgroundColor: 'white', flexDirection: "row", borderRadius: 5, marginTop: 5, marginBottom: 5 }}>
@@ -377,7 +409,7 @@ class ItemInfoCartView extends React.PureComponent {
                         {this.showMinAmount() ?
                             (
                                 <View style={{ backgroundColor: 'white', marginTop: 5, marginBottom: 5, flexDirection: "row", justifyContent: "center", alignItems: "center", borderColor: "grey", borderWidth: 1, borderRadius: 5 }}>
-                                    <Text> Min. Monto: </Text>
+                                    <Text> {this.definteText()} </Text>
                                     <View style={{ flexDirection: "row", }}>
                                         <Text style={{ textAlign: "center", }}>${this.props.vendorSelected.montoMinimo}</Text>
                                         {this.props.shoppingCartSelected.idGrupo === null ? (
@@ -447,6 +479,19 @@ class ItemInfoCartView extends React.PureComponent {
 }
 
 const stylesListCard = StyleSheet.create({
+
+    sectionTitleTextStyle: {
+        textAlign: "center",
+        fontSize: 16,
+        fontWeight: "bold",
+        backgroundColor: 'rgba(51, 102, 255, 1)',
+        color: "white",
+        marginLeft:-2,
+        marginRight:-2,
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+        borderColor: 'black'
+    },
 
     badgeImage: {
         height: 30,

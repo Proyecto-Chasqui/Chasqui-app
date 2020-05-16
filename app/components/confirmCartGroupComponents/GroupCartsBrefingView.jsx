@@ -57,15 +57,20 @@ class GroupCartBriefingView extends React.PureComponent {
     render() {
 
         return (
-            <View style={{flex:1}}>
+            <View style={{ flex: 1 }}>
                 <View style={stylesListCard.titleContainer}>
-                    <Text style={stylesListCard.adressTitle}>Verifique su compra</Text>
+                    <Text style={stylesListCard.adressTitle}>Información de la compra</Text>
                 </View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
                 <View style={{ height: Dimensions.get("window").height - 265 }}>
+                    <Text style={stylesListCard.sectionTitleTextStyle}>Grupo</Text>
+                    <View style={{backgroundColor:"white"}}>
+                        <Text style={{ fontSize: 16, fontWeight: "bold", textAlign: "center" }}>{this.props.groupSelected.alias}</Text>
+                    </View>
+                    <Text style={stylesListCard.sectionTitleTextStyle}>Pedidos</Text>
                     <DetailGroupView onlyConfirmed={true} hideHeaders={true} navigation={this.props.navigation}></DetailGroupView>
                 </View>
-                <View style={{ }}>
+                <View style={{}}>
                     <View style={{ marginTop: 15 }}>
                         <View style={stylesListCard.singleItemContainer}>
                             <View>
@@ -91,6 +96,17 @@ class GroupCartBriefingView extends React.PureComponent {
 }
 
 const stylesListCard = StyleSheet.create({
+    sectionTitleTextStyle: {
+        textAlign: "center",
+        fontSize: 16,
+        fontWeight: "bold",
+        backgroundColor: 'rgba(51, 102, 255, 1)',
+        color: "white",
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+        borderColor: 'black'
+    },
+
     titleContainer: {
         backgroundColor: 'white',
         shadowColor: "#000",
@@ -182,7 +198,7 @@ const stylesListCard = StyleSheet.create({
     singleItemContainer: {
         flexDirection: "row",
         justifyContent: "space-evenly",
-        alignItems:"center",
+        alignItems: "center",
         marginBottom: 5,
         height: 40,
         borderRadius: 5,

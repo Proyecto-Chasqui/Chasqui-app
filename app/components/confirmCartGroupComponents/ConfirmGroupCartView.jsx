@@ -86,6 +86,10 @@ class ConfirmGroupCartView extends React.PureComponent {
                     <Text style={stylesListCard.adressTitle}>Los datos de su compra</Text>
                 </View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
+                <Text style={stylesListCard.sectionTitleTextStyle}>Grupo</Text>
+                    <View style={{backgroundColor:"white"}}>
+                        <Text style={{ fontSize: 16, fontWeight: "bold", textAlign: "center" }}>{this.props.groupSelected.alias}</Text>
+                    </View>
                 <View >
                     <Text style={stylesListCard.sectionTitleTextStyle}>Su pedido</Text>
                     <DetailGroupView onlyConfirmed={true} disabledPress={true} hideHeaders={true}></DetailGroupView>
