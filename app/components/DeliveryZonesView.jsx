@@ -1,6 +1,6 @@
 import React from 'react'
 import MapView from 'react-native-maps';
-import { StyleSheet, Text, View, Dimensions, Alert } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Alert, ScrollView } from 'react-native';
 import { UrlTile, Marker, Polygon } from 'react-native-maps';
 import { Header, Button, Icon, SearchBar, Image, Overlay } from 'react-native-elements';
 import axios from 'axios';
@@ -165,26 +165,39 @@ class DeliveryZonesView extends React.PureComponent {
                 <Overlay
                     isVisible={this.state.isVisible}
                     width="90%"
-                    height="40%"
+                    height={300}
                     onBackdropPress={() => this.hidePop()}
                     animationType="fade"
                 >
                     {this.state.zoneSelected !== null ? (
-                        <View style={{ flex: 1 }}>
+                        <View style={{ flex: 1, margin: -10 }}>
                             <View style={styles.infoTextContainer}>
                                 <Text style={styles.infoText} >Zona de entrega</Text>
                             </View>
+
                             <View style={styles.itemContainer}>
                                 <Icon iconStyle={styles.iconStyle} name="book" size={20} color="black" type='font-awesome' />
-                                <Text style={styles.zoneNameStyle}> {this.state.zoneSelected.name}</Text>
+                                <ScrollView style={{ height: 80 }}>
+                                    <View style={{ flexDirection: "row", height: 80, justifyContent: "center", alignItems: "center" }}>
+                                        <Text style={styles.zoneNameStyle}> {this.state.zoneSelected.name}</Text>
+                                    </View>
+                                </ScrollView>
                             </View>
                             <View style={styles.itemContainer}>
                                 <Icon iconStyle={styles.iconStyle} name="file" size={20} color="black" type='font-awesome' />
-                                <Text style={styles.zoneMessageStyle} > {this.state.zoneSelected.message}</Text>
+                                <ScrollView style={{ height: 80 }}>
+                                    <View style={{ flexDirection: "row", height: 80, justifyContent: "center", alignItems: "center" }}>
+                                        <Text style={styles.zoneMessageStyle} > {this.state.zoneSelected.message}</Text>
+                                    </View>
+                                </ScrollView>
                             </View>
                             <View style={styles.itemContainer}>
                                 <Icon iconStyle={styles.iconStyle} name="calendar" size={20} color="black" type='font-awesome' />
-                                <Text style={styles.zoneDateStyle} >Fecha de cierre: {this.parseDate(this.state.zoneSelected.closeDate)}</Text>
+                                <ScrollView style={{ height: 80 }}>
+                                    <View style={{ flexDirection: "row", height: 80, justifyContent: "center", alignItems: "center" }}>
+                                        <Text style={styles.zoneDateStyle} >Cierre: {this.parseDate(this.state.zoneSelected.closeDate)}</Text>
+                                    </View>
+                                </ScrollView>
                             </View>
                         </View>
                     ) : (null)}
@@ -192,22 +205,30 @@ class DeliveryZonesView extends React.PureComponent {
                 <Overlay
                     isVisible={this.state.isSPDataVisible}
                     width="90%"
-                    height="40%"
+                    height={240}
                     onBackdropPress={() => this.hidePopSP()}
                     animationType="fade"
                 >
                     {this.state.sellerPointSelected !== null ? (
-                        <View style={{ flex: 1 }}>
+                        <View style={{ flex: 1, margin: -10 }}>
                             <View style={styles.infoTextContainer}>
                                 <Text style={styles.infoText} >Punto de retiro</Text>
                             </View>
                             <View style={styles.itemContainer}>
                                 <Icon iconStyle={styles.iconStyle} name="book" size={20} color="black" type='font-awesome' />
-                                <Text style={styles.zoneNameStyle}> {this.state.sellerPointSelected.nombre}</Text>
+                                <ScrollView style={{ height: 75 }}>
+                                    <View style={{ flexDirection: "row", height: 75, justifyContent: "center", alignItems: "center" }}>
+                                        <Text style={styles.zoneNameStyle}> {this.state.sellerPointSelected.nombre}</Text>
+                                    </View>
+                                </ScrollView>
                             </View>
                             <View style={styles.itemContainer}>
                                 <Icon iconStyle={styles.iconStyle} name="file" size={20} color="black" type='font-awesome' />
-                                <Text style={styles.zoneMessageStyle} > {this.state.sellerPointSelected.mensaje}</Text>
+                                <ScrollView style={{ height: 110 }}>
+                                    <View style={{ flexDirection: "row", height: 110, justifyContent: "center", alignItems: "center" }}>
+                                        <Text style={styles.zoneMessageStyle} > {this.state.sellerPointSelected.mensaje}</Text>
+                                    </View>
+                                </ScrollView>
                             </View>
                         </View>
                     ) : (null)}
@@ -309,9 +330,7 @@ const styles = StyleSheet.create({
 
     infoTextContainer: {
         backgroundColor: "rgba(51, 102, 255, 1)",
-        marginTop: -10,
-        marginLeft: -10,
-        marginRight: -10,
+
         height: 50,
         alignItems: "center"
     },
@@ -358,10 +377,12 @@ const styles = StyleSheet.create({
         alignContent: "center"
     },
     itemContainer: {
-        marginTop: 10,
-        width: "80%",
+        borderTopWidth: 1,
+        borderColor: "grey",
+        width: "100%",
         flexDirection: "row",
-        alignContent: "center"
+        alignContent: "center",
+        alignItems: "center"
     },
     iconStyle: {
         marginLeft: 10,
@@ -369,18 +390,19 @@ const styles = StyleSheet.create({
     },
 
     zoneNameStyle: {
-        fontSize: 20,
+        fontSize: 18,
     },
     zoneMessageStyle: {
-        fontSize: 20,
+        fontSize: 18,
+        marginEnd:5,
     },
     zoneDateStyle: {
-        fontSize: 20,
+        fontSize: 18,
     },
 
     topHeader: {
         backgroundColor: 'rgba(51, 102, 255, 1)',
-        borderBottomWidth:0,
+        borderBottomWidth: 0,
         marginTop: -25,
     },
     rightHeaderButton: {

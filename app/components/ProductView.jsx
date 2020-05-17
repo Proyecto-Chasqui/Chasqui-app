@@ -19,15 +19,15 @@ class ProductView extends React.PureComponent {
                 showCaracteristics: false,
                 images: [],
                 showShoppingCart: false,
-                maxTimeSecondsPopUp:3,
-                timerTick:0,
+                maxTimeSecondsPopUp: 3,
+                timerTick: 0,
                 initialValue: 0,
                 quantityValue: 0,
                 idPedido: 0,
                 buttonDisabled: true,
                 intentAddingWithOutCart: false,
                 idProduct: 0,
-                interval:null,
+                interval: null,
             }
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.shoppingCarts = this.props.actions.shoppingCarts
@@ -44,8 +44,8 @@ class ProductView extends React.PureComponent {
     }
 
     componentDidUpdate() {
-        if(this.state.timerTick >= this.state.maxTimeSecondsPopUp){
-            this.setState({timerTick:0})
+        if (this.state.timerTick >= this.state.maxTimeSecondsPopUp) {
+            this.setState({ timerTick: 0 })
             clearInterval(this.state.interval);
             this.tooltipRef.toggleTooltip();
         }
@@ -187,18 +187,18 @@ class ProductView extends React.PureComponent {
         this.setState({ buttonLoading: false })
     }
 
-    toogleClosedHandler(){
-        this.setState({timerTick:0})
+    toogleClosedHandler() {
+        this.setState({ timerTick: 0 })
         clearInterval(this.state.interval);
     }
 
-    openTooltip(){
+    openTooltip() {
         this.tooltipRef.toggleTooltip();
-        this.setState({timerTick:0})
+        this.setState({ timerTick: 0 })
         this.state.interval = setInterval(() => {
             this.setState({
-              timerTick: this.state.timerTick + 1,
-           })
+                timerTick: this.state.timerTick + 1,
+            })
         }, 1000);
     }
 
@@ -208,7 +208,7 @@ class ProductView extends React.PureComponent {
             estados: [
                 "ABIERTO"
             ]
-        },{withCredentials: true}).then(res => {
+        }, { withCredentials: true }).then(res => {
             this.shoppingCarts(res.data);
             this.updateCartSelected();
             this.setState({ showWaitSign: false, idPedido: 0 })
@@ -231,7 +231,7 @@ class ProductView extends React.PureComponent {
             idPedido: this.props.shoppingCartSelected.id,
             idVariante: this.props.productSelected.idVariante,
             cantidad: this.state.initialValue - this.state.quantityValue,
-        },{withCredentials: true}).then(res => {
+        }, { withCredentials: true }).then(res => {
             this.getShoppingCarts();
         }).catch((error) => {
             console.log(error);
@@ -253,7 +253,7 @@ class ProductView extends React.PureComponent {
                 idPedido: this.props.shoppingCartSelected.id,
                 idVariante: this.props.productSelected.idVariante,
                 cantidad: this.state.quantityValue - this.state.initialValue,
-            },{withCredentials: true}).then(res => {
+            }, { withCredentials: true }).then(res => {
                 this.getShoppingCarts()
             }).catch((error) => {
                 this.setState({ buttonLoading: false, buttonDisabled: false })
@@ -320,7 +320,7 @@ class ProductView extends React.PureComponent {
         const INJECTEDJAVASCRIPT = "document.body.style.userSelect = 'none'";
         return (
 
-            <View style={{flex:1, backgroundColor:"white"}}>
+            <View style={{ flex: 1, backgroundColor: "white" }}>
                 <Header containerStyle={styles.topHeader}>
                     <Button
                         icon={
@@ -348,7 +348,7 @@ class ProductView extends React.PureComponent {
                             <Badge value={this.props.shoppingCarts.length} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }} />
                         ) : (null)}
                         <View style={{ position: 'absolute', marginLeft: 35, marginTop: 75 }}>
-                            <Tooltip onClose={()=> this.toogleClosedHandler()}containerStyle={{ borderColor: 'black', borderWidth: 1, backgroundColor: "white", height: 150, width: 300, marginLeft: -135 }} ref={(ref) => { this.tooltipRef = ref }} withOverlay={false}
+                            <Tooltip onClose={() => this.toogleClosedHandler()} containerStyle={{ borderColor: 'black', borderWidth: 1, backgroundColor: "white", height: 150, width: 300, marginLeft: -135 }} ref={(ref) => { this.tooltipRef = ref }} withOverlay={false}
                                 pointerColor='rgba(51, 102, 255, 1)'
                                 popover={
                                     <View style={{ width: "100%" }}>
@@ -389,13 +389,13 @@ class ProductView extends React.PureComponent {
                     </View>
                     <Text style={styles.priceStyle}>$ {this.props.productSelected.precio}</Text>
                     <ScrollView style={styles.descriptionViewContainer}>
-                        <View style={{ height: 100 }}>
+                        <View style={{ height: 200 }}>
                             <WebView
                                 originWhitelist={["*"]}
                                 scalesPageToFit={false}
-                                style={{ backgroundColor: "transparent" }}                                
+                                style={{ backgroundColor: "transparent" }}
                                 injectedJavaScript={INJECTEDJAVASCRIPT}
-                                style={{flex: 1}}
+                                style={{ flex: 1 }}
                                 containerStyle={{}}
                                 source={{ html: this.props.productSelected.descripcion }}
                             />
@@ -461,7 +461,9 @@ class ProductView extends React.PureComponent {
                             ) : (null)
                         }
                     </View>
-                    <View style={{ marginTop: 20 }}></View>
+
+                </ScrollView>
+                <View style={styles.footerControlsSection}>
                     {
                         this.props.shoppingCartSelected.id !== undefined ?
                             (
@@ -472,14 +474,18 @@ class ProductView extends React.PureComponent {
                             :
                             (null)
                     }
-                    <View style={styles.singleItemContainer}>
-                        {this.props.shoppingCartSelected.id === undefined ?
-                            (<Text style={styles.totalPriceCartStyle}> No posee un pedido seleccionado </Text>)
-                            :
-                            (<Text style={styles.totalPriceCartStyle}> Total del pedido: $ {this.props.shoppingCartSelected.montoActual} </Text>)
-                        }
 
-                    </View>
+                    {this.props.shoppingCartSelected.id === undefined ?
+                        (null)
+                        :
+                        (
+                            <View style={styles.singleItemContainer}>
+                                <Text style={styles.totalPriceCartStyle}> Total del pedido: $ {this.props.shoppingCartSelected.montoActual} </Text>
+                            </View>
+                        )
+                    }
+
+
                     {this.props.shoppingCartSelected.id !== undefined ? (
                         <View style={styles.singleItemContainer}>
                             <Button
@@ -495,12 +501,12 @@ class ProductView extends React.PureComponent {
                                     onPress={() => this.showShoppingCart()}
                                     titleStyle={{ color: "black", fontSize: 20 }}
                                     containerStyle={styles.buttonAddProductContainer}
-                                    buttonStyle={styles.buttonAddProductStyle} title="Seleccionar pedido"></Button>
+                                    buttonStyle={styles.buttonAddProductStyle} title="Comprar"></Button>
                             </View>
                         )
 
                     }
-                </ScrollView>
+                </View>
                 <OverlayShoppingCartView
                     showFilter={() => this.showShoppingCart()}
                     isVisible={this.state.showShoppingCart}
@@ -514,10 +520,14 @@ class ProductView extends React.PureComponent {
 
 const styles = StyleSheet.create({
 
+    footerControlsSection: {
+        backgroundColor: "rgba(51, 102, 255, 1)",
+    },
+
     topHeader: {
         backgroundColor: 'rgba(51, 102, 255, 1)',
         marginTop: -25,
-        borderBottomWidth:0,
+        borderBottomWidth: 0,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -571,7 +581,7 @@ const styles = StyleSheet.create({
     },
 
     productPageContainer: {
-        flex:1
+        flex: 1
     },
 
     topSectionContainer: {
@@ -586,7 +596,6 @@ const styles = StyleSheet.create({
     },
     productNameStyle: {
         fontSize: 22,
-        height: 60,
         marginLeft: 20,
         marginRight: 20,
         textAlign: 'justify'
@@ -601,7 +610,6 @@ const styles = StyleSheet.create({
     },
 
     descriptionViewContainer: {
-        height: 100,
         marginBottom: 5,
         marginLeft: 15,
         marginRight: 15
@@ -620,6 +628,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginLeft: 20,
         marginRight: 20,
+        marginBottom: 5,
     },
 
     divisor: {
@@ -684,11 +693,13 @@ const styles = StyleSheet.create({
     },
 
     singleItemContainer: {
+        marginTop: 5,
         marginBottom: 5,
         height: 50,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "grey",
+        backgroundColor: "white",
         marginLeft: 20,
         marginRight: 20,
     },
