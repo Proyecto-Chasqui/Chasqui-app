@@ -99,6 +99,35 @@ class ItemInfoCartView extends React.PureComponent {
         this.props.actions.logout();
     }
 
+    detectAlert(alertText){
+        if(this.props.shoppingCartSelected.idGrupo !== null){
+            if(this.isAdminOfGroup()){
+                Alert.alert(
+                    'Aviso',
+                    alertText,
+                    [
+                        { text: 'Mis grupos', onPress: ()=> this.navigation.navigate("MisGrupos")},
+                        { text: 'Entendido', onPress: () => null },
+                    ],
+                    { cancelable: false },
+                );
+            }else{
+                Alert.alert(
+                    'Aviso',
+                    alertText,
+                    [
+                        { text: 'Entendido', onPress: () => null },
+                    ],
+                    { cancelable: false },
+                );
+            }
+        }else{
+            this.showAlert(text)
+        }
+        this.props.functionShow();
+        this.props.actions.shoppingCartUnselected();
+    }
+
     getShoppingCarts(alertText) {
         axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'), {
             idVendedor: this.props.vendorSelected.id,
@@ -108,16 +137,10 @@ class ItemInfoCartView extends React.PureComponent {
         }, { withCredentials: true }).then(res => {
             this.shoppingCarts(res.data);
             this.setState({ showWaitSign: false })
-            Alert.alert(
-                'Aviso',
-                alertText,
-                [
-                    { text: 'Entendido', onPress: () => null },
-                ],
-                { cancelable: false },
-            );
+            this.detectAlert(alertText)
         }).catch((error) => {
             console.log(error);
+            this.props.actions.shoppingCartUnselected();
             Alert.alert(
                 'Error',
                 'Ocurrio un error al obtener los pedidos del servidor, vuelva a intentar más tarde.',
@@ -132,7 +155,6 @@ class ItemInfoCartView extends React.PureComponent {
     cancelCart() {
         this.setState({ showWaitSign: true })
         axios.delete((this.serverBaseRoute + 'rest/user/pedido/individual/' + this.props.shoppingCartSelected.id)).then(res => {
-            this.props.actions.shoppingCartUnselected();
             this.getShoppingCarts('El pedido ha sido cancelado correctamente');
         }, { withCredentials: true }).catch((error) => {
             this.setState({ showWaitSign: false })
@@ -156,22 +178,70 @@ class ItemInfoCartView extends React.PureComponent {
             console.log("error", error);
         });
     }
-    alertGroupConfirm() {
-        Alert.alert(
-            'Aviso',
-            '¿Esta seguro de confirmar el pedido del grupo ' + this.props.shoppingCartSelected.aliasGrupo + '? una vez confirmado, no podrá cambiarlo.',
-            [
-                { text: 'No', onPress: () => null },
-                { text: 'Si', onPress: () => this.confirmCartOnGroup('Su pedido en el grupo ' + this.props.shoppingCartSelected.aliasGrupo + ' fue confirmado correctamente. Deberá esperar a que el administrador confirme el pedido colectivo para que se confirme por completo.') },
-            ],
-            { cancelable: false },
-        );
 
+    hasFullConfirmedCartsOnGroup(idGroup){
+        let value = false;
+        let countConfirmedCarts = 0;
+        let totalMembers = 0;
+        let vgroup = null; 
+        this.props.groupsData.map((group)=>{
+            if(group.id === idGroup){
+                vgroup = group
+            }
+        })
+        if(vgroup !== null){
+            totalMembers = vgroup.miembros.length
+            vgroup.miembros.map((member)=>{
+                if(member.pedido !== null){
+                    if(member.pedido.estado === "CONFIRMADO"){
+                        countConfirmedCarts = countConfirmedCarts + 1
+                    }
+                }
+            })
+            value = (totalMembers - 1  === countConfirmedCarts)
+        }
+
+        return value
+    }
+
+    alertGroupConfirm() {
+        if (!this.isAdminOfGroup()) {
+            Alert.alert(
+                'Aviso',
+                '¿Esta seguro de confirmar el pedido del grupo ' + this.props.shoppingCartSelected.aliasGrupo + '? una vez confirmado, no podrá cambiarlo.',
+                [
+                    { text: 'No', onPress: () => null },
+                    { text: 'Si', onPress: () => this.confirmCartOnGroup('Su pedido en el grupo ' + this.props.shoppingCartSelected.aliasGrupo + ' fue confirmado correctamente. Deberá esperar a que el administrador confirme el pedido colectivo para que se confirme por completo.') },
+                ],
+                { cancelable: false },
+            );
+        } else {
+            if(!this.hasFullConfirmedCartsOnGroup(this.props.shoppingCartSelected.idGrupo)){
+                Alert.alert(
+                    'Aviso',
+                    'Debido a que es el administrador, se le recomienda confirmar su pedido individual en ultimo lugar, para que pueda usarlo en ultima instancia para correcciones de falta de productos en algún pedido de sus integrantes.'+'¿Esta seguro de confirmar el pedido del grupo ' + this.props.shoppingCartSelected.aliasGrupo + '? una vez confirmado, no podrá cambiarlo.',
+                    [
+                        { text: 'No', onPress: () => null },
+                        { text: 'Si', onPress: () => this.confirmCartOnGroup('Su pedido en el grupo ' + this.props.shoppingCartSelected.aliasGrupo + ' fue confirmado correctamente. Recuerde que tiene que confirmar el pedido colectivo en la sección mis grupos cuando decida concretar todos los pedidos realizados.') },
+                    ],
+                    { cancelable: false },
+                );
+            }else{
+                Alert.alert(
+                    'Aviso',
+                    '¿Esta seguro de confirmar el pedido del grupo ' + this.props.shoppingCartSelected.aliasGrupo + '? una vez confirmado, no podrá cambiarlo.',
+                    [
+                        { text: 'No', onPress: () => null },
+                        { text: 'Si', onPress: () => this.confirmCartOnGroup('Su pedido en el grupo ' + this.props.shoppingCartSelected.aliasGrupo + ' fue confirmado correctamente.Todos los integrantes del grupo confirmaron sus pedidos, puede completar el pedido colectivo en la sección "Mis Grupos".') },
+                    ],
+                    { cancelable: false },
+                );
+            }
+        }
     }
 
     goToConfirm() {
         if (this.props.shoppingCartSelected.idGrupo !== null) {
-            //validar que sea admin del grupo y advertir que no esta alcanzando el monto minimo.
             this.refreshExpiration();
             this.alertGroupConfirm();
         } else {
@@ -195,8 +265,7 @@ class ItemInfoCartView extends React.PureComponent {
             axios.post((this.serverBaseRoute + 'rest/user/pedido/individualEnGrupo/confirmar'), {
                 idPedido: this.props.shoppingCartSelected.id
             }, { withCredentials: true }).then(res => {
-                this.getShoppingCarts(text);
-                this.props.actions.shoppingCartUnselected();
+                this.getShoppingCarts(text);                
                 this.getUnreadNotifications();
                 this.getGroups();
             }).catch((error) => {
@@ -207,12 +276,28 @@ class ItemInfoCartView extends React.PureComponent {
         }
     }
 
-    validToConfirm(){
+    hasDeliveryAndRetrievePoint() {
+        return this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega
+    }
+
+    validToConfirm() {
         if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega) {
-            if (this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo) {
-                this.goToConfirm()
+            if (this.props.shoppingCartSelected.idGrupo === null) {
+                if (this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo) {
+                    this.goToConfirm()
+                } else {
+                    this.showAlert("Debe alcanzar el monto minímo para poder confirmar el pedido")
+                }
             } else {
-                this.showAlert("Debe alcanzar el monto minímo para poder confirmar el pedido")
+                if (this.isAdminOfGroup()) {
+                    if (this.validateGroupAmount()) {
+                        this.goToConfirm()
+                    } else {
+                        this.showAlert("Debe alcanzar el monto minímo para poder confirmar el pedido")
+                    }
+                } else {
+                    this.goToConfirm();
+                }
             }
         }
     }
@@ -222,25 +307,20 @@ class ItemInfoCartView extends React.PureComponent {
         if (this.props.shoppingCartSelected.productosResponse == 0) {
             this.showAlertInvalidCart()
         } else {
-            if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega) {
-                this.goToConfirm()
-            }
-            if(this.props.shoppingCartSelected.idGrupo === null){
-                this.validToConfirm()
-            }else{
-                if(this.isAdminOfGroup()){
-                    this.validToConfirm();
-                }else{
-                    this.goToConfirm();
-                }
-            }
-
             if (!this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega) {
                 this.showAlert("No puede confirmar el pedido, por que el catálogo no esta configurado correctamente.")
             }
+
+            if (this.hasDeliveryAndRetrievePoint()) {
+                this.goToConfirm()
+            }
+
             if (!this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega) {
                 this.goToConfirm()
             }
+
+            this.validToConfirm()
+
         }
     }
 
@@ -262,10 +342,10 @@ class ItemInfoCartView extends React.PureComponent {
         }
     }
 
-    isAdminOfGroup(){
+    isAdminOfGroup() {
         let isAdmin = false;
-        this.props.groupsData.map((group)=>{
-            if(group.emailAdministrador === this.props.shoppingCartSelected.cliente.email){
+        this.props.groupsData.map((group) => {
+            if (group.emailAdministrador === this.props.shoppingCartSelected.cliente.email) {
                 isAdmin = true;
             }
         })
@@ -273,9 +353,9 @@ class ItemInfoCartView extends React.PureComponent {
     }
 
     showMinAmount() {
-        if(this.props.shoppingCartSelected.idGrupo !== null){
+        if (this.props.shoppingCartSelected.idGrupo !== null) {
             return this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.montoMinimo >= 1 && this.isAdminOfGroup();
-        }else{
+        } else {
             return this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.montoMinimo >= 1;
         }
     }
@@ -291,43 +371,43 @@ class ItemInfoCartView extends React.PureComponent {
     findGroupName() {
         let nombre = "Error grupo desconocido"
         let idGrupo = this.props.shoppingCartSelected.idGrupo
-        this.props.groupsData.map((group)=>{
-            if(group.id === idGrupo){
+        this.props.groupsData.map((group) => {
+            if (group.id === idGrupo) {
                 nombre = group.alias;
             }
         })
         return nombre;
     }
-    validateGroupAmount(){
+    validateGroupAmount() {
         let idGroup = this.props.shoppingCartSelected.idGrupo;
         let vgroup = null;
         let totalAmount = 0;
-        this.props.groupsData.map((group)=>{
-            if(group.id === idGroup){
+        this.props.groupsData.map((group) => {
+            if (group.id === idGroup) {
                 vgroup = group
             }
         })
-        if(vgroup !== null){
-            vgroup.miembros.map((member)=>{
-                if(member.pedido !== null){
-                    if(member.pedido.estado === "CONFIRMADO"){
+        if (vgroup !== null) {
+            vgroup.miembros.map((member) => {
+                if (member.pedido !== null) {
+                    if (member.pedido.estado === "CONFIRMADO") {
                         totalAmount = totalAmount + member.pedido.montoActual;
                     }
                 }
             })
         }
-        if(this.props.shoppingCartSelected.idGrupo !== null){
-            if(this.props.shoppingCartSelected.idGrupo === idGroup){
+        if (this.props.shoppingCartSelected.idGrupo !== null) {
+            if (this.props.shoppingCartSelected.idGrupo === idGroup) {
                 totalAmount = totalAmount + this.props.shoppingCartSelected.montoActual;
             }
         }
         return totalAmount > this.props.vendorSelected.montoMinimo;
     }
 
-    definteText(){
-        if(this.props.shoppingCartSelected.idGrupo === null){
+    definteText() {
+        if (this.props.shoppingCartSelected.idGrupo === null) {
             return "Min. Monto: "
-        }else{
+        } else {
             return "Min. Monto grupal: "
         }
     }
@@ -388,11 +468,11 @@ class ItemInfoCartView extends React.PureComponent {
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
                 <View style={{ height: Dimensions.get("window").height - 255 }}>
 
-                {this.props.shoppingCartSelected.idGrupo === null ? (null) : (
+                    {this.props.shoppingCartSelected.idGrupo === null ? (null) : (
                         <View style={{ backgroundColor: '#ebedeb', flexDirection: "row", justifyContent: this.setStyleDistance(), borderBottomColor: "#dfdfdf", borderBottomWidth: 1 }}>
-                            <View style={{flex:1}}>
-                            <Text style={stylesListCard.sectionTitleTextStyle}> Comprando en el grupo </Text>
-                                <Text style={{ fontSize: 15, fontWeight: "bold", textAlign:"center", marginStart:5,marginEnd:5 }}> {this.findGroupName()} </Text>
+                            <View style={{ flex: 1 }}>
+                                <Text style={stylesListCard.sectionTitleTextStyle}> Comprando en el grupo </Text>
+                                <Text style={{ fontSize: 15, fontWeight: "bold", textAlign: "center", marginStart: 5, marginEnd: 5 }}> {this.findGroupName()} </Text>
                             </View>
                         </View>
                     )}
@@ -413,18 +493,18 @@ class ItemInfoCartView extends React.PureComponent {
                                     <View style={{ flexDirection: "row", }}>
                                         <Text style={{ textAlign: "center", }}>${this.props.vendorSelected.montoMinimo}</Text>
                                         {this.props.shoppingCartSelected.idGrupo === null ? (
-                                        <View style={{ marginLeft: 5, marginRight: 5 }}>
-                                            {this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo ? (
-                                                <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
-                                            ) : (<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
-                                        </View>
-                                        ):(
-                                        <View style={{ marginLeft: 5, marginRight: 5 }}>
-                                            {this.validateGroupAmount() ? (
-                                                <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
-                                            ) : (<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
-                                        </View>
-                                        )}
+                                            <View style={{ marginLeft: 5, marginRight: 5 }}>
+                                                {this.props.shoppingCartSelected.montoActual >= this.props.vendorSelected.montoMinimo ? (
+                                                    <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
+                                                ) : (<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
+                                            </View>
+                                        ) : (
+                                                <View style={{ marginLeft: 5, marginRight: 5 }}>
+                                                    {this.validateGroupAmount() ? (
+                                                        <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
+                                                    ) : (<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
+                                                </View>
+                                            )}
                                     </View>
                                 </View>
                             )
@@ -486,8 +566,8 @@ const stylesListCard = StyleSheet.create({
         fontWeight: "bold",
         backgroundColor: 'rgba(51, 102, 255, 1)',
         color: "white",
-        marginLeft:-2,
-        marginRight:-2,
+        marginLeft: -2,
+        marginRight: -2,
         borderBottomWidth: 1,
         borderTopWidth: 1,
         borderColor: 'black'
@@ -504,7 +584,7 @@ const stylesListCard = StyleSheet.create({
     viewSearchErrorContainer: {
         height: "100%",
         justifyContent: "center",
-        flex:1,
+        flex: 1,
     },
 
     viewErrorContainer: {
@@ -530,7 +610,7 @@ const stylesListCard = StyleSheet.create({
         width: 100,
         height: 100,
         alignSelf: 'center',
-        borderWidth:2,
+        borderWidth: 2,
     },
 
     cartIconOkContainer: {
@@ -539,7 +619,7 @@ const stylesListCard = StyleSheet.create({
         width: 100,
         height: 100,
         alignSelf: 'center',
-        borderWidth:2,
+        borderWidth: 2,
     },
 
     searchIconError: {

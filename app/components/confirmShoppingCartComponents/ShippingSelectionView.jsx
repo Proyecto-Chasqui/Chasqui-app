@@ -22,41 +22,41 @@ class ShippingSelectionView extends React.PureComponent {
             selectedSellerPoint: [],
             selectedAddress: [],
             showRevert: true,
-            zone:undefined,
-            loadingZone:false,
+            zone: undefined,
+            loadingZone: false,
         }
     }
 
-    getZoneOfAdress(id){
-            this.setState({loadingZone:true})
-            axios.post((this.serverBaseRoute + 'rest/client/vendedor/obtenerZonaDeDireccion'),
+    getZoneOfAdress(id) {
+        this.setState({ loadingZone: true })
+        axios.post((this.serverBaseRoute + 'rest/client/vendedor/obtenerZonaDeDireccion'),
             {
                 idDireccion: id,
                 idVendedor: this.props.vendorSelected.id
             })
             .then(res => {
-                if(this.state.selectedAddress.length === 0){
-                    this.setState({zone:undefined, loadingZone:false});
+                if (this.state.selectedAddress.length === 0) {
+                    this.setState({ zone: undefined, loadingZone: false });
                     this.props.setZone(undefined);
-                }else{
-                this.setState({zone:res.data, loadingZone:false});
-                this.props.setZone(res.data);
+                } else {
+                    this.setState({ zone: res.data, loadingZone: false });
+                    this.props.setZone(res.data);
                 }
             }).catch((error) => {
-                
+
                 if (error.response) {
-                    this.setState({zone:undefined, loadingZone:false});
+                    this.setState({ zone: undefined, loadingZone: false });
                     this.props.setZone(undefined);
-                } 
+                }
             });
-        
+
     }
 
-    calculateActualAmountOnGroup(){
+    calculateActualAmountOnGroup() {
         let amount = 0
-        this.props.groupSelected.miembros.map((miembro, i)=>{
-            if(miembro.pedido !== null){
-                if(miembro.pedido.estado === "CONFIRMADO"){
+        this.props.groupSelected.miembros.map((miembro, i) => {
+            if (miembro.pedido !== null) {
+                if (miembro.pedido.estado === "CONFIRMADO") {
                     amount = amount + miembro.pedido.montoActual
                 }
             }
@@ -70,15 +70,15 @@ class ShippingSelectionView extends React.PureComponent {
     }
 
     setVisualsBasedOnStrats() {
-        if(!this.props.isGroup){
+        if (!this.props.isGroup) {
             if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega) {
-                    if(this.props.shoppingCartSelected.montoActual < this.props.vendorSelected.montoMinimo){
-                        this.showMoreInfoSellerPoint()
-                        this.setState({ showRevert: false })
-                    }
+                if (this.props.shoppingCartSelected.montoActual < this.props.vendorSelected.montoMinimo) {
+                    this.showMoreInfoSellerPoint()
+                    this.setState({ showRevert: false })
+                }
             } else {
                 if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario) {
-                    if(this.props.shoppingCartSelected.montoActual > this.props.vendorSelected.montoMinimo){
+                    if (this.props.shoppingCartSelected.montoActual > this.props.vendorSelected.montoMinimo) {
                         this.showMoreInfoAddress()
                     }
                 }
@@ -88,15 +88,15 @@ class ShippingSelectionView extends React.PureComponent {
 
                 this.setState({ showRevert: false })
             }
-        }else{
+        } else {
             if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega) {
-                    if(this.calculateActualAmountOnGroup() < this.props.vendorSelected.montoMinimo){
-                        this.showMoreInfoSellerPoint()
-                        this.setState({ showRevert: false })
-                    }
+                if (this.calculateActualAmountOnGroup() < this.props.vendorSelected.montoMinimo) {
+                    this.showMoreInfoSellerPoint()
+                    this.setState({ showRevert: false })
+                }
             } else {
                 if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario) {
-                    if(this.calculateActualAmountOnGroup() > this.props.vendorSelected.montoMinimo){
+                    if (this.calculateActualAmountOnGroup() > this.props.vendorSelected.montoMinimo) {
                         this.showMoreInfoAddress()
                     }
                 }
@@ -114,7 +114,7 @@ class ShippingSelectionView extends React.PureComponent {
         this.unCheckOthers(this.state.dataChecksAdress)
         this.props.selectedSPFunction(undefined)
         this.props.selectedAdressFunction(undefined)
-        this.setState({zone:undefined})
+        this.setState({ zone: undefined })
     }
 
     showMoreInfoSellerPoint() {
@@ -159,7 +159,7 @@ class ShippingSelectionView extends React.PureComponent {
     constructDataForChecked() {
         const checksSellerPoints = [];
         this.props.sellerPoints.map((u, i) => {
-            checksSellerPoints.push({sp:u, id: u.id, checked: false });
+            checksSellerPoints.push({ sp: u, id: u.id, checked: false });
         })
         this.setState({
             dataChecksSellerPoints: checksSellerPoints,
@@ -195,7 +195,7 @@ class ShippingSelectionView extends React.PureComponent {
 
     addCheck(vadress) {
         const data = this.state.dataChecksAdress;
-        data.push({adress:vadress, id: vadress.idDireccion, checked: false })
+        data.push({ adress: vadress, id: vadress.idDireccion, checked: false })
         this.setState({
             dataChecksAdress: data,
         })
@@ -204,7 +204,7 @@ class ShippingSelectionView extends React.PureComponent {
     }
 
     onCheckChangedAdress(id) {
-        
+
         const data = this.state.dataChecksAdress;
         const index = data.findIndex((x) => x.id === id);
         data[index].checked = !data[index].checked;
@@ -250,29 +250,33 @@ class ShippingSelectionView extends React.PureComponent {
         return parsedDate;
     }
 
-    minAmount(){
-        return this.props.shoppingCartSelected.montoActual < this.props.vendorSelected.montoMinimo && (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega)
+    minAmount() {
+        if (this.props.isGroup) {
+            return this.calculateActualAmountOnGroup() < this.props.vendorSelected.montoMinimo && (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega)
+        } else {
+            return this.props.shoppingCartSelected.montoActual < this.props.vendorSelected.montoMinimo && (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega)
+        }
     }
 
-    setDimensionsOnSP(){
-        if(this.minAmount()){
-            return  Dimensions.get("window").height - 330
-        }else{
-            return  Dimensions.get("window").height - 330
+    setDimensionsOnSP() {
+        if (this.minAmount()) {
+            return Dimensions.get("window").height - 330
+        } else {
+            return Dimensions.get("window").height - 330
         }
 
     }
 
-    getHeightValue(){
-        if(this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega){
+    getHeightValue() {
+        if (this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && this.props.vendorSelected.few.puntoDeEntrega) {
             return 460
-        }else{
+        } else {
             return 440
         }
     }
     render() {
         return (
-            <View style={{flex:1}}>
+            <View style={{ flex: 1 }}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.adressTitle}>{this.state.title}</Text>
                 </View>
@@ -302,32 +306,32 @@ class ShippingSelectionView extends React.PureComponent {
                         {this.state.showSellerPoints ? (
                             <View>
                                 <View >
-                                { this.minAmount() ? (
-                                    <View style={{margin: 10}}>
-                                    <Text style={{fontSize:16, textAlign:"justify", fontStyle:"italic"}}> {"Debido a que su pedido no supera el monto minimo de $" + this.props.vendorSelected.montoMinimo +", solo puede pasar a retirar el pedido por alguno de los siguientes puntos de retiro."}</Text>
-                                    </View>
-                                ):(null)}            
-                                </View>                                                
-                            <ScrollView style={{ height: this.setDimensionsOnSP() }}>
+                                    {this.minAmount() ? (
+                                        <View style={{ margin: 10 }}>
+                                            <Text style={{ fontSize: 16, textAlign: "justify", fontStyle: "italic" }}> {"Debido a que su pedido no supera el monto minimo de $" + this.props.vendorSelected.montoMinimo + ", solo puede pasar a retirar el pedido por alguno de los siguientes puntos de retiro."}</Text>
+                                        </View>
+                                    ) : (null)}
+                                </View>
+                                <ScrollView style={{ height: this.setDimensionsOnSP() }}>
 
-                                <View style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}></View>
-                                {this.props.sellerPoints.map((sellerPoint, i) => {
-                                    return (
-                                        <TouchableOpacity key={sellerPoint.id} onPress={() => this.onCheckChangedSellerPoint(sellerPoint.id)} style={{ flexDirection: "row", alignItems: 'center', height: 200, borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
-                                            <View style={{ flex: 1 }}>
-                                                <CheckBox
-                                                    checked={this.state.dataChecksSellerPoints[i].checked}
-                                                    onPress={() => this.onCheckChangedSellerPoint(sellerPoint.id)}
-                                                />
-                                            </View>
-                                            <View style={{ flex: 5 }}>
-                                                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{sellerPoint.nombre}</Text>
-                                                <Text style={{ color: "blue" }}>{this.parseAdress(sellerPoint.direccion)}</Text>
-                                                <Text style={{ fontSize: 16 }}>{sellerPoint.mensaje}</Text>
-                                            </View>
-                                        </TouchableOpacity>)
-                                })}
-                            </ScrollView>
+                                    <View style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}></View>
+                                    {this.props.sellerPoints.map((sellerPoint, i) => {
+                                        return (
+                                            <TouchableOpacity key={sellerPoint.id} onPress={() => this.onCheckChangedSellerPoint(sellerPoint.id)} style={{ flexDirection: "row", alignItems: 'center', height: 200, borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                                <View style={{ flex: 1 }}>
+                                                    <CheckBox
+                                                        checked={this.state.dataChecksSellerPoints[i].checked}
+                                                        onPress={() => this.onCheckChangedSellerPoint(sellerPoint.id)}
+                                                    />
+                                                </View>
+                                                <View style={{ flex: 5 }}>
+                                                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{sellerPoint.nombre}</Text>
+                                                    <Text style={{ color: "blue" }}>{this.parseAdress(sellerPoint.direccion)}</Text>
+                                                    <Text style={{ fontSize: 16 }}>{sellerPoint.mensaje}</Text>
+                                                </View>
+                                            </TouchableOpacity>)
+                                    })}
+                                </ScrollView>
                             </View>) : (null)}
 
                         {this.state.showAdresses ? (
@@ -337,37 +341,37 @@ class ShippingSelectionView extends React.PureComponent {
                                     buttonStyle={styles.buttonNewAddressStyle}
                                     onPress={() => this.goToNewAdress()} title="Nueva dirección">
                                 </Button>
-                                        <ScrollView style={{height:120}}>
-                                            <View style={{borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}></View>
-                                            <View style={{marginLeft:20, marginRight:20, marginTop:10}}><Text style={{textAlign:"center", fontSize:15, fontWeight:"bold"}}>Información sobre la entrega</Text></View>
-                                            {this.state.zone !== undefined?(
-                                            <View style={{marginLeft:20, marginRight:20, marginBottom:10}}>                                            
-                                                <View style={{flexDirection:'row'}}>
-                                                    <Text style={{fontSize:15, fontWeight:'bold'}}>Zona de entrega: </Text>
-                                                    <Text style={{fontSize:15}}>{this.state.zone.nombre}</Text>
-                                                </View>
-                                                <View  style={{flexDirection:'row'}}>
-                                                    <Text style={{fontSize:15, fontWeight:'bold'}}>Cierre de pedidos: </Text>
-                                                    <Text style={{fontSize:15}}>{this.parseDate(this.state.zone.fechaCierrePedidos)}</Text>
-                                                </View>
-                                                <Text style={{fontStyle:'italic'}}>{ this.state.zone.descripcion }</Text>
-                                            </View>)
-                                            :(<View style={{marginLeft:20, marginRight:20, marginBottom:10}}>
-                                                {this.state.selectedAddress.length === 0 || this.state.loadingZone? 
+                                <ScrollView style={{ height: 120 }}>
+                                    <View style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}></View>
+                                    <View style={{ marginLeft: 20, marginRight: 20, marginTop: 10 }}><Text style={{ textAlign: "center", fontSize: 15, fontWeight: "bold" }}>Información sobre la entrega</Text></View>
+                                    {this.state.zone !== undefined ? (
+                                        <View style={{ marginLeft: 20, marginRight: 20, marginBottom: 10 }}>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text style={{ fontSize: 15, fontWeight: 'bold' }}>Zona de entrega: </Text>
+                                                <Text style={{ fontSize: 15 }}>{this.state.zone.nombre}</Text>
+                                            </View>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text style={{ fontSize: 15, fontWeight: 'bold' }}>Cierre de pedidos: </Text>
+                                                <Text style={{ fontSize: 15 }}>{this.parseDate(this.state.zone.fechaCierrePedidos)}</Text>
+                                            </View>
+                                            <Text style={{ fontStyle: 'italic' }}>{this.state.zone.descripcion}</Text>
+                                        </View>)
+                                        : (<View style={{ marginLeft: 20, marginRight: 20, marginBottom: 10 }}>
+                                            {this.state.selectedAddress.length === 0 || this.state.loadingZone ?
                                                 (<Text>Seleccione una dirección para obtener mas información sobre la entrega</Text>)
                                                 :
-                                                (<Text>{this.zoneWarnText}</Text>)}                                            
-                                            </View>)}
-                                            
-                                        </ScrollView>
-                                        <View style={{borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}></View>
+                                                (<Text>{this.zoneWarnText}</Text>)}
+                                        </View>)}
+
+                                </ScrollView>
+                                <View style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}></View>
                                 <ScrollView style={{ height: Dimensions.get("window").height - this.getHeightValue() }}>
-                                    
+
                                     <View style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}></View>
-                                    
+
                                     {this.props.adressesData.map((adress, i) => {
                                         const index = this.addCheck(adress);
-                                        
+
                                         return (
                                             <TouchableOpacity key={adress.idDireccion} onPress={() => this.onCheckChangedAdress(adress.idDireccion)} style={{ flexDirection: "row", alignItems: 'center', height: 90, borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
                                                 <View style={{ flex: 1 }}>
@@ -379,8 +383,8 @@ class ShippingSelectionView extends React.PureComponent {
                                                 <View style={{ flex: 5 }}>
                                                     <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{adress.alias}</Text>
                                                     <Text style={{ color: "blue" }}>{this.parseAdress(adress)}</Text>
-                                                    <Text style={{ fontSize: 16 }}>{adress.comentario}</Text>                                            
-                                                    
+                                                    <Text style={{ fontSize: 16 }}>{adress.comentario}</Text>
+
                                                 </View>
                                                 <View style={{ flex: 1, marginRight: 10 }}>
                                                     <Button icon={
