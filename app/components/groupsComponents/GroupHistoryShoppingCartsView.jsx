@@ -43,7 +43,6 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
             estados: ["CONFIRMADO","PREPARADO","ENTREGADO"]
         }, { withCredentials: true }).then(res => {
             this.props.actions.groupHistoryShoppingCarts(res.data);
-            console.log("pedidos",res.data);
             this.setState({isLoading:false})
         }).catch((error) => {
             this.setState({isLoading:false})

@@ -81,7 +81,6 @@ class CatalogView extends React.Component {
     getGroups(){
         axios.get((this.serverBaseRoute + 'rest/user/gcc/all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
             this.props.actions.groupsData(res.data);
-            console.log(res.data);
         }).catch( (error) => {
             console.log(error);
             if (error.response) {                

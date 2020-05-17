@@ -15,7 +15,6 @@ class AdministrationMembersView extends React.PureComponent {
             emailError: "",
             loading: false,
         }
-        console.log("grupo", this.props.groupSelected)
     }
 
     normalizeText(text) {

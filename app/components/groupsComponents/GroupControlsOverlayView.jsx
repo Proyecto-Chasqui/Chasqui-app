@@ -9,8 +9,6 @@ class GroupControlsOverlayView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.serverBaseRoute = GLOBALS.BASE_URL;
-        console.log("group in control", this.props.groupSelected)
-        console.log("vendor", this.props.vendorSelected)
         this.state = {
             showWaitSign: false,
         }
@@ -53,7 +51,6 @@ class GroupControlsOverlayView extends React.PureComponent {
     }
 
     openCartOnGroup(group) {
-        console.log("grupo", group);
         this.setState({ showWaitSign: true })
         axios.post((this.serverBaseRoute + 'rest/user/gcc/individual'), {
             idGrupo: group.id,

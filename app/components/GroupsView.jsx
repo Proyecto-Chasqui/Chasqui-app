@@ -94,7 +94,6 @@ class GroupsView extends React.PureComponent {
                 admin = member
             }
         })
-        console.log(this.normalizeText(this.createImageUrl(admin.avatar)))
         return this.normalizeText(this.createImageUrl(admin.avatar))
     }
 

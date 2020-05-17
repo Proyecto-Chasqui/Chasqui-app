@@ -24,14 +24,11 @@ class ButtonOpenGroupCart extends React.PureComponent {
                 this.setState({ cart: vcart, existOpenCart: true })
             }
         })
-        console.log("existe", this.state.existOpenCart)
     }
 
     cartConfirmed() {
         this.props.group.miembros.map((miembro, i) => {
-            console.log("es miembro", miembro.email === this.props.user.email)
             if (miembro.email === this.props.user.email) {
-                console.log("estado pedido", miembro.pedido)
                 if (miembro.pedido != null) {
                     if (miembro.pedido.estado === "CONFIRMADO") {
                         this.setState({ cartConfirmed: true, memberCart: miembro.pedido })

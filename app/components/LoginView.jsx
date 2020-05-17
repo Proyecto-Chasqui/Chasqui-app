@@ -80,7 +80,6 @@ class LoginView extends React.PureComponent {
   //usado para registrar en el server su "login", probablemente sea necesario crear una contramedida
   // del lado del servidor cuando se crean 401 unautorized.
   getPersonalData(data, values) {
-    console.log("getting personal data", data);
     const token = base64.encode(`${data.email}:${data.token}`);
     axios.get(this.serverBaseRoute + 'rest/user/adm/read', {
       headers: {

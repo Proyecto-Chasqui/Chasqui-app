@@ -122,7 +122,7 @@ class ItemInfoCartView extends React.PureComponent {
                 );
             }
         }else{
-            this.showAlert(text)
+            this.showAlert(alertText)
         }
         this.props.functionShow();
         this.props.actions.shoppingCartUnselected();

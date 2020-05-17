@@ -10,7 +10,6 @@ import base64 from 'react-native-base64';
 class GroupHistoryShoppingCartDetailView extends React.PureComponent {
     constructor(props) {
         super(props)
-        console.log("pedido colectivo seleccionado", this.props.groupHistoryShoppingCartSelected)
     }
 
     obtainTotalPrice() {

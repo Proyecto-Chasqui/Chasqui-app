@@ -60,7 +60,6 @@ class OverlayShoppingCartView extends React.PureComponent {
     }
 
     openCartOnGroup(group) {
-        console.log("grupo", group);
         this.setState({ showWaitSign: true })
         axios.post((this.serverBaseRoute + 'rest/user/gcc/individual'), {
             idGrupo: group.id,
@@ -136,11 +135,8 @@ class OverlayShoppingCartView extends React.PureComponent {
     }
 
     selectCartById(id) {
-        console.log("select cart", id)
         this.props.shoppingCarts.map((vcart, i) => {
-            console.log("cartid", vcart.id)
             if (vcart.id === id) {
-                console.log("cartDetected", vcart.id)
                 this.shoppingCartSelected(vcart);
                 this.showShoppingCarts();
             }

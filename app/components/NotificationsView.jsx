@@ -132,7 +132,6 @@ class NotificationsView extends React.PureComponent {
         axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/' + page, { withCredentials: true })
             .then(res => {
                 this.setState({ notifications: this.state.notifications.concat(res.data), loading: false, firstLoading: false });
-                console.log("notificaciones",res.data)
             }).catch((error) => {
                 this.setState({ loading: false, firstLoading: false })
                 Alert.alert('Error', 'No se logro obtener sus notificaciones, intente mas tarde.');

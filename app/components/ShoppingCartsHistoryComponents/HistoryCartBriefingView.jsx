@@ -9,7 +9,6 @@ class HistoryCartBriefingView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.serverBaseRoute = GLOBALS.BASE_URL;
-        console.log("cart", this.props.historyCartSelected)
     }
 
     goToGroups(){
@@ -60,7 +59,6 @@ class HistoryCartBriefingView extends React.PureComponent {
     }
 
     inWaitingOfGroupConfirmation(){
-        console.log(this.props.historyCartSelected.direccion === null && this.props.historyCartSelected.puntoDeRetiro === null && this.props.historyCartSelected.idGrupo !== null)
         return (this.props.historyCartSelected.direccion === null && this.props.historyCartSelected.puntoDeRetiro === null && this.props.historyCartSelected.idGrupo !== null)
     }
 
