@@ -104,10 +104,22 @@ class AdministrationMembersView extends React.PureComponent {
         this.setState({ emailError: 'Ingrese un email valido' })
     }
 
+    defineInvitationRoute(){
+        console.log("vendor", this.props.vendorSelected.few);
+        if(this.props.vendorSelected.few.gcc){
+            console.log("returning", 'rest/user/gcc/invitacion')
+            return 'rest/user/gcc/invitacion';
+        }else{
+            console.log("returning", 'rest/user/nodo/enviarInvitacion')
+            return 'rest/user/nodo/enviarInvitacion';
+        }
+    }
+
     handleSubmit() {
         this.setState({ loading: true })
         if (this.validEmail()) {
-            axios.post((this.serverBaseRoute + 'rest/user/gcc/invitacion'), {
+            console.log("return", this.defineInvitationRoute())
+            axios.post((this.serverBaseRoute + this.defineInvitationRoute()), {
                 idGrupo: this.props.groupSelected.id,
                 emailInvitado: this.state.email
             }, { withCredentials: true }).then(res => {
@@ -133,9 +145,20 @@ class AdministrationMembersView extends React.PureComponent {
 
     }
 
+    defineStrategyRoute(){
+        let value = ''
+        if(this.props.vendorSelected.few.gcc){
+            value = 'rest/user/gcc/'
+        }
+        if(this.props.vendorSelected.few.nodos){
+            value = 'rest/user/nodo/'
+        }
+        return value
+    }
+
     sendPassAdministration(email) {
         this.setState({ loading: true })
-        axios.post((this.serverBaseRoute + '/rest/user/gcc/cederAdministracion'), {
+        axios.post((this.serverBaseRoute + this.defineStrategyRoute() +'cederAdministracion'), {
             idGrupo: this.props.groupSelected.id,
             emailCliente: email
         }, { withCredentials: true }).then(res => {
@@ -173,7 +196,7 @@ class AdministrationMembersView extends React.PureComponent {
 
     sendRemoveMember(email) {
         this.setState({ loading: true })
-        axios.post((this.serverBaseRoute + 'rest/user/gcc/quitarMiembro'), {
+        axios.post((this.serverBaseRoute + this.defineStrategyRoute() +'quitarMiembro'), {
             idGrupo: this.props.groupSelected.id,
             emailCliente: email
         }, { withCredentials: true }).then(res => {
@@ -209,7 +232,7 @@ class AdministrationMembersView extends React.PureComponent {
 
     getGroups() {
         this.setState({ loading: true })
-        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
+        axios.get((this.serverBaseRoute + this.defineStrategyRoute()+ 'all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
             this.props.actions.groupsData(res.data);
             this.setState({ loading: false })
             this.findSelectedGroup()

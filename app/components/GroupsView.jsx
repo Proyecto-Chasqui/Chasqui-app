@@ -30,7 +30,7 @@ class GroupsView extends React.PureComponent {
         return message.includes(name);
     }
     isInvitation(message) {
-        return message.includes('invitado al grupo de compras');
+        return message.includes('invitado al grupo de compras') ||  message.includes('invitado al nodo de compras');
     }
 
     filterInvitations(notificacions){
@@ -52,9 +52,20 @@ class GroupsView extends React.PureComponent {
         });
     }
 
+    defineStrategyRoute(){
+        let value = ''
+        if(this.props.vendorSelected.few.gcc){
+            value = 'rest/user/gcc/'
+        }
+        if(this.props.vendorSelected.few.nodos){
+            value = 'rest/user/nodo/'
+        }
+        return value
+    }
+
     getGroups(){
         this.setState({loading:true})
-        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
+        axios.get((this.serverBaseRoute + this.defineStrategyRoute() + 'all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
             this.props.actions.groupsData(res.data);
             this.setState({loading:false})        
         }).catch( (error) => {
@@ -62,7 +73,7 @@ class GroupsView extends React.PureComponent {
             console.log(error);
             if (error.response) {                
             Alert.alert(
-                'Error Grupos',
+                'Error',
                 error.response.data.error,
                 [
                     { text: 'Entendido', onPress: () => this.props.actions.logout() },
@@ -147,7 +158,7 @@ class GroupsView extends React.PureComponent {
         }else{
             Alert.alert(
                 'Aviso',
-                "El pedido colectivo no se puede confirmar, debido a que hay uno o mas pedidos abiertos y/o no supera el monto mínimo para el envío a domicilio. Si cree que esto se cumple, utilice la acción 'actualizar' para obtener los ultimos datos del grupo.",
+                "El pedido colectivo no se puede confirmar, debido a que hay uno o mas pedidos abiertos y/o no supera el monto mínimo para el envío a domicilio. Si cree que esto se cumple, utilice la acción 'actualizar' para sincronizar la información.",
                 [
                     {text: 'Actualizar', onPress: () => this.updateData()},
                     { text: 'Entendido', onPress: () => null },
@@ -193,6 +204,14 @@ class GroupsView extends React.PureComponent {
             }
         })
         return count;
+    }
+
+    defineButtonTitle(){
+        if(this.props.vendorSelected.few.gcc){
+            return "Puede aceptar una invitación o crear uno"
+        }else{
+            return "Puede aceptar una invitación o solicitar uno"
+        }
     }
 
     renderItem = ({ item }) => (
@@ -249,7 +268,7 @@ class GroupsView extends React.PureComponent {
                 </TouchableOpacity>
                 {item.esAdministrador ? (
                     <Button titleStyle={{ color: 'white', }} containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonOkStyle}
-                        title="Confirmar pedido grupal" onPress={()=>this.goToConfirmGroup(item)}
+                        title="Confirmar pedido colectivo" onPress={()=>this.goToConfirmGroup(item)}
                         disabled={!this.atLeastOneConfirmed(item)}
                         icon={
                             <View>
@@ -301,7 +320,7 @@ class GroupsView extends React.PureComponent {
                         <FlatList
                             ListHeaderComponent={
                                 <View style={styles.titleContainer}>
-                                    <Text style={styles.adressTitle}>Grupos</Text>
+                                    <Text style={styles.adressTitle}>{this.props.vendorSelected.few.gcc?("Grupos"):("Nodos")}</Text>
                                 </View>}
                             keyExtractor={this.keyExtractor}
                             data={this.props.groupsData}
@@ -315,11 +334,11 @@ class GroupsView extends React.PureComponent {
                                         <Icon name="users" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
                                     </View>
                                     <Text style={styles.errorText}>
-                                        No pertenece a ningun grupo
+                                        No pertenece a ningun {this.props.vendorSelected.few.gcc?("grupo"):("nodo")}
                                     </Text>
                                     <View style={{justifyContent:"center", alignContent:"center", alignItems:"center"}}>
                                         <Button
-                                        title="Puede aceptar una invitación o crear uno"
+                                        title={this.defineButtonTitle()}
                                             buttonStyle={styles.tipErrorText}
                                             onPress={() => this.showControls()}
                                             type="clear"

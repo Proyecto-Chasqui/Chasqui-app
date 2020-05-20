@@ -7,6 +7,7 @@ const mapStateToProps = state => ({
     groupsData : state.groupsData,
     shoppingCarts: state.shoppingCarts,
     invitationsData: state.invitationsData,
+    vendorSelected:state.vendorSelected,
 });
 
 const mapDispatchToProps = dispatch => ({

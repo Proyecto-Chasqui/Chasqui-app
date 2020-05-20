@@ -38,7 +38,7 @@ class GroupsControlsOverlayView extends React.PureComponent {
                         <View style={{ justifyContent: "space-evenly", flex: 1 }}>
                             {this.props.groupsData.length > 0 ? (
                                 <Button
-                                    title="Actualizar grupos"
+                                    title="Actualizar"
                                     titleStyle={styles.normalTitleButton}
                                     buttonStyle={styles.normalButtonStyle}
                                     containerStyle={styles.contanierNormalButton}
@@ -54,6 +54,7 @@ class GroupsControlsOverlayView extends React.PureComponent {
                                     onPress={()=>this.updateGroupsData()}
                                 />
                             ) : (null)}
+                            {this.props.vendorSelected.few.gcc ?(
                             <Button
                                 title="Crear grupo"
                                 titleStyle={styles.normalTitleButton}
@@ -70,7 +71,25 @@ class GroupsControlsOverlayView extends React.PureComponent {
                                         size={35}
                                     />
                                 }
-                            />
+                            />):(
+                                <Button
+                                title="Solicitar Nodo"
+                                titleStyle={styles.normalTitleButton}
+                                buttonStyle={styles.normalButtonStyle}
+                                containerStyle={styles.contanierNormalButton}
+                                onPress={() => null}
+                                raised
+                                icon={
+                                    <Icon
+                                        containerStyle={styles.iconContainerStyle}
+                                        name='group-add'
+                                        type='material'
+                                        color='white'
+                                        size={35}
+                                    />
+                                }
+                            />                                
+                            )}
                             <View>
                             <Button
                                 title="Ver invitaciones"

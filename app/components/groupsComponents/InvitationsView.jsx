@@ -27,9 +27,16 @@ class InvitationsView extends React.PureComponent {
         });
     }
 
+    defineAcceptRoute(){
+        if(this.props.vendorSelected.few.gcc){
+            return 'rest/user/gcc/aceptar'
+        }else{
+            return 'rest/user/nodo/aceptarInvitacion'
+        }
+    }
     sendAccept(id) {
         this.setState({loading:true})
-        axios.post(this.serverBaseRoute + 'rest/user/gcc/aceptar', {
+        axios.post(this.serverBaseRoute + this.defineAcceptRoute(), {
             idInvitacion: id,
         }, { withCredentials: true }).then(res => {
             this.resetInvitations()
@@ -79,8 +86,19 @@ class InvitationsView extends React.PureComponent {
         );
     }
 
+    defineStrategyRoute(){
+        let value = ''
+        if(this.props.vendorSelected.few.gcc){
+            value = 'rest/user/gcc/'
+        }
+        if(this.props.vendorSelected.few.nodos){
+            value = 'rest/user/nodo/'
+        }
+        return value
+    }
+
     getGroups() {
-        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
+        axios.get((this.serverBaseRoute + this.defineStrategyRoute() + 'all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
             this.props.actions.groupsData(res.data);
         }).catch((error) => {
             console.log(error);
@@ -102,9 +120,17 @@ class InvitationsView extends React.PureComponent {
         });
     }
 
+    defineDeclineInvitationRoute(){
+        if(this.props.vendorSelected.few.gcc){
+            return 'rest/user/gcc/rechazar';
+        }else{
+            return 'rest/user/nodo/rechazarInvitacion';
+        }
+    }
+
     sendDeclined(id) {
         this.setState({loading:true})
-        axios.post(this.serverBaseRoute + 'rest/user/gcc/rechazar', {
+        axios.post(this.serverBaseRoute + this.defineDeclineInvitationRoute(), {
             idInvitacion: id,
         }, { withCredentials: true }).then(res => {
             this.resetInvitations()
@@ -144,7 +170,7 @@ class InvitationsView extends React.PureComponent {
         return message.includes(name);
     }
     isInvitation(message) {
-        return message.includes('invitado al grupo de compras');
+        return message.includes('invitado al grupo de compras')|| message.includes('invitado al nodo de compras');
     }
 
     keyExtractor = (item, index) => index.toString()

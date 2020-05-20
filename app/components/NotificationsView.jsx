@@ -54,7 +54,8 @@ class NotificationsView extends React.PureComponent {
         this.getNotifications(this.state.page)
         this.getTotalNotifications()
     }
-
+    //la ruta para aceptar una invitacion de nodo es rest/user/nodos/aceptarInvitacion
+    //revisar como parametrizar esto.
     sendAccept(id){
         axios.post(this.serverBaseRoute + 'rest/user/gcc/aceptar',{
             idInvitacion : id,
@@ -81,7 +82,8 @@ class NotificationsView extends React.PureComponent {
             );
         });
     }
-
+    //la ruta para aceptar una invitacion de nodo es rest/user/nodos/rechazarInvitacion
+    //revisar como parametrizar esto.
     sendDeclined(id){
         axios.post(this.serverBaseRoute + 'rest/user/gcc/rechazar',{
             idInvitacion : id,
@@ -166,7 +168,7 @@ class NotificationsView extends React.PureComponent {
     }
 
     isInvitation(message) {
-        return message.includes('invitado al grupo de compras');
+        return message.includes('invitado al grupo de compras')|| message.includes('invitado al nodo de compras');
     }
 
     keyExtractor = (item, index) => index.toString()

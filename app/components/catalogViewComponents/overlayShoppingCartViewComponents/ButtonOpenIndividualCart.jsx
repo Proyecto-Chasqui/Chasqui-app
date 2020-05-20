@@ -24,6 +24,10 @@ class ButtonOpenIndividualCart extends React.PureComponent {
     }
 
     render() {
+        if(!this.props.vendorSelected.few.compraIndividual){
+            return null
+        }
+
         if (this.state.existOpenCart) {
             return (
                 <View style={{

@@ -26,6 +26,17 @@ class OverlayShoppingCartView extends React.PureComponent {
         }
     }
 
+    defineStrategyRoute(){
+        let value = ''
+        if(this.props.vendorSelected.few.gcc){
+            value = 'rest/user/gcc/'
+        }
+        if(this.props.vendorSelected.few.nodos){
+            value = 'rest/user/nodo/'
+        }
+        return value
+    }
+
     showShoppingCarts() {
         this.setState({ showShoppingCarts: !this.state.showShoppingCarts })
         if (this.state.showShoppingCarts) {
@@ -61,7 +72,7 @@ class OverlayShoppingCartView extends React.PureComponent {
 
     openCartOnGroup(group) {
         this.setState({ showWaitSign: true })
-        axios.post((this.serverBaseRoute + 'rest/user/gcc/individual'), {
+        axios.post((this.serverBaseRoute + this.defineStrategyRoute()+ 'individual'), {
             idGrupo: group.id,
             idVendedor: this.props.vendorSelected.id
         }, { withCredentials: true }).then(res => {
@@ -149,6 +160,7 @@ class OverlayShoppingCartView extends React.PureComponent {
     }
 
     validCatalog() {
+        return true;
         if (this.vendorSelected.few.compraIndividual !== undefined) {
             return this.vendorSelected.few.compraIndividual
         } else {

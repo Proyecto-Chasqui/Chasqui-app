@@ -52,7 +52,7 @@ class GroupControlsOverlayView extends React.PureComponent {
 
     openCartOnGroup(group) {
         this.setState({ showWaitSign: true })
-        axios.post((this.serverBaseRoute + 'rest/user/gcc/individual'), {
+        axios.post((this.serverBaseRoute + this.defineStrategyRoute()+ 'individual'), {
             idGrupo: group.id,
             idVendedor: this.props.vendorSelected.id
         }, { withCredentials: true }).then(res => {
@@ -174,9 +174,20 @@ class GroupControlsOverlayView extends React.PureComponent {
         this.props.navigation.navigate("HistorialPedidosGrupo")
     }
 
+    defineStrategyRoute(){
+        let value = ''
+        if(this.props.vendorSelected.few.gcc){
+            value = 'rest/user/gcc/'
+        }
+        if(this.props.vendorSelected.few.nodos){
+            value = 'rest/user/nodo/'
+        }
+        return value
+    }
+
     goToGroups(text) {
         this.setState({ loading: true })
-        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
+        axios.get((this.serverBaseRoute + this.defineStrategyRoute() +'all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
             this.props.actions.groupsData(res.data);
             if(text.length > 0){
                 Alert.alert('Aviso', text);
@@ -204,8 +215,10 @@ class GroupControlsOverlayView extends React.PureComponent {
         });
     }
 
+    
+
     getOutOfGroup() {
-        axios.post((this.serverBaseRoute + 'rest/user/gcc/quitarMiembro'), {
+        axios.post((this.serverBaseRoute + this.defineStrategyRoute()+'quitarMiembro'), {
             idGrupo: this.props.groupSelected.id,
             emailCliente: this.props.user.email
         }, { withCredentials: true }).then(res => {
@@ -303,6 +316,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                                     raised
                                     onPress={()=>this.goToHistory()}
                                 />
+                                {this.props.vendorSelected.few.gcc?(
                                 <Button
                                     title="Gestionar grupo"
                                     titleStyle={styles.normalTitleButton}
@@ -319,7 +333,24 @@ class GroupControlsOverlayView extends React.PureComponent {
                                     onPress={() => this.props.showEditGroup()}
                                     raised
                                 />
-
+                                ):(
+                                <Button
+                                    title="Gestionar nodo"
+                                    titleStyle={styles.normalTitleButton}
+                                    buttonStyle={styles.normalButtonStyle}
+                                    containerStyle={styles.contanierNormalButton}
+                                    icon={
+                                        <Icon
+                                            containerStyle={styles.iconContainerStyle}
+                                            name='clipboard'
+                                            type='font-awesome'
+                                            color='white'
+                                        />
+                                    }
+                                    onPress={() => null}
+                                    raised
+                                />
+                                )}
                                 <Button
                                     title="Administrar integrantes"
                                     titleStyle={styles.normalTitleButton}

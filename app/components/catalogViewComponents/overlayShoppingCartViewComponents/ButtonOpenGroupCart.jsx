@@ -39,21 +39,33 @@ class ButtonOpenGroupCart extends React.PureComponent {
     }
 
     render() {
+        if (!this.props.vendorSelected.few.gcc && !this.props.vendorSelected.few.nodos) {
+            console.log("vendor", this.props.vendorSelected.few)
+            return null
+        }
+
         if (this.state.existOpenCart) {
             return (
                 <View style={{
                     borderWidth: 2,
                     borderRadius: 3,
                     margin: 10,
-                    borderColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('black'):("#D8D8D8"),
+                    borderColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('black') : ("#D8D8D8"),
                 }}>
-                    <View style={{  justifyContent: "center", borderColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('black'):("#D8D8D8"), borderWidth: 2, borderBottomWidth: 0, borderTopRightRadius: 5, borderTopLeftRadius: 5, marginLeft: -2, marginRight: -2, marginTop: -2, alignItems: 'center', flexDirection: "row", backgroundColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('#5ebb47'):('rgba(51, 102, 255, 1)') }}>
+                    <View style={{ justifyContent: "center", borderColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('black') : ("#D8D8D8"), borderWidth: 2, borderBottomWidth: 0, borderTopRightRadius: 5, borderTopLeftRadius: 5, marginLeft: -2, marginRight: -2, marginTop: -2, alignItems: 'center', flexDirection: "row", backgroundColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('#5ebb47') : ('rgba(51, 102, 255, 1)') }}>
                         <View style={{ flex: 8, alignItems: "center", margin: 5 }}>
                             <Text style={styles.aliasStyle}>{this.props.group.alias}</Text>
                         </View>
-                        <View style={styles.iconStyle}>
-                            <Image style={styles.badgeImage} source={require('../../vendorsViewComponents/badge_icons/compra_grupal.png')} />
-                        </View>
+                        {this.props.vendorSelected.few.gcc ? (
+                            <View style={styles.iconStyle}>
+                                <Image style={styles.badgeImage} source={require('../../vendorsViewComponents/badge_icons/compra_grupal.png')} />
+                            </View>
+                        ) : (null)}
+                        {this.props.vendorSelected.few.nodos ? (
+                            <View style={styles.iconStyle}>
+                                <Image style={styles.badgeImage} source={require('../../vendorsViewComponents/badge_icons/compra_nodos.png')} />
+                            </View>
+                        ) : (null)}
                     </View>
                     <View style={{ margin: 5 }}>
                         <Text style={styles.textResumeStyle}> Total: ${(this.state.cart.montoActual).toFixed(2)} </Text>
@@ -74,17 +86,24 @@ class ButtonOpenGroupCart extends React.PureComponent {
                         (
                             <View style={styles.selectorContainer}>
                                 <View style={{ justifyContent: "center", borderColor: "#D8D8D8", borderWidth: 2, borderBottomWidth: 0, borderTopRightRadius: 5, borderTopLeftRadius: 5, marginLeft: -2, marginRight: -2, marginTop: -2, alignItems: 'center', flexDirection: "row", backgroundColor: 'rgba(51, 102, 255, 1)' }}>
-                                    <View style={{ flex: 8, alignItems: "center",  margin: 5 }}>
+                                    <View style={{ flex: 8, alignItems: "center", margin: 5 }}>
                                         <Text style={styles.aliasStyle}>{this.props.group.alias}</Text>
                                     </View>
-                                    <View style={styles.iconStyle}>
-                                        <Image style={styles.badgeImage} source={require('../../vendorsViewComponents/badge_icons/compra_grupal.png')} />
-                                    </View>
+                                    {this.props.vendorSelected.few.gcc ? (
+                                        <View style={styles.iconStyle}>
+                                            <Image style={styles.badgeImage} source={require('../../vendorsViewComponents/badge_icons/compra_grupal.png')} />
+                                        </View>
+                                    ) : (null)}
+                                    {this.props.vendorSelected.few.nodos ? (
+                                        <View style={styles.iconStyle}>
+                                            <Image style={styles.badgeImage} source={require('../../vendorsViewComponents/badge_icons/compra_nodos.png')} />
+                                        </View>
+                                    ) : (null)}
                                 </View>
                                 <View style={{ margin: 5 }}>
                                     <View style={styles.messageContainer}>
                                         <Text style={{ marginTop: 3, textAlign: "center", color: "white", fontSize: 17, fontWeight: "bold" }}> Confirmado </Text>
-                                        <Text style={{ marginBottom: 3, textAlign: "center", color: "white",  fontSize: 12, fontStyle: "italic", fontWeight: "bold" }}> En espera de confirmación grupal </Text>
+                                        <Text style={{ marginBottom: 3, textAlign: "center", color: "white", fontSize: 12, fontStyle: "italic", fontWeight: "bold" }}> En espera de confirmación grupal </Text>
                                     </View>
                                     <View style={{ marginTop: 3 }}>
                                         <Text style={styles.textResumeStyle}> Total: ${(this.state.memberCart.montoActual).toFixed(2)} </Text>
@@ -100,9 +119,16 @@ class ButtonOpenGroupCart extends React.PureComponent {
                                         <View style={{ flex: 8, alignItems: "center", margin: 5 }}>
                                             <Text style={styles.aliasStyle}>{this.props.group.alias}</Text>
                                         </View>
-                                        <View style={styles.iconStyle}>
-                                            <Image style={styles.badgeImage} source={require('../../vendorsViewComponents/badge_icons/compra_grupal.png')} />
-                                        </View>
+                                        {this.props.vendorSelected.few.gcc ? (
+                                            <View style={styles.iconStyle}>
+                                                <Image style={styles.badgeImage} source={require('../../vendorsViewComponents/badge_icons/compra_grupal.png')} />
+                                            </View>
+                                        ) : (null)}
+                                        {this.props.vendorSelected.few.nodos ? (
+                                            <View style={styles.iconStyle}>
+                                                <Image style={styles.badgeImage} source={require('../../vendorsViewComponents/badge_icons/compra_nodos.png')} />
+                                            </View>
+                                        ) : (null)}
                                     </View>
                                     <View style={{ margin: 5 }}>
                                         <View style={styles.selectorContainer}>

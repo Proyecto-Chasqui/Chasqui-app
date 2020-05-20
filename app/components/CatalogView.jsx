@@ -71,21 +71,32 @@ class CatalogView extends React.Component {
             if (this.props.vendorSelected.few.puntoDeEntrega) {
                 this.getSellerPoints(this.props);
             }
-            if(this.props.vendorSelected.few.gcc){
+            if(this.props.vendorSelected.few.gcc || this.props.vendorSelected.few.nodos){
                 this.getGroups();
             }
 
         }
     }
 
+    defineStrategyRoute(){
+        let value = ''
+        if(this.props.vendorSelected.few.gcc){
+            value = 'rest/user/gcc/'
+        }
+        if(this.props.vendorSelected.few.nodos){
+            value = 'rest/user/nodo/'
+        }
+        return value
+    }
+
     getGroups(){
-        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
+        axios.get((this.serverBaseRoute + this.defineStrategyRoute() + 'all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
             this.props.actions.groupsData(res.data);
         }).catch( (error) => {
             console.log(error);
             if (error.response) {                
             Alert.alert(
-                'Error Grupos',
+                'Error',
                 error.response.data.error,
                 [
                     { text: 'Entendido', onPress: () => this.props.actions.logout() },

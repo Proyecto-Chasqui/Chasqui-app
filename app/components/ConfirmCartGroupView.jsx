@@ -191,17 +191,27 @@ class ConfirmCartGroupView extends React.PureComponent {
             { cancelable: false },
         );
     }
+    defineStrategyRoute(){
+        let value = ''
+        if(this.props.vendorSelected.few.gcc){
+            value = 'rest/user/gcc/'
+        }
+        if(this.props.vendorSelected.few.nodos){
+            value = 'rest/user/nodo/'
+        }
+        return value
+    }
 
     getGroups(){
         this.setState({loading:true})
-        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
+        axios.get((this.serverBaseRoute + this.defineStrategyRoute()+'/all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
             this.props.actions.groupsData(res.data);     
         }).catch( (error) => {
             this.setState({loading:false})
             console.log(error);
             if (error.response) {                
             Alert.alert(
-                'Error Grupos',
+                'Error',
                 error.response.data.error,
                 [
                     { text: 'Entendido', onPress: () => this.props.actions.logout() },
@@ -211,7 +221,7 @@ class ConfirmCartGroupView extends React.PureComponent {
               } else if (error.request) {
                 Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
               } else {
-                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+                Alert.alert('Error', "Ocurrio un error, intente más tarde o verifique su conectividad.");
               }
         });
     }
@@ -261,7 +271,7 @@ class ConfirmCartGroupView extends React.PureComponent {
     
     confirmCart(){        
         this.setState({ showWaitSign: true, loading:true, allownext:false})
-        axios.post((this.serverBaseRoute + 'rest/user/gcc/confirmar'),{
+        axios.post((this.serverBaseRoute + this.defineStrategyRoute() + 'confirmar'),{
             idDireccion: this.state.adressSelected !== undefined ? this.state.adressSelected.idDireccion : null,
             idGrupo: this.props.groupSelected.id,
             idPuntoDeRetiro: this.state.sellerPointSelected !== undefined ? this.state.sellerPointSelected.id : null,

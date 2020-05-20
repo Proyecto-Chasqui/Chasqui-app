@@ -76,6 +76,13 @@ class NavigationItemsView extends React.PureComponent {
                                     title="Mis grupos"
                                     titleStyle={styles.menuButtonTitleFixedSection}
                                 />) : (null)}
+                                {this.props.vendorSelected.few.nodos ? (
+                                <Button
+                                    buttonStyle={styles.menuButtonSection}
+                                    onPress={() => this.goToGroups()}
+                                    title="Mis nodos"
+                                    titleStyle={styles.menuButtonTitleFixedSection}
+                                />) : (null)}
                             </View>
                         ) : (null)}
                     </View>

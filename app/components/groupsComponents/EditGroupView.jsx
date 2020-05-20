@@ -64,8 +64,19 @@ class EditGroupView extends React.PureComponent {
         }
     }
 
+    defineStrategyRoute(){
+        let value = ''
+        if(this.props.vendorSelected.few.gcc){
+            value = 'rest/user/gcc/'
+        }
+        if(this.props.vendorSelected.few.nodos){
+            value = 'rest/user/nodo/'
+        }
+        return value
+    }
+
     getGroups(deleting) {
-        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
+        axios.get((this.serverBaseRoute + this.defineStrategyRoute() + 'all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
             this.props.actions.groupsData(res.data);
             this.setState({ loading: false })
             this.findAndSelectGroup(deleting);
@@ -88,7 +99,7 @@ class EditGroupView extends React.PureComponent {
             }
         });
     }
-
+    
     deleteGroupOnServer() {
         this.setState({ loading: true })
         axios.post((this.serverBaseRoute + 'rest/user/gcc/eliminarGrupo'), {
