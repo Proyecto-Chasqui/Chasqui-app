@@ -28,6 +28,7 @@ class DetailGroupView extends React.PureComponent {
     keyExtractor = (item, index) => index.toString()
 
     goToMember(member){
+        console.log("integrante", member)
         this.props.actions.memberSelected(member);
         this.props.navigation.navigate("Miembro");
     }
@@ -112,7 +113,7 @@ class DetailGroupView extends React.PureComponent {
         }
     }
 
-    renderItem = ({ item }) => (
+    renderItem = ({ item }) => (        
         <View>
         { item.invitacion !== "NOTIFICACION_NO_LEIDA" ?(
         <TouchableOpacity disabled={this.props.disabledPress} onPress={()=>(this.goToMember(item))} style={this.isUser(item)}>

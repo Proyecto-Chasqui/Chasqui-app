@@ -22,6 +22,11 @@ class GroupsControlsOverlayView extends React.PureComponent {
         this.props.navigation.navigate("Invitaciones")
     }
 
+    goToNodeRequest(){
+        this.props.showControls();
+        this.props.navigation.navigate("SolicitudDeNodo")
+    }
+
     render() {
         return (
             <Overlay containerStyle={styles.overlayContainer}
@@ -88,6 +93,7 @@ class GroupsControlsOverlayView extends React.PureComponent {
                                         size={35}
                                     />
                                 }
+                                onPress={()=> this.goToNodeRequest()}
                             />                                
                             )}
                             <View>

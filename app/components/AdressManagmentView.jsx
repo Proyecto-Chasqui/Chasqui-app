@@ -362,7 +362,7 @@ class AdressManagmentView extends React.PureComponent {
         }).then(res => {
             this.adressesData(res.data);
             this.showAlertActionComplete(text);
-        }).catch(function (error) {
+        }).catch((error) => {
             console.log("error en udpate", error);
             Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
         });
@@ -423,7 +423,7 @@ class AdressManagmentView extends React.PureComponent {
             provincia: '',
         },{withCredentials: true}).then(res => {
             this.updateAdressData(this.state.saveMessage);
-        }).catch(function (error) {
+        }).catch((error) =>{
             console.log(error);
             this.setState({isVisible:false})
             if (error.response) {
@@ -515,7 +515,7 @@ class AdressManagmentView extends React.PureComponent {
                 },withCredentials: true
             }).then(res => {
                 this.updateAdressData(this.state.deleteMessage);
-            }).catch(function (error) {
+            }).catch((error) => {
                 Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
             });
         }
