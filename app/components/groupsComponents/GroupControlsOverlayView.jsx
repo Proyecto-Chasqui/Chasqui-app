@@ -281,6 +281,12 @@ class GroupControlsOverlayView extends React.PureComponent {
         }
     }
 
+    goToEditNode(){
+        this.props.showControls()
+        this.props.navigation.navigate('SolicitudDeNodo', {
+            editNodeMode: true,
+        });
+    }
 
 
     render() {
@@ -347,7 +353,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                                             color='white'
                                         />
                                     }
-                                    onPress={() => null}
+                                    onPress={() => this.goToEditNode()}
                                     raised
                                 />
                                 )}

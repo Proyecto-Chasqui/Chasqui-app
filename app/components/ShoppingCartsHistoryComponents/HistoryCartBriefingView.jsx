@@ -9,6 +9,7 @@ class HistoryCartBriefingView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.serverBaseRoute = GLOBALS.BASE_URL;
+        console.log("history cart", this.props.historyCartSelected)
     }
 
     goToGroups(){
@@ -108,7 +109,7 @@ class HistoryCartBriefingView extends React.PureComponent {
                 {this.props.historyCartSelected.aliasGrupo !== null ?
                     (
                         <View>
-                            <Text style={styles.sectionTitleTextStyle}>Realizado en el grupo</Text>
+                            <Text style={styles.sectionTitleTextStyle}>Realizado en </Text>
                             <Text style={{ margin: 5, color: "blue", fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.props.historyCartSelected.aliasGrupo}</Text>
                         </View>
                     )
