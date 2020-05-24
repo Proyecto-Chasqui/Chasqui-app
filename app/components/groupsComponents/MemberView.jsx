@@ -86,7 +86,7 @@ class MemberView extends React.PureComponent {
                         ) : (null)}
                         <View style={{ marginStart: 10, flex: 1 }}>
                             <Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", }}>{this.props.memberSelected.nickname}</Text>
-                            <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>{this.props.memberSelected.email}</Text>
+                            <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey", }}>{this.props.memberSelected.email}</Text>
                             {this.props.memberSelected.pedido != null ? (
                                 <View style={{ flexDirection: "row" }}>
                                     <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Pedido: {this.props.memberSelected.pedido.estado}</Text>
@@ -97,7 +97,7 @@ class MemberView extends React.PureComponent {
                         </View>
                     </View>
                 </View>
-                <View >
+                <View style={{flex:1}}>
                     {this.props.memberSelected.pedido != null ? (
                         <View>
                             {this.cartNotConfirmed() ? (
@@ -116,7 +116,7 @@ class MemberView extends React.PureComponent {
                                     </View>
                                 </View>
                             ) : (null)}
-                            <FlatList
+                            <FlatList 
                                 ListHeaderComponent={
                                     <View style={styles.titleContainer}>
                                         <Text style={styles.sectionTitleTextStyle}>Pedido</Text>
@@ -127,7 +127,7 @@ class MemberView extends React.PureComponent {
                             />
                         </View>
                     ) : (
-                            <View>
+                            <View >
                                 <View style={styles.titleContainer}>
                                     <Text style={styles.sectionTitleTextStyle}>Pedido</Text>
                                 </View>

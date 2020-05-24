@@ -309,7 +309,8 @@ class NotificationsView extends React.PureComponent {
                         </View>
                     </Header>
                 </View>
-                {this.state.firstLoading ? (<LoadingView></LoadingView>) : (<View style={{ flex: 1 }}>
+                {this.state.firstLoading ? (<LoadingView></LoadingView>) : (
+                <View style={{ flex: 1 }}>
                     {this.state.notifications.length === 0 && !this.state.loading ? (
                         <View style={styles.viewErrorContainer}>
                             <View style={styles.searchIconErrorContainer}>

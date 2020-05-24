@@ -129,7 +129,6 @@ class NodeRequestView extends React.PureComponent {
     }
 
     setEditActiveNode(){
-        console.log("open edit node mode")
         this.setState({ loadingData: false })
         if (this.props.groupSelected !== null) {
             this.setState((prevState) => ({

@@ -1,6 +1,6 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Text, Header, Button, Icon } from 'react-native-elements';
+import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { Text, Header, Button, Icon, } from 'react-native-elements';
 
 class NavigationItemsView extends React.PureComponent {
     constructor(props) {
@@ -39,52 +39,78 @@ class NavigationItemsView extends React.PureComponent {
     goToGroups() {
         this.navigation.navigate('MisGrupos');
     }
+    goToOpenNodes() {
+        this.navigation.navigate('NodosAbiertos');
+    }
 
     render() {
         return (
-            <View style={{ backgroundColor: "white" }}>
+            <View style={{ backgroundColor: "white", flex: 1 }}>
                 {this.showControls() ? (
-                    <View style={{ backgroundColor: "white", marginTop: 10, marginBottom: 10, alignItems: "flex-start", }}>
-                        <Button
-                            buttonStyle={styles.menuButtonSection}
+                    <View style={{ flex: 1, backgroundColor: "white", marginLeft: 60 }}>
+                        <TouchableOpacity
                             onPress={() => this.goToCatalogs()}
-                            title="Catálogos"
-                            titleStyle={styles.menuButtonTitleSection}
-                        />
+                            style={styles.optionContainer}
+                        >
+                            <Text style={styles.menuButtonTitleSection}>Catálogos </Text>
+                        </TouchableOpacity>
                         {this.props.vendorSelected.few.seleccionDeDireccionDelUsuario || this.props.vendorSelected.few.puntoDeEntrega ?
                             (
-                                <Button
-                                    buttonStyle={styles.menuButtonSection}
+                                <TouchableOpacity
                                     onPress={() => this.goToDeliveryZones()}
-                                    title="Entregas"
-                                    titleStyle={styles.menuButtonTitleSection}
-                                />
+                                    style={styles.optionContainer}
+                                >
+                                    <Text style={styles.menuButtonTitleSection}>Entregas</Text>
+                                </TouchableOpacity>
                             ) : (null)
                         }
                         {this.props.user.id != 0 ? (
-                            <View style={{alignItems:"center"}}>
-                                <Button
-                                    buttonStyle={styles.menuButtonSection}
+                            <View style={{ flex: 1 }}>
+                                <TouchableOpacity
                                     onPress={() => this.goToShoppingCartsHistory()}
-                                    title="Historial de pedidos"
-                                    titleStyle={styles.menuButtonTitleSection}
-                                />
+                                    style={styles.optionContainer}
+                                >
+                                    <Text style={styles.menuButtonTitleSection}>Historial de pedidos</Text>
+                                </TouchableOpacity>
                                 {this.props.vendorSelected.few.gcc ? (
-                                <Button
-                                    buttonStyle={styles.menuButtonSection}
-                                    onPress={() => this.goToGroups()}
-                                    title="Mis grupos"
-                                    titleStyle={styles.menuButtonTitleFixedSection}
-                                />) : (null)}
+                                    <TouchableOpacity
+                                        onPress={() => this.goToGroups()}
+                                        style={styles.optionContainer}
+                                    >
+                                        <Text style={styles.menuButtonTitleSection}>Mis grupos</Text>
+                                    </TouchableOpacity>
+                                ) : (null)}
                                 {this.props.vendorSelected.few.nodos ? (
-                                <Button
-                                    buttonStyle={styles.menuButtonSection}
-                                    onPress={() => this.goToGroups()}
-                                    title="Mis nodos"
-                                    titleStyle={styles.menuButtonTitleFixedSection}
-                                />) : (null)}
+                                    <View >
+                                        <TouchableOpacity
+                                            onPress={() => this.goToGroups()}
+                                            style={styles.optionContainer}
+                                        >
+                                            <Text style={styles.menuButtonTitleSection}>Mis nodos</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => this.goToOpenNodes()}
+                                            style={styles.optionContainer}
+                                        >
+                                            <Text style={styles.menuButtonTitleSection}>Nodos abiertos</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                ) : (null)}
                             </View>
-                        ) : (null)}
+                        ) : (
+                            <View>
+                            {this.props.vendorSelected.few.nodos ? (
+                                <View >
+                                    <TouchableOpacity
+                                        onPress={() => this.goToOpenNodes()}
+                                        style={styles.optionContainer}
+                                    >
+                                        <Text style={styles.menuButtonTitleSection}>Nodos abiertos</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ) : (null)}
+                            </View>
+                        )}
                     </View>
                 ) : (
                         null
@@ -97,16 +123,28 @@ class NavigationItemsView extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+    optionContainer: {
+        backgroundColor: "white",
+        height: 40,
+        flexDirection: "row",
+        alignItems: "center"
+    },
     menuButtonSection: {
-        backgroundColor: "white"
+        backgroundColor: "white",
+        alignSelf: "flex-start",
+
     },
     menuButtonTitleSection: {
         color: "black",
-        marginLeft: 50
+        textAlign: "left",
+        fontSize: 15,
+        fontWeight: "bold",
     },
     menuButtonTitleFixedSection: {
         color: "black",
-        marginLeft: -10
+        alignContent: "flex-start",
+        alignSelf: 'flex-end',
+
     }
 });
 

@@ -466,7 +466,7 @@ class AdministrationMembersView extends React.PureComponent {
                     </View>
                 )}
 
-                <View>
+                <View style={{flex:1}}>
                     <FlatList
                         ListHeaderComponent={
                             <View>

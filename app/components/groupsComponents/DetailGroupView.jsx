@@ -127,9 +127,9 @@ class DetailGroupView extends React.PureComponent {
                     <Icon containerStyle={{margin:1}} name="star" size={15} color="blue" type='font-awesome' />
                 </View>
                 ):(null)}
-                <View style={{ marginStart: 10,flex:1  }}>
+                <View style={{ marginStart: 10, }}>
                     <Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", }}>{item.nickname}</Text>
-                    <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>{item.email}</Text>
+                    <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey"}}>{item.email}</Text>
                     <View>
                         {item.pedido != null ?(
                         <View style={{ flexDirection: "row" }}>
@@ -182,7 +182,7 @@ class DetailGroupView extends React.PureComponent {
                 <EditGroupView navigation={this.props.navigation} showEditGroup={() => this.showEditGroup()} isVisible={this.state.showEditGroup}></EditGroupView>
                 </View>
                 )}
-                <View>
+                <View style={{flex:1}}> 
                     <FlatList
                         ListHeaderComponent={
                             <View>

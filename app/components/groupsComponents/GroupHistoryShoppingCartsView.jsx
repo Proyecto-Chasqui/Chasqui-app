@@ -150,12 +150,16 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
         }
     }
 
+    cartIsConfirmed(estado){
+        return estado === "CONFIRMADO" || estado === "PREPARADO" || estado === "ENTREGADO"
+    }
+
     calculateAmount(groupCart){
         let amount = 0
         if(groupCart.pedidos !== null){
             groupCart.pedidos.map((pedido)=>{
-                if(pedido.estado === "CONFIRMADO"){
-                    amount = amount + pedido.montoActual //dudo del valor real de este numero.
+                if(this.cartIsConfirmed(pedido.estado)){
+                    amount = amount + pedido.montoActual 
                 }
             })
         }

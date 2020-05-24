@@ -9,7 +9,6 @@ class HistoryCartBriefingView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.serverBaseRoute = GLOBALS.BASE_URL;
-        console.log("history cart", this.props.historyCartSelected)
     }
 
     goToGroups(){

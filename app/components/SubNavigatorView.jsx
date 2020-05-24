@@ -20,7 +20,8 @@ import AdministrationMembersView from '../containers/GroupsComponentsContainers/
 import InvitationsView from '../containers/GroupsComponentsContainers/Invitations';
 import GroupHistoryShoppingCartsView from '../containers/GroupsComponentsContainers/GroupHistoryShoppingCarts';
 import GroupHistoryShoppingCartDetailView from '../containers/GroupsComponentsContainers/GroupHistoryShoppingCartDetail';
-import NodeRequestView from '../containers/GroupsComponentsContainers/NodeRequest'
+import NodeRequestView from '../containers/GroupsComponentsContainers/NodeRequest';
+import OpenNodesView from '../containers/OpenNodes'
 import { createStackNavigator } from '@react-navigation/stack';
 
 
@@ -81,7 +82,8 @@ class SubNavigatorView extends React.PureComponent{
                   <Stack.Screen name='HistorialPedidosGrupo' component={GroupHistoryShoppingCartsView} options={{headerShown:false}}  />                   
                   <Stack.Screen name='DetalleHistorialPedidosGrupo' component={GroupHistoryShoppingCartDetailView} options={{headerShown:false}}  />                   
                   <Stack.Screen name='SolicitudDeNodo' component={NodeRequestView} options={{headerShown:false}}  />                   
-                  
+                  <Stack.Screen name='NodosAbiertos' component={OpenNodesView} options={{headerShown:false}}  />                   
+                
              </Stack.Navigator>
           );
     }
