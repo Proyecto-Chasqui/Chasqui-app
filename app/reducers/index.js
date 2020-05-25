@@ -31,13 +31,14 @@ import invitationsData from './invitationsData';
 import groupHistoryShoppingCarts from './groupHistoryShoppingCarts';
 import groupHistoryShoppingCartSelected from './groupHistoryShoppingCartSelected';
 import openNodesData from './openNodesData';
+import accessOpenNodeRequests from './accessOpenNodeRequests';
 
 const rootReducer = combineReducers({invitationsData, groupsData,groupSelected,memberSelected,
      unreadNotifications, resetState, user, vendors, vendorTags,
      products, seals, sealsSelected, vendorSelected, productSelected, producers,
      producerSelected, productSeals, productionSeals, productCategories, zones, sellerPoints,
      personalData, adressesData, shoppingCartSelected, shoppingCarts,historyShoppingCarts, allProducts,
-     historyCartSelected, groupHistoryShoppingCarts, groupHistoryShoppingCartSelected, openNodesData
+     historyCartSelected, groupHistoryShoppingCarts, groupHistoryShoppingCartSelected, openNodesData, accessOpenNodeRequests
 });
 
 export default rootReducer;

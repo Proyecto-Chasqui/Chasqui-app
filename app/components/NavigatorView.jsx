@@ -21,6 +21,7 @@ class NavigatorView extends React.PureComponent {
     super(props);
     this.logout = props.actions.logout;
     this.state = {
+      lastAccessId: this.props.user.id,
       isSignout: this.props.user.token == "",
       nickname: this.props.user.nickname,
     }
@@ -28,10 +29,26 @@ class NavigatorView extends React.PureComponent {
   }
 
   componentDidUpdate(){
-    if(this.state.nickname != this.props.user.nickname){
-      this.forceUpdate();
-      this.setState({nickname: this.props.user.nickname})
+    if(this.state.lastAccessId !== this.props.user.id){
+      this.resetData()
+      this.setState({ lastAccessId: this.props.user.id})
     }
+  }
+
+  resetData(){
+    let actions = this.props.actions
+    actions.groupsData([])
+    actions.groupSelected({})
+    actions.historyShoppingCarts([])
+    actions.historyCartSelected([])
+    actions.invitationsData([])
+    actions.memberSelected([])
+    actions.openNodesData([])
+    actions.personalData([])
+    actions.shoppingCartSelected([])
+    actions.shoppingCartSelected([])
+    actions.shoppingCarts([])
+    actions.accessOpenNodeRequests([])
   }
 
   createImageUrl(){

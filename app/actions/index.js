@@ -39,6 +39,7 @@ export const INVITATIONS = 'INVITATIONS';
 export const GROUPHISTORYSHOPPINGCARTS = 'GROUPHISTORYSHOPPINGCARTS';
 export const GROUPHISTORYSHOPPINGCARTSELECTED = 'GROUPHISTORYSHOPPINGCARTSELECTED';
 export const OPENNODESDATA = 'OPENNODESDATA';
+export const ACCESSOPENNODEREQUESTS = 'ACCESSOPENNODEREQUESTS';
 
 
 export const resetState = (resetDataState) => ({type:RESETSTATE, resetDataState})
@@ -82,3 +83,4 @@ export const invitationsData = (invitationsStack) => ({type:INVITATIONS, invitat
 export const groupHistoryShoppingCarts = (groupHistoryShoppingCartsStack) =>({type:GROUPHISTORYSHOPPINGCARTS, groupHistoryShoppingCartsStack})
 export const groupHistoryShoppingCartSelected = (groupHistoryShoppingCartSelectedData) => ({type:GROUPHISTORYSHOPPINGCARTSELECTED, groupHistoryShoppingCartSelectedData})
 export const openNodesData = (openNodesStack) => ({type:OPENNODESDATA, openNodesStack})
+export const accessOpenNodeRequests = (accessOpenNodeRequestsStack) => ({type:ACCESSOPENNODEREQUESTS, accessOpenNodeRequestsStack})
