@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions, Alert } from 'react-native'
-import { Button, Icon, Overlay, CheckBox, Image, Header } from 'react-native-elements';
+import { Button, Icon, Overlay, CheckBox, Image, Header, Badge } from 'react-native-elements';
 import axios from 'axios'
 import GLOBALS from '../../Globals'
 import LoadingOverlayView from '../generalComponents/LoadingOverlayView'
@@ -52,7 +52,7 @@ class GroupControlsOverlayView extends React.PureComponent {
 
     openCartOnGroup(group) {
         this.setState({ showWaitSign: true })
-        axios.post((this.serverBaseRoute + this.defineStrategyRoute()+ 'individual'), {
+        axios.post((this.serverBaseRoute + this.defineStrategyRoute() + 'individual'), {
             idGrupo: group.id,
             idVendedor: this.props.vendorSelected.id
         }, { withCredentials: true }).then(res => {
@@ -169,17 +169,17 @@ class GroupControlsOverlayView extends React.PureComponent {
         this.props.navigation.navigate("GestionarMiembros")
     }
 
-    goToHistory(){
+    goToHistory() {
         this.props.showControls()
         this.props.navigation.navigate("HistorialPedidosGrupo")
     }
 
-    defineStrategyRoute(){
+    defineStrategyRoute() {
         let value = ''
-        if(this.props.vendorSelected.few.gcc){
+        if (this.props.vendorSelected.few.gcc) {
             value = 'rest/user/gcc/'
         }
-        if(this.props.vendorSelected.few.nodos){
+        if (this.props.vendorSelected.few.nodos) {
             value = 'rest/user/nodo/'
         }
         return value
@@ -187,12 +187,12 @@ class GroupControlsOverlayView extends React.PureComponent {
 
     goToGroups(text) {
         this.setState({ loading: true })
-        axios.get((this.serverBaseRoute + this.defineStrategyRoute() +'all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
+        axios.get((this.serverBaseRoute + this.defineStrategyRoute() + 'all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
             this.props.actions.groupsData(res.data);
-            if(text.length > 0){
+            if (text.length > 0) {
                 Alert.alert('Aviso', text);
             }
-           
+
             this.setState({ loading: false })
             this.props.navigation.goBack();
         }).catch((error) => {
@@ -215,10 +215,10 @@ class GroupControlsOverlayView extends React.PureComponent {
         });
     }
 
-    
+
 
     getOutOfGroup() {
-        axios.post((this.serverBaseRoute + this.defineStrategyRoute()+'quitarMiembro'), {
+        axios.post((this.serverBaseRoute + this.defineStrategyRoute() + 'quitarMiembro'), {
             idGrupo: this.props.groupSelected.id,
             emailCliente: this.props.user.email
         }, { withCredentials: true }).then(res => {
@@ -281,11 +281,23 @@ class GroupControlsOverlayView extends React.PureComponent {
         }
     }
 
-    goToEditNode(){
+    goToEditNode() {
         this.props.showControls()
         this.props.navigation.navigate('SolicitudDeNodo', {
             editNodeMode: true,
         });
+    }
+
+    amountOfNotManageRequests(){
+        let count = 0
+        if(this.props.vendorSelected.few.nodos){
+            this.props.selectedNodeRequests.map((request)=>{
+                if(request.estado === 'solicitud_pertenencia_nodo_enviado'){
+                    count = count + 1
+                }
+            })
+        }
+        return count
     }
 
 
@@ -320,60 +332,66 @@ class GroupControlsOverlayView extends React.PureComponent {
                                         />
                                     }
                                     raised
-                                    onPress={()=>this.goToHistory()}
+                                    onPress={() => this.goToHistory()}
                                 />
-                                {this.props.vendorSelected.few.gcc?(
-                                <Button
-                                    title="Gestionar grupo"
-                                    titleStyle={styles.normalTitleButton}
-                                    buttonStyle={styles.normalButtonStyle}
-                                    containerStyle={styles.contanierNormalButton}
-                                    icon={
-                                        <Icon
-                                            containerStyle={styles.iconContainerStyle}
-                                            name='clipboard'
-                                            type='font-awesome'
-                                            color='white'
+                                {this.props.vendorSelected.few.gcc ? (
+                                    <Button
+                                        title="Gestionar grupo"
+                                        titleStyle={styles.normalTitleButton}
+                                        buttonStyle={styles.normalButtonStyle}
+                                        containerStyle={styles.contanierNormalButton}
+                                        icon={
+                                            <Icon
+                                                containerStyle={styles.iconContainerStyle}
+                                                name='clipboard'
+                                                type='font-awesome'
+                                                color='white'
+                                            />
+                                        }
+                                        onPress={() => this.props.showEditGroup()}
+                                        raised
+                                    />
+                                ) : (
+                                        <Button
+                                            title="Gestionar nodo"
+                                            titleStyle={styles.normalTitleButton}
+                                            buttonStyle={styles.normalButtonStyle}
+                                            containerStyle={styles.contanierNormalButton}
+                                            icon={
+                                                <Icon
+                                                    containerStyle={styles.iconContainerStyle}
+                                                    name='clipboard'
+                                                    type='font-awesome'
+                                                    color='white'
+                                                />
+                                            }
+                                            onPress={() => this.goToEditNode()}
+                                            raised
                                         />
-                                    }
-                                    onPress={() => this.props.showEditGroup()}
-                                    raised
-                                />
-                                ):(
-                                <Button
-                                    title="Gestionar nodo"
-                                    titleStyle={styles.normalTitleButton}
-                                    buttonStyle={styles.normalButtonStyle}
-                                    containerStyle={styles.contanierNormalButton}
-                                    icon={
-                                        <Icon
-                                            containerStyle={styles.iconContainerStyle}
-                                            name='clipboard'
-                                            type='font-awesome'
-                                            color='white'
-                                        />
-                                    }
-                                    onPress={() => this.goToEditNode()}
-                                    raised
-                                />
-                                )}
-                                <Button
-                                    title="Administrar integrantes"
-                                    titleStyle={styles.normalTitleButton}
-                                    buttonStyle={styles.normalButtonStyle}
-                                    containerStyle={styles.contanierNormalButton}
-                                    raised
-                                    icon={
-                                        <Icon
-                                            containerStyle={styles.iconContainerStyle}
-                                            name='users'
-                                            type='font-awesome'
-                                            color='white'
-                                        />
-                                    }
-                                    onPress={() => this.goToAdminMembers()}
-                                />
-
+                                    )}
+                                <View>
+                                    <Button
+                                        title="Integrantes"
+                                        titleStyle={styles.normalTitleButton}
+                                        buttonStyle={styles.normalButtonStyle}
+                                        containerStyle={styles.contanierNormalButton}
+                                        raised
+                                        icon={
+                                            <View>
+                                                <Icon
+                                                    containerStyle={styles.iconContainerStyle}
+                                                    name='users'
+                                                    type='font-awesome'
+                                                    color='white'
+                                                />
+                                                {this.amountOfNotManageRequests() > 0 ? (
+                                                    <Badge value={this.amountOfNotManageRequests()} status="error" containerStyle={{ position: 'absolute', left:-22,top:3}} />
+                                                ) : (null)}
+                                            </View>
+                                        }
+                                        onPress={() => this.goToAdminMembers()}
+                                    />
+                                </View>
                                 <Button
                                     disabled={this.hasCartConfirmed()}
                                     title="Comenzar mi pedido"
@@ -408,7 +426,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                                             />
                                         }
                                         raised
-                                        onPress={()=>this.goToHistory()}
+                                        onPress={() => this.goToHistory()}
                                     />
                                     <Button
                                         disabled={this.hasCartConfirmed()}

@@ -204,7 +204,7 @@ class ConfirmCartGroupView extends React.PureComponent {
 
     getGroups(){
         this.setState({loading:true})
-        axios.get((this.serverBaseRoute + this.defineStrategyRoute()+'/all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
+        axios.get((this.serverBaseRoute + this.defineStrategyRoute()+'all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
             this.props.actions.groupsData(res.data);     
         }).catch( (error) => {
             this.setState({loading:false})
@@ -214,7 +214,7 @@ class ConfirmCartGroupView extends React.PureComponent {
                 'Error',
                 error.response.data.error,
                 [
-                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    { text: 'Entendido', onPress: () => null},
                 ],
                 { cancelable: false },
             );

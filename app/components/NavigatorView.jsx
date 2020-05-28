@@ -31,7 +31,7 @@ class NavigatorView extends React.PureComponent {
   componentDidUpdate(){
     if(this.state.lastAccessId !== this.props.user.id){
       this.resetData()
-      this.setState({ lastAccessId: this.props.user.id})
+      this.setState({ lastAccessId: this.props.user.id, nickname:this.props.user.nickname})
     }
   }
 

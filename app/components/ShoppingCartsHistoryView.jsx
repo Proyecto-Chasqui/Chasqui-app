@@ -134,6 +134,14 @@ class ShoppingCartsHistoryView extends React.PureComponent {
         return (cart.estado ==="CONFIRMADO" && cart.direccion === null && cart.puntoDeRetiro === null && cart.idGrupo !== null)
     }
 
+    defineText(){
+        if(this.props.vendorSelected.few.gcc){
+            return "En espera de confirmación grupal"
+        }else{
+            return "En espera de confirmación del nodo"
+        }
+    }
+
     renderItem = ({ item }) => (
         <View>
             {this.showCart(item) ? (
@@ -146,7 +154,7 @@ class ShoppingCartsHistoryView extends React.PureComponent {
                         {this.inWaitingOfGroupConfirmation(item)?(
                         <View style={{ alingItems: "center", flexDirection: "row" }}>
                             <Text style={{ fontSize: 12, fontWeight: "bold", color: "blue" }}>Aviso: </Text>
-                            <Text style={{ fontSize: 12, fontWeight: "bold", color: "green" }}>En espera de confirmación grupal</Text>
+                        <Text style={{ fontSize: 12, fontWeight: "bold", color: "green" }}>{this.defineText()}</Text>
                         </View>
                         ):(null)}
                         <View style={{ alignContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 5 }}>

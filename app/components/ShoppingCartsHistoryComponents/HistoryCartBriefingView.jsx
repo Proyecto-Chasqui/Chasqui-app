@@ -62,6 +62,22 @@ class HistoryCartBriefingView extends React.PureComponent {
         return (this.props.historyCartSelected.direccion === null && this.props.historyCartSelected.puntoDeRetiro === null && this.props.historyCartSelected.idGrupo !== null)
     }
 
+    defineWord(){
+        if(this.props.vendorSelected.few.gcc){
+            return "grupo"
+        }else{
+            return "nodo"
+        }
+    }
+
+    defineText(){
+        if(this.props.vendorSelected.few.gcc){
+            return "Mis grupos"
+        }else{
+            return "Mis nodos"
+        }
+    }
+
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -118,10 +134,10 @@ class HistoryCartBriefingView extends React.PureComponent {
                         <TouchableOpacity onPress={()=>this.goToGroups()} style={{}}>
                             <Text style={styles.sectionTitleTextStyle}> Aviso </Text>
                                 <Text style={{ fontSize: 15, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10, fontStyle: 'italic', textAlign: "auto" }}>
-                                    Su pedido dentro del grupo esta confirmado, pero esta a la espera de la <Text style={{fontWeight:"bold", color:"blue"}}> confirmación grupal</Text> por parte del administrador.
+                                    Su pedido dentro del {this.defineWord()} esta confirmado, pero esta a la espera de la <Text style={{fontWeight:"bold", color:"blue"}}>confirmación</Text> por parte del administrador.
                                 </Text>
                                 <Text  style={{ fontSize: 15, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10, fontStyle: 'italic', textAlign: "center" }}>    
-                                    Puede presionar aquí para ir a <Text style={{fontWeight:"bold", color:"blue"}}>Mis grupos</Text>.
+                                    Puede presionar aquí para ir a <Text style={{fontWeight:"bold", color:"blue"}}>{this.defineText()}</Text>.
                                 </Text>
                         </TouchableOpacity>
                     ):(

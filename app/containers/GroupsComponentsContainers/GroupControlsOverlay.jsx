@@ -9,6 +9,7 @@ const mapStateToProps = state => ({
     shoppingCartSelected: state.shoppingCartSelected,
     vendorSelected: state.vendorSelected,
     shoppingCarts: state.shoppingCarts,
+    selectedNodeRequests: state.selectedNodeRequests,
 });
 
 const mapDispatchToProps = dispatch => ({

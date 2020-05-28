@@ -40,6 +40,7 @@ export const GROUPHISTORYSHOPPINGCARTS = 'GROUPHISTORYSHOPPINGCARTS';
 export const GROUPHISTORYSHOPPINGCARTSELECTED = 'GROUPHISTORYSHOPPINGCARTSELECTED';
 export const OPENNODESDATA = 'OPENNODESDATA';
 export const ACCESSOPENNODEREQUESTS = 'ACCESSOPENNODEREQUESTS';
+export const SELECTEDNODEREQUESTS ='SELECTEDNODEREQUESTS';
 
 
 export const resetState = (resetDataState) => ({type:RESETSTATE, resetDataState})
@@ -84,3 +85,4 @@ export const groupHistoryShoppingCarts = (groupHistoryShoppingCartsStack) =>({ty
 export const groupHistoryShoppingCartSelected = (groupHistoryShoppingCartSelectedData) => ({type:GROUPHISTORYSHOPPINGCARTSELECTED, groupHistoryShoppingCartSelectedData})
 export const openNodesData = (openNodesStack) => ({type:OPENNODESDATA, openNodesStack})
 export const accessOpenNodeRequests = (accessOpenNodeRequestsStack) => ({type:ACCESSOPENNODEREQUESTS, accessOpenNodeRequestsStack})
+export const selectedNodeRequests = (selectedNodeRequestsStack) => ({type:SELECTEDNODEREQUESTS, selectedNodeRequestsStack})

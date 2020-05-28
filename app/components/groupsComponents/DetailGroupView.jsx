@@ -4,14 +4,21 @@ import { Header, Button, Icon, Image, ListItem, Badge } from 'react-native-eleme
 import GLOBALS from '../../Globals'
 import GroupControlsOverlayView from '../../containers/GroupsComponentsContainers/GroupControlsOverlay'
 import EditGroupView from '../../containers/GroupsComponentsContainers/EditGroup'
+import axios from 'axios'
 
 class DetailGroupView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.serverBaseRoute = GLOBALS.BASE_URL;
-        this.state={
-            showControls:false,
-            showEditGroup:false,
+        this.state = {
+            showControls: false,
+            showEditGroup: false,
+        }
+    }
+
+    componentDidMount() {
+        if (this.props.vendorSelected.few.nodos) {
+            this.getRequests()
         }
     }
 
@@ -27,26 +34,26 @@ class DetailGroupView extends React.PureComponent {
 
     keyExtractor = (item, index) => index.toString()
 
-    goToMember(member){
+    goToMember(member) {
         console.log("integrante", member)
         this.props.actions.memberSelected(member);
         this.props.navigation.navigate("Miembro");
     }
 
-    showControls(){
-        this.setState({showControls:!this.state.showControls})
+    showControls() {
+        this.setState({ showControls: !this.state.showControls })
     }
 
-    showEditGroupFromControl(){
+    showEditGroupFromControl() {
         this.showControls()
-        this.setState({showEditGroup:!this.state.showEditGroup})
+        this.setState({ showEditGroup: !this.state.showEditGroup })
     }
 
-    filterConfirmed(members){
+    filterConfirmed(members) {
         let confirmedMemebers = []
-        members.map((member)=>{
-            if(member.pedido !== null){
-                if(member.pedido.estado === "CONFIRMADO"){
+        members.map((member) => {
+            if (member.pedido !== null) {
+                if (member.pedido.estado === "CONFIRMADO") {
                     confirmedMemebers.push(member)
                 }
             }
@@ -54,24 +61,34 @@ class DetailGroupView extends React.PureComponent {
         return confirmedMemebers
     }
 
-    obtainMembers(){
-        if(this.props.onlyConfirmed){
+    obtainMembers() {
+        if (this.props.onlyConfirmed) {
             return this.filterConfirmed(this.props.groupSelected.miembros)
-        }else{
+        } else {
             return this.props.groupSelected.miembros
         }
     }
-    
-    showEditGroup(){
-        this.setState({showEditGroup:!this.state.showEditGroup})
+
+    getRequests() {
+        axios.get(this.serverBaseRoute + 'rest/user/nodo/obtenerSolicitudesDePertenenciaANodo/' + this.props.groupSelected.id, { withCredentials: true }).then(res => {
+            console.log("requests", res.data);
+            this.props.actions.selectedNodeRequests(res.data)
+        }).catch((error) => {
+            console.log(error);
+        });
     }
-    isAdministrator(member){
+
+
+    showEditGroup() {
+        this.setState({ showEditGroup: !this.state.showEditGroup })
+    }
+    isAdministrator(member) {
         return this.props.groupSelected.emailAdministrador === member.email
     }
 
-    isUser(member){
-        if(member.email === this.props.user.email){
-            return(
+    isUser(member) {
+        if (member.email === this.props.user.email) {
+            return (
                 {
                     backgroundColor: "white",
                     alignItems: "center",
@@ -86,12 +103,12 @@ class DetailGroupView extends React.PureComponent {
                     },
                     shadowOpacity: 0.25,
                     shadowRadius: 3.84,
-                    borderColor:"blue",
+                    borderColor: "blue",
                     elevation: 5,
                 }
             )
-        }else{
-            return(
+        } else {
+            return (
                 {
                     backgroundColor: "white",
                     alignItems: "center",
@@ -106,92 +123,110 @@ class DetailGroupView extends React.PureComponent {
                     },
                     shadowOpacity: 0.25,
                     shadowRadius: 3.84,
-            
+
                     elevation: 5,
                 }
             )
         }
     }
 
-    renderItem = ({ item }) => (        
+    amountOfNotManageRequests(){
+        let count = 0
+        if(this.props.vendorSelected.few.nodos){
+            this.props.selectedNodeRequests.map((request)=>{
+                if(request.estado === 'solicitud_pertenencia_nodo_enviado'){
+                    count = count + 1
+                }
+            })
+        }
+        return count
+    }
+
+    renderItem = ({ item }) => (
         <View>
-        { item.invitacion !== "NOTIFICACION_NO_LEIDA" ?(
-        <TouchableOpacity disabled={this.props.disabledPress} onPress={()=>(this.goToMember(item))} style={this.isUser(item)}>
-            <View style={{ margin: 2, marginStart:10, flexDirection: "row", alignItems: "center", alignSelf:"stretch" }}>
-                <Image
-                    style={{ width: 50, height: 50, resizeMode: 'center',  }}
-                    source={{ uri: (this.normalizeText(this.createImageUrl(item.avatar))) }}
-                />
-                {this.isAdministrator(item)?(
-                <View style={{position:"absolute", alignSelf:"flex-start", marginStart:-4, marginTop:1,borderWidth:1, borderRadius:10, backgroundColor:"#5ebb47" }}>
-                    <Icon containerStyle={{margin:1}} name="star" size={15} color="blue" type='font-awesome' />
-                </View>
-                ):(null)}
-                <View style={{ marginStart: 10, }}>
-                    <Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", }}>{item.nickname}</Text>
-                    <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey"}}>{item.email}</Text>
-                    <View>
-                        {item.pedido != null ?(
-                        <View style={{ flexDirection: "row" }}>
-                            <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Pedido: {item.pedido.estado}</Text>
-                            <Text style={{ fontSize: 14, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>Total: ${item.pedido.montoActual}</Text>
-                        </View>)
-                            : (<Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Sin pedido</Text>)
-                        }
+            {item.invitacion !== "NOTIFICACION_NO_LEIDA" ? (
+                <TouchableOpacity disabled={this.props.disabledPress} onPress={() => (this.goToMember(item))} style={this.isUser(item)}>
+                    <View style={{ margin: 2, marginStart: 10, flexDirection: "row", alignItems: "center", alignSelf: "stretch" }}>
+                        <Image
+                            style={{ width: 50, height: 50, resizeMode: 'center', }}
+                            source={{ uri: (this.normalizeText(this.createImageUrl(item.avatar))) }}
+                        />
+                        {this.isAdministrator(item) ? (
+                            <View style={{ position: "absolute", alignSelf: "flex-start", marginStart: -4, marginTop: 1, borderWidth: 1, borderRadius: 10, backgroundColor: "#5ebb47" }}>
+                                <Icon containerStyle={{ margin: 1 }} name="star" size={15} color="blue" type='font-awesome' />
+                            </View>
+                        ) : (null)}
+                        <View style={{ marginStart: 10, }}>
+                            <Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", }}>{item.nickname}</Text>
+                            <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>{item.email}</Text>
+                            <View>
+                                {item.pedido != null ? (
+                                    <View style={{ flexDirection: "row" }}>
+                                        <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Pedido: {item.pedido.estado}</Text>
+                                        <Text style={{ fontSize: 14, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>Total: ${item.pedido.montoActual}</Text>
+                                    </View>)
+                                    : (<Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Sin pedido</Text>)
+                                }
+                            </View>
+                        </View>
+                        {!this.props.disabledPress ? (
+                            <View style={{ flex: 1, alignItems: "flex-end", marginEnd: 5 }}>
+                                <Icon
+                                    name='chevron-right'
+                                    type='font-awesome'
+                                    color='blue'
+                                />
+                            </View>
+                        ) : (null)}
                     </View>
-                </View>
-                {!this.props.disabledPress?(
-                <View style={{flex:1,alignItems:"flex-end", marginEnd:5}}>
-                <Icon                    
-                    name='chevron-right'
-                    type='font-awesome'
-                    color='blue'
-                    />
-                </View>
-                ):(null)}
-            </View>
-        </TouchableOpacity>):(null)}</View>
+                </TouchableOpacity>) : (null)}</View>
     )
 
     render() {
         return (
-            <View style={{flex:1}}>
-                {this.props.hideHeaders?(null):(
-                <View>
-                <Header containerStyle={styles.topHeader}>
-                    <Button
-                        icon={
-                            <Icon name="arrow-left" size={20} color="white" type='font-awesome' />
-                        }
-                        buttonStyle={styles.rightHeaderButton}
-                        onPress={() => this.props.navigation.goBack()}
-                    />
-                    <Image
-                        style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                        source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
-                    />
-                    <Button
-                        icon={
-                            <Icon name="cogs" size={20} color="white" type='font-awesome' />
-                        }
-                        buttonStyle={styles.rightHeaderButton}
-                        onPress={() => this.showControls()}
-                    />
-                </Header>
-                <GroupControlsOverlayView navigation={this.props.navigation} showEditGroup={() => this.showEditGroupFromControl()} showControls={()=>this.showControls()} isVisible={this.state.showControls}></GroupControlsOverlayView>
-                <EditGroupView navigation={this.props.navigation} showEditGroup={() => this.showEditGroup()} isVisible={this.state.showEditGroup}></EditGroupView>
-                </View>
+            <View style={{ flex: 1 }}>
+                {this.props.hideHeaders ? (null) : (
+                    <View>
+                        <Header containerStyle={styles.topHeader}>
+                            <Button
+                                icon={
+                                    <Icon name="arrow-left" size={20} color="white" type='font-awesome' />
+                                }
+                                buttonStyle={styles.rightHeaderButton}
+                                onPress={() => this.props.navigation.goBack()}
+                            />
+                            <Image
+                                style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
+                                source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                            />
+                            <View>
+                                <Button
+                                    icon={
+                                        <Icon name="cogs" size={20} color="white" type='font-awesome' />
+                                    }
+                                    buttonStyle={styles.rightHeaderButton}
+                                    onPress={() => this.showControls()}
+                                />
+                                {this.amountOfNotManageRequests() > 0 ? (
+                                    <Badge value={this.amountOfNotManageRequests()} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }} />
+                                ) : (null)}
+                            </View>
+
+                        </Header>
+                        <GroupControlsOverlayView navigation={this.props.navigation} showEditGroup={() => this.showEditGroupFromControl()} showControls={() => this.showControls()} isVisible={this.state.showControls}></GroupControlsOverlayView>
+                        <EditGroupView navigation={this.props.navigation} showEditGroup={() => this.showEditGroup()} isVisible={this.state.showEditGroup}></EditGroupView>
+                    </View>
                 )}
-                <View style={{flex:1}}> 
+                <View style={{ flex: 1 }}>
                     <FlatList
                         ListHeaderComponent={
                             <View>
-                            {this.props.hideHeaders?(null):(
-                            <View style={styles.titleContainer}>
-                                <Text style={styles.adressTitle}>{this.props.groupSelected.alias}</Text>
-                            </View>)}
+                                {this.props.hideHeaders ? (null) : (
+                                    <View style={styles.titleContainer}>
+                                        <Text style={styles.adressTitle}>{this.props.groupSelected.alias}</Text>
+                                    </View>)}
                             </View>
-                            }
+                        }
                         keyExtractor={this.keyExtractor}
                         data={this.obtainMembers()}
                         renderItem={(item) => this.renderItem(item)}

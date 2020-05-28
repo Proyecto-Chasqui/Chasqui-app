@@ -4,6 +4,7 @@ import { Header, Button, Icon, Image, ListItem, Badge } from 'react-native-eleme
 import GroupsControlsOverlayView from '../containers/GroupsComponentsContainers/GroupsControlsOverlay'
 import NewGroupView from '../containers/GroupsComponentsContainers/NewGroup';
 import LoadingView from '../components/LoadingView';
+import RequestQuantityView from '../components/groupsComponents/RequestQuantityView'
 import GLOBALS from '../Globals'
 import axios from 'axios'
 
@@ -16,6 +17,7 @@ class GroupsView extends React.PureComponent {
             showNewGroup: false,
             loading:false,
             disabledOpacity:false,
+            nodeRequest:[]
         }
     }
 
@@ -259,6 +261,9 @@ class GroupsView extends React.PureComponent {
                                 </View>
                             </View>
                         </View>
+                            {this.props.vendorSelected.few.nodos && item.esAdministrador?(
+                            <RequestQuantityView date={new Date().getTime()} idNode={item.id}></RequestQuantityView>
+                            ):(null)}
                     </View>
                     <View style={{ borderTopWidth: 1, flexDirection: "row", justifyContent: "center" }}>
                         <View style={{ width: 300, backgroundColor: "#ebedeb", borderRadius: 5, borderWidth: 1, margin: 7 }}>
@@ -341,9 +346,19 @@ class GroupsView extends React.PureComponent {
                                         title={this.defineButtonTitle()}
                                             buttonStyle={styles.tipErrorText}
                                             onPress={() => this.showControls()}
-                                            type="clear"
+                                            type="solid"
                                         />
                                     </View>
+                                    {this.props.vendorSelected.few.nodos ? (
+                                    <View style={{justifyContent:"center", alignContent:"center", alignItems:"center"}}>
+                                        <Button
+                                        title={"Puede solicitar ingreso a un nodo abierto"}
+                                            buttonStyle={styles.tipErrorText}
+                                            onPress={() => this.props.navigation.navigate("NodosAbiertos")}
+                                            type="solid"
+                                        />
+                                    </View>
+                                    ):(null)}
                                 </View>
                             </View>
 

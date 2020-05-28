@@ -270,10 +270,18 @@ class ItemInfoCartView extends React.PureComponent {
         });
     }
 
+    defineRouteTypeGroupConfirm(){
+        if(this.props.vendorSelected.few.nodos){
+            return 'rest/user/nodo/confirmarIndividualEnNodo'
+        }else{
+            return 'rest/user/pedido/individualEnGrupo/confirmar'
+        }
+    }
+
     confirmCartOnGroup(text) {
         this.setState({ showWaitSign: true })
         if (this.props.shoppingCartSelected.idGrupo !== null) {
-            axios.post((this.serverBaseRoute + 'rest/user/pedido/individualEnGrupo/confirmar'), {
+            axios.post((this.serverBaseRoute + this.defineRouteTypeGroupConfirm()), {
                 idPedido: this.props.shoppingCartSelected.id
             }, { withCredentials: true }).then(res => {
                 this.getShoppingCarts(text);                
