@@ -46,6 +46,14 @@ class ButtonOpenGroupCart extends React.PureComponent {
         }
     }
 
+    definePriceOfOpenCart(cart){
+        if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+            return cart.montoActual + cart.incentivoActual
+        }else{
+            return cart.montoActual
+        }
+    }
+
     render() {
         if (!this.props.vendorSelected.few.gcc && !this.props.vendorSelected.few.nodos) {
             console.log("vendor", this.props.vendorSelected.few)
@@ -76,7 +84,7 @@ class ButtonOpenGroupCart extends React.PureComponent {
                         ) : (null)}
                     </View>
                     <View style={{ margin: 5 }}>
-                        <Text style={styles.textResumeStyle}> Total: ${(this.state.cart.montoActual).toFixed(2)} </Text>
+                        <Text style={styles.textResumeStyle}> Total: ${this.definePriceOfOpenCart(this.state.cart)} </Text>
                         <Text style={styles.textResumeStyle}> Creado el: {this.state.cart.fechaCreacion} </Text>
                     </View>
                     <View style={{ margin: 5 }}>

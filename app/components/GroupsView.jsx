@@ -275,7 +275,7 @@ class GroupsView extends React.PureComponent {
                             </View>
                         </View>
                         <View style={{ backgroundColor: "#ebedeb", marginBottom: 3, flexDirection: "row", justifyContent: "center", alignItems: "center", borderColor: "black", borderWidth: 1, borderRadius: 5 }}>
-                            <Text style={{ fontSize: 16, fontWeight: "bold" }}> Min. Monto Grupal: </Text>
+                            <Text style={{ fontSize: 16, fontWeight: "bold" }}> Min. Monto Colectivo: </Text>
                             <View style={{ flexDirection: "row", margin: 3 }}>
                                 <Text style={{ textAlign: "center", fontSize: 16, fontWeight: "bold" }}>${this.props.vendorSelected.montoMinimo}</Text>
                                 <View style={{ marginLeft: 5, marginRight: 5 }}>

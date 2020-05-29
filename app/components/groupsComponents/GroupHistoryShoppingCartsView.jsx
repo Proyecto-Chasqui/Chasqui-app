@@ -154,6 +154,21 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
         return estado === "CONFIRMADO" || estado === "PREPARADO" || estado === "ENTREGADO"
     }
 
+    calculateSingleFinalAmount(groupCart) {
+        let count = 0
+        if (groupCart.pedidos !== null) {
+            groupCart.pedidos.map((pedido) => {
+                if (this.cartIsConfirmed(pedido.estado)) {
+                    count = count + pedido.montoActual
+                    if (pedido.incentivoActual !== null) {
+                        count = count + pedido.incentivoActual
+                    }
+                }
+            })
+        }
+        return count
+    }
+
     calculateFinalAmount(groupCart) {
         let count = 0
         if (groupCart.pedidos !== null) {
@@ -188,6 +203,8 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
         }
         return amount
     }
+
+
     goToCart(cart) {
         this.props.actions.groupHistoryShoppingCartSelected(cart)
         this.props.navigation.navigate("DetalleHistorialPedidosGrupo")
@@ -224,15 +241,15 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
                                     </View>
                                 ) : (
                                         <View style={{ alignContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 5 }}>
-                                            <Text >Total: </Text>
-                                            <Text style={{ fontWeight: "bold", marginLeft: 5 }} >${this.calculateAmount(item)}</Text>
+                                            <Text style={[styles.itemDataInfoStyle, styles.itemDataStyle]}>Total: </Text>
+                                            <Text style={styles.itemDataInfoStyle}>${this.calculateSingleFinalAmount(item)}</Text>
                                         </View>
                                     )}
                             </View>
                         ) : (
                                 <View style={{ alignContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 5 }}>
-                                    <Text style={[styles.itemDataInfoStyle,styles.itemDataStyle]}>Total: </Text>
-                                    <Text style={styles.itemDataInfoStyle}>${this.calculateAmount(item)}</Text>
+                                    <Text style={[styles.itemDataInfoStyle, styles.itemDataStyle]}>Total: </Text>
+                                    <Text style={styles.itemDataInfoStyle}>${this.calculateSingleFinalAmount(item)}</Text>
                                 </View>
                             )}
                     </View>

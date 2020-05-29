@@ -246,6 +246,14 @@ class GroupControlsOverlayView extends React.PureComponent {
         });
     }
 
+    defineType(){
+        if(this.props.vendorSelected.few.gcc){
+            return "grupo"
+        }else{
+            return "nodo"
+        }
+    }
+
     getOut() {
         if (!this.hasCartOpenOrConfirmed()) {
             Alert.alert(
@@ -261,7 +269,7 @@ class GroupControlsOverlayView extends React.PureComponent {
             if (this.hasCartOpen()) {
                 Alert.alert(
                     'Aviso',
-                    'No puede irse del grupo debido a que tiene un pedido abierto. Deberá cancelar su pedido para poder salir.',
+                    'No puede irse debido a que tiene un pedido abierto. Deberá cancelar su pedido para poder salir.',
                     [
                         { text: 'Entendido', onPress: () => null },
                     ],
@@ -270,7 +278,7 @@ class GroupControlsOverlayView extends React.PureComponent {
             } else {
                 Alert.alert(
                     'Aviso',
-                    'No puede irse del grupo, debido a que tiene un pedido confirmado. Deberá esperar que el ciclo de compra este grupo finalice para poder salir.',
+                    'No puede irse debido a que tiene un pedido confirmado. Deberá esperar que el ciclo de compra este ' + this.defineType()+ ' finalice para poder salir.',
                     [
                         { text: 'Entendido', onPress: () => null },
                     ],
@@ -300,6 +308,13 @@ class GroupControlsOverlayView extends React.PureComponent {
         return count
     }
 
+    defineButtonOutText(){
+        if(this.props.vendorSelected.few.gcc){
+            return "Salir del grupo"
+        }else{
+            return "Salir del nodo"
+        }
+    }
 
     render() {
         return (
@@ -447,7 +462,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                                     />
 
                                     <Button
-                                        title="Salir del grupo"
+                                        title={this.defineButtonOutText()}
                                         titleStyle={styles.normalTitleButton}
                                         buttonStyle={styles.normalButtonStyle}
                                         containerStyle={styles.contanierNormalButton}

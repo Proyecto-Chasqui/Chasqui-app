@@ -63,10 +63,10 @@ class AdministrationMembersView extends React.PureComponent {
         }
     }
 
-    askActionRemoveMember(member) {
+    askActionRemoveMember(member) { 
         Alert.alert(
             'Pregunta',
-            "¿Esta seguro de remover " + this.defineMessage(member) + " del grupo ?",
+            "¿Esta seguro de expulsar a " + this.defineMessage(member) + " ?",
             [
                 { text: 'No', onPress: () => null },
                 { text: 'Si', onPress: () => this.sendRemoveMember(member.email) },

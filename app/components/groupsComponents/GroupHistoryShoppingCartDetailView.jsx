@@ -14,7 +14,12 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
 
     obtainTotalPrice() {
         if (this.props.groupHistoryShoppingCartSelected.montoTotal !== undefined) {
-            return (this.props.groupHistoryShoppingCartSelected.montoTotal).toFixed(2)
+            let value = 0
+            value = value + this.props.groupHistoryShoppingCartSelected.montoTotal;
+            if(this.props.groupHistoryShoppingCartSelected.incentivoTotal !== null){
+                value = value + this.props.groupHistoryShoppingCartSelected.incentivoTotal
+            }
+            return (value).toFixed(2)
         } else {
             return 0
         }

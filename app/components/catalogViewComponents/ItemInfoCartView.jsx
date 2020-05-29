@@ -117,7 +117,7 @@ class ItemInfoCartView extends React.PureComponent {
                     'Aviso',
                     alertText,
                     [
-                        { text: 'Mis grupos', onPress: ()=> this.navigation.navigate("MisGrupos")},
+                        { text: this.defineSection(), onPress: ()=> this.navigation.navigate("MisGrupos")},
                         { text: 'Entendido', onPress: () => null },
                     ],
                     { cancelable: false },
@@ -189,6 +189,15 @@ class ItemInfoCartView extends React.PureComponent {
             console.log("error", error);
         });
     }
+    obtainActiveMembers(members){
+        let actives = 0
+        members.map((member)=>{
+            if(member.invitacion === "NOTIFICACION_ACEPTADA"){
+                actives = actives + 1
+            }
+        })
+        return actives
+    }
 
     hasFullConfirmedCartsOnGroup(idGroup){
         let value = false;
@@ -201,11 +210,13 @@ class ItemInfoCartView extends React.PureComponent {
             }
         })
         if(vgroup !== null){
-            totalMembers = vgroup.miembros.length
+            totalMembers = this.obtainActiveMembers(vgroup.miembros)
             vgroup.miembros.map((member)=>{
                 if(member.pedido !== null){
-                    if(member.pedido.estado === "CONFIRMADO"){
-                        countConfirmedCarts = countConfirmedCarts + 1
+                    if(member.invitacion === "NOTIFICACION_ACEPTADA"){
+                        if(member.pedido.estado === "CONFIRMADO"){
+                            countConfirmedCarts = countConfirmedCarts + 1
+                        }
                     }
                 }
             })
@@ -215,11 +226,27 @@ class ItemInfoCartView extends React.PureComponent {
         return value
     }
 
+    defineColectiveType(){
+        if(this.props.vendorSelected.few.gcc){
+            return "grupo"
+        }else{
+            return "nodo"
+        }
+    }
+
+    defineSection(){
+        if(this.props.vendorSelected.few.gcc){
+            return "Mis grupos"
+        }else{
+            return "Mis nodos"
+        }
+    }
+
     alertGroupConfirm() {
         if (!this.isAdminOfGroup()) {
             Alert.alert(
                 'Aviso',
-                '¿Esta seguro de confirmar el pedido del grupo ' + this.props.shoppingCartSelected.aliasGrupo + '? una vez confirmado, no podrá cambiarlo.',
+                '¿Esta seguro de confirmar el pedido del ' +  this.defineColectiveType() + ' ' + this.props.shoppingCartSelected.aliasGrupo + '? una vez confirmado, no podrá cambiarlo.',
                 [
                     { text: 'No', onPress: () => null },
                     { text: 'Si', onPress: () => this.confirmCartOnGroup('Su pedido en el grupo ' + this.props.shoppingCartSelected.aliasGrupo + ' fue confirmado correctamente. Deberá esperar a que el administrador confirme el pedido colectivo para que se confirme por completo.') },
@@ -230,20 +257,20 @@ class ItemInfoCartView extends React.PureComponent {
             if(!this.hasFullConfirmedCartsOnGroup(this.props.shoppingCartSelected.idGrupo)){
                 Alert.alert(
                     'Aviso',
-                    'Debido a que es el administrador, se le recomienda confirmar su pedido individual en ultimo lugar, para que pueda usarlo en ultima instancia para correcciones de falta de productos en algún pedido de sus integrantes.'+'¿Esta seguro de confirmar el pedido del grupo ' + this.props.shoppingCartSelected.aliasGrupo + '? una vez confirmado, no podrá cambiarlo.',
+                    'Debido a que es el administrador, se le recomienda confirmar su pedido individual en ultimo lugar, para que pueda usarlo en ultima instancia para correcciones de falta de productos en algún pedido de sus integrantes. ¿Esta seguro de confirmar el pedido del ' +  this.defineColectiveType() + ' ' + this.props.shoppingCartSelected.aliasGrupo + '? una vez confirmado, no podrá cambiarlo.',
                     [
                         { text: 'No', onPress: () => null },
-                        { text: 'Si', onPress: () => this.confirmCartOnGroup('Su pedido en el grupo ' + this.props.shoppingCartSelected.aliasGrupo + ' fue confirmado correctamente. Recuerde que tiene que confirmar el pedido colectivo en la sección mis grupos cuando decida concretar todos los pedidos realizados.') },
+                        { text: 'Si', onPress: () => this.confirmCartOnGroup('Su pedido en el ' +  this.defineColectiveType() + ' ' + this.props.shoppingCartSelected.aliasGrupo + ' fue confirmado correctamente. Recuerde que tiene que confirmar el pedido colectivo en la sección ' +this.defineSection()+' cuando decida concretar todos los pedidos realizados.') },
                     ],
                     { cancelable: false },
                 );
             }else{
                 Alert.alert(
                     'Aviso',
-                    '¿Esta seguro de confirmar el pedido del grupo ' + this.props.shoppingCartSelected.aliasGrupo + '? una vez confirmado, no podrá cambiarlo.',
+                    '¿Esta seguro de confirmar el pedido del ' +  this.defineColectiveType() + ' ' + this.props.shoppingCartSelected.aliasGrupo + '? una vez confirmado, no podrá cambiarlo.',
                     [
                         { text: 'No', onPress: () => null },
-                        { text: 'Si', onPress: () => this.confirmCartOnGroup('Su pedido en el grupo ' + this.props.shoppingCartSelected.aliasGrupo + ' fue confirmado correctamente.Todos los integrantes del grupo confirmaron sus pedidos, puede completar el pedido colectivo en la sección "Mis Grupos".') },
+                        { text: 'Si', onPress: () => this.confirmCartOnGroup('Su pedido en el ' +  this.defineColectiveType() + ' ' + this.props.shoppingCartSelected.aliasGrupo + ' fue confirmado correctamente.Todos los integrantes del mismo confirmaron sus pedidos, puede completar el pedido colectivo en la sección "' + this.defineSection() + '".') },
                     ],
                     { cancelable: false },
                 );
@@ -364,8 +391,10 @@ class ItemInfoCartView extends React.PureComponent {
     isAdminOfGroup() {
         let isAdmin = false;
         this.props.groupsData.map((group) => {
-            if (group.emailAdministrador === this.props.shoppingCartSelected.cliente.email) {
-                isAdmin = true;
+            if(group.id === this.props.shoppingCartSelected.idGrupo){
+                if (group.emailAdministrador === this.props.shoppingCartSelected.cliente.email) {
+                    isAdmin = true;
+                }
             }
         })
         return isAdmin;
@@ -427,7 +456,7 @@ class ItemInfoCartView extends React.PureComponent {
         if (this.props.shoppingCartSelected.idGrupo === null) {
             return "Min. Monto: "
         } else {
-            return "Min. Monto grupal: "
+            return "Min. Monto colectivo: "
         }
     }
 
@@ -498,7 +527,7 @@ class ItemInfoCartView extends React.PureComponent {
                     {this.props.shoppingCartSelected.idGrupo === null ? (null) : (
                         <View style={{ backgroundColor: '#ebedeb', flexDirection: "row", justifyContent: this.setStyleDistance(), borderBottomColor: "#dfdfdf", borderBottomWidth: 1 }}>
                             <View style={{ flex: 1 }}>
-                                <Text style={stylesListCard.sectionTitleTextStyle}> Comprando en el grupo </Text>
+                                <Text style={stylesListCard.sectionTitleTextStyle}> Comprando en </Text>
                                 <Text style={{ fontSize: 15, fontWeight: "bold", textAlign: "center", marginStart: 5, marginEnd: 5 }}> {this.findGroupName()} </Text>
                             </View>
                         </View>
@@ -510,7 +539,15 @@ class ItemInfoCartView extends React.PureComponent {
                             {this.props.shoppingCartSelected.idGrupo === null ?
                                 (<Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_individual.png')} />)
                                 :
-                                (<Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_grupal.png')} />)}
+                                (
+                                    <View>
+                                {this.props.vendorSelected.few.gcc ? (
+                                <Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_grupal.png')} />
+                                ):(
+                                    <Image style={stylesListCard.badgeImage} source={require('../vendorsViewComponents/badge_icons/compra_nodos.png')} />
+                                )}
+                                </View>
+                                )}
                         </View>
 
                         {this.showMinAmount() ?
