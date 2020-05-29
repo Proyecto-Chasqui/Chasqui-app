@@ -5,7 +5,8 @@ import { shoppingCartSelected, shoppingCartUnselected, shoppingCarts, logout } f
 
 const mapStateToProps = state => ({
     groupSelected : state.groupSelected,
-    memberSelected: state.memberSelected
+    memberSelected: state.memberSelected,
+    vendorSelected: state.vendorSelected,
 });
 
 const mapDispatchToProps = dispatch => ({

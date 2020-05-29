@@ -11,41 +11,41 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
     constructor(props) {
         super(props)
         this.serverBaseRoute = GLOBALS.BASE_URL;
-        this.state = {isLoading:false}
+        this.state = { isLoading: false }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.getGroupHistoryCarts()
     }
 
     keyExtractor = (item, index) => index.toString()
-  //usado para registrar en el server su "login", probablemente sea necesario crear una contramedida
-  // del lado del servidor cuando se crean 401 unautorized.
-  reloginToken(retryfunction) {
-    const token = base64.encode(`${this.props.user.email}:${this.props.user.token}`);
-    axios.get(this.serverBaseRoute + 'rest/user/adm/read', {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${token}`
-      }
-      , withCredentials: true
-    }).then(res => {
-        retryfunction()
-    }).catch((error) => {
-      Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
-    });
-  }
+    //usado para registrar en el server su "login", probablemente sea necesario crear una contramedida
+    // del lado del servidor cuando se crean 401 unautorized.
+    reloginToken(retryfunction) {
+        const token = base64.encode(`${this.props.user.email}:${this.props.user.token}`);
+        axios.get(this.serverBaseRoute + 'rest/user/adm/read', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${token}`
+            }
+            , withCredentials: true
+        }).then(res => {
+            retryfunction()
+        }).catch((error) => {
+            Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
+        });
+    }
 
-    getGroupHistoryCarts(){
-        this.setState({isLoading:true})
+    getGroupHistoryCarts() {
+        this.setState({ isLoading: true })
         axios.post((this.serverBaseRoute + 'rest/user/pedido/pedidosColectivosConEstados'), {
             idGrupo: this.props.groupSelected.id,
-            estados: ["CONFIRMADO","PREPARADO","ENTREGADO"]
+            estados: ["CONFIRMADO", "PREPARADO", "ENTREGADO"]
         }, { withCredentials: true }).then(res => {
             this.props.actions.groupHistoryShoppingCarts(res.data);
-            this.setState({isLoading:false})
+            this.setState({ isLoading: false })
         }).catch((error) => {
-            this.setState({isLoading:false})
+            this.setState({ isLoading: false })
             if (error.response) {
                 console.log(error.response.data);
                 console.log(error.response.status);
@@ -150,24 +150,50 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
         }
     }
 
-    cartIsConfirmed(estado){
+    cartIsConfirmed(estado) {
         return estado === "CONFIRMADO" || estado === "PREPARADO" || estado === "ENTREGADO"
     }
 
-    calculateAmount(groupCart){
+    calculateFinalAmount(groupCart) {
+        let count = 0
+        if (groupCart.pedidos !== null) {
+            groupCart.pedidos.map((pedido) => {
+                if (this.cartIsConfirmed(pedido.estado)) {
+                    count = count + pedido.montoActual + pedido.incentivoActual
+                }
+            })
+        }
+        return count
+    }
+
+    calculateNodeAmount(groupCart) {
+        let count = 0
+        if (groupCart.pedidos !== null) {
+            groupCart.pedidos.map((pedido) => {
+                if (this.cartIsConfirmed(pedido.estado)) {
+                    count = count + pedido.incentivoActual
+                }
+            })
+        }
+        return count
+    }
+    calculateAmount(groupCart) {
         let amount = 0
-        if(groupCart.pedidos !== null){
-            groupCart.pedidos.map((pedido)=>{
-                if(this.cartIsConfirmed(pedido.estado)){
-                    amount = amount + pedido.montoActual 
+        if (groupCart.pedidos !== null) {
+            groupCart.pedidos.map((pedido) => {
+                if (this.cartIsConfirmed(pedido.estado)) {
+                    amount = amount + pedido.montoActual
                 }
             })
         }
         return amount
     }
-    goToCart(cart){
+    goToCart(cart) {
         this.props.actions.groupHistoryShoppingCartSelected(cart)
         this.props.navigation.navigate("DetalleHistorialPedidosGrupo")
+    }
+    isAdmin() {
+        return this.props.groupSelected.emailAdministrador === this.props.user.email
     }
     keyExtractor = (item, index) => index.toString()
     renderItem = ({ item }) => (
@@ -188,10 +214,27 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
                                 {item.estado}
                             </Text>
                         </View>
-                        <View style={{ alignContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 5 }}>
-                            <Text >Total: </Text>
-                            <Text style={{ fontWeight: "bold", marginLeft: 5 }} >${this.calculateAmount(item)}</Text>
-                        </View>
+                        {this.props.vendorSelected.few.nodos ? (
+                            <View>
+                                {this.isAdmin() ? (
+                                    <View style={{ alignContent: "center", alignItems: "center", flexDirection: "row", flexWrap: "wrap", marginBottom: 5 }}>
+                                        <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}>Ingreso Nodo :</Text> $ {this.calculateNodeAmount(item)} </Text>
+                                        <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}>Costo al Nodo :</Text> $ {this.calculateAmount(item)} </Text>
+                                        <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}>Precio Final :</Text> $ {this.calculateFinalAmount(item)} </Text>
+                                    </View>
+                                ) : (
+                                        <View style={{ alignContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 5 }}>
+                                            <Text >Total: </Text>
+                                            <Text style={{ fontWeight: "bold", marginLeft: 5 }} >${this.calculateAmount(item)}</Text>
+                                        </View>
+                                    )}
+                            </View>
+                        ) : (
+                                <View style={{ alignContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 5 }}>
+                                    <Text style={[styles.itemDataInfoStyle,styles.itemDataStyle]}>Total: </Text>
+                                    <Text style={styles.itemDataInfoStyle}>${this.calculateAmount(item)}</Text>
+                                </View>
+                            )}
                     </View>
                     {this.defineIcon(item)}
                 </TouchableOpacity>) : (null)}
@@ -200,26 +243,26 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
 
     render() {
         return (
-            <View style={{flex:1}}>
+            <View style={{ flex: 1 }}>
                 <View>
 
-                <Header containerStyle={styles.topHeader}>
-                    <Button
-                        icon={
-                            <Icon name="arrow-left" size={20} color="white" type='font-awesome' />
-                        }
-                        buttonStyle={styles.rightHeaderButton}
-                        onPress={() => this.props.navigation.goBack()}
+                    <Header containerStyle={styles.topHeader}>
+                        <Button
+                            icon={
+                                <Icon name="arrow-left" size={20} color="white" type='font-awesome' />
+                            }
+                            buttonStyle={styles.rightHeaderButton}
+                            onPress={() => this.props.navigation.goBack()}
                         />
-                    <Image
-                        style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                        source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                        <Image
+                            style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
+                            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                         />
-                </Header>
+                    </Header>
                 </View>
                 {this.state.isLoading ? (<LoadingView></LoadingView>) : (
                     <View style={{ flex: 1 }}>
-                        {this.props.groupHistoryShoppingCarts.length > 0? (
+                        {this.props.groupHistoryShoppingCarts.length > 0 ? (
                             <View >
                                 <FlatList
                                     ListHeaderComponent={
@@ -255,6 +298,16 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+    itemDataInfoStyle: {
+        alignSelf: "center",
+        fontSize: 14,
+        fontWeight: "bold",
+        fontStyle: "italic", color: "grey"
+    },
+    itemDataStyle: {
+        color: "black",
+        fontStyle: "normal"
+    },
     titleContainer: {
         backgroundColor: 'white',
         shadowColor: "#000",

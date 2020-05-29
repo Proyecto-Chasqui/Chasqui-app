@@ -142,6 +142,14 @@ class DetailGroupView extends React.PureComponent {
         return count
     }
 
+    definePrice(item){
+        if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+            return item.pedido.montoActual + item.pedido.incentivoActual
+        }else{
+            return item.pedido.montoActual
+        }
+    }
+
     renderItem = ({ item }) => (
         <View>
             {item.invitacion !== "NOTIFICACION_NO_LEIDA" ? (
@@ -163,7 +171,7 @@ class DetailGroupView extends React.PureComponent {
                                 {item.pedido != null ? (
                                     <View style={{ flexDirection: "row" }}>
                                         <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Pedido: {item.pedido.estado}</Text>
-                                        <Text style={{ fontSize: 14, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>Total: ${item.pedido.montoActual}</Text>
+                                        <Text style={{ fontSize: 14, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>Total: ${this.definePrice(item)}</Text>
                                     </View>)
                                     : (<Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Sin pedido</Text>)
                                 }
@@ -180,6 +188,7 @@ class DetailGroupView extends React.PureComponent {
                         ) : (null)}
                     </View>
                 </TouchableOpacity>) : (null)}</View>
+                
     )
 
     render() {

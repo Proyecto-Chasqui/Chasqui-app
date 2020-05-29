@@ -12,6 +12,7 @@ class ProductCardsView extends React.PureComponent {
         this.catalogViewModes = GLOBALS.CATALOG_VIEW_MODES;
         this.navigation = props.navigation;
         this.size = (props.size != undefined) ? (props.size) : (2);
+        console.log("vendor", this.props.vendorSelected)
     }
 
     normalizeText(text) {
@@ -21,6 +22,18 @@ class ProductCardsView extends React.PureComponent {
     goToProductDetails(product) {
         this.props.actions.productSelected(product);
         this.navigation.navigate('Producto');
+    }
+
+    definePrice(item){
+        if(this.props.vendorSelected !== undefined){
+            if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+                return item.precio + item.incentivo
+            }else{
+                return item.precio
+            }
+        }else{
+            return item.precio
+        }
     }
 
     render() {
@@ -58,7 +71,7 @@ class ProductCardsView extends React.PureComponent {
                             }
                             <View style={{ flexDirection: "column" }}>
                                 <View>
-                                    <Text style={stylesCards.priceStyle}>$ {item.precio}</Text>
+                                    <Text style={stylesCards.priceStyle}>$ {this.definePrice(item)}</Text>
                                 </View>
                                 <ScrollView style={{ height: 55 }}>
                                     <Text style={stylesCards.nameTextStyle}>{item.nombreProducto}</Text>
@@ -107,7 +120,7 @@ class ProductCardsView extends React.PureComponent {
                                     producerSeals={item.medallasProductor} >
                             </SealsView>
                             <View  style={{ height: 30}}>
-                                <Text style={stylesMultipleCards.priceStyle}>$ {item.precio}</Text>
+                                <Text style={stylesMultipleCards.priceStyle}>$ {this.definePrice(item)}</Text>
                             </View>
 
                         </View>

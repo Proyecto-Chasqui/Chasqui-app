@@ -14,8 +14,8 @@ class ConfirmGroupCartView extends React.PureComponent {
         this.navigation = this.props.navigation;
         this.serverBaseRoute = GLOBAL.BASE_URL;
         this.shoppingCarts = this.props.actions.shoppingCarts;
-        this.comment= "",
-        this.sellerPointSelected = this.props.sellerPointSelected,
+        this.comment = "",
+            this.sellerPointSelected = this.props.sellerPointSelected,
             this.adressSelected = this.props.adressSelected,
             this.answers = this.props.answers,
             this.state = {
@@ -38,149 +38,214 @@ class ConfirmGroupCartView extends React.PureComponent {
         return 0;
     }
 
-    goToShippingMap(){
+    goToShippingMap() {
         this.navigation.navigate("Entregas")
     }
     parseAdress(adress) {
         return adress.calle + ", " + adress.altura + ", " + adress.localidad
     }
 
-        
+
     parseDate(string) {
         let parts = string.split('-');
         let parsedDate = parts[0] + "/" + parts[1] + "/" + parts[2].split(' ')[0];
         return parsedDate;
     }
 
-    updateText(text){
-        if(this.comment !== text ){
+    updateText(text) {
+        if (this.comment !== text) {
             this.props.comment(text)
-            this.comment = text 
+            this.comment = text
         }
     }
 
-    getDataProducts(){
-        if (this.props.shoppingCartSelected.productosResponse !== undefined){
-        return this.props.shoppingCartSelected.productosResponse.sort((a, b) => this.compareIds(a, b))
-        }else{
+    getDataProducts() {
+        if (this.props.shoppingCartSelected.productosResponse !== undefined) {
+            return this.props.shoppingCartSelected.productosResponse.sort((a, b) => this.compareIds(a, b))
+        } else {
             return []
         }
     }
 
-    obtainTotalPrice(){
+    calculateFinalAmount() {
+        let count = 0
+        this.props.groupSelected.miembros.map((miembro) => {
+            if (miembro.pedido != null) {
+                if (miembro.pedido.estado === "CONFIRMADO") {
+                    count = count + miembro.pedido.montoActual + miembro.pedido.incentivoActual
+                }
+            }
+        })
+        return count
+    }
+
+    calculateNodeAmount() {
+        let count = 0
+        this.props.groupSelected.miembros.map((miembro) => {
+            if (miembro.pedido != null) {
+                if (miembro.pedido.estado === "CONFIRMADO") {
+                    count = count + miembro.pedido.incentivoActual
+                }
+            }
+        })
+        return count
+    }
+
+    obtainTotalPrice() {
         let total = 0;
-        this.props.groupSelected.miembros.map((member)=>{
-            if(member.pedido !== null){
-                if(member.pedido.estado === "CONFIRMADO"){
+        this.props.groupSelected.miembros.map((member) => {
+            if (member.pedido !== null) {
+                if (member.pedido.estado === "CONFIRMADO") {
                     total = total + member.pedido.montoActual
                 }
             }
-        })    
+        })
         return total
     }
+
+    hasNodeAndIncentives() {
+        return this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos;
+    }
+
+    defineTitleText() {
+        if (this.props.vendorSelected.few.nodos) {
+            return "Nodo"
+        } else {
+            return "Grupo"
+        }
+    }
+
     render() {
 
         return (
-            <ScrollView style={{flex:1}} >
+            <ScrollView style={{ flex: 1 }} >
                 <View style={stylesListCard.titleContainer}>
                     <Text style={stylesListCard.adressTitle}>Los datos de su compra</Text>
                 </View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
-                <Text style={stylesListCard.sectionTitleTextStyle}>Grupo</Text>
-                    <View style={{backgroundColor:"white"}}>
-                        <Text style={{ fontSize: 16, fontWeight: "bold", textAlign: "center" }}>{this.props.groupSelected.alias}</Text>
-                    </View>
+                <Text style={stylesListCard.sectionTitleTextStyle}>{this.defineTitleText()}</Text>
+                <View style={{ backgroundColor: "white" }}>
+                    <Text style={{ fontSize: 16, fontWeight: "bold", textAlign: "center" }}>{this.props.groupSelected.alias}</Text>
+                </View>
                 <View >
                     <Text style={stylesListCard.sectionTitleTextStyle}>Su pedido</Text>
                     <DetailGroupView onlyConfirmed={true} disabledPress={true} hideHeaders={true}></DetailGroupView>
                     {this.props.answers.length > 0 ? (
-                        <View style={{flex:1}}>
+                        <View style={{ flex: 1 }}>
                             <Text style={stylesListCard.sectionTitleTextStyle} > Respuestas del cuestionario </Text>
                             <FlatList data={this.props.answers}
                                 keyExtractor={item => item.nombre} windowSize={15}
                                 renderItem={({ item }) =>
-                                    <View style={{ flexDirection: "row", marginLeft:5, marginRight:5, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
-                                        <Text style={{color:"black",fontWeight:"bold"}}>{item.nombre} : </Text><Text  style={{color:"blue",fontWeight:"bold"}}>{item.opcionSeleccionada}</Text>
+                                    <View style={{ flexDirection: "row", marginLeft: 5, marginRight: 5, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                        <Text style={{ color: "black", fontWeight: "bold" }}>{item.nombre} : </Text><Text style={{ color: "blue", fontWeight: "bold" }}>{item.opcionSeleccionada}</Text>
                                     </View>
                                 } />
                         </View>) : (null)
                     }
                     {this.props.adressSelected !== undefined ? (
-                        <View style={{flex:1}}>
-                        <Text style={stylesListCard.sectionTitleTextStyle}>Será entregado en</Text>
-                        <View style={{flex:1}}>
-                            <Text style={{ margin:5, color: "blue", fontSize:16,fontWeight:'bold', textAlign:"center" }}>{this.parseAdress(this.props.adressSelected)}</Text>
-                            {this.props.zone != undefined ? (
-                                <View style={{flex:1,}}>
-                                    <Text style={stylesListCard.sectionTitleTextStyle}> Detalles de la zona de entrega</Text>
-                                    <View style={{  flex:1,marginLeft:20, marginRight:20, marginBottom:10, marginTop:10}}>                                            
-                                                <View style={{flexDirection:'row'}}>
-                                                    <Text style={{fontSize:12, fontWeight:'bold'}}>Zona de entrega: </Text>
-                                                    <Text style={{fontSize:12}}>{this.props.zone.nombre}</Text>
-                                                </View>
-                                                <View  style={{flexDirection:'row'}}>
-                                                    <Text style={{fontSize:12, fontWeight:'bold'}}>Cierre de pedidos: </Text>
-                                                    <Text style={{fontSize:12}}>{this.parseDate(this.props.zone.fechaCierrePedidos)}</Text>
-                                                </View>
-                                                <Text style={{fontStyle:'italic'}}>{ this.props.zone.descripcion }</Text>
+                        <View style={{ flex: 1 }}>
+                            <Text style={stylesListCard.sectionTitleTextStyle}>Será entregado en</Text>
+                            <View style={{ flex: 1 }}>
+                                <Text style={{ margin: 5, color: "blue", fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.parseAdress(this.props.adressSelected)}</Text>
+                                {this.props.zone != undefined ? (
+                                    <View style={{ flex: 1, }}>
+                                        <Text style={stylesListCard.sectionTitleTextStyle}> Detalles de la zona de entrega</Text>
+                                        <View style={{ flex: 1, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10 }}>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text style={{ fontSize: 12, fontWeight: 'bold' }}>Zona de entrega: </Text>
+                                                <Text style={{ fontSize: 12 }}>{this.props.zone.nombre}</Text>
+                                            </View>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text style={{ fontSize: 12, fontWeight: 'bold' }}>Cierre de pedidos: </Text>
+                                                <Text style={{ fontSize: 12 }}>{this.parseDate(this.props.zone.fechaCierrePedidos)}</Text>
+                                            </View>
+                                            <Text style={{ fontStyle: 'italic' }}>{this.props.zone.descripcion}</Text>
+                                        </View>
                                     </View>
-                                 </View>
-                            ):(
-                                <Text style={{fontSize:13, marginLeft:20, marginRight:20, marginBottom:10, marginTop:10, fontStyle:'italic', textAlign:"justify"}}>
-                                     La dirección seleccionada no se encuentra dentro del alcance de alguna zona de entrega, recuerde comunicarse con el vendedor para coordinar la entrega.
-                                </Text>
-                            )}
-                        </View>
+                                ) : (
+                                        <Text style={{ fontSize: 13, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10, fontStyle: 'italic', textAlign: "justify" }}>
+                                            La dirección seleccionada no se encuentra dentro del alcance de alguna zona de entrega, recuerde comunicarse con el vendedor para coordinar la entrega.
+                                        </Text>
+                                    )}
+                            </View>
                         </View>
                     ) : (null)}
                     {this.props.sellerPointSelected !== undefined ? (
-                        <View style={{height:130}}>
-                        <Text style={stylesListCard.sectionTitleTextStyle}>Lo pasa a retirar en</Text>
-                        <ScrollView style={{  marginLeft:20, marginRight:10, marginBottom:10, marginTop:10 }}>
-                            <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{this.props.sellerPointSelected.nombre}</Text>
-                            <Text style={{ color: "blue" }}>{this.parseAdress(this.props.sellerPointSelected.direccion)}</Text>
-                            <Text style={{ fontSize: 14,}}>{this.props.sellerPointSelected.mensaje}</Text>
-                        </ScrollView>
+                        <View style={{ height: 130 }}>
+                            <Text style={stylesListCard.sectionTitleTextStyle}>Lo pasa a retirar en</Text>
+                            <ScrollView style={{ marginLeft: 20, marginRight: 10, marginBottom: 10, marginTop: 10 }}>
+                                <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{this.props.sellerPointSelected.nombre}</Text>
+                                <Text style={{ color: "blue" }}>{this.parseAdress(this.props.sellerPointSelected.direccion)}</Text>
+                                <Text style={{ fontSize: 14, }}>{this.props.sellerPointSelected.mensaje}</Text>
+                            </ScrollView>
                         </View>
-                        ) : (null)}
-                    <View style={{justifyContent:"center"}}>
+                    ) : (null)}
+                    <View style={{ justifyContent: "center" }}>
                         <Text style={stylesListCard.sectionTitleTextStyle}>Comentario [ {this.comment.length} / 200 ]</Text>
-                        <TextInput style={{ marginLeft:10, alignSelf:"flex-start", borderColor: 'gray', }}
-                                placeholder={"  Puede dejar un comentario para el pedido aqui."}
-                                placeholderTextColor="blue"
-                                multiline
-                                numberOfLines={4}
-                                onChangeText={text => this.updateText(text)}
-                                value={this.comment}
-                                maxLength = {200}>                            
+                        <TextInput style={{ marginLeft: 10, alignSelf: "flex-start", borderColor: 'gray', }}
+                            placeholder={"  Puede dejar un comentario para el pedido aqui."}
+                            placeholderTextColor="blue"
+                            multiline
+                            numberOfLines={4}
+                            onChangeText={text => this.updateText(text)}
+                            value={this.comment}
+                            maxLength={200}>
                         </TextInput>
                     </View>
-                    
+
 
                 </View>
-                            <View style={{backgroundColor: "black",  }}>
-                                <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1,}}>
-                                    <View style={stylesListCard.singleItemContainer}>
-                                        <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {this.obtainTotalPrice()} </Text>
-                                    </View>
+                {this.hasNodeAndIncentives() ? (
+                    <View style={{}}>
+                        <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                            <View style={stylesListCard.singleItemContainer}>
+                                <Text style={stylesListCard.itemDataInfoStyle}><Text style={stylesListCard.itemDataStyle}> Ingreso Nodo :</Text> $ {this.calculateNodeAmount()} </Text>
+                                <Text style={stylesListCard.itemDataInfoStyle}><Text style={stylesListCard.itemDataStyle}> Costo al Nodo :</Text> $ {this.obtainTotalPrice()} </Text>
+                                <Text style={stylesListCard.itemDataInfoStyle}><Text style={stylesListCard.itemDataStyle}> Precio Final :</Text> $ {this.calculateFinalAmount()} </Text>
+                            </View>
+                        </View>
+                    </View>
+                ) : (
+                        <View style={{ backgroundColor: "black", }}>
+                            <View style={{ alignItems: "center", backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                                <View style={[stylesListCard.singleItemContainer, { height: 40, justifyContent: "center" }]}>
+                                    <Text style={[stylesListCard.itemDataInfoStyle]}><Text style={[stylesListCard.itemDataStyle]}> Total :</Text> $ {this.obtainTotalPrice()} </Text>
                                 </View>
                             </View>
+                        </View>
+                    )}
             </ScrollView>
         )
     }
 }
 
 const stylesListCard = StyleSheet.create({
-    sectionTitleTextStyle:{ 
+    itemDataInfoStyle: {
+        alignSelf: "center",
+        fontSize: 16,
+        fontWeight: "bold",
+        fontStyle: "italic", color: "grey"
+    },
+    itemDataStyle: {
+        color: "black",
+        fontStyle: "normal"
+    },
+    requestItemData: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "flex-start",
+        width: "100%",
+    },
+    sectionTitleTextStyle: {
         textAlign: "center",
-        fontSize: 16, 
-        fontWeight: "bold", 
+        fontSize: 16,
+        fontWeight: "bold",
         backgroundColor: 'rgba(51, 102, 255, 1)',
-        color:"white",
-        borderBottomWidth:1,
-        borderTopWidth:1,
-        borderColor:'black'
-     },
+        color: "white",
+        borderBottomWidth: 1,
+        borderTopWidth: 1,
+        borderColor: 'black'
+    },
 
     titleContainer: {
         backgroundColor: 'white',
@@ -270,15 +335,13 @@ const stylesListCard = StyleSheet.create({
     },
 
     singleItemContainer: {
-        justifyContent:"center",
+        alignSelf: "center",
         margin: 5,
-        height: 40,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "grey",
-        backgroundColor:"white",
-        marginLeft: 20,
-        marginRight: 20,
+        backgroundColor: "white",
+        width: "95%"
     },
     priceStyle: {
         fontSize: 16,

@@ -431,6 +431,14 @@ class ItemInfoCartView extends React.PureComponent {
         }
     }
 
+    defineTotalPriceCart(){
+        if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+            return this.props.shoppingCartSelected.montoActual + this.props.shoppingCartSelected.incentivoActual
+        }else{
+            return this.props.shoppingCartSelected.montoActual
+        }
+    }
+
     render() {
         if (this.props.shoppingCartSelected.id === undefined) {
             return (
@@ -564,7 +572,7 @@ class ItemInfoCartView extends React.PureComponent {
                 <View style={{ backgroundColor: '#ebedeb', }}>
                     <View style={{ justifyContent: "center" }}>
                         <View style={stylesListCard.singleItemContainer}>
-                            <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {(this.props.shoppingCartSelected.montoActual).toFixed(2)} </Text>
+                            <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {(this.defineTotalPriceCart()).toFixed(2)} </Text>
                         </View>
                         <View style={{ flexDirection: 'row', marginLeft: 15, marginRight: 15, marginBottom: 10 }}>
                             <Button onPress={() => this.cancelCartAlert()} titleStyle={{ color: 'black', }} title='Cancelar' containerStyle={stylesListCard.subMenuButtonContainer} buttonStyle={stylesListCard.subMenuButtonNotStyle}></Button>

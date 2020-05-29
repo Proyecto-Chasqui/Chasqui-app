@@ -7,6 +7,7 @@ const mapStateToProps = state => ({
     groupSelected : state.groupSelected,
     user: state.user,
     groupHistoryShoppingCarts: state.groupHistoryShoppingCarts,
+    vendorSelected: state.vendorSelected,
 });
 
 const mapDispatchToProps = dispatch => ({

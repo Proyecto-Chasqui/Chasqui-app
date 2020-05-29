@@ -15,31 +15,31 @@ class GroupsView extends React.PureComponent {
         this.state = {
             showControls: false,
             showNewGroup: false,
-            loading:false,
-            disabledOpacity:false,
-            nodeRequest:[]
+            loading: false,
+            disabledOpacity: false,
+            nodeRequest: []
         }
     }
 
-    
 
-    componentDidMount(){
+
+    componentDidMount() {
         this.getGroups();
         this.getInvitations();
     }
 
-    isInvitationOf(name, message){
+    isInvitationOf(name, message) {
         return message.includes(name);
     }
     isInvitation(message) {
-        return message.includes('invitado al grupo de compras') ||  message.includes('invitado al nodo de compras');
+        return message.includes('invitado al grupo de compras') || message.includes('invitado al nodo de compras');
     }
 
-    filterInvitations(notificacions){
+    filterInvitations(notificacions) {
         let vinvitations = []
-        notificacions.map((notification)=>{
+        notificacions.map((notification) => {
             let message = notification.mensaje
-            if(this.isInvitation(message) && this.isInvitationOf(this.props.vendorSelected.nombre, message)){
+            if (this.isInvitation(message) && this.isInvitationOf(this.props.vendorSelected.nombre, message)) {
                 vinvitations.push(notification)
             }
         })
@@ -54,39 +54,39 @@ class GroupsView extends React.PureComponent {
         });
     }
 
-    defineStrategyRoute(){
+    defineStrategyRoute() {
         let value = ''
-        if(this.props.vendorSelected.few.gcc){
+        if (this.props.vendorSelected.few.gcc) {
             value = 'rest/user/gcc/'
         }
-        if(this.props.vendorSelected.few.nodos){
+        if (this.props.vendorSelected.few.nodos) {
             value = 'rest/user/nodo/'
         }
         return value
     }
 
-    getGroups(){
-        this.setState({loading:true})
-        axios.get((this.serverBaseRoute + this.defineStrategyRoute() + 'all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
+    getGroups() {
+        this.setState({ loading: true })
+        axios.get((this.serverBaseRoute + this.defineStrategyRoute() + 'all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
             this.props.actions.groupsData(res.data);
-            this.setState({loading:false})        
-        }).catch( (error) => {
-            this.setState({loading:false})
+            this.setState({ loading: false })
+        }).catch((error) => {
+            this.setState({ loading: false })
             console.log(error);
-            if (error.response) {                
-            Alert.alert(
-                'Error',
-                error.response.data.error,
-                [
-                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
-                ],
-                { cancelable: false },
-            );
-              } else if (error.request) {
+            if (error.response) {
+                Alert.alert(
+                    'Error',
+                    error.response.data.error,
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            } else if (error.request) {
                 Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-              } else {
+            } else {
                 Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
-              }
+            }
         });
     }
 
@@ -149,31 +149,31 @@ class GroupsView extends React.PureComponent {
         this.setState({ showNewGroup: !this.state.showNewGroup })
     }
 
-    updateData(){
+    updateData() {
         this.getGroups();
         this.getInvitations()
     }
-    goToConfirmGroup(group){
-        if(this.groupValidToConfirm(group)){
+    goToConfirmGroup(group) {
+        if (this.groupValidToConfirm(group)) {
             this.props.actions.groupSelected(group)
             this.props.navigation.navigate("ConfirmarColectivo")
-        }else{
+        } else {
             Alert.alert(
                 'Aviso',
                 "El pedido colectivo no se puede confirmar, debido a que hay uno o mas pedidos abiertos y/o no supera el monto mínimo para el envío a domicilio. Si cree que esto se cumple, utilice la acción 'actualizar' para sincronizar la información.",
                 [
-                    {text: 'Actualizar', onPress: () => this.updateData()},
+                    { text: 'Actualizar', onPress: () => this.updateData() },
                     { text: 'Entendido', onPress: () => null },
                 ],
                 { cancelable: false },
             );
         }
     }
-    atLeastOneConfirmed(group){
+    atLeastOneConfirmed(group) {
         let valid = false
-        group.miembros.map((miembro)=>{
-            if(miembro.pedido !== null){
-                if(miembro.pedido.estado === "CONFIRMADO"){
+        group.miembros.map((miembro) => {
+            if (miembro.pedido !== null) {
+                if (miembro.pedido.estado === "CONFIRMADO") {
                     valid = true
                 }
             }
@@ -181,39 +181,63 @@ class GroupsView extends React.PureComponent {
         return valid
     }
 
-    groupValidToConfirm(group){
+    groupValidToConfirm(group) {
         let valid = true
-        group.miembros.map((miembro)=>{
-            if(miembro.pedido !== null){
-                if(miembro.pedido.estado === "ABIERTO"){
+        group.miembros.map((miembro) => {
+            if (miembro.pedido !== null) {
+                if (miembro.pedido.estado === "ABIERTO") {
                     valid = false
                 }
             }
         })
-        if(valid && this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega){
-            if(this.calculateAmount(group.miembros) < this.props.vendorSelected.montoMinimo){
+        if (valid && this.props.vendorSelected.few.seleccionDeDireccionDelUsuario && !this.props.vendorSelected.few.puntoDeEntrega) {
+            if (this.calculateAmount(group.miembros) < this.props.vendorSelected.montoMinimo) {
                 valid = false
             }
-         }
-        return valid 
+        }
+        return valid
     }
 
-    numberOfActiveMembers(members){
+    numberOfActiveMembers(members) {
         let count = 0
-        members.map((member)=>{
-            if(member.invitacion === "NOTIFICACION_ACEPTADA"){
+        members.map((member) => {
+            if (member.invitacion === "NOTIFICACION_ACEPTADA") {
                 count = count + 1;
             }
         })
         return count;
     }
 
-    defineButtonTitle(){
-        if(this.props.vendorSelected.few.gcc){
+    defineButtonTitle() {
+        if (this.props.vendorSelected.few.gcc) {
             return "Puede aceptar una invitación o crear uno"
-        }else{
+        } else {
             return "Puede aceptar una invitación o solicitar uno"
         }
+    }
+
+    calculateIncentiveAmount(miembros) {
+        let count = 0
+        miembros.map((miembro) => {
+            if (miembro.pedido !== null) {
+                if (miembro.pedido.estado === "CONFIRMADO") {
+                    count = count + miembro.pedido.incentivoActual
+                }
+            }
+        })
+        return count
+    }
+
+    calculateTotalAmount(miembros) {
+        let count = 0
+        miembros.map((miembro) => {
+            if (miembro.pedido !== null) {
+                if (miembro.pedido.estado === "CONFIRMADO") {
+                    count = count + miembro.pedido.montoActual + miembro.pedido.incentivoActual
+                }
+            }
+        })
+        return count
     }
 
     renderItem = ({ item }) => (
@@ -261,25 +285,47 @@ class GroupsView extends React.PureComponent {
                                 </View>
                             </View>
                         </View>
-                            {this.props.vendorSelected.few.nodos && item.esAdministrador?(
+                        {this.props.vendorSelected.few.nodos && item.esAdministrador ? (
                             <RequestQuantityView date={new Date().getTime()} idNode={item.id}></RequestQuantityView>
-                            ):(null)}
+                        ) : (null)}
                     </View>
-                    <View style={{ borderTopWidth: 1, flexDirection: "row", justifyContent: "center" }}>
-                        <View style={{ width: 300, backgroundColor: "#ebedeb", borderRadius: 5, borderWidth: 1, margin: 7 }}>
-                            <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, margin: 7 }}>Total : ${this.calculateAmount(item.miembros)}</Text>
+                    {item.esAdministrador ? (
+                        <View>
+                            {
+                                this.props.vendorSelected.few.nodos ? (
+                                    <View style={{ borderTopWidth: 1, flexDirection: "row", justifyContent: "center" }}>
+                                        <View style={{ width: 300, backgroundColor: "#ebedeb", borderRadius: 5, borderWidth: 1, margin: 7 }}>
+                                            <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, }}>Ingreso Nodo : ${this.calculateIncentiveAmount(item.miembros)}</Text>
+                                            <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, }}>Costo al Nodo : ${this.calculateAmount(item.miembros)}</Text>
+                                            <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, }}>Precio final : ${this.calculateTotalAmount(item.miembros)}</Text>
+                                        </View>
+                                    </View>
+                                ) : (
+                                        <View style={{ borderTopWidth: 1, flexDirection: "row", justifyContent: "center" }}>
+                                            <View style={{ width: 300, backgroundColor: "#ebedeb", borderRadius: 5, borderWidth: 1, margin: 7 }}>
+                                                <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, margin: 7 }}>Total : ${this.calculateAmount(item.miembros)}</Text>
+                                            </View>
+                                        </View>
+                                    )
+                            }
                         </View>
-                    </View>
+                    ) : (
+                            <View style={{ borderTopWidth: 1, flexDirection: "row", justifyContent: "center" }}>
+                                <View style={{ width: 300, backgroundColor: "#ebedeb", borderRadius: 5, borderWidth: 1, margin: 7 }}>
+                                    <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, margin: 7 }}>Total : ${this.calculateAmount(item.miembros)}</Text>
+                                </View>
+                            </View>
+                        )}
                 </TouchableOpacity>
                 {item.esAdministrador ? (
                     <Button titleStyle={{ color: 'white', }} containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonOkStyle}
-                        title="Confirmar pedido colectivo" onPress={()=>this.goToConfirmGroup(item)}
+                        title="Confirmar pedido colectivo" onPress={() => this.goToConfirmGroup(item)}
                         disabled={!this.atLeastOneConfirmed(item)}
                         icon={
                             <View>
-                                {this.groupValidToConfirm(item) && this.atLeastOneConfirmed(item)?(
-                                <Icon name="done-all" size={20} color="white" type='material' />                                  
-                                ):(null)}
+                                {this.groupValidToConfirm(item) && this.atLeastOneConfirmed(item) ? (
+                                    <Icon name="done-all" size={20} color="white" type='material' />
+                                ) : (null)}
                             </View>
                         }
                     />
@@ -304,66 +350,66 @@ class GroupsView extends React.PureComponent {
                         source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                     />
                     <View>
-                    <Button
-                        icon={
-                            <Icon name='users' size={20} color="white" type='font-awesome' />
-                        }
-                        buttonStyle={styles.rightHeaderButton}
-                        onPress={() => this.showControls()}
-                    />
-                    {this.props.invitationsData.length > 0 ? (
-                    <Badge value={this.props.invitationsData.length} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }}/>
-                    ):(null)}
+                        <Button
+                            icon={
+                                <Icon name='users' size={20} color="white" type='font-awesome' />
+                            }
+                            buttonStyle={styles.rightHeaderButton}
+                            onPress={() => this.showControls()}
+                        />
+                        {this.props.invitationsData.length > 0 ? (
+                            <Badge value={this.props.invitationsData.length} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }} />
+                        ) : (null)}
                     </View>
                 </Header>
-                <GroupsControlsOverlayView navigation={this.props.navigation} updateData={()=>this.updateData()} showNewGroup={()=>this.showNewGroup()} showControls={() => this.showControls()} isVisible={this.state.showControls}></GroupsControlsOverlayView>
+                <GroupsControlsOverlayView navigation={this.props.navigation} updateData={() => this.updateData()} showNewGroup={() => this.showNewGroup()} showControls={() => this.showControls()} isVisible={this.state.showControls}></GroupsControlsOverlayView>
                 <NewGroupView navigation={this.props.navigation} showNewGroup={() => this.showNewGroup()} isVisible={this.state.showNewGroup}></NewGroupView>
-                
-                {this.state.loading ? (<LoadingView></LoadingView>):(
-                <View style={{ flex: 1 }}>
-                    {this.props.groupsData.length > 0 ? (
-                        <FlatList
-                            ListHeaderComponent={
-                                <View style={styles.titleContainer}>
-                                    <Text style={styles.adressTitle}>{this.props.vendorSelected.few.gcc?("Grupos"):("Nodos")}</Text>
-                                </View>}
-                            keyExtractor={this.keyExtractor}
-                            data={this.props.groupsData}
-                            renderItem={(item) => this.renderItem(item)}
-                        />
-                    ) : (
-                            <View style={{ position: "absolute", zIndex: 1, width: Dimensions.get("window").width }}>
-                                <View style={styles.viewErrorContainer}>
 
-                                    <View style={styles.searchIconErrorContainer}>
-                                        <Icon name="users" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
+                {this.state.loading ? (<LoadingView></LoadingView>) : (
+                    <View style={{ flex: 1 }}>
+                        {this.props.groupsData.length > 0 ? (
+                            <FlatList
+                                ListHeaderComponent={
+                                    <View style={styles.titleContainer}>
+                                        <Text style={styles.adressTitle}>{this.props.vendorSelected.few.gcc ? ("Grupos") : ("Nodos")}</Text>
+                                    </View>}
+                                keyExtractor={this.keyExtractor}
+                                data={this.props.groupsData}
+                                renderItem={(item) => this.renderItem(item)}
+                            />
+                        ) : (
+                                <View style={{ position: "absolute", zIndex: 1, width: Dimensions.get("window").width }}>
+                                    <View style={styles.viewErrorContainer}>
+
+                                        <View style={styles.searchIconErrorContainer}>
+                                            <Icon name="users" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
+                                        </View>
+                                        <Text style={styles.errorText}>
+                                            No pertenece a ningun {this.props.vendorSelected.few.gcc ? ("grupo") : ("nodo")}
+                                        </Text>
+                                        <View style={{ justifyContent: "center", alignContent: "center", alignItems: "center" }}>
+                                            <Button
+                                                title={this.defineButtonTitle()}
+                                                buttonStyle={styles.tipErrorText}
+                                                onPress={() => this.showControls()}
+                                                type="solid"
+                                            />
+                                        </View>
+                                        {this.props.vendorSelected.few.nodos ? (
+                                            <View style={{ justifyContent: "center", alignContent: "center", alignItems: "center" }}>
+                                                <Button
+                                                    title={"Puede solicitar ingreso a un nodo abierto"}
+                                                    buttonStyle={styles.tipErrorText}
+                                                    onPress={() => this.props.navigation.navigate("NodosAbiertos")}
+                                                    type="solid"
+                                                />
+                                            </View>
+                                        ) : (null)}
                                     </View>
-                                    <Text style={styles.errorText}>
-                                        No pertenece a ningun {this.props.vendorSelected.few.gcc?("grupo"):("nodo")}
-                                    </Text>
-                                    <View style={{justifyContent:"center", alignContent:"center", alignItems:"center"}}>
-                                        <Button
-                                        title={this.defineButtonTitle()}
-                                            buttonStyle={styles.tipErrorText}
-                                            onPress={() => this.showControls()}
-                                            type="solid"
-                                        />
-                                    </View>
-                                    {this.props.vendorSelected.few.nodos ? (
-                                    <View style={{justifyContent:"center", alignContent:"center", alignItems:"center"}}>
-                                        <Button
-                                        title={"Puede solicitar ingreso a un nodo abierto"}
-                                            buttonStyle={styles.tipErrorText}
-                                            onPress={() => this.props.navigation.navigate("NodosAbiertos")}
-                                            type="solid"
-                                        />
-                                    </View>
-                                    ):(null)}
                                 </View>
-                            </View>
 
-                        )}
-                </View>
+                            )}
+                    </View>
                 )}
             </View>
         )
@@ -396,7 +442,7 @@ const styles = StyleSheet.create({
     },
 
     rightHeaderButtonOnWarn: {
-        marginTop:10,
+        marginTop: 10,
         backgroundColor: '#66000000',
         marginRight: 0,
         borderColor: 'rgba(51, 102, 255, 1)',

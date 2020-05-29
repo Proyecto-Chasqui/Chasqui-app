@@ -142,6 +142,10 @@ class ShoppingCartsHistoryView extends React.PureComponent {
         }
     }
 
+    definePrice(item){
+        return item.montoActual + item.incentivoActual;
+    }
+
     renderItem = ({ item }) => (
         <View>
             {this.showCart(item) ? (
@@ -172,7 +176,7 @@ class ShoppingCartsHistoryView extends React.PureComponent {
                         </View>
                         <View style={{ alignContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 5 }}>
                             <Text >Total: </Text>
-                            <Text style={{ fontWeight: "bold", marginLeft: 5 }} >${item.montoActual}</Text>
+                            <Text style={{ fontWeight: "bold", marginLeft: 5 }} >${this.definePrice(item)}</Text>
                         </View>
                     </View>
                     {this.defineIcon(item)}

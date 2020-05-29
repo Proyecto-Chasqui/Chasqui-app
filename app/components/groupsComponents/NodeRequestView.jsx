@@ -113,7 +113,7 @@ class NodeRequestView extends React.PureComponent {
             console.log(error);
             if (error.response) {
                 Alert.alert(
-                    'Error Grupos',
+                    'Error',
                     error.response.data.error,
                     [
                         { text: 'Entendido', onPress: () => this.props.actions.logout() },

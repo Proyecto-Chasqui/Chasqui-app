@@ -299,7 +299,8 @@ class ProductView extends React.PureComponent {
             idVariante: this.props.productSelected.idVariante,
             precio: this.props.productSelected.precio,
             cantidad: this.state.quantityValue,
-            imagen: this.props.productSelected.imagenPrincipal
+            imagen: this.props.productSelected.imagenPrincipal,
+            incentivo: this.props.productSelected.incentivo
         }
         return item
     }
@@ -314,6 +315,22 @@ class ProductView extends React.PureComponent {
             text = "Producto Removido del pedido"
         }
         return text;
+    }
+
+    definePrice(){
+        if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+            return this.props.productSelected.precio + this.props.productSelected.incentivo
+        }else{
+            return this.props.productSelected.precio
+        }
+    }
+
+    defineCartPrice(){
+        if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+            return this.props.shoppingCartSelected.montoActual + this.props.shoppingCartSelected.incentivoActual
+        }else{
+            return this.props.shoppingCartSelected.montoActual
+        }
     }
 
     render() {
@@ -387,7 +404,7 @@ class ProductView extends React.PureComponent {
                         />)
                         }
                     </View>
-                    <Text style={styles.priceStyle}>$ {this.props.productSelected.precio}</Text>
+                    <Text style={styles.priceStyle}>$ {this.definePrice()}</Text>
                     <ScrollView style={styles.descriptionViewContainer}>
                         <View style={{ height: 200 }}>
                             <WebView
@@ -480,7 +497,7 @@ class ProductView extends React.PureComponent {
                         :
                         (
                             <View style={styles.singleItemContainer}>
-                                <Text style={styles.totalPriceCartStyle}> Total del pedido: $ {this.props.shoppingCartSelected.montoActual} </Text>
+                                <Text style={styles.totalPriceCartStyle}> Total del pedido: $ {this.defineCartPrice()} </Text>
                             </View>
                         )
                     }

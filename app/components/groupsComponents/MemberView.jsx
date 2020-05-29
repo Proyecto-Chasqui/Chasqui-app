@@ -31,6 +31,13 @@ class MemberView extends React.PureComponent {
             return this.props.memberSelected.nickname + " ha cancelado su pedido"
         }
     }
+    definePrice(item){
+        if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+            return item.precio + item.incentivo
+        }else{
+            return item.precio 
+        }
+    }
 
     keyExtractor = (item, index) => index.toString()
 
@@ -43,7 +50,7 @@ class MemberView extends React.PureComponent {
                     </View>
                     <View style={{ flex: 1 }}>
                         <View >
-                            <Text style={styles.priceStyle}>{item.cantidad} x {item.precio} = $ {(item.cantidad * item.precio).toFixed(2)}</Text>
+                            <Text style={styles.priceStyle}>{item.cantidad} x {this.definePrice(item)} = $ {(item.cantidad * this.definePrice(item)).toFixed(2)}</Text>
                         </View>
                         <View>
                             <Text style={styles.nameTextStyle}>{item.nombre}</Text>
@@ -55,6 +62,15 @@ class MemberView extends React.PureComponent {
     )
     isAdministrator(){
         return this.props.groupSelected.emailAdministrador === this.props.memberSelected.email
+    }
+
+    defineTotalPriceCart(item){
+        
+        if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+            return this.props.memberSelected.pedido.montoActual + this.props.memberSelected.pedido.incentivoActual
+        }else{
+            return this.props.memberSelected.pedido.montoActual
+        }
     }
 
     render() {
@@ -90,7 +106,7 @@ class MemberView extends React.PureComponent {
                             {this.props.memberSelected.pedido != null ? (
                                 <View style={{ flexDirection: "row" }}>
                                     <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Pedido: {this.props.memberSelected.pedido.estado}</Text>
-                                    <Text style={{ fontSize: 14, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>Total: ${this.props.memberSelected.pedido.montoActual}</Text>
+                                    <Text style={{ fontSize: 14, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>Total: ${this.defineTotalPriceCart()}</Text>
                                 </View>
                             ) : (null)
                             }

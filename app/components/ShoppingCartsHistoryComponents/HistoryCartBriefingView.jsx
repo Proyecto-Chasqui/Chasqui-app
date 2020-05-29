@@ -1,7 +1,7 @@
 import React from 'react'
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, FlatList, ActivityIndicator, Dimensions, Alert,  } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, FlatList, ActivityIndicator, Dimensions, Alert, } from 'react-native';
 import { Card, Badge, Icon, Image, Button, Avatar, Header, ButtonGroup } from 'react-native-elements';
-import {NavigationActions, StackActions} from '@react-navigation/native';
+import { NavigationActions, StackActions } from '@react-navigation/native';
 import GLOBALS from '../../Globals'
 
 
@@ -11,7 +11,7 @@ class HistoryCartBriefingView extends React.PureComponent {
         this.serverBaseRoute = GLOBALS.BASE_URL;
     }
 
-    goToGroups(){
+    goToGroups() {
         this.props.navigation.dispatch(
             StackActions.replace('MisGrupos')
         );
@@ -51,29 +51,29 @@ class HistoryCartBriefingView extends React.PureComponent {
 
     obtainTotalPrice() {
         if (this.props.historyCartSelected.montoActual !== undefined) {
-            return (this.props.historyCartSelected.montoActual).toFixed(2)
+            return (this.props.historyCartSelected.montoActual + this.props.historyCartSelected.incentivoActual).toFixed(2)
         } else {
             return 0
         }
 
     }
 
-    inWaitingOfGroupConfirmation(){
+    inWaitingOfGroupConfirmation() {
         return (this.props.historyCartSelected.direccion === null && this.props.historyCartSelected.puntoDeRetiro === null && this.props.historyCartSelected.idGrupo !== null)
     }
 
-    defineWord(){
-        if(this.props.vendorSelected.few.gcc){
+    defineWord() {
+        if (this.props.vendorSelected.few.gcc) {
             return "grupo"
-        }else{
+        } else {
             return "nodo"
         }
     }
 
-    defineText(){
-        if(this.props.vendorSelected.few.gcc){
+    defineText() {
+        if (this.props.vendorSelected.few.gcc) {
             return "Mis grupos"
-        }else{
+        } else {
             return "Mis nodos"
         }
     }
@@ -109,7 +109,7 @@ class HistoryCartBriefingView extends React.PureComponent {
                                         </View>
                                         <View style={{ flex: 1 }}>
                                             <View >
-                                                <Text style={styles.priceStyle}>{item.cantidad} x {item.precio} = $ {(item.cantidad * item.precio).toFixed(2)}</Text>
+                                                <Text style={styles.priceStyle}>{item.cantidad} x {item.precio + item.incentivo} = $ {(item.cantidad * (item.precio + item.incentivo)).toFixed(2)}</Text>
                                             </View>
                                             <View>
                                                 <Text style={styles.nameTextStyle}>{item.nombre}</Text>
@@ -130,17 +130,17 @@ class HistoryCartBriefingView extends React.PureComponent {
                     )
                     : (null)
                 }
-                    {this.inWaitingOfGroupConfirmation()?(
-                        <TouchableOpacity onPress={()=>this.goToGroups()} style={{}}>
-                            <Text style={styles.sectionTitleTextStyle}> Aviso </Text>
-                                <Text style={{ fontSize: 15, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10, fontStyle: 'italic', textAlign: "auto" }}>
-                                    Su pedido dentro del {this.defineWord()} esta confirmado, pero esta a la espera de la <Text style={{fontWeight:"bold", color:"blue"}}>confirmación</Text> por parte del administrador.
+                {this.inWaitingOfGroupConfirmation() ? (
+                    <TouchableOpacity onPress={() => this.goToGroups()} style={{}}>
+                        <Text style={styles.sectionTitleTextStyle}> Aviso </Text>
+                        <Text style={{ fontSize: 15, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10, fontStyle: 'italic', textAlign: "auto" }}>
+                            Su pedido dentro del {this.defineWord()} esta confirmado, pero esta a la espera de la <Text style={{ fontWeight: "bold", color: "blue" }}>confirmación</Text> por parte del administrador.
                                 </Text>
-                                <Text  style={{ fontSize: 15, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10, fontStyle: 'italic', textAlign: "center" }}>    
-                                    Puede presionar aquí para ir a <Text style={{fontWeight:"bold", color:"blue"}}>{this.defineText()}</Text>.
+                        <Text style={{ fontSize: 15, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10, fontStyle: 'italic', textAlign: "center" }}>
+                            Puede presionar aquí para ir a <Text style={{ fontWeight: "bold", color: "blue" }}>{this.defineText()}</Text>.
                                 </Text>
-                        </TouchableOpacity>
-                    ):(
+                    </TouchableOpacity>
+                ) : (
                         null
                     )}
                 <View >
@@ -189,13 +189,14 @@ class HistoryCartBriefingView extends React.PureComponent {
                             </View>
                         )}
 
-                    <View style={{ backgroundColor: "black", }}>
-                        <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
-                            <View style={styles.singleItemContainer}>
-                                <Text style={styles.totalPriceCartStyle}> Total : $ {this.obtainTotalPrice()} </Text>
+                            <View style={{ backgroundColor: "black", }}>
+                                <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                                    <View style={styles.singleItemContainer}>
+                                    <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Total:</Text> $ {this.obtainTotalPrice()} </Text>
+                                    </View>
+                                </View>
                             </View>
-                        </View>
-                    </View>
+
                 </View>
             </View>
         )
@@ -203,6 +204,16 @@ class HistoryCartBriefingView extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+    itemDataInfoStyle: {
+        alignSelf: "center",
+        fontSize: 16,
+        fontWeight: "bold",
+        fontStyle: "italic", color: "grey"
+    },
+    itemDataStyle: {
+        color: "black",
+        fontStyle: "normal"
+    },
     sectionTitleTextStyle: {
         textAlign: "center",
         fontSize: 16,
@@ -323,6 +334,7 @@ const styles = StyleSheet.create({
     },
 
     singleItemContainer: {
+        justifyContent:"center",
         margin: 5,
         height: 40,
         borderRadius: 5,

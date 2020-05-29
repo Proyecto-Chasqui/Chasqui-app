@@ -5,6 +5,7 @@ import ProductCardsView from '../../components/catalogViewComponents/ProductCard
 
 const mapStateToProps = state => ({
     products: state.products,
+    vendorSelected: state.vendorSelected,
 });
 
 const mapDispatchToProps = dispatch => ({

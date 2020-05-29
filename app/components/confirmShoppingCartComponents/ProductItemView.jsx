@@ -12,15 +12,16 @@ class ProductItemView extends React.PureComponent {
         this.serverBaseRoute = GLOBAL.BASE_URL;
         this.shoppingCarts = this.props.actions.shoppingCarts;
         this.touchable = this.props.touchable,
-        this.state = {
-            showInfo: false,
-            validCart: false,
-            initialValue: 0,
-            quantityValue: 0,
-            idPedido: 0,
-            buttonDisabled: true,
-            buttonLoading:false,
-        }
+            this.state = {
+                showInfo: false,
+                validCart: false,
+                initialValue: 0,
+                quantityValue: 0,
+                idPedido: 0,
+                buttonDisabled: true,
+                buttonLoading: false,
+            }
+        console.log("item", this.props.item)
     }
 
     componentDidUpdate() {
@@ -48,7 +49,7 @@ class ProductItemView extends React.PureComponent {
 
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.setState({})
     }
 
@@ -83,7 +84,7 @@ class ProductItemView extends React.PureComponent {
             estados: [
                 "ABIERTO"
             ]
-        },{withCredentials: true}).then(res => {
+        }, { withCredentials: true }).then(res => {
             this.shoppingCarts(res.data);
             this.updateCartSelected();
             this.setState({ showWaitSign: false, idPedido: 0 })
@@ -100,12 +101,12 @@ class ProductItemView extends React.PureComponent {
         });
     }
 
-    doRemove(){
+    doRemove() {
         axios.put((this.serverBaseRoute + 'rest/user/pedido/individual/eliminar-producto'), {
             idPedido: this.props.shoppingCartSelected.id,
             idVariante: this.props.item.idVariante,
             cantidad: this.state.initialValue - this.state.quantityValue,
-        },{withCredentials: true}).then(res => {
+        }, { withCredentials: true }).then(res => {
             this.getShoppingCarts();
         }).catch((error) => {
             console.log(error);
@@ -119,7 +120,7 @@ class ProductItemView extends React.PureComponent {
             }
         });
     }
-    
+
     addProductToCart() {
         this.setState({ buttonLoading: true, buttonDisabled: true })
         if (this.state.quantityValue > this.state.initialValue) {
@@ -127,16 +128,16 @@ class ProductItemView extends React.PureComponent {
                 idPedido: this.props.shoppingCartSelected.id,
                 idVariante: this.props.item.idVariante,
                 cantidad: this.state.quantityValue - this.state.initialValue,
-            },{withCredentials: true}).then(res => {
+            }, { withCredentials: true }).then(res => {
                 this.getShoppingCarts()
             }).catch((error) => {
                 console.log(error.response)
                 this.setState({ buttonLoading: false, buttonDisabled: false })
                 if (error.response) {
-                    if(error.response.data.error === "El vendedor por el momento no permite hacer compras o agregar mas productos, intentelo mas tarde."){
-                        this.props.actions.resetState({reset:true})
+                    if (error.response.data.error === "El vendedor por el momento no permite hacer compras o agregar mas productos, intentelo mas tarde.") {
+                        this.props.actions.resetState({ reset: true })
                         Alert.alert('Aviso', "No se permiten hacer compras por el momento, solo puede remover productos. Tenga en cuenta que si remueve productos no podrá agregarlos luego.");
-                    }else{                        
+                    } else {
                         Alert.alert('Aviso', error.response.data.error);
                     }
                 } else if (error.request) {
@@ -146,31 +147,43 @@ class ProductItemView extends React.PureComponent {
                 }
             });
         } else {
-            if(!this.props.vendorSelected.ventasHabilitadas){
+            if (!this.props.vendorSelected.ventasHabilitadas) {
                 Alert.alert(
                     'Advertencia',
                     'Si remueve el producto, no podrá volverlo a agregar. ¿Esta seguro de removerlo?',
                     [
-                        { text: 'No', onPress: () =>  this.setState({ buttonLoading: false, buttonDisabled: false }) },
+                        { text: 'No', onPress: () => this.setState({ buttonLoading: false, buttonDisabled: false }) },
                         { text: 'Si', onPress: () => this.doRemove() },
                     ],
                     { cancelable: false },
                 );
-            }else{
+            } else {
                 this.doRemove()
             }
         }
     }
 
-    showControlsItemProduct(){
-        if(this.touchable){
+    showControlsItemProduct() {
+        if (this.touchable) {
             this.setState({ showInfo: !this.state.showInfo })
+        }
+    }
+
+    definePrice() {
+        if (this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos) {
+            if (this.props.item.incentivo !== null) {
+                return this.props.item.precio + this.props.item.incentivo
+            } else {
+                return this.props.item.precio
+            }
+        } else {
+            return this.props.item.precio
         }
     }
 
     render() {
         return (
-            <View style={{backgroundColor:"white"}}>
+            <View style={{ backgroundColor: "white" }}>
                 <TouchableOpacity onPress={() => this.showControlsItemProduct()} >
                     <View style={stylesListCard.containerList}>
                         <View style={stylesListCard.cardImageView}>
@@ -178,7 +191,7 @@ class ProductItemView extends React.PureComponent {
                         </View>
                         <View style={{ flex: 1 }}>
                             <View >
-                                <Text style={stylesListCard.priceStyle}>{this.props.item.cantidad} x {this.props.item.precio} = $ {(this.props.item.cantidad * this.props.item.precio).toFixed(2)}</Text>
+                                <Text style={stylesListCard.priceStyle}>{this.props.item.cantidad} x {this.definePrice()} = $ {(this.props.item.cantidad * this.definePrice()).toFixed(2)}</Text>
                             </View>
                             <View>
                                 <Text style={stylesListCard.nameTextStyle}>{this.props.item.nombre}</Text>
@@ -187,24 +200,24 @@ class ProductItemView extends React.PureComponent {
                     </View>
                 </TouchableOpacity>
                 {this.state.showInfo ? (
-                    <View style={{ flex: 1, backgroundColor: '#ebedeb', borderBottomWidth:2, borderColor:'black'}}>
-                        <View  style={{ backgroundColor: '#ebedeb', marginTop:10,marginBottom:10, flexDirection:'row'}}>
-                        <View style={stylesListCard.quantityContainer}>
-                            <QuantitySelector disabled={false} vendorAllowSells={this.props.vendorSelected.ventasHabilitadas} functionValueComunicator={(value, change) => this.setQuantityValue(value, change)} text={""} initialValue={this.state.initialValue.toString()}></QuantitySelector>
-                        </View>
-                        <View style={stylesListCard.singleItemContainer}>
-                            <Button
-                                onPress={() => this.addProductToCart()}
-                                titleStyle={{ color: "black", fontSize: 20 }}
-                                containerStyle={stylesListCard.buttonAddProductContainer}
-                                disabled={this.state.buttonDisabled}
-                                loading={this.state.buttonLoading}
-                                icon={<Icon
-                                    name='edit'
-                                    type='font-awesome'
-                                    size={25} />}
-                                buttonStyle={stylesListCard.buttonAddProductStyle}></Button>
-                        </View>
+                    <View style={{ flex: 1, backgroundColor: '#ebedeb', borderBottomWidth: 2, borderColor: 'black' }}>
+                        <View style={{ backgroundColor: '#ebedeb', marginTop: 10, marginBottom: 10, flexDirection: 'row' }}>
+                            <View style={stylesListCard.quantityContainer}>
+                                <QuantitySelector disabled={false} vendorAllowSells={this.props.vendorSelected.ventasHabilitadas} functionValueComunicator={(value, change) => this.setQuantityValue(value, change)} text={""} initialValue={this.state.initialValue.toString()}></QuantitySelector>
+                            </View>
+                            <View style={stylesListCard.singleItemContainer}>
+                                <Button
+                                    onPress={() => this.addProductToCart()}
+                                    titleStyle={{ color: "black", fontSize: 20 }}
+                                    containerStyle={stylesListCard.buttonAddProductContainer}
+                                    disabled={this.state.buttonDisabled}
+                                    loading={this.state.buttonLoading}
+                                    icon={<Icon
+                                        name='edit'
+                                        type='font-awesome'
+                                        size={25} />}
+                                    buttonStyle={stylesListCard.buttonAddProductStyle}></Button>
+                            </View>
                         </View>
                     </View>) : (null)}
             </View>)
@@ -290,7 +303,7 @@ const stylesListCard = StyleSheet.create({
     },
 
     singleItemContainer: {
-        flex:3,
+        flex: 3,
         marginBottom: 5,
         height: 40,
         borderRadius: 5,
@@ -300,8 +313,8 @@ const stylesListCard = StyleSheet.create({
         marginRight: 20,
     },
 
-    quantityContainer:{
-        flex:12,
+    quantityContainer: {
+        flex: 12,
         marginBottom: 5,
         height: 40,
         borderRadius: 5,
@@ -317,7 +330,7 @@ const stylesListCard = StyleSheet.create({
         fontWeight: 'bold'
     },
     containerList: {
-        
+
         flexDirection: "row",
         margin: 10,
     },

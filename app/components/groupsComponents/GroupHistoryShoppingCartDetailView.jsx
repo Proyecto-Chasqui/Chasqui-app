@@ -21,6 +21,22 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
 
     }
 
+    calculateFinalAmount() {
+        if (this.props.groupHistoryShoppingCartSelected.montoTotal !== undefined) {
+            return (this.props.groupHistoryShoppingCartSelected.montoTotal + this.props.groupHistoryShoppingCartSelected.incentivoTotal).toFixed(2)
+        } else {
+            return 0
+        }
+    }
+
+    calculateNodeAmount() {
+        if (this.props.groupHistoryShoppingCartSelected.incentivoTotal !== undefined) {
+            return (this.props.groupHistoryShoppingCartSelected.incentivoTotal).toFixed(2)
+        } else {
+            return 0
+        }
+    }
+
     parseDate(string) {
         let parts = string.split('-');
         let parsedDate = parts[0] + "/" + parts[1] + "/" + parts[2].split(' ')[0];
@@ -31,10 +47,10 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
         return adress.calle + ", " + adress.altura + ", " + adress.localidad
     }
     keyExtractor = (item, index) => index.toString()
-    
-    isUser(member){
-        if(member.email === this.props.user.email){
-            return(
+
+    isUser(member) {
+        if (member.email === this.props.user.email) {
+            return (
                 {
                     backgroundColor: "white",
                     alignItems: "center",
@@ -49,12 +65,12 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                     },
                     shadowOpacity: 0.25,
                     shadowRadius: 3.84,
-                    borderColor:"blue",
+                    borderColor: "blue",
                     elevation: 5,
                 }
             )
-        }else{
-            return(
+        } else {
+            return (
                 {
                     backgroundColor: "white",
                     alignItems: "center",
@@ -69,32 +85,38 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                     },
                     shadowOpacity: 0.25,
                     shadowRadius: 3.84,
-            
+
                     elevation: 5,
                 }
             )
         }
     }
-    goToCartDetail(cart){
+    hasNodeAndIncentives() {
+        return this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos;
+    }
+    goToCartDetail(cart) {
         this.props.actions.historyCartSelected(cart)
         this.props.navigation.navigate("HistorialDePedido")
     }
+    isAdmin() {
+        return this.props.groupSelected.emailAdministrador === this.props.user.email
+    }
     renderItem = ({ item }) => (
-        <TouchableOpacity disabled={this.props.disabledPress} onPress={()=>this.goToCartDetail(item)} style={this.isUser(item.cliente)}>
-        <View style={{ margin: 2, marginStart: 10, flexDirection: "row", alignItems: "center", alignSelf: "stretch" }}>
-            <View style={{ marginStart: 10, flex: 1 }}>
-                <Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", }}>{item.cliente.alias}</Text>
-                <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>{item.cliente.email}</Text>
-                <View>
-                    {item != null ? (
-                        <View style={{ flexDirection: "row" }}>
-                            <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Pedido: {item.estado}</Text>
-                            <Text style={{ fontSize: 14, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>Total: ${item.montoActual}</Text>
-                        </View>)
-                        : (<Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Sin pedido</Text>)
-                    }
+        <TouchableOpacity disabled={this.props.disabledPress} onPress={() => this.goToCartDetail(item)} style={this.isUser(item.cliente)}>
+            <View style={{ margin: 2, marginStart: 10, flexDirection: "row", alignItems: "center", alignSelf: "stretch" }}>
+                <View style={{ marginStart: 10, flex: 1 }}>
+                    <Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", }}>{item.cliente.alias}</Text>
+                    <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>{item.cliente.email}</Text>
+                    <View>
+                        {item != null ? (
+                            <View style={{ flexDirection: "row" }}>
+                                <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Pedido: {item.estado}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>Total: ${item.montoActual + item.incentivoActual}</Text>
+                            </View>)
+                            : (<Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Sin pedido</Text>)
+                        }
+                    </View>
                 </View>
-            </View>
                 <View style={{ flex: 1, alignItems: "flex-end", marginEnd: 5 }}>
                     <Icon
                         name='chevron-right'
@@ -102,7 +124,7 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                         color='blue'
                     />
                 </View>
-        </View>
+            </View>
         </TouchableOpacity>
     )
 
@@ -180,20 +202,55 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                                 ) : (null)}
                             </View>
                         )}
-
-                    <View style={{ backgroundColor: "black", }}>
-                        <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
-                            <View style={styles.singleItemContainer}>
-                                <Text style={styles.totalPriceCartStyle}> Total : $ {this.obtainTotalPrice()} </Text>
-                            </View>
+                    {this.isAdmin() ? (
+                        <View>
+                        {
+                            this.hasNodeAndIncentives() ? (
+                                <View style={{}}>
+                                    <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                                        <View style={styles.singleItemContainer}>
+                                            <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Ingreso Nodo :</Text> $ {this.calculateNodeAmount()} </Text>
+                                            <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Costo al Nodo :</Text> $ {this.obtainTotalPrice()} </Text>
+                                            <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Precio Final :</Text> $ {this.calculateFinalAmount()} </Text>
+                                        </View>
+                                    </View>
+                                </View>
+                            ) : (
+                                    <View style={{ }}>
+                                        <View style={{ alignItems: "center", backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                                            <View style={[styles.singleItemContainer, { width:"95%", height: 40, justifyContent: "center" }]}>
+                                                <Text style={[styles.itemDataInfoStyle]}><Text style={[styles.itemDataStyle]}> Total :</Text> $ {this.obtainTotalPrice()} </Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                )
+                        }
                         </View>
-                    </View>
+                    ) : (
+                            <View style={{  }}>
+                                <View style={{ alignItems: "center", backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                                    <View style={[styles.singleItemContainer, { width:"90%", height: 40, justifyContent: "center" }]}>
+                                        <Text style={[styles.itemDataInfoStyle]}><Text style={[styles.itemDataStyle]}> Total :</Text> $ {this.obtainTotalPrice()} </Text>
+                                    </View>
+                                </View>
+                            </View>
+                        )}
                 </View>
             </View>)
     }
 }
 
 const styles = StyleSheet.create({
+    itemDataInfoStyle: {
+        alignSelf: "center",
+        fontSize: 16,
+        fontWeight: "bold",
+        fontStyle: "italic", color: "grey"
+    },
+    itemDataStyle: {
+        color: "black",
+        fontStyle: "normal"
+    },
     titleContainer: {
         backgroundColor: 'white',
         shadowColor: "#000",
@@ -368,7 +425,6 @@ const styles = StyleSheet.create({
 
     singleItemContainer: {
         margin: 5,
-        height: 40,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "grey",

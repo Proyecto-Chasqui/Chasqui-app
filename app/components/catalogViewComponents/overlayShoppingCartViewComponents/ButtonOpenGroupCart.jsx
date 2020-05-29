@@ -38,6 +38,14 @@ class ButtonOpenGroupCart extends React.PureComponent {
         })
     }
 
+    definePriceOfCart(){        
+        if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+            return this.state.memberCart.montoActual + this.state.memberCart.incentivoActual
+        }else{
+            return this.state.memberCart.montoActual
+        }
+    }
+
     render() {
         if (!this.props.vendorSelected.few.gcc && !this.props.vendorSelected.few.nodos) {
             console.log("vendor", this.props.vendorSelected.few)
@@ -103,10 +111,10 @@ class ButtonOpenGroupCart extends React.PureComponent {
                                 <View style={{ margin: 5 }}>
                                     <View style={styles.messageContainer}>
                                         <Text style={{ marginTop: 3, textAlign: "center", color: "white", fontSize: 17, fontWeight: "bold" }}> Confirmado </Text>
-                                        <Text style={{ marginBottom: 3, textAlign: "center", color: "white", fontSize: 12, fontStyle: "italic", fontWeight: "bold" }}> En espera de confirmación grupal </Text>
+                                        <Text style={{ marginBottom: 3, textAlign: "center", color: "white", fontSize: 12, fontStyle: "italic", fontWeight: "bold" }}> En espera de confirmación colectiva </Text>
                                     </View>
                                     <View style={{ marginTop: 3 }}>
-                                        <Text style={styles.textResumeStyle}> Total: ${(this.state.memberCart.montoActual).toFixed(2)} </Text>
+                                        <Text style={styles.textResumeStyle}> Total: ${(this.definePriceOfCart()).toFixed(2)} </Text>
                                         <Text style={styles.textResumeStyle}> Creado el: {this.state.memberCart.fechaCreacion} </Text>
                                     </View>
                                 </View>

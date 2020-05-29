@@ -54,6 +54,42 @@ class GroupCartBriefingView extends React.PureComponent {
         return count
     }
 
+    calculateNodeAmount() {
+        let count = 0
+        this.props.groupSelected.miembros.map((miembro) => {
+            if (miembro.pedido != null) {
+                if (miembro.pedido.estado === "CONFIRMADO") {
+                    count = count + miembro.pedido.incentivoActual
+                }
+            }
+        })
+        return count
+    }
+
+    calculateFinalAmount() {
+        let count = 0
+        this.props.groupSelected.miembros.map((miembro) => {
+            if (miembro.pedido != null) {
+                if (miembro.pedido.estado === "CONFIRMADO") {
+                    count = count + miembro.pedido.montoActual + miembro.pedido.incentivoActual
+                }
+            }
+        })
+        return count
+    }
+
+    hasNodeAndIncentives() {
+        return this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos;
+    }
+
+    defineTitleText() {
+        if (this.props.vendorSelected.few.nodos) {
+            return "Nodo"
+        } else {
+            return "Grupo"
+        }
+    }
+
     render() {
 
         return (
@@ -62,25 +98,35 @@ class GroupCartBriefingView extends React.PureComponent {
                     <Text style={stylesListCard.adressTitle}>Información de la compra</Text>
                 </View>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
-                <View style={{ height: Dimensions.get("window").height - 265 }}>
-                    <Text style={stylesListCard.sectionTitleTextStyle}>Grupo</Text>
-                    <View style={{backgroundColor:"white"}}>
+                <View style={{ flex: 1}}>
+                    <Text style={stylesListCard.sectionTitleTextStyle}>{this.defineTitleText()}</Text>
+                    <View style={{ backgroundColor: "white" }}>
                         <Text style={{ fontSize: 16, fontWeight: "bold", textAlign: "center" }}>{this.props.groupSelected.alias}</Text>
                     </View>
                     <Text style={stylesListCard.sectionTitleTextStyle}>Pedidos</Text>
                     <DetailGroupView onlyConfirmed={true} hideHeaders={true} navigation={this.props.navigation}></DetailGroupView>
                 </View>
                 <View style={{}}>
-                    <View style={{ marginTop: 15 }}>
-                        <View style={stylesListCard.singleItemContainer}>
-                            <View>
-                                <Text style={stylesListCard.totalPriceCartStyle}> Total : $ {this.calculateAmount()} </Text>
-                            </View>
+                    <View style={{ marginTop: 15, }}>
+                        <View style={[stylesListCard.singleItemContainer,{flexDirection: this.hasNodeAndIncentives()?("column"):("row")}]}>
+                            {this.hasNodeAndIncentives() ? (
+                                <View style={{  }}>
+                                    <View style={{ marginBottom: 5 }}>
+                                        <Text style={stylesListCard.itemDataInfoStyle}><Text style={stylesListCard.itemDataStyle}> Ingreso Nodo :</Text> $ {this.calculateNodeAmount()} </Text>
+                                        <Text style={stylesListCard.itemDataInfoStyle}><Text style={stylesListCard.itemDataStyle}> Costo al Nodo :</Text> $ {this.calculateAmount()} </Text>
+                                        <Text style={stylesListCard.itemDataInfoStyle}><Text style={stylesListCard.itemDataStyle}> Precio Final :</Text> $ {this.calculateFinalAmount()} </Text>
+                                    </View>
+                                </View>
+                            ) : (
+                                    <View style={{ height: 50, justifyContent: "center" }}>
+                                        <Text style={stylesListCard.itemDataInfoStyle}><Text style={stylesListCard.itemDataStyle}> Total :</Text> $ {this.calculateAmount()} </Text>
+                                    </View>
+                                )}
                             {this.showMinAmount() ? (
-                                <View style={{ backgroundColor: 'transparent', flexDirection: "row", alignItems: "center", }}>
-                                    <Text style={{ fontSize: 15, }}> Min. Monto: </Text>
+                                <View style={{ backgroundColor: 'transparent', flexDirection: "row", alignItems: "center" }}>
+                                    <Text style={[stylesListCard.itemDataInfoStyle,stylesListCard.itemDataStyle]}> Min. Monto: </Text>
                                     <View style={{ flexDirection: "row" }}>
-                                        <Text style={{ textAlign: "center", marginRight: 5 }}>${this.props.vendorSelected.montoMinimo}</Text>
+                                        <Text style={[stylesListCard.itemDataInfoStyle,{marginRight:5}]}>${this.props.vendorSelected.montoMinimo}</Text>
                                         {this.calculateAmount() >= this.props.vendorSelected.montoMinimo ? (
                                             <Icon name="check" type='font-awesome' size={20} color={"green"}></Icon>
                                         ) : (<Icon name="check" type='font-awesome' size={20} color={"#ebedeb"}></Icon>)}
@@ -96,6 +142,9 @@ class GroupCartBriefingView extends React.PureComponent {
 }
 
 const stylesListCard = StyleSheet.create({
+    itemDataInfoStyle: { fontSize: 16, fontWeight: "bold", fontStyle: "italic", color: "grey" },
+    itemDataStyle: { color: "black", fontStyle: "normal" },
+    requestItemData: { flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-start", width: "100%", },
     sectionTitleTextStyle: {
         textAlign: "center",
         fontSize: 16,
@@ -196,11 +245,9 @@ const stylesListCard = StyleSheet.create({
     },
 
     singleItemContainer: {
-        flexDirection: "row",
         justifyContent: "space-evenly",
         alignItems: "center",
         marginBottom: 5,
-        height: 40,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: "grey",
