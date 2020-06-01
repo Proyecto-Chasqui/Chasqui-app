@@ -13,7 +13,6 @@ class ProductCardsView extends React.PureComponent {
         this.navigation = props.navigation;
         this.size = (props.size != undefined) ? (props.size) : (2);
         this.vendorSelected = this.props.vendorSelected
-        console.log("vendor", this.props.vendorSelected)
         this.state = {
             unmounted:true
         }

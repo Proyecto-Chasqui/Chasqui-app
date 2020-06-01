@@ -142,7 +142,6 @@ class NodeRequestView extends React.PureComponent {
                 })
 
             }))
-            console.log("direccion", this.props.groupSelected.direccionDelNodo)
             this.onCheckChangedAdress(this.props.groupSelected.direccionDelNodo.id);
         }
     }
@@ -342,7 +341,6 @@ class NodeRequestView extends React.PureComponent {
     findActive(requests) {
         requests.map((request) => {
             if (request.estado === 'solicitud_nodo_en_gestion') {
-                console.log("find active request!");
                 this.setState({ activeRequest: request })
             }
         })
@@ -557,7 +555,6 @@ class NodeRequestView extends React.PureComponent {
     onCheckChangedAdress(id) {
         const data = this.state.dataChecksAdress;
         const index = data.findIndex((x) => x.id === id);
-        console.log("index", id);
         if (index !== -1) {
             data[index].checked = !data[index].checked;
             this.unCheckOthers(data, index);

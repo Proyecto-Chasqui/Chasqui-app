@@ -119,7 +119,6 @@ class ConfirmCartGroupView extends React.PureComponent {
     hasQuestionsAnswered() {
         let allAnswered = true
         this.state.answers.map((answer) => {
-            console.log("respuesta",answer);
             if (answer.opcionSeleccionada === null) {
                 allAnswered = false
             }

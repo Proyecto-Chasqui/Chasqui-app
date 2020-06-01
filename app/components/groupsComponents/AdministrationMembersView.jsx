@@ -20,7 +20,6 @@ class AdministrationMembersView extends React.PureComponent {
             selectedIndex: 0,
         }
         this.updateIndex = this.updateIndex.bind(this)
-        console.log("request", this.props.selectedNodeRequests)
     }
 
     updateIndex(selectedIndex) {
@@ -115,12 +114,9 @@ class AdministrationMembersView extends React.PureComponent {
     }
 
     defineInvitationRoute() {
-        console.log("vendor", this.props.vendorSelected.few);
         if (this.props.vendorSelected.few.gcc) {
-            console.log("returning", 'rest/user/gcc/invitacion')
             return 'rest/user/gcc/invitacion';
         } else {
-            console.log("returning", 'rest/user/nodo/enviarInvitacion')
             return 'rest/user/nodo/enviarInvitacion';
         }
     }
@@ -128,7 +124,6 @@ class AdministrationMembersView extends React.PureComponent {
     handleSubmit() {
         this.setState({ loading: true })
         if (this.validEmail()) {
-            console.log("return", this.defineInvitationRoute())
             axios.post((this.serverBaseRoute + this.defineInvitationRoute()), {
                 idGrupo: this.props.groupSelected.id,
                 emailInvitado: this.state.email

@@ -200,7 +200,6 @@ class ShoppingCartsHistoryView extends React.PureComponent {
             this.props.actions.historyShoppingCarts(res.data);
             this.setState({ isLoading: false })
         }).catch((error) => {
-            console.log("error en history_ relogin", error);
             this.setState({ isLoading: false })
             if (error.response) {
                 Alert.alert(

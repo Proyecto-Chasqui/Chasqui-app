@@ -21,7 +21,6 @@ class ProductItemView extends React.PureComponent {
                 buttonDisabled: true,
                 buttonLoading: false,
             }
-        console.log("item", this.props.item)
     }
 
     componentDidUpdate() {

@@ -27,7 +27,6 @@ class OpenNodesView extends React.PureComponent {
     getAccessOpenNodeRequests() {
         axios.get((this.serverBaseRoute + 'rest/user/nodo/obtenerSolicitudesDePertenenciaDeUsuario/' + this.props.vendorSelected.id))
             .then(res => {
-                console.log("solicitudes", res.data)
                 this.props.actions.accessOpenNodeRequests(res.data)
             }).catch((error) => {
                 this.setState({ loading: false })
@@ -52,7 +51,6 @@ class OpenNodesView extends React.PureComponent {
     getOpenNodes() {
         this.setState({ loading: true })
         axios.get((this.serverBaseRoute + 'rest/client/vendedor/nodosAbiertos/' + this.props.vendorSelected.id), {}).then(res => {
-            console.log("nodos abiertos", res.data);
             this.props.actions.openNodesData(res.data);
             this.setState({ loading: false })
         }).catch((error) => {

@@ -316,7 +316,6 @@ class ItemInfoCartView extends React.PureComponent {
                 this.getGroups();
             }).catch((error) => {
                 this.setState({ showWaitSign: false })
-                console.log("error en confirm cart group", error);
                 this.showAlert("ocurrio un error al confirmar el pedido en el grupo")
             });
         }

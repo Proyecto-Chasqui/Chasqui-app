@@ -110,7 +110,7 @@ class EditGroupView extends React.PureComponent {
         }).catch((error) => {
             this.setState({ loading: false })
             if (error.response) {
-                console.log("response data errror", error.response);
+                console.log("response data error", error.response);
                 Alert.alert(
                     'Error',
                     error.response.data.error,

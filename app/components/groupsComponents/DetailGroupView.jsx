@@ -35,7 +35,6 @@ class DetailGroupView extends React.PureComponent {
     keyExtractor = (item, index) => index.toString()
 
     goToMember(member) {
-        console.log("integrante", member)
         this.props.actions.memberSelected(member);
         this.props.navigation.navigate("Miembro");
     }
@@ -71,7 +70,6 @@ class DetailGroupView extends React.PureComponent {
 
     getRequests() {
         axios.get(this.serverBaseRoute + 'rest/user/nodo/obtenerSolicitudesDePertenenciaANodo/' + this.props.groupSelected.id).then(res => {
-            console.log("requests", res.data);
             this.props.actions.selectedNodeRequests(res.data)
         }).catch((error) => {
             console.log("error request:",error);
