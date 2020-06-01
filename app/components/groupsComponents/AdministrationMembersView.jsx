@@ -213,7 +213,7 @@ class AdministrationMembersView extends React.PureComponent {
             this.getGroups()
             Alert.alert(
                 'Aviso',
-                "Usuario removido del grupo con exito",
+                "Usuario removido con exito",
                 [
                     { text: 'Entendido', onPress: () => this.setState({ loading: false }) },
                 ],

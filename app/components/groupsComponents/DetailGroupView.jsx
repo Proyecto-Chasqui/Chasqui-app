@@ -17,7 +17,7 @@ class DetailGroupView extends React.PureComponent {
     }
 
     componentDidMount() {
-        if (this.props.vendorSelected.few.nodos) {
+        if (this.props.vendorSelected.few.nodos && (this.props.groupSelected.emailAdministrador === this.props.user.email)) {
             this.getRequests()
         }
     }
@@ -70,11 +70,11 @@ class DetailGroupView extends React.PureComponent {
     }
 
     getRequests() {
-        axios.get(this.serverBaseRoute + 'rest/user/nodo/obtenerSolicitudesDePertenenciaANodo/' + this.props.groupSelected.id, { withCredentials: true }).then(res => {
+        axios.get(this.serverBaseRoute + 'rest/user/nodo/obtenerSolicitudesDePertenenciaANodo/' + this.props.groupSelected.id).then(res => {
             console.log("requests", res.data);
             this.props.actions.selectedNodeRequests(res.data)
         }).catch((error) => {
-            console.log(error);
+            console.log("error request:",error);
         });
     }
 
@@ -134,8 +134,10 @@ class DetailGroupView extends React.PureComponent {
         let count = 0
         if(this.props.vendorSelected.few.nodos){
             this.props.selectedNodeRequests.map((request)=>{
-                if(request.estado === 'solicitud_pertenencia_nodo_enviado'){
-                    count = count + 1
+                if(this.props.groupSelected.id === request.nodo.idNodo){
+                    if(request.estado === 'solicitud_pertenencia_nodo_enviado'){
+                        count = count + 1
+                    }
                 }
             })
         }
