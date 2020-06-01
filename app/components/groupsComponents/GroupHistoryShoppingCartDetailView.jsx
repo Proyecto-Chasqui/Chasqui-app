@@ -109,9 +109,9 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
     renderItem = ({ item }) => (
         <TouchableOpacity disabled={this.props.disabledPress} onPress={() => this.goToCartDetail(item)} style={this.isUser(item.cliente)}>
             <View style={{ margin: 2, marginStart: 10, flexDirection: "row", alignItems: "center", alignSelf: "stretch" }}>
-                <View style={{ marginStart: 10, flex: 1 }}>
+                <View style={{ marginStart: 10, flex:10}}>
                     <Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", }}>{item.cliente.alias}</Text>
-                    <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>{item.cliente.email}</Text>
+                    <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey"}}>{item.cliente.email}</Text>
                     <View>
                         {item != null ? (
                             <View style={{ flexDirection: "row" }}>
@@ -152,7 +152,7 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                     </Header>
                 </View>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.adressTitle}>Detalle del pedidos colectivo</Text>
+                    <Text style={styles.adressTitle}>Detalle del pedido colectivo</Text>
                 </View>
                 <View>
                     <Text style={styles.sectionTitleTextStyle}>Pedido de los integrantes</Text>

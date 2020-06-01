@@ -164,10 +164,10 @@ class DetailGroupView extends React.PureComponent {
                                 <Icon containerStyle={{ margin: 1 }} name="star" size={15} color="blue" type='font-awesome' />
                             </View>
                         ) : (null)}
-                        <View style={{ marginStart: 10, }}>
+                        <View style={{ marginStart: 10, flex:10}}>
                             <Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", }}>{item.nickname}</Text>
                             <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>{item.email}</Text>
-                            <View>
+                            <View >
                                 {item.pedido != null ? (
                                     <View style={{ flexDirection: "row" }}>
                                         <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Pedido: {item.pedido.estado}</Text>
@@ -301,6 +301,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 10,
         marginBottom: 10,
+        marginEnd:5,
+        marginStart:5
     },
 
     notificationItem: {

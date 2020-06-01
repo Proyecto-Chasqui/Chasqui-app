@@ -28,7 +28,7 @@ class EditGroupView extends React.PureComponent {
         this.setState({
             groupData: {
                 alias: this.props.groupSelected.alias,
-                descripcion: this.props.groupSelected.descripcion,
+                descripcion: (this.props.groupSelected.descripcion === null ? "" : this.props.groupSelected.descripcion),
             }
         })
     }
@@ -190,7 +190,7 @@ class EditGroupView extends React.PureComponent {
         switch (field) {
             case ALIAS:
                 return this.state.groupData.alias
-            case DESCRIPCION:
+            case DESCRIPCION:                
                 return this.state.groupData.descripcion
         }
     }
