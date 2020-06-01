@@ -26,7 +26,7 @@ class LoginView extends React.PureComponent {
   loginAsGuest() {
     
     if(!this.state.loading){
-      this.login({
+      this.props.actions.login({
         email: "invitadx@invitadx.com",
         token: "invitado",
         id: 0,

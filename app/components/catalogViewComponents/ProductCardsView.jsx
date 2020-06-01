@@ -12,7 +12,19 @@ class ProductCardsView extends React.PureComponent {
         this.catalogViewModes = GLOBALS.CATALOG_VIEW_MODES;
         this.navigation = props.navigation;
         this.size = (props.size != undefined) ? (props.size) : (2);
+        this.vendorSelected = this.props.vendorSelected
         console.log("vendor", this.props.vendorSelected)
+        this.state = {
+            unmounted:true
+        }
+    }
+
+    componentDidMount(){
+        this.setState({unmounted:false})
+    }
+
+    componentWillUnmount(){
+        this.setState({unmounted:true})
     }
 
     normalizeText(text) {
@@ -25,19 +37,15 @@ class ProductCardsView extends React.PureComponent {
     }
 
     definePrice(item){
-        if(this.props.vendorSelected !== undefined){
-            if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+            if(this.vendorSelected.few.nodos && this.vendorSelected.few.usaIncentivos){
                 return item.precio + item.incentivo
             }else{
                 return item.precio
             }
-        }else{
-            return item.precio
-        }
     }
 
     render() {
-        if (this.props.products.length < 1) {
+        if (this.props.products.length < 1 || this.state.unmounted) {
             return (
                 <View style={stylesMultipleCards.viewSearchErrorContainer}>
                     <View style={stylesMultipleCards.viewErrorContainer}>

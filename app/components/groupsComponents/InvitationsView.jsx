@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         margin: 4,
         borderRadius: 5,
-        height: Dimensions.get("window").height / 4.5,
+        height: 170,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

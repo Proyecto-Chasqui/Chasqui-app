@@ -95,10 +95,15 @@ class ConfirmCartView extends React.PureComponent {
                         <View style={{flex:1}}>
                             <Text style={stylesListCard.sectionTitleTextStyle} > Respuestas del cuestionario </Text>
                             <FlatList data={this.props.answers}
+                                ListHeaderComponent={
+                                <View style={{ flex:1, alignItems:"center",flexDirection: "row", marginLeft:5, marginRight:5, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                    <Text style={{flex:1,color:"black",fontWeight:"bold", textAlign:"center", }}>Pregunta </Text><Text style={{borderLeftWidth:2,height:"100%",borderColor:"#e1e1e1"}}></Text><Text  style={{flex:1,textAlign:"center",color:"blue",fontWeight:"bold"}}>Respuesta</Text>
+                                </View>
+                                }
                                 keyExtractor={item => item.nombre} windowSize={15}
                                 renderItem={({ item }) =>
-                                    <View style={{ flexDirection: "row", marginLeft:5, marginRight:5, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
-                                        <Text style={{color:"black",fontWeight:"bold"}}>{item.nombre} : </Text><Text  style={{color:"blue",fontWeight:"bold"}}>{item.opcionSeleccionada}</Text>
+                                    <View style={{ flex:1, alignItems:"center",flexDirection: "row", marginLeft:5, marginRight:5, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                                        <Text style={{flex:1,color:"black",fontWeight:"bold", textAlign:"center"}}>{item.nombre}  </Text><Text style={{borderLeftWidth:2,height:"100%",borderColor:"#e1e1e1"}}></Text><Text  style={{flex:1,textAlign:"center",color:"blue",fontWeight:"bold"}}>{item.opcionSeleccionada}</Text>
                                     </View>
                                 } />
                         </View>) : (null)

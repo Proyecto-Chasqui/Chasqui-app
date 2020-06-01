@@ -69,7 +69,7 @@ class ButtonOpenGroupCart extends React.PureComponent {
                     borderColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('black') : ("#D8D8D8"),
                 }}>
                     <View style={{ justifyContent: "center", borderColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('black') : ("#D8D8D8"), borderWidth: 2, borderBottomWidth: 0, borderTopRightRadius: 5, borderTopLeftRadius: 5, marginLeft: -2, marginRight: -2, marginTop: -2, alignItems: 'center', flexDirection: "row", backgroundColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('#5ebb47') : ('rgba(51, 102, 255, 1)') }}>
-                        <View style={{ flex: 8, alignItems: "center", margin: 5 }}>
+                        <View style={{  alignItems: "center", margin: 5 }}>
                             <Text style={styles.aliasStyle}>{this.props.group.alias}</Text>
                         </View>
                         {this.props.vendorSelected.few.gcc ? (
@@ -206,6 +206,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#5ebb47",
     },
     aliasStyle: { fontWeight: 'bold', color: "white", fontSize: 15 },
-    iconStyle: { flex: 1, backgroundColor: "white", borderColor: "black", borderRadius: 5, borderWidth: 1, margin: 4 },
+    iconStyle: {  backgroundColor: "white", borderColor: "black", borderRadius: 5, borderWidth: 1, margin: 4 },
     textResumeStyle: { textAlign: "center", fontWeight: "bold" },
 })

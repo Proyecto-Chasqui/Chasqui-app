@@ -170,14 +170,16 @@ class ProductItemView extends React.PureComponent {
     }
 
     definePrice() {
-        if (this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos) {
-            if (this.props.item.incentivo !== null) {
-                return this.props.item.precio + this.props.item.incentivo
+        if (this.props.vendorSelected !== null) {
+            if (this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos) {
+                if (this.props.item.incentivo !== null) {
+                    return this.props.item.precio + this.props.item.incentivo
+                } else {
+                    return this.props.item.precio
+                }
             } else {
                 return this.props.item.precio
             }
-        } else {
-            return this.props.item.precio
         }
     }
 

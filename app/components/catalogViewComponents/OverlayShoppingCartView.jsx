@@ -189,7 +189,7 @@ class OverlayShoppingCartView extends React.PureComponent {
             >
                 <View style={styles.topHeader}>
                     <View style={styles.containerIconStyle}>
-                        <Icon iconStyle={styles.shoppingCartIcon} name="shopping-cart" size={30} color="white" type='font-awesome' />
+                        <Icon iconStyle={styles.shoppingCartIcon} name="shopping-cart" size={20} color="white" type='font-awesome' />
                     </View>
                     <Text style={styles.title}>PEDIDOS</Text>
                 </View>
@@ -345,9 +345,12 @@ const styles = StyleSheet.create({
     },
 
     containerIconStyle: {
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: 'white',
         borderRadius: 3,
+        height:40,
+        width:40,
+        justifyContent:"center"
     },
 
     shoppingCartIcon: {
@@ -378,7 +381,7 @@ const styles = StyleSheet.create({
 
     overlay: {
         alignSelf: "flex-end",
-        width: Dimensions.get("window").width - 100,
+        width: Dimensions.get("window").width - 50,
         height: Dimensions.get("window").height,
 
         flex: 1,

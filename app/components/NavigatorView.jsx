@@ -67,7 +67,7 @@ class NavigatorView extends React.PureComponent {
               <Image style={styles.userAvatar} source={require('./configurationViewComponents/configurationAssets/avatar_4.png')}></Image>
             )}
 
-          <Text style={styles.nickText}>{this.state.nickname}</Text>
+          <Text style={styles.nickText}>{this.props.user.nickname}</Text>
         </Header>
         <NavigationItems navigation={props.navigation}></NavigationItems>
         <NavigationOptionItems navigation={props.navigation}></NavigationOptionItems>

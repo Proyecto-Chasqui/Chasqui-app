@@ -47,9 +47,17 @@ class CatalogView extends React.Component {
         };
     }
 
+    userLogged(){
+        let value = false
+        if(this.props.user !== undefined){
+                value = this.props.user.id !== 0
+        }
+        return value
+    }
+
     load() {
         if (this.props.vendorSelected.id !== undefined) {
-            if(this.props.user.id !== 0){
+            if(this.userLogged()){
                 this.getShoppingCarts(this.props);
                 this.getUnreadNotifications();
                 this.props.actions.shoppingCartUnselected();
@@ -145,7 +153,7 @@ class CatalogView extends React.Component {
             ,withCredentials: true
         }).then(res => {
             this.personalData(res.data);
-        }).catch(function (error) {
+        }).catch((error) => {
             Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
         });
     }
