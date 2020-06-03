@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 import axios from 'axios';
 import GLOBALS from '../Globals';
 import base64 from 'react-native-base64';
+import { AsyncStorage } from 'react-native';
 
 class LoginView extends React.PureComponent {
   constructor(props) {
@@ -21,7 +22,22 @@ class LoginView extends React.PureComponent {
       dataChange: false,
       loading: false,
     }
+    
   }
+
+  componentDidMount(){
+    this.retrieveUserData();
+  }  
+  
+  async storeData(key, item){
+    try {
+      console.log("store:" + key,item)
+      await AsyncStorage.setItem(key, JSON.stringify(item));
+    } catch (error) {
+      console.log("error on storage",error.message)
+    }
+  };
+  
 
   loginAsGuest() {
     
@@ -33,51 +49,35 @@ class LoginView extends React.PureComponent {
         nickname: "invitadx",
         avatar: "",
       });
+      this.storeData("user",{
+        email: "invitadx@invitadx.com",
+        token: "invitado",
+        id: 0,
+        nickname: "invitadx",
+        avatar: "",
+      })
     }
   }
-  //deprecado
-  reLogin() {
-    axios.post(this.serverBaseRoute + 'rest/client/sso/singIn', {
-      email: this.props.user.email,
-      password: this.props.user.password
-    }, { withCredentials: true, })
-      .then(res => {
-        let userData = res.data
-        userData.password = values.contraseña
-        this.login(userData);
-        this.setPassword(values.contraseña);
-      }).catch((error) => {
-        if (error.response) {
-          if (error.response.data.error === "Usuario o Password incorrectos!") {
-            Alert.alert(
-              'Advertencia',
-              'Usuario o Password incorrectos!',
-              [
-                { text: 'Entendido', onPress: () => null },
-              ],
-              { cancelable: false },
-            );
-          } else {
-            Alert.alert(
-              'Advertencia',
-              'ocurrio un error al tratar de comunicarse con el servidor, debe re ingresar',
-              [
-                { text: 'Entendido', onPress: () => null },
-              ],
-              { cancelable: false },
-            );
-          }
 
-        } else if (error.request) {
-          Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-        } else {
-          Alert.alert('Error', "Ocurrio un error al intentar ingresar, intente más tarde o verifique su conectividad.");
+  retrieveUserData = async () =>{
+    try {
+      let user = await AsyncStorage.getItem("user");
+      if (user !== null) {
+        if(JSON.parse(user).id !== 0){
+          this.getPersonalData(JSON.parse(user),JSON.parse(user).password)
+        }else{
+          this.loginAsGuest()
         }
-      });
-  }
+      }
+    } catch (error) {
+      console.log("value error", error.message);
+    }
+  };
   //usado para registrar en el server su "login", probablemente sea necesario crear una contramedida
   // del lado del servidor cuando se crean 401 unautorized.
-  getPersonalData(data, values) {
+  getPersonalData(data, password) {
+    console.log("data",data)
+    console.log("password", password)
     const token = base64.encode(`${data.email}:${data.token}`);
     axios.get(this.serverBaseRoute + 'rest/user/adm/read', {
       headers: {
@@ -87,9 +87,10 @@ class LoginView extends React.PureComponent {
       , withCredentials: true
     }).then(res => {
       let userData = data
-      userData.password = values.contraseña
-      this.setPassword(values.contraseña);
+      userData.password = password
+      this.setPassword(password);
       this.login(userData);
+      this.storeData("user", userData);
       this.setState({loading:false})
     }).catch((error) => {
       Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
@@ -104,7 +105,7 @@ class LoginView extends React.PureComponent {
         password: values.contraseña
       }, { withCredentials: true })
         .then(res => {
-          this.getPersonalData(res.data, values)
+          this.getPersonalData(res.data, values.contraseña)
         }).catch((error) => {
           this.setState({loading:false})
           if (error.response) {

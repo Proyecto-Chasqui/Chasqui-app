@@ -4,6 +4,7 @@ import { Header, Button, Icon, Image, Overlay, Input, Badge } from 'react-native
 import axios from 'axios'
 import GLOBALS from '../Globals'
 import LoadingView from '../components/LoadingView'
+import { AsyncStorage } from 'react-native';
 
 class OpenNodesView extends React.PureComponent {
     constructor(props) {
@@ -15,12 +16,12 @@ class OpenNodesView extends React.PureComponent {
         }
     }
 
-    componentDidUpdate(){
-        if(this.props.hasReceivedPushNotifications){
+    componentDidUpdate() {
+        if (this.props.hasReceivedPushNotifications) {
             this.getOpenNodes()
-            if(this.props.user.id !== 0){
+            if (this.props.user.id !== 0) {
                 this.getAccessOpenNodeRequests()
-            }else{
+            } else {
                 this.props.actions.accessOpenNodeRequests([])
             }
             this.props.actions.hasReceivedPushNotifications(false)
@@ -29,9 +30,9 @@ class OpenNodesView extends React.PureComponent {
 
     componentDidMount() {
         this.getOpenNodes()
-        if(this.props.user.id !== 0){
+        if (this.props.user.id !== 0) {
             this.getAccessOpenNodeRequests()
-        }else{
+        } else {
             this.props.actions.accessOpenNodeRequests([])
         }
     }
@@ -126,8 +127,18 @@ class OpenNodesView extends React.PureComponent {
 
         return isInNode || hasSendRequest;
     }
+
+    async goToLogin() {
+        try {
+            await AsyncStorage.removeItem("user");
+            this.props.actions.logout();
+        } catch (error) {
+            console.log("error on go to login", error.message)
+        }
+    }
+
     askSendUserRequest(item) {
-        if(this.props.user.id !== 0){
+        if (this.props.user.id !== 0) {
             Alert.alert(
                 'Pregunta',
                 "¿Esta seguro de enviar la solicitud al nodo " + item.nombreDelNodo + " ?",
@@ -137,12 +148,12 @@ class OpenNodesView extends React.PureComponent {
                 ],
                 { cancelable: false },
             );
-        }else{
+        } else {
             Alert.alert(
                 'Aviso',
                 "Debe ingresar con una cuenta para poder enviar una solicitud.",
                 [
-                    { text: 'Ingresar', onPress: () => this.props.actions.logout() },
+                    { text: 'Ingresar', onPress: () => this.goToLogin() },
                     { text: 'Entendido', onPress: () => null },
                 ],
                 { cancelable: false },
@@ -190,7 +201,7 @@ class OpenNodesView extends React.PureComponent {
     }
 
     askCancelRequest(item) {
-        if(this.props.user.id !== 0){
+        if (this.props.user.id !== 0) {
             Alert.alert(
                 'Pregunta',
                 "¿Esta seguro de cancelar la solicitud al nodo " + item.nodo.nombreDelNodo + " ?",
@@ -200,7 +211,7 @@ class OpenNodesView extends React.PureComponent {
                 ],
                 { cancelable: false },
             );
-        }else{
+        } else {
             Alert.alert(
                 'Aviso',
                 "Debe ingresar con una cuenta para poder cancelar la solicitud.",
@@ -360,32 +371,32 @@ class OpenNodesView extends React.PureComponent {
                         source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
                     />
                     {this.props.user.id !== 0 ? (
-                    <View>
-                        {this.state.showOpenNodes ? (
-                            <View>
-                                <Button
-                                    icon={
-                                        <Icon name="file-move" size={22} color="white" type='material-community' />
-                                    }
-                                    buttonStyle={styles.leftHeaderButton}
-                                    onPress={() => this.setState({ showOpenNodes: !this.state.showOpenNodes })}
-                                />
-                                {this.requestsPending() > 0 ? (
-                                    <Badge value={this.requestsPending()} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }} />
-                                ) : (null)}
-                            </View>
-                        ) : (
+                        <View>
+                            {this.state.showOpenNodes ? (
                                 <View>
-                                    <TouchableOpacity
-                                        style={styles.rightNodesHeaderButton}
+                                    <Button
+                                        icon={
+                                            <Icon name="file-move" size={22} color="white" type='material-community' />
+                                        }
+                                        buttonStyle={styles.leftHeaderButton}
                                         onPress={() => this.setState({ showOpenNodes: !this.state.showOpenNodes })}
-                                    >
-                                        <Image style={styles.badgeImage} source={require('../components/vendorsViewComponents/badge_icons/compra_nodos.png')} />
-                                    </TouchableOpacity>
+                                    />
+                                    {this.requestsPending() > 0 ? (
+                                        <Badge value={this.requestsPending()} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }} />
+                                    ) : (null)}
                                 </View>
-                            )}
-                    </View>
-                    ):(null)}
+                            ) : (
+                                    <View>
+                                        <TouchableOpacity
+                                            style={styles.rightNodesHeaderButton}
+                                            onPress={() => this.setState({ showOpenNodes: !this.state.showOpenNodes })}
+                                        >
+                                            <Image style={styles.badgeImage} source={require('../components/vendorsViewComponents/badge_icons/compra_nodos.png')} />
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                        </View>
+                    ) : (null)}
                 </Header>
                 {this.state.showOpenNodes ? (
                     <View style={{ flex: 1 }}>
@@ -482,7 +493,7 @@ const styles = StyleSheet.create({
         marginTop: 23,
     },
     badgeImage: { height: "100%", width: "100%" },
-        viewSearchErrorContainer: {
+    viewSearchErrorContainer: {
         height: "100%"
     },
 

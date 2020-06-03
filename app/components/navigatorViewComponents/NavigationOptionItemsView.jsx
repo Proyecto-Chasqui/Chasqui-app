@@ -3,6 +3,7 @@ import { View, StyleSheet, Alert } from 'react-native';
 import { Text, Header, Button, Icon, Badge } from 'react-native-elements';
 import GLOBALS from '../../Globals'
 import axios from 'axios'
+import { AsyncStorage } from 'react-native';
 
 class NavigationOptionItemsView extends React.PureComponent {
   constructor(props) {
@@ -12,13 +13,22 @@ class NavigationOptionItemsView extends React.PureComponent {
     this.serverBaseRoute = GLOBALS.BASE_URL;
   }
 
+  async removeUserData(){
+    try {
+      await AsyncStorage.removeItem("user");
+      this.navigation.closeDrawer()
+      this.props.actions.vendorUnSelected()
+      this.props.actions.shoppingCarts([])
+      this.props.actions.shoppingCartUnselected()
+      this.props.actions.groupsData([])
+      this.logout()
+    } catch (error) {
+      console.log("error on storage",error.message)
+    }
+  };
+
   sendLogout() {
-    this.navigation.closeDrawer()
-    this.props.actions.vendorUnSelected()
-    this.props.actions.shoppingCarts([])
-    this.props.actions.shoppingCartUnselected()
-    this.props.actions.groupsData([])
-    this.logout()
+    this.removeUserData()
   }
 
   

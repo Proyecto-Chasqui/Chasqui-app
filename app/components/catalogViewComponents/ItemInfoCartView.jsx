@@ -5,6 +5,7 @@ import GLOBAL from '../../Globals';
 import axios from 'axios';
 import LoadingOverlayView from '../generalComponents/LoadingOverlayView'
 import ProductItemView from '../../containers/ConfirmShoppingCartContainers/ProductItem'
+import { AsyncStorage } from 'react-native';
 
 class ItemInfoCartView extends React.PureComponent {
     constructor(props) {
@@ -106,8 +107,17 @@ class ItemInfoCartView extends React.PureComponent {
         this.navigation.navigate("Producto");
     }
 
+    async removeUserData(){
+        try {
+          await AsyncStorage.removeItem("user");
+          this.props.actions.logout();
+        } catch (error) {
+          console.log("error on storage",error.message)
+        }
+      };
+
     goToRegister() {
-        this.props.actions.logout();
+        this.removeUserData()
     }
 
     detectAlert(alertText){

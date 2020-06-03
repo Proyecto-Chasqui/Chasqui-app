@@ -29,6 +29,7 @@ class ProductView extends React.PureComponent {
                 idProduct: 0,
                 interval: null,
             }
+        this.vendorSelected = this.props.vendorSelected;
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.shoppingCarts = this.props.actions.shoppingCarts
     }
@@ -318,7 +319,7 @@ class ProductView extends React.PureComponent {
     }
 
     definePrice(){
-        if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+        if(this.vendorSelected.few.nodos && this.vendorSelected.few.usaIncentivos){
             return this.props.productSelected.precio + this.props.productSelected.incentivo
         }else{
             return this.props.productSelected.precio
@@ -326,7 +327,7 @@ class ProductView extends React.PureComponent {
     }
 
     defineCartPrice(){
-        if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+        if(this.vendorSelected.few.nodos && this.vendorSelected.few.usaIncentivos){
             return this.props.shoppingCartSelected.montoActual + this.props.shoppingCartSelected.incentivoActual
         }else{
             return this.props.shoppingCartSelected.montoActual
