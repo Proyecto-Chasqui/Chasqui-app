@@ -15,6 +15,18 @@ class OpenNodesView extends React.PureComponent {
         }
     }
 
+    componentDidUpdate(){
+        if(this.props.hasReceivedPushNotifications){
+            this.getOpenNodes()
+            if(this.props.user.id !== 0){
+                this.getAccessOpenNodeRequests()
+            }else{
+                this.props.actions.accessOpenNodeRequests([])
+            }
+            this.props.actions.hasReceivedPushNotifications(false)
+        }
+    }
+
     componentDidMount() {
         this.getOpenNodes()
         if(this.props.user.id !== 0){

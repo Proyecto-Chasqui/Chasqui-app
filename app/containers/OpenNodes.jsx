@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {openNodesData, accessOpenNodeRequests, logout} from '../actions';
+import {openNodesData, accessOpenNodeRequests, logout, hasReceivedPushNotifications} from '../actions';
 import OpenNodesView from '../components/OpenNodesView';
 
 const mapStateToProps = state => ({
@@ -10,10 +10,11 @@ const mapStateToProps = state => ({
   groupsData: state.groupsData,
   accessOpenNodeRequests: state.accessOpenNodeRequests,
   user: state.user,
+  hasReceivedPushNotifications: state.hasReceivedPushNotifications
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({openNodesData, accessOpenNodeRequests, logout}, dispatch),
+  actions: bindActionCreators({openNodesData, accessOpenNodeRequests, logout, hasReceivedPushNotifications}, dispatch),
 });
 
 export default connect(

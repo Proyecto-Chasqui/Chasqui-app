@@ -55,6 +55,30 @@ class CatalogView extends React.Component {
         return value
     }
 
+    findSelectedGroup() {
+        if(this.props.groupSelected !== undefined){
+            this.props.groupsData.map((group) => {
+                if (group.id === this.props.groupSelected.id) {
+                    this.props.actions.groupSelected(group);
+                }
+            })
+        }
+      }
+
+    updateInfo(){
+        if (this.props.vendorSelected !== undefined) {
+            if(this.userLogged()){
+                console.log("Update!")
+                this.getShoppingCarts(this.props);
+                this.getUnreadNotifications();
+                this.getPersonalData(this.props);
+                if(this.props.vendorSelected.few.gcc || this.props.vendorSelected.few.nodos){
+                    this.getGroups();
+                }
+            }
+        }
+    }
+
     load() {
         if (this.props.vendorSelected.id !== undefined) {
             if(this.userLogged()){
@@ -99,6 +123,7 @@ class CatalogView extends React.Component {
     getGroups(){
         axios.get((this.serverBaseRoute + this.defineStrategyRoute() + 'all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
             this.props.actions.groupsData(res.data);
+            this.findSelectedGroup()
         }).catch( (error) => {
             console.log(error);
             console.log("error en grupos")
@@ -194,6 +219,11 @@ class CatalogView extends React.Component {
                 this.load();
                 this.props.navigation.navigate("Catalogo");
             }
+        }
+        if(this.props.hasReceivedPushNotifications){
+            console.log("update! en catalogo " + this.props.user.nickname);
+            this.updateInfo();
+            this.props.actions.hasReceivedPushNotifications(false);
         }
     }
 

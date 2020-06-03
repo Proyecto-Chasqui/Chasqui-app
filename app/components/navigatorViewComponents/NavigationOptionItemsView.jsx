@@ -1,12 +1,15 @@
 import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { Text, Header, Button, Icon, Badge } from 'react-native-elements';
+import GLOBALS from '../../Globals'
+import axios from 'axios'
 
 class NavigationOptionItemsView extends React.PureComponent {
   constructor(props) {
     super(props)
     this.logout = props.actions.logout;
     this.navigation = this.props.navigation;
+    this.serverBaseRoute = GLOBALS.BASE_URL;
   }
 
   sendLogout() {
@@ -16,6 +19,15 @@ class NavigationOptionItemsView extends React.PureComponent {
     this.props.actions.shoppingCartUnselected()
     this.props.actions.groupsData([])
     this.logout()
+  }
+
+  
+  getUnreadNotifications() {
+    axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas',{withCredentials: true}).then(res => {
+        this.props.actions.unreadNotifications(res.data);
+    }).catch((error) => {
+        console.log(error);
+    });
   }
 
   logoutAlert() {
@@ -35,6 +47,14 @@ class NavigationOptionItemsView extends React.PureComponent {
   goToNotifications() {
     this.navigation.navigate('Notificaciones');
   }
+
+  componentDidUpdate(){
+    if(this.props.hasReceivedPushNotifications){
+      this.getUnreadNotifications()
+      this.props.actions.hasReceivedPushNotifications(false)
+    }
+  }
+
 
   render() {
     return (

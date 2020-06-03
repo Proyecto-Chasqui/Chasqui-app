@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import AdministrationMembersView from '../../components/groupsComponents/AdministrationMembersView';
-import { groupsData, groupSelected, selectedNodeRequests } from '../../actions';
+import { groupsData, groupSelected, selectedNodeRequests, hasReceivedPushNotifications } from '../../actions';
 
 const mapStateToProps = state => ({
     groupSelected : state.groupSelected,
@@ -9,10 +9,11 @@ const mapStateToProps = state => ({
     vendorSelected: state.vendorSelected,
     groupsData: state.groupsData,
     selectedNodeRequests: state.selectedNodeRequests,
+    hasReceivedPushNotifications: state.hasReceivedPushNotifications,
 });
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators({groupsData, groupSelected, selectedNodeRequests}, dispatch),
+    actions: bindActionCreators({groupsData, groupSelected, selectedNodeRequests, hasReceivedPushNotifications}, dispatch),
 });
 
 export default connect(

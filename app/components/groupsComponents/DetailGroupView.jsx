@@ -16,6 +16,14 @@ class DetailGroupView extends React.PureComponent {
         }
     }
 
+    componentDidUpdate(){
+        if(this.props.hasReceivedPushNotifications){
+            if (this.props.vendorSelected.few.nodos && (this.props.groupSelected.emailAdministrador === this.props.user.email)) {
+                this.getRequests()
+            }
+        }
+    }
+
     componentDidMount() {
         if (this.props.vendorSelected.few.nodos && (this.props.groupSelected.emailAdministrador === this.props.user.email)) {
             this.getRequests()

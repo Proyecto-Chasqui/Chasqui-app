@@ -37,6 +37,13 @@ class OverlayShoppingCartView extends React.PureComponent {
         return value
     }
 
+    componentDidUpdate(){
+        if(this.props.hasReceivedPushNotifications){
+            this.forceUpdate();
+            this.props.actions.hasReceivedPushNotifications(false)
+        }
+    }
+
     showShoppingCarts() {
         this.setState({ showShoppingCarts: !this.state.showShoppingCarts })
         if (this.state.showShoppingCarts) {
@@ -58,10 +65,18 @@ class OverlayShoppingCartView extends React.PureComponent {
         );
     }
 
+    defineTypeGroup(){
+        if(this.props.vendorSelected.few.gcc){
+            return "grupo"
+        }else{
+            return "nodo"
+        }
+    }
+
     alertOpenGroupCart(group) {
         Alert.alert(
             'Aviso',
-            '¿Seguro que desea abrir un pedido para el grupo ' + group.alias + '?',
+            '¿Seguro que desea abrir un pedido para el '+ this.defineTypeGroup() + ' ' + group.alias + '?',
             [
                 { text: 'Si', onPress: () => this.openCartOnGroup(group) },
                 { text: 'No', onPress: () => null },

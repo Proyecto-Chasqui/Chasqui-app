@@ -9,8 +9,12 @@ import { Text, Header, Image } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet,  Vibration, Platform, Alert } from 'react-native';
 import GLOBALS from '../Globals';
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
+import axios from 'axios';
 
 const StackLogin = createStackNavigator();
 
@@ -24,12 +28,68 @@ class NavigatorView extends React.PureComponent {
       lastAccessId: this.props.user.id,
       isSignout: this.props.user.token == "",
       nickname: this.props.user.nickname,
+      expoPushToken: '',
+      notification: {},
     }
     this.serverBaseRoute = GLOBALS.BASE_URL;
   }
 
+  registerForPushNotificationsAsync = async () => {
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('No se logro obtener el permiso para las notificaciones, puede usar la aplicación pero perderá ciertas sincronizaciones necesarias en compras colectivas.');
+        return;
+      }
+      let token = await Notifications.getExpoPushTokenAsync();
+      //console.log(token);
+      this.setState({ expoPushToken: token });
+      this.registerTokenOnServer(token.toString());
+    } else {
+      alert('Las notificaciones solo funcionan en dispositivos fisicos');
+    }
+
+    if (Platform.OS === 'android') {
+      Notifications.createChannelAndroidAsync('default', {
+        name: 'default',
+        sound: true,
+        priority: 'max',
+        vibrate: [0, 250, 250, 250],
+      });
+    }
+  };
+
+  registerTokenOnServer(vexpoToken){
+    axios.put(this.serverBaseRoute + 'rest/user/adm/registrarDispositivo', {
+      expoToken: vexpoToken
+    }).then(res => {
+
+    }).catch((error) => {
+      Alert.alert('Error', 'ocurrio un error al registrar el dispositivo para las notificaciones.');
+    });
+  }
+
+  componentDidMount() {
+    this._notificationSubscription = Notifications.addListener(this._handleNotification);
+  }
+
+  _handleNotification = notification => {
+    //Vibration.vibrate();
+    //console.log(notification);
+    this.setState({ notification: notification });
+    this.props.actions.hasReceivedPushNotifications(true);
+  };
+
   componentDidUpdate(){
     if(this.state.lastAccessId !== this.props.user.id){
+      if(this.props.user.id !== 0){
+        this.registerForPushNotificationsAsync();
+      }
       this.resetData()
       this.setState({ lastAccessId: this.props.user.id, nickname:this.props.user.nickname})
     }

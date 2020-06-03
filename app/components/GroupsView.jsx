@@ -21,7 +21,13 @@ class GroupsView extends React.PureComponent {
         }
     }
 
-
+    componentDidUpdate(){
+        if(this.props.hasReceivedPushNotifications){
+            //this.getGroups()
+            this.getInvitations()
+            this.props.actions.hasReceivedPushNotifications(false)
+        }
+    }
 
     componentDidMount() {
         this.getGroups();

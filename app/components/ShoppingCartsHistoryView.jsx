@@ -20,6 +20,13 @@ class ShoppingCartsHistoryView extends React.PureComponent {
         };
     }
 
+    componentDidUpdate(){
+        if(this.props.hasReceivedPushNotifications){
+            this.getShoppingCarts();
+            this.props.actions.hasReceivedPushNotifications(false)
+        }
+    }
+
     componentDidMount() {
         this.setState({ isLoading: true })
         this.getShoppingCarts();

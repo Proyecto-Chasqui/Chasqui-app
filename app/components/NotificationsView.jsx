@@ -19,6 +19,14 @@ class NotificationsView extends React.PureComponent {
         }
     }
 
+    componentDidUpdate(){
+        if(this.props.hasReceivedPushNotifications){
+            this.restartNotifications()
+            this.getUnreadNotifications()
+            this.props.actions.hasReceivedPushNotifications(false)
+        }
+    }
+
     componentDidMount() {
         this.setState({ firstLoading: true })
         this.getNotifications(this.state.page)
@@ -51,7 +59,7 @@ class NotificationsView extends React.PureComponent {
 
     restartNotifications(){
         this.setState({notifications:[],page:1,firstLoading: true});
-        this.getNotifications(this.state.page)
+        this.getFirstNotifications()
         this.getTotalNotifications()
     }
     //la ruta para aceptar una invitacion de nodo es rest/user/nodos/aceptarInvitacion
@@ -125,6 +133,17 @@ class NotificationsView extends React.PureComponent {
                 this.setState({ totalNotifications: res.data })
             }).catch((error) => {
                 this.setState({ loading: false })
+                Alert.alert('Error', 'No se logro obtener sus notificaciones, intente mas tarde.');
+            });
+    }
+
+    getFirstNotifications() {
+        this.setState({ loading: true })
+        axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/' + 1, { withCredentials: true })
+            .then(res => {
+                this.setState({ notifications: res.data, loading: false, firstLoading: false });
+            }).catch((error) => {
+                this.setState({ loading: false, firstLoading: false })
                 Alert.alert('Error', 'No se logro obtener sus notificaciones, intente mas tarde.');
             });
     }
