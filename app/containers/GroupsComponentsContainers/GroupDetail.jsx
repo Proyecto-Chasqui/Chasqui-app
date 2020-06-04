@@ -12,7 +12,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators({memberSelected, selectedNodeRequests, hasReceivedPushNotifications}, dispatch),
+    actions: bindActionCreators({memberSelected, selectedNodeRequests,logout, hasReceivedPushNotifications}, dispatch),
 });
 
 export default connect(

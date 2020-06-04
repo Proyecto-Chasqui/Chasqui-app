@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {unreadNotifications, hasReceivedPushNotifications} from '../actions';
+import {unreadNotifications, hasReceivedPushNotifications, logout} from '../actions';
 import NotificationsView from '../components/NotificationsView';
 
 const mapStateToProps = state => ({
@@ -11,7 +11,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({unreadNotifications, hasReceivedPushNotifications}, dispatch),
+  actions: bindActionCreators({unreadNotifications, hasReceivedPushNotifications, logout}, dispatch),
 });
 
 export default connect(

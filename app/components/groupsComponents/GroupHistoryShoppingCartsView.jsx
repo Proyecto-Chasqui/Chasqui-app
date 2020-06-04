@@ -19,21 +19,44 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
     }
 
     keyExtractor = (item, index) => index.toString()
-    //usado para registrar en el server su "login", probablemente sea necesario crear una contramedida
-    // del lado del servidor cuando se crean 401 unautorized.
-    reloginToken(retryfunction) {
-        const token = base64.encode(`${this.props.user.email}:${this.props.user.token}`);
-        axios.get(this.serverBaseRoute + 'rest/user/adm/read', {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Basic ${token}`
+
+    errorAlert(error){
+        if (error.response) {
+            if(error.response.status === 401){
+                Alert.alert(
+                    'Sesion expirada',
+                    'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            }else{
+                if(error.response.data !== null){
+                    Alert.alert(
+                        'Error',
+                         error.response.data.error,
+                        [
+                            { text: 'Entendido', onPress: () => null },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
             }
-            , withCredentials: true
-        }).then(res => {
-            retryfunction()
-        }).catch((error) => {
-            Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
-        });
+        } else if (error.request) {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+        } else {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.");
+        }
     }
 
     getGroupHistoryCarts() {
@@ -46,24 +69,7 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
             this.setState({ isLoading: false })
         }).catch((error) => {
             this.setState({ isLoading: false })
-            if (error.response) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log('Error', error.message);
-            }
-            console.log(error.config);
-            Alert.alert(
-                'Error',
-                'Ocurrio un error, vuelva a intentar más tarde.',
-                [
-                    { text: 'Entendido', onPress: () => this.reloginToken(this.getGroupHistoryCarts()) },
-                ],
-                { cancelable: false },
-            );
+            this.errorAlert(error)
         });
     }
 

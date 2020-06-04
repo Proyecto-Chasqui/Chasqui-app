@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { personalData, login } from '../../actions';
+import { personalData, login, logout } from '../../actions';
 import PersonalDataView from '../../components/configurationViewComponents/PersonalDataView';
 
 const mapStateToProps = state => ({
@@ -9,7 +9,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators({ personalData, login }, dispatch),
+    actions: bindActionCreators({ personalData, login, logout }, dispatch),
 });
 
 export default connect(

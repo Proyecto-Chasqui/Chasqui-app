@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {} from '../../actions';
+import {logout} from '../../actions';
 import DeliveryAdressConfigView from '../../components/configurationViewComponents/DeliveryAdressConfigView';
 
 const mapStateToProps = state => ({
@@ -10,7 +10,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({}, dispatch),
+  actions: bindActionCreators({logout}, dispatch),
 });
 
 export default connect(

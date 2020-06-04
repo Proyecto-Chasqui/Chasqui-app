@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import GroupHistoryShoppingCartDetailView from '../../components/groupsComponents/GroupHistoryShoppingCartDetailView';
-import { memberSelected,  groupHistoryShoppingCarts, historyCartSelected } from '../../actions';
+import { memberSelected,  groupHistoryShoppingCarts, historyCartSelected, logout } from '../../actions';
 
 const mapStateToProps = state => ({
     groupSelected : state.groupSelected,
@@ -11,7 +11,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators({memberSelected, groupHistoryShoppingCarts, historyCartSelected}, dispatch),
+    actions: bindActionCreators({memberSelected, groupHistoryShoppingCarts, historyCartSelected, logout}, dispatch),
 });
 
 export default connect(

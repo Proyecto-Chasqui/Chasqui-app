@@ -6,6 +6,7 @@ import GLOBALS from '../../Globals';
 import base64 from 'react-native-base64'
 import { ScrollView } from 'react-native-gesture-handler';
 import LoadingOverlayView from '../generalComponents/LoadingOverlayView'
+import { AsyncStorage } from 'react-native';
 
 const OLDPASSWORD = 'Contraseña_anterior';
 const NEWPASSWORD = 'Nueva_contraseña';
@@ -37,6 +38,54 @@ class PasswordConfigView extends React.PureComponent {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    errorAlert(error){
+        if (error.response) {
+            if(error.response.status === 401){
+                Alert.alert(
+                    'Sesion expirada',
+                    'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            }else{
+                if(error.response.data !== null){
+                    Alert.alert(
+                        'Error',
+                         error.response.data.error,
+                        [
+                            { text: 'Entendido', onPress: () => null },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            }
+        } else if (error.request) {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+        } else {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.");
+        }
+    }
+
+    async storeData(key, item){
+        try {
+          console.log("store:" + key,item)
+          await AsyncStorage.setItem(key, JSON.stringify(item));
+        } catch (error) {
+          console.log("error on storage",error.message)
+        }
+      };
+    
     handleSubmit() {
         if (!this.state.sendingData) {
             if (this.dataValid()) {
@@ -49,14 +98,16 @@ class PasswordConfigView extends React.PureComponent {
                         let userData = res.data
                         userData.password = this.state.passwordData.confirm_password
                         this.login(userData);
-                        this.setPassword(this.state.passwordData.confirm_password)                        
+                        this.setPassword(this.state.passwordData.confirm_password)
+                        this.storeData("user", userData);                        
                         this.flushPasswords()
                         this.flushErrors()
                         Alert.alert('Aviso', 'Los datos fueron actualizados correctamente');
                         this.setState({isVisible:false})
                     }).catch((error) => {
                         this.setState({ sendingData: false, dataChange: true, isVisible: false })
-                        Alert.alert('Error', 'ocurrio un error al intentar actualizar los datos');
+                        console.log("error",error)
+                        this.errorAlert(error)
                     });
             } else {
                 this.showErrorMessages()
@@ -65,6 +116,8 @@ class PasswordConfigView extends React.PureComponent {
     }
 
     validOldPassword() {
+        console.log("validando password old",this.state.passwordData.old_password)
+        console.log("validando password actual", this.props.user.password)
         return this.props.user.password === this.state.passwordData.old_password;
     }
 

@@ -56,7 +56,31 @@ class GroupsView extends React.PureComponent {
         axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas', { withCredentials: true }).then(res => {
             this.filterInvitations(res.data);
         }).catch((error) => {
-            console.log(error);
+            if (error.response) {
+                if(error.response.status === 401){
+                    Alert.alert(
+                        'Sesion expirada',
+                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+            } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+            }
         });
     }
 
@@ -78,16 +102,26 @@ class GroupsView extends React.PureComponent {
             this.setState({ loading: false })
         }).catch((error) => {
             this.setState({ loading: false })
-            console.log(error);
             if (error.response) {
-                Alert.alert(
-                    'Error',
-                    error.response.data.error,
-                    [
-                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
-                    ],
-                    { cancelable: false },
-                );
+                if(error.response.status === 401){
+                    Alert.alert(
+                        'Sesion expirada',
+                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
             } else if (error.request) {
                 Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
             } else {

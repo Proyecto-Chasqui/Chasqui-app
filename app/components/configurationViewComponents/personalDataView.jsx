@@ -192,11 +192,50 @@ class PersonalDataView extends React.PureComponent {
         })
     }
 
+    errorAlert(error){
+        if (error.response) {
+            if(error.response.status === 401){
+                Alert.alert(
+                    'Sesion expirada',
+                    'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            }else{
+                if(error.response.data !== null){
+                    Alert.alert(
+                        'Error',
+                         error.response.data.error,
+                        [
+                            { text: 'Entendido', onPress: () => null },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            }
+        } else if (error.request) {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+        } else {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.");
+        }
+    }
+
     getPersonalData() {
         axios.get(this.serverBaseRoute + 'rest/user/adm/read',{withCredentials: true}).then(res => {
             this.personalData(res.data);
         }).catch((error) => {
-            Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
+            this.errorAlert(error)
         });
     }
 
@@ -236,7 +275,7 @@ class PersonalDataView extends React.PureComponent {
                             dataChange: false,
                             isVisible: false,
                         })
-                        Alert.alert('Error', 'ocurrio un error al intentar actualizar los datos');
+                        this.errorAlert(error)
                     });
             } else {
                 this.showErrorMessages()

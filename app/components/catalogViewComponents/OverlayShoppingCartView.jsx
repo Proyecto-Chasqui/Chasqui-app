@@ -73,6 +73,45 @@ class OverlayShoppingCartView extends React.PureComponent {
         }
     }
 
+    errorAlert(error){
+        if (error.response) {
+            if(error.response.status === 401){
+                Alert.alert(
+                    'Sesion expirada',
+                    'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            }else{
+                if(error.response.data !== null){
+                    Alert.alert(
+                        'Error',
+                         error.response.data.error,
+                        [
+                            { text: 'Entendido', onPress: () => null },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            }
+        } else if (error.request) {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+        } else {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.");
+        }
+    }
+
     alertOpenGroupCart(group) {
         Alert.alert(
             'Aviso',
@@ -95,24 +134,7 @@ class OverlayShoppingCartView extends React.PureComponent {
             this.getShoppingCarts();
         }).catch((error) => {
             this.setState({ showWaitSign: false })
-            if (error.response) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log('Error', error.message);
-            }
-            console.log(error.config);
-            Alert.alert(
-                'Error',
-                'Ocurrio un error al crear el pedido para el grupo, vuelva a intentar más tarde.',
-                [
-                    { text: 'Entendido', onPress: () => null },
-                ],
-                { cancelable: false },
-            );
+            this.errorAlert(error)
         });
     }
 
@@ -128,14 +150,7 @@ class OverlayShoppingCartView extends React.PureComponent {
             this.showShoppingCarts();
         }).catch((error) => {
             console.log(error);
-            Alert.alert(
-                'Error',
-                'Ocurrio un error al obtener los pedidos del servidor, vuelva a intentar más tarde.',
-                [
-                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
-                ],
-                { cancelable: false },
-            );
+            this.errorAlert(error)
         });
     }
 
@@ -149,14 +164,7 @@ class OverlayShoppingCartView extends React.PureComponent {
         }).catch((error) => {
             this.setState({ showWaitSign: false })
             console.log("error", error);
-            Alert.alert(
-                'Error',
-                'Ocurrio un error al crear el pedido, vuelva a intentar más tarde.',
-                [
-                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
-                ],
-                { cancelable: false },
-            );
+            this.errorAlert(error)
         });
     }
 

@@ -192,7 +192,44 @@ class ShoppingCartsHistoryView extends React.PureComponent {
     )
 
     keyExtractor = (item, index) => index.toString()
-
+    errorAlert(error){
+        if (error.response) {
+            if(error.response.status === 401){
+                Alert.alert(
+                    'Sesion expirada',
+                    'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            }else{
+                if(error.response.data !== null){
+                    Alert.alert(
+                        'Error',
+                         error.response.data.error,
+                        [
+                            { text: 'Entendido', onPress: () => null },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            }
+        } else if (error.request) {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+        } else {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.");
+        }
+    }
     getShoppingCarts() {
         axios.post((this.serverBaseRoute + 'rest/user/pedido/conEstados'), {
             idVendedor: this.props.vendorSelected.id,
@@ -208,20 +245,7 @@ class ShoppingCartsHistoryView extends React.PureComponent {
             this.setState({ isLoading: false })
         }).catch((error) => {
             this.setState({ isLoading: false })
-            if (error.response) {
-                Alert.alert(
-                    'Advertencia',
-                    'La sesión expiro, debe re ingresar',
-                    [
-                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
-                    ],
-                    { cancelable: false },
-                );
-            } else if (error.request) {
-                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-            } else {
-                Alert.alert('Error', "Ocurrio un error al intentar ingresar, intente más tarde o verifique su conectividad.");
-            }
+            this.errorAlert(error)
         });
     }
 

@@ -13,7 +13,7 @@ class NavigationOptionItemsView extends React.PureComponent {
     this.serverBaseRoute = GLOBALS.BASE_URL;
   }
 
-  async removeUserData(){
+  async removeUserData() {
     try {
       await AsyncStorage.removeItem("user");
       this.navigation.closeDrawer()
@@ -23,20 +23,46 @@ class NavigationOptionItemsView extends React.PureComponent {
       this.props.actions.groupsData([])
       this.logout()
     } catch (error) {
-      console.log("error on storage",error.message)
+      console.log("error on storage", error.message)
     }
   };
 
   sendLogout() {
     this.removeUserData()
   }
+  errorAlert(error) {
+    if (error.response) {
+      if (error.response.status === 401) {
+        Alert.alert(
+          'Sesion expirada',
+          'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+          [
+            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+          ],
+          { cancelable: false },
+        );
+      } else {
+        Alert.alert(
+          'Error',
+          'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+          [
+            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+          ],
+          { cancelable: false },
+        );
+      }
+    } else if (error.request) {
+      Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+    } else {
+      Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+    }
+  }
 
-  
   getUnreadNotifications() {
-    axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas',{withCredentials: true}).then(res => {
-        this.props.actions.unreadNotifications(res.data);
+    axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas', { withCredentials: true }).then(res => {
+      this.props.actions.unreadNotifications(res.data);
     }).catch((error) => {
-        console.log(error);
+      this.errorAlert(error)
     });
   }
 
@@ -58,8 +84,8 @@ class NavigationOptionItemsView extends React.PureComponent {
     this.navigation.navigate('Notificaciones');
   }
 
-  componentDidUpdate(){
-    if(this.props.hasReceivedPushNotifications){
+  componentDidUpdate() {
+    if (this.props.hasReceivedPushNotifications) {
       this.getUnreadNotifications()
       this.props.actions.hasReceivedPushNotifications(false)
     }
@@ -81,7 +107,7 @@ class NavigationOptionItemsView extends React.PureComponent {
                 />
                 <Button
                   icon={
-                    <View style={{justifyContent:"center"}}>
+                    <View style={{ justifyContent: "center" }}>
                       <Icon name="bell" type='font-awesome' size={20} iconStyle={styles.iconMenuButton} />
 
                       {this.props.unreadNotifications.length > 0 ? (

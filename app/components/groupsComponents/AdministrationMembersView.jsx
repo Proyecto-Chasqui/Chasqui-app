@@ -123,6 +123,45 @@ class AdministrationMembersView extends React.PureComponent {
         }
     }
 
+    errorAlert(error){
+        if (error.response) {
+            if(error.response.status === 401){
+                Alert.alert(
+                    'Sesion expirada',
+                    'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            }else{
+                if(error.response.data !== null){
+                    Alert.alert(
+                        'Error',
+                        error.response.data.error.replace('Grupo inexistente',''),
+                        [
+                            { text: 'Entendido', onPress: () => null },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            }
+        } else if (error.request) {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+        } else {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.");
+        }
+    }
+
     handleSubmit() {
         this.setState({ loading: true })
         if (this.validEmail()) {
@@ -137,13 +176,7 @@ class AdministrationMembersView extends React.PureComponent {
                     { cancelable: false });
             }).catch((error) => {
                 this.resetInvitation();
-                if (error.response) {
-                    Alert.alert('Error', error.response.data.error);
-                } else if (error.request) {
-                    Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-                } else {
-                    Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
-                }
+                this.errorAlert(error);
             });
         } else {
             this.setState({ loading: false })
@@ -183,21 +216,7 @@ class AdministrationMembersView extends React.PureComponent {
         }).catch((error) => {
             this.setState({ loading: false })
             console.log(error);
-            if (error.response) {
-                console.log(error.response)
-                Alert.alert(
-                    'Error',
-                    error.response.data.error,
-                    [
-                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
-                    ],
-                    { cancelable: false },
-                );
-            } else if (error.request) {
-                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-            } else {
-                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
-            }
+            this.errorAlert(error);
         });
     }
 
@@ -219,21 +238,7 @@ class AdministrationMembersView extends React.PureComponent {
         }).catch((error) => {
             this.setState({ loading: false })
             console.log(error);
-            if (error.response) {
-                console.log(error.response)
-                Alert.alert(
-                    'Error Grupos',
-                    error.response.data.error,
-                    [
-                        { text: 'Entendido', onPress: () => null },
-                    ],
-                    { cancelable: false },
-                );
-            } else if (error.request) {
-                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-            } else {
-                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
-            }
+            this.errorAlert(error)
         });
     }
 
@@ -242,6 +247,7 @@ class AdministrationMembersView extends React.PureComponent {
             this.props.actions.selectedNodeRequests(res.data)
         }).catch((error) => {
             console.log(error);
+            this.errorAlert(error)
         });
     }
 
@@ -254,20 +260,7 @@ class AdministrationMembersView extends React.PureComponent {
         }).catch((error) => {
             this.setState({ loading: false })
             console.log(error);
-            if (error.response) {
-                Alert.alert(
-                    'Error Grupos',
-                    error.response.data.error,
-                    [
-                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
-                    ],
-                    { cancelable: false },
-                );
-            } else if (error.request) {
-                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-            } else {
-                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
-            }
+            this.errorAlert(error)
         });
     }
 
@@ -421,14 +414,7 @@ class AdministrationMembersView extends React.PureComponent {
                         { cancelable: false },
                     );
                 }else{
-                    Alert.alert(
-                        'Error Grupos',
-                        error.response.data.error,
-                        [
-                            { text: 'Entendido', onPress: () => null },
-                        ],
-                        { cancelable: false },
-                    );
+                    this.errorAlert(error)
                 }
             } else if (error.request) {
                 Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");

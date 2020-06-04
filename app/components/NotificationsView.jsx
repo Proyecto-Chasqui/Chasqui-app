@@ -19,6 +19,45 @@ class NotificationsView extends React.PureComponent {
         }
     }
 
+    errorAlert(error){
+        if (error.response) {
+            if(error.response.status === 401){
+                Alert.alert(
+                    'Sesion expirada',
+                    'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            }else{
+                if(error.response.data !== null){
+                    Alert.alert(
+                        'Error',
+                         error.response.data.error,
+                        [
+                            { text: 'Entendido', onPress: () => null },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            }
+        } else if (error.request) {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+        } else {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.");
+        }
+    }
+
     componentDidUpdate(){
         if(this.props.hasReceivedPushNotifications){
             this.restartNotifications()
@@ -123,7 +162,7 @@ class NotificationsView extends React.PureComponent {
         axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas', { withCredentials: true }).then(res => {
             this.props.actions.unreadNotifications(res.data);
         }).catch((error) => {
-            console.log(error);
+            this.errorAlert(error)
         });
     }
 
@@ -133,7 +172,7 @@ class NotificationsView extends React.PureComponent {
                 this.setState({ totalNotifications: res.data })
             }).catch((error) => {
                 this.setState({ loading: false })
-                Alert.alert('Error', 'No se logro obtener sus notificaciones, intente mas tarde.');
+                this.errorAlert(error)
             });
     }
 
@@ -144,7 +183,7 @@ class NotificationsView extends React.PureComponent {
                 this.setState({ notifications: res.data, loading: false, firstLoading: false });
             }).catch((error) => {
                 this.setState({ loading: false, firstLoading: false })
-                Alert.alert('Error', 'No se logro obtener sus notificaciones, intente mas tarde.');
+                this.errorAlert(error)
             });
     }
 
@@ -155,7 +194,7 @@ class NotificationsView extends React.PureComponent {
                 this.setState({ notifications: this.state.notifications.concat(res.data), loading: false, firstLoading: false });
             }).catch((error) => {
                 this.setState({ loading: false, firstLoading: false })
-                Alert.alert('Error', 'No se logro obtener sus notificaciones, intente mas tarde.');
+                this.errorAlert(error);
             });
     }
     
@@ -182,7 +221,7 @@ class NotificationsView extends React.PureComponent {
                 this.getUnreadNotifications();
             }).catch((error) => {
                 this.setState({ loading: false })
-                Alert.alert('Error', 'No se logro marcar la notificación como leída, intente mas tarde.');
+               this.errorAlert(error)
             });
     }
 

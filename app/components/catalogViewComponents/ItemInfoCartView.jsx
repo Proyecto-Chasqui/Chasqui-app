@@ -47,25 +47,51 @@ class ItemInfoCartView extends React.PureComponent {
         return value
     }
 
-    getGroups() {
-        axios.get((this.serverBaseRoute + this.defineStrategyRoute() + 'all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
-            this.props.actions.groupsData(res.data);
-        }).catch((error) => {
-            console.log(error);
-            if (error.response) {
+    errorAlert(error){
+        if (error.response) {
+            if(error.response.status === 401){
                 Alert.alert(
-                    'Error Grupos',
-                    error.response.data.error,
+                    'Sesion expirada',
+                    'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
                     [
                         { text: 'Entendido', onPress: () => this.props.actions.logout() },
                     ],
                     { cancelable: false },
                 );
-            } else if (error.request) {
-                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-            } else {
-                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+            }else{
+                if(error.response.data !== null){
+                    Alert.alert(
+                        'Error',
+                         error.response.data.error,
+                        [
+                            { text: 'Entendido', onPress: () => null },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
             }
+        } else if (error.request) {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+        } else {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.");
+        }
+    }
+
+    getGroups() {
+        axios.get((this.serverBaseRoute + this.defineStrategyRoute() + 'all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
+            this.props.actions.groupsData(res.data);
+        }).catch((error) => {
+            console.log(error);
+            this.errorAlert(error);
         });
     }
 
@@ -162,14 +188,7 @@ class ItemInfoCartView extends React.PureComponent {
         }).catch((error) => {
             console.log(error);
             this.props.actions.shoppingCartUnselected();
-            Alert.alert(
-                'Error',
-                'Ocurrio un error al obtener los pedidos del servidor, vuelva a intentar más tarde.',
-                [
-                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
-                ],
-                { cancelable: false },
-            );
+            this.errorAlert(error);
         });
     }
 
@@ -180,14 +199,7 @@ class ItemInfoCartView extends React.PureComponent {
         }, { withCredentials: true }).catch((error) => {
             this.setState({ showWaitSign: false })
             console.log("error", error);
-            Alert.alert(
-                'Error',
-                'Ocurrio un error al cancelar el pedido, vuelva a intentar más tarde.',
-                [
-                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
-                ],
-                { cancelable: false },
-            );
+            this.errorAlert(error);
         });
     }
 
@@ -197,6 +209,7 @@ class ItemInfoCartView extends React.PureComponent {
         }, { withCredentials: true }).then(res => {
         }).catch((error) => {
             console.log("error", error);
+            this.errorAlert(error);
         });
     }
     obtainActiveMembers(members){
@@ -304,6 +317,7 @@ class ItemInfoCartView extends React.PureComponent {
             this.props.actions.unreadNotifications(res.data);
         }).catch((error) => {
             console.log(error);
+            this.errorAlert(error);
         });
     }
 
@@ -326,7 +340,7 @@ class ItemInfoCartView extends React.PureComponent {
                 this.getGroups();
             }).catch((error) => {
                 this.setState({ showWaitSign: false })
-                this.showAlert("ocurrio un error al confirmar el pedido en el grupo")
+                this.errorAlert(error)
             });
         }
     }

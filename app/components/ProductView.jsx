@@ -93,18 +93,50 @@ class ProductView extends React.PureComponent {
         this.setState({ images: varImageRoutes })
     }
 
+    errorAlert(error){
+        if (error.response) {
+            if(error.response.status === 401){
+                Alert.alert(
+                    'Sesion expirada',
+                    'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                    [
+                        { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                );
+            }else{
+                if(error.response.data !== null){
+                    Alert.alert(
+                        'Error',
+                         error.response.data.error,
+                        [
+                            { text: 'Entendido', onPress: () => null },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            }
+        } else if (error.request) {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+        } else {
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.");
+        }
+    }
+
     getImages() {
         axios.get((this.serverBaseRoute + 'rest/client/producto/images/' + this.props.productSelected.idProducto)).then(res => {
             this.parseImageURL(res.data);
         }).catch((error) => {
-            Alert.alert(
-                'Error',
-                'Ocurrio un error al obtener las imagenes, vuelva a intentar más tarde.',
-                [
-                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
-                ],
-                { cancelable: false },
-            );
+            this.errorAlert(error)
         });
     }
 
@@ -216,14 +248,7 @@ class ProductView extends React.PureComponent {
             this.openTooltip()
         }).catch((error) => {
             console.log(error);
-            Alert.alert(
-                'Error',
-                'Ocurrio un error al obtener los pedidos del servidor, vuelva a intentar más tarde.',
-                [
-                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
-                ],
-                { cancelable: false },
-            );
+            this.errorAlert(error)
         });
     }
 
@@ -237,13 +262,7 @@ class ProductView extends React.PureComponent {
         }).catch((error) => {
             console.log(error);
             this.setState({ buttonLoading: false, buttonDisabled: false })
-            if (error.response) {
-                Alert.alert('Aviso', error.response.data.error);
-            } else if (error.request) {
-                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-            } else {
-                Alert.alert('Error', "Ocurrio un error al intentar comunicarse con el servidor, intente más tarde o verifique su conectividad.");
-            }
+            this.errorAlert(error)
         });
     }
 
@@ -263,7 +282,7 @@ class ProductView extends React.PureComponent {
                         this.props.actions.resetState({ reset: true })
                         Alert.alert('Aviso', "No se permiten hacer compras por el momento, solo puede remover productos. Tenga en cuenta que si remueve productos no podrá agregarlos luego.");
                     } else {
-                        Alert.alert('Aviso', error.response.data.error);
+                        this.errorAlert(error)
                     }
                 } else if (error.request) {
                     Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");

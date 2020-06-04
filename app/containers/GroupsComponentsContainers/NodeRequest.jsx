@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import NodeRequestView from '../../components/groupsComponents/NodeRequestView';
-import { groupsData, groupSelected } from '../../actions';
+import { groupsData, groupSelected, logout } from '../../actions';
 
 const mapStateToProps = state => ({
     groupsData : state.groupsData,
@@ -12,7 +12,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators({groupsData, groupSelected}, dispatch),
+    actions: bindActionCreators({groupsData, groupSelected, logout}, dispatch),
 });
 
 export default connect(

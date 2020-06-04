@@ -121,15 +121,32 @@ class ProductFilterView extends React.PureComponent{
         axios.get((this.serverBaseRoute + 'rest/client/categoria/all/' + this.props.vendorSelected.id)).then(res => {
             this.productCategories(res.data);
             this.constructDataForChecked();
-        }).catch(function (error) {
-            Alert.alert(
-                'Error',
-                'Ocurrio un error al obtener las caracteristicas de los productos del servidor, vuelva a intentar más tarde.',
-                [
-                    { text: 'Entendido', onPress: () => props.actions.logout() },
-                ],
-                { cancelable: false },
-            );
+        }).catch((error) =>{
+            if (error.response) {
+                if (error.response.status === 404) {
+                  Alert.alert(
+                    'Catálogo en construcción',
+                    'El Catálogo esta en construcción, vuelva mas tarde.',
+                    [
+                      { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                  );
+                } else {
+                  Alert.alert(
+                    'Error',
+                    'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                    [
+                      { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                  );
+                }
+              } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+              } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+              }
         });
     }
     

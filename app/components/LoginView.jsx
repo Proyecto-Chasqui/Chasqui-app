@@ -6,6 +6,7 @@ import axios from 'axios';
 import GLOBALS from '../Globals';
 import base64 from 'react-native-base64';
 import { AsyncStorage } from 'react-native';
+import LoadingView from './LoadingView';
 
 class LoginView extends React.PureComponent {
   constructor(props) {
@@ -21,6 +22,7 @@ class LoginView extends React.PureComponent {
       emailErrorRecover: '',
       dataChange: false,
       loading: false,
+      firstLoading:true,
     }
     
   }
@@ -56,6 +58,7 @@ class LoginView extends React.PureComponent {
         nickname: "invitadx",
         avatar: "",
       })
+      this.setState({firstLoading:false})
     }
   }
 
@@ -68,13 +71,14 @@ class LoginView extends React.PureComponent {
         }else{
           this.loginAsGuest()
         }
+      }else{
+        this.setState({firstLoading:false})
       }
     } catch (error) {
       console.log("value error", error.message);
     }
   };
-  //usado para registrar en el server su "login", probablemente sea necesario crear una contramedida
-  // del lado del servidor cuando se crean 401 unautorized.
+  
   getPersonalData(data, password) {
     console.log("data",data)
     console.log("password", password)
@@ -91,9 +95,10 @@ class LoginView extends React.PureComponent {
       this.setPassword(password);
       this.login(userData);
       this.storeData("user", userData);
-      this.setState({loading:false})
+      this.setState({loading:false, firstLoading:false})
     }).catch((error) => {
-      Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
+      this.setState({loading:false, firstLoading:false})
+      Alert.alert('Error', 'ocurrio un error al comunicarse con el servidor');
     });
   }
 
@@ -194,6 +199,10 @@ class LoginView extends React.PureComponent {
   }
 
   render() {
+
+    if(this.state.firstLoading){
+      return (<LoadingView></LoadingView>)
+    }
     return (
       <KeyboardAvoidingView style={styles.principalContainer}>
         <Overlay

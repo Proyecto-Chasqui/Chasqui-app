@@ -13,7 +13,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators({shoppingCartSelected, shoppingCarts,groupsData,groupSelected}, dispatch),
+    actions: bindActionCreators({shoppingCartSelected, logout, shoppingCarts,groupsData,groupSelected}, dispatch),
 });
 
 export default connect(

@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {adressesData} from '../actions';
+import {adressesData, logout} from '../actions';
 import AdressManagmentView from '../components/AdressManagmentView';
 
 const mapStateToProps = state => ({
@@ -10,7 +10,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({adressesData}, dispatch),
+  actions: bindActionCreators({adressesData, logout}, dispatch),
 });
 
 export default connect(

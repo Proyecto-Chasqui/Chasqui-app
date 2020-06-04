@@ -363,9 +363,31 @@ class AdressManagmentView extends React.PureComponent {
             this.adressesData(res.data);
             this.showAlertActionComplete(text);
         }).catch((error) => {
-            console.log("error en udpate", error);
-            Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
-        });
+            if (error.response) {
+                if(error.response.status === 401){
+                    Alert.alert(
+                        'Sesion expirada',
+                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+            } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+            } });
     }
 
     sendDataUpdateToServer() {
@@ -393,12 +415,30 @@ class AdressManagmentView extends React.PureComponent {
             console.log(error);
             this.setState({isVisible:false})
             if (error.response) {
-                Alert.alert('Error', "Ocurrio un error al intentar enviar los datos de la dirección, si el problema persiste, intente cerrar la sesión y volver a ingresar.");
-              } else if (error.request) {
+                if(error.response.status === 401){
+                    Alert.alert(
+                        'Sesion expirada',
+                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            } else if (error.request) {
                 Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-              } else {
+            } else {
                 Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
-              }
+            }
         });
         this.setState({ dataSended: false })
     }
@@ -427,12 +467,30 @@ class AdressManagmentView extends React.PureComponent {
             console.log(error);
             this.setState({isVisible:false})
             if (error.response) {
-                Alert.alert('Error', "Ocurrio un error al intentar enviar los datos de la dirección, si el problema persiste, intente cerrar la sesión y volver a ingresar.");
-              } else if (error.request) {
+                if(error.response.status === 401){
+                    Alert.alert(
+                        'Sesion expirada',
+                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            } else if (error.request) {
                 Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-              } else {
+            } else {
                 Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
-              }
+            }
         });
         this.setState({ dataSended: false })
     }
@@ -516,8 +574,31 @@ class AdressManagmentView extends React.PureComponent {
             }).then(res => {
                 this.updateAdressData(this.state.deleteMessage);
             }).catch((error) => {
-                Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
-            });
+                if (error.response) {
+                    if(error.response.status === 401){
+                        Alert.alert(
+                            'Sesion expirada',
+                            'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                            [
+                                { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                            ],
+                            { cancelable: false },
+                        );
+                    }else{
+                        Alert.alert(
+                            'Error',
+                            'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                            [
+                                { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                            ],
+                            { cancelable: false },
+                        );
+                    }
+                } else if (error.request) {
+                    Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+                } else {
+                    Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+                } });
         }
     }
 

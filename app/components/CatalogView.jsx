@@ -125,22 +125,31 @@ class CatalogView extends React.Component {
             this.props.actions.groupsData(res.data);
             this.findSelectedGroup()
         }).catch( (error) => {
-            console.log(error);
-            console.log("error en grupos")
-            if (error.response) {                
-            Alert.alert(
-                'Error',
-                error.response.data.error,
-                [
-                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
-                ],
-                { cancelable: false },
-            );
-              } else if (error.request) {
+            if (error.response) {
+                if(error.response.status === 401){
+                    Alert.alert(
+                        'Sesion expirada',
+                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            } else if (error.request) {
                 Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-              } else {
+            } else {
                 Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
-              }
+            }
         });
     }
 
@@ -164,7 +173,31 @@ class CatalogView extends React.Component {
         axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas',{withCredentials: true}).then(res => {
             this.props.actions.unreadNotifications(res.data);
         }).catch((error) => {
-            console.log(error);
+            if (error.response) {
+                if(error.response.status === 401){
+                    Alert.alert(
+                        'Sesion expirada',
+                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+            } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+            }
         });
     }
 
@@ -179,7 +212,31 @@ class CatalogView extends React.Component {
         }).then(res => {
             this.personalData(res.data);
         }).catch((error) => {
-            Alert.alert('Error', 'ocurrio un error al obtener los datos del usuario, ¿quizas ingreso desde otro dispositivo?');
+            if (error.response) {
+                if(error.response.status === 401){
+                    Alert.alert(
+                        'Sesion expirada',
+                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+            } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+            }
         });
     }
 
@@ -241,36 +298,46 @@ class CatalogView extends React.Component {
             ]
           },{withCredentials: true}).then(res => {
             this.shoppingCarts(res.data);
-        }).catch(function (error) {
+        }).catch((error) =>{
             console.log(error);
             if (error.response) {
-                
-            Alert.alert(
-                'Error',
-                error.response.data.error,
-                [
-                    { text: 'Entendido', onPress: () => props.actions.logout() },
-                ],
-                { cancelable: false },
-            );
-              } else if (error.request) {
+                if(error.response.status === 401){
+                    Alert.alert(
+                        'Sesion expirada',
+                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            } else if (error.request) {
                 Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
-              } else {
+            } else {
                 Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
-              }
+            }
         });
     }
 
     getSeals(props) {
         axios.get((this.serverBaseRoute + 'rest/client/medalla/all/')).then(res => {
             this.seals(res.data);
-        }, {withCredentials: true}).catch(function (error) {
+        }, {withCredentials: true}).catch((error)=> {
             console.log("error en sellos")
             Alert.alert(
                 'Error',
                 'Ocurrio un error al obtener los productos del servidor, vuelva a intentar más tarde.',
                 [
-                    { text: 'Entendido', onPress: () => props.actions.logout() },
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
                 ],
                 { cancelable: false },
             );
@@ -281,13 +348,13 @@ class CatalogView extends React.Component {
     getZones(props) {
         axios.get((this.serverBaseRoute + 'rest/client/zona/all/' + this.props.vendorSelected.id)).then(res => {
             this.zones(res.data);
-        }).catch(function (error) {
+        }).catch((error) => {
             console.log("error en zonas")
             Alert.alert(
                 'Error',
                 'Ocurrio un error al obtener las zonas del servidor, vuelva a intentar más tarde.',
                 [
-                    { text: 'Entendido', onPress: () => props.actions.logout() },
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
                 ],
                 { cancelable: false },
             );
@@ -297,13 +364,13 @@ class CatalogView extends React.Component {
     getSellerPoints(props) {
         axios.get((this.serverBaseRoute + 'rest/client/vendedor/puntosDeRetiro/' + this.props.vendorSelected.nombreCorto)).then(res => {
             this.sellerPoints(res.data.puntosDeRetiro);
-        }).catch(function (error) {
+        }).catch((error) => {
             console.log("error seller points")
             Alert.alert(
                 'Error',
                 'Ocurrio un error al obtener los puntos de retiro del servidor, vuelva a intentar más tarde.',
                 [
-                    { text: 'Entendido', onPress: () => props.actions.logout() },
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
                 ],
                 { cancelable: false },
             );
@@ -358,16 +425,33 @@ class CatalogView extends React.Component {
     getProducers(props) {
         axios.get((this.serverBaseRoute + 'rest/client/productor/all/' + props.vendorSelected.id)).then(res => {
             this.producers(res.data);
-        }).catch(function (error) {
-            console.log("error en productores")
-            Alert.alert(
-                'Error',
-                'Ocurrio un error al obtener los productos del servidor, vuelva a intentar más tarde.',
-                [
-                    { text: 'Entendido', onPress: () => props.actions.logout() },
-                ],
-                { cancelable: false },
-            );
+        }).catch((error)=> {
+            console.log("error en productores",error)
+            if (error.response) {
+                if (error.response.status === 404) {
+                  Alert.alert(
+                    'Catálogo en construcción',
+                    'El Catálogo esta en construcción, vuelva mas tarde.',
+                    [
+                      { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                  );
+                } else {
+                  Alert.alert(
+                    'Error',
+                    'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                    [
+                      { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                    ],
+                    { cancelable: false },
+                  );
+                }
+              } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+              } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+              }
         });
     }
 
