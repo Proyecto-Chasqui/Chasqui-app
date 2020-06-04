@@ -38,15 +38,19 @@ class GroupControlsOverlayView extends React.PureComponent {
         return confirmed
     }
 
-    hasCartConfirmed() {
-        let confirmed = false;
-        this.props.groupSelected.miembros.map((miembro) => {
-            if (miembro.pedido != null) {
-                if (miembro.email === this.props.user.email && miembro.pedido.estado === "CONFIRMADO") {
-                    confirmed = true;
+    canOpenCart() {
+        let confirmed = true;
+        if(this.props.vendorSelected.ventasHabilitadas){
+            this.props.groupSelected.miembros.map((miembro) => {
+                if (miembro.pedido != null) {
+                    if (miembro.email === this.props.user.email && miembro.pedido.estado === "CONFIRMADO") {
+                        confirmed = false;
+                    }
                 }
-            }
-        })
+            })
+        }else{
+            confirmed = false
+        }
         return confirmed
     }
 
@@ -393,7 +397,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                                     />
                                 </View>
                                 <Button
-                                    disabled={this.hasCartConfirmed()}
+                                    disabled={!this.canOpenCart()}
                                     title="Comenzar mi pedido"
                                     titleStyle={styles.normalTitleButton}
                                     buttonStyle={styles.normalButtonStyle}
@@ -429,7 +433,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                                         onPress={() => this.goToHistory()}
                                     />
                                     <Button
-                                        disabled={this.hasCartConfirmed()}
+                                        disabled={!this.canOpenCart()}
                                         title="Comenzar mi pedido"
                                         titleStyle={styles.normalTitleButton}
                                         buttonStyle={styles.normalButtonStyle}

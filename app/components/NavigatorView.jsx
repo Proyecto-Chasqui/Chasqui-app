@@ -43,15 +43,14 @@ class NavigatorView extends React.PureComponent {
         finalStatus = status;
       }
       if (finalStatus !== 'granted') {
-        alert('No se logro obtener el permiso para las notificaciones, puede usar la aplicación pero perderá ciertas sincronizaciones necesarias en compras colectivas.');
+        Alert.alert('No se logro obtener el permiso para las notificaciones, puede usar la aplicación pero perderá ciertas sincronizaciones necesarias en compras colectivas.');
         return;
       }
       let token = await Notifications.getExpoPushTokenAsync();
-      //console.log(token);
       this.setState({ expoPushToken: token });
       this.registerTokenOnServer(token.toString());
     } else {
-      alert('Las notificaciones solo funcionan en dispositivos fisicos');
+      Alert.alert('Las notificaciones solo funcionan en dispositivos fisicos');
     }
 
     if (Platform.OS === 'android') {
@@ -78,11 +77,41 @@ class NavigatorView extends React.PureComponent {
     this._notificationSubscription = Notifications.addListener(this._handleNotification);
   }
 
+  analize(notification){
+    if(notification.data.Type === "Notificación"){
+      if(notification.data.Action === "Vencimiento"){
+        this.props.actions.hasReceivedExpiredCartNotification(true)
+      }
+    }
+  }
+
+  analizeIfMarks(notification){
+    if(notification.data.Type === "Notificación"){
+      this.markViewedNotification(notification.data.id);
+    }
+  }
+
+  markViewedNotification(id) {
+    this.setState({ loading: true })
+    axios.post(this.serverBaseRoute + 'rest/user/adm/notificacion/' + id, {}, { withCredentials: true })
+        .then(res => {
+            this.props.actions.hasReceivedPushNotifications(true);
+        }).catch((error) => {
+            console.log(error)
+        });
+  }
+
   _handleNotification = notification => {
     //Vibration.vibrate();
-    //console.log(notification);
+    console.log("notificacion",notification);
     this.setState({ notification: notification });
-    this.props.actions.hasReceivedPushNotifications(true);
+    if(notification.origin === "received"){
+      this.analize(notification)
+      this.props.actions.hasReceivedPushNotifications(true);
+    }
+    if(notification.origin === "selected"){
+      this.analizeIfMarks(notification)
+    }
   };
 
   componentDidUpdate(){

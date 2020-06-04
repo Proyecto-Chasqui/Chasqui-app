@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { groupsData,groupSelected,hasReceivedPushNotifications, unreadNotifications, resetState, allProducts, shoppingCarts, shoppingCartUnselected, vendorSelected, personalData, adressesData, sellerPoints, products,vendorUnSelected,cleanZones,cleanSellerPoints, flushproducts, producers, logout, seals, productionSeals, productSeals, productCategories, zones } from '../actions';
+import { groupsData,groupSelected,hasReceivedExpiredCartNotification,hasReceivedPushNotifications, unreadNotifications, resetState, allProducts, shoppingCarts, shoppingCartUnselected, vendorSelected, personalData, adressesData, sellerPoints, products,vendorUnSelected,cleanZones,cleanSellerPoints, flushproducts, producers, logout, seals, productionSeals, productSeals, productCategories, zones } from '../actions';
 import CatalogView from '../components/CatalogView';
 
 const mapStateToProps = state => ({
@@ -13,6 +13,7 @@ const mapStateToProps = state => ({
   hasReceivedPushNotifications: state.hasReceivedPushNotifications,
   groupsData: state.groupsData,
   groupSelected: state.groupSelected,
+  hasReceivedExpiredCartNotification: state.hasReceivedExpiredCartNotification
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -21,7 +22,8 @@ const mapDispatchToProps = dispatch => ({
     flushproducts, producers, logout, seals, productionSeals,
     cleanZones,cleanSellerPoints, vendorUnSelected, productSeals,
     productCategories, zones, sellerPoints, personalData, adressesData,
-    shoppingCarts, shoppingCartUnselected, allProducts, unreadNotifications, hasReceivedPushNotifications
+    shoppingCarts, shoppingCartUnselected, allProducts, unreadNotifications, 
+    hasReceivedPushNotifications, hasReceivedExpiredCartNotification
   }, dispatch),
 });
 

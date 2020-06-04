@@ -125,6 +125,7 @@ class CatalogView extends React.Component {
             this.props.actions.groupsData(res.data);
             this.findSelectedGroup()
         }).catch( (error) => {
+            console.log("error grupos catalogo",error.response)
             if (error.response) {
                 if(error.response.status === 401){
                     Alert.alert(
@@ -173,6 +174,7 @@ class CatalogView extends React.Component {
         axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas',{withCredentials: true}).then(res => {
             this.props.actions.unreadNotifications(res.data);
         }).catch((error) => {
+            console.log("error",error)
             if (error.response) {
                 if(error.response.status === 401){
                     Alert.alert(
@@ -278,9 +280,12 @@ class CatalogView extends React.Component {
             }
         }
         if(this.props.hasReceivedPushNotifications){
-            console.log("update! en catalogo " + this.props.user.nickname);
             this.updateInfo();
             this.props.actions.hasReceivedPushNotifications(false);
+        }
+        if(this.props.hasReceivedExpiredCartNotification){
+            this.props.actions.shoppingCartUnselected();
+            this.props.actions.hasReceivedExpiredCartNotification(false)
         }
     }
 

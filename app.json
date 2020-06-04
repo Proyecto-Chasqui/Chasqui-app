@@ -13,6 +13,9 @@
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "notification": {
+      "icon": "./assets/notif_icon.png"
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -29,6 +32,7 @@
     },
     "android": {
       "package": "org.proyectochasqui.ar",
+      "googleServicesFile": "./google-services.json",
       "versionCode": 1,
       "config": {
         "googleMaps": { "apiKey": "yourapikey" }   

@@ -34,6 +34,7 @@ import openNodesData from './openNodesData';
 import accessOpenNodeRequests from './accessOpenNodeRequests';
 import selectedNodeRequests from './selectedNodeRequests';
 import hasReceivedPushNotifications from './hasReceivedPushNotifications';
+import hasReceivedExpiredCartNotification from './hasReceivedExpiredCartNotification'
 
 const rootReducer = combineReducers({invitationsData, groupsData,groupSelected,memberSelected,
      unreadNotifications, resetState, user, vendors, vendorTags,
@@ -41,7 +42,7 @@ const rootReducer = combineReducers({invitationsData, groupsData,groupSelected,m
      producerSelected, productSeals, productionSeals, productCategories, zones, sellerPoints,
      personalData, adressesData, shoppingCartSelected, shoppingCarts,historyShoppingCarts, allProducts,
      historyCartSelected, groupHistoryShoppingCarts, groupHistoryShoppingCartSelected, openNodesData, accessOpenNodeRequests,
-     selectedNodeRequests, hasReceivedPushNotifications
+     selectedNodeRequests, hasReceivedPushNotifications, hasReceivedExpiredCartNotification
 });
 
 export default rootReducer;

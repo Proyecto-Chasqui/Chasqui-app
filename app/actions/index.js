@@ -42,6 +42,7 @@ export const OPENNODESDATA = 'OPENNODESDATA';
 export const ACCESSOPENNODEREQUESTS = 'ACCESSOPENNODEREQUESTS';
 export const SELECTEDNODEREQUESTS ='SELECTEDNODEREQUESTS';
 export const HASRECEIVEDPUSHNOTIFICATIONS = 'HASRECEIVEDPUSHNOTIFICATIONS';
+export const HASRECEIVEDEXPIREDCARTNOTIFICATION = 'HASRECEIVEDEXPIREDCARTNOTIFICATION';
 
 
 export const resetState = (resetDataState) => ({type:RESETSTATE, resetDataState})
@@ -88,3 +89,4 @@ export const openNodesData = (openNodesStack) => ({type:OPENNODESDATA, openNodes
 export const accessOpenNodeRequests = (accessOpenNodeRequestsStack) => ({type:ACCESSOPENNODEREQUESTS, accessOpenNodeRequestsStack})
 export const selectedNodeRequests = (selectedNodeRequestsStack) => ({type:SELECTEDNODEREQUESTS, selectedNodeRequestsStack})
 export const hasReceivedPushNotifications = (hasReceivedPushNotificationsValue) => ({type:HASRECEIVEDPUSHNOTIFICATIONS, hasReceivedPushNotificationsValue})
+export const hasReceivedExpiredCartNotification = (hasReceivedExpiredCartNotificationValue) => ({type:HASRECEIVEDEXPIREDCARTNOTIFICATION, hasReceivedExpiredCartNotificationValue})
