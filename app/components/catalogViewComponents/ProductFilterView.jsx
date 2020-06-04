@@ -14,6 +14,7 @@ class ProductFilterView extends React.PureComponent{
         this.productSeals = props.actions.productSeals;
         this.productCategories = props.actions.productCategories;
         this.products = props.actions.products;
+        this.dataProductsDate = new Date()
         this.state={
             showCategories: false,
             showProducers: false,
@@ -31,6 +32,15 @@ class ProductFilterView extends React.PureComponent{
         }
     }
 
+    
+    hasProductListExpired(){
+        let dateNow = new Date();
+        let productDates = new Date();
+        productDates.setTime(this.dataProductsDate.getTime())
+        productDates.setMinutes(productDates.getMinutes() + 30)
+        return (dateNow.getTime() > productDates.getTime())     
+    }
+
     normalizeText(text) {
         return encodeURI(text);
     }
@@ -46,9 +56,14 @@ class ProductFilterView extends React.PureComponent{
             this.getFilterProducts(this.props);
             this.props.functionStopSearch();
         }
+        if(this.hasProductListExpired()){
+            this.getFilterProducts(this.props)
+            this.dataProductsDate = new Date()
+        }
     }
 
     componentDidMount(){
+        this.dataProductsDate = new Date()
         this.getProductionSeals(this.props);
         this.getProductSeals(this.props);
         this.getProductCategories(this.props);        
@@ -72,6 +87,7 @@ class ProductFilterView extends React.PureComponent{
             this.setState({
                 isLoadingProducts: false,
             });
+            this.dataProductsDate = new Date()
             props.isLoadingSearch(false);
         }).catch(function (error) {
             Alert.alert(
