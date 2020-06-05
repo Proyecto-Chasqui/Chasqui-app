@@ -253,15 +253,27 @@ class CatalogView extends React.Component {
 
     backButtonClick() {
         if (this.props.navigation && this.props.navigation.canGoBack() && this.props.navigation.dangerouslyGetState().index === 0) {
-            Alert.alert(
-                'Pregunta',
-                '¿Desea volver a la lista de catálogos?',
-                [
-                    { text: 'Si', onPress: () => this.goBackCatalogs()},
-                    { text: 'No', onPress: () => null },
-                ],
-                { cancelable: true },
-            );
+            if(!this.state.isLoadingProducts){
+                Alert.alert(
+                    'Pregunta',
+                    '¿Desea volver a la lista de catálogos?',
+                    [
+                        { text: 'Si', onPress: () => this.goBackCatalogs()},
+                        { text: 'No', onPress: () => null },
+                    ],
+                    { cancelable: true },
+                );
+            }else{
+                Alert.alert(
+                    'Aviso',
+                    'Por favor espere a que termine de cargar el catálogo',
+                    [,
+                        { text: 'Entendido', onPress: () => null },
+                    ],
+                    { cancelable: true },
+                );
+            }
+
             return true;
         }
         return false;
