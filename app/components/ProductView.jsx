@@ -753,8 +753,8 @@ const styles = StyleSheet.create({
 
     sealsContainer: {
         flexDirection: "row",
+        flexWrap:"wrap",
         flex: 23,
-        height: 50,
     },
 
     sealsStyle: {
