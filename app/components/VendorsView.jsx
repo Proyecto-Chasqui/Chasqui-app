@@ -29,7 +29,11 @@ class VendorsView extends React.PureComponent {
     }
 
     updateSearch = search => {
-        this.setState({ search: search, searchHasChanged: true });
+        this.setState({ search: search, });
+        if(this.timeout) clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            this.setState( {searchHasChanged: true});
+        }, 800);
     }
 
     stopSearch() {
@@ -111,7 +115,7 @@ class VendorsView extends React.PureComponent {
         }
 
         return (
-            <View style={{ marginBottom: 75 }}>
+            <View style={{ flex:1 }}>
                 <View>
                     <Header containerStyle={styles.topHeader}>
                         <Button
@@ -182,7 +186,7 @@ class VendorsView extends React.PureComponent {
                 
                 {
                     this.state.isLoadingSearchVendors ?
-                        (<LoadingView textStyle={styles.loadingTextStyle}></LoadingView>)
+                        (<LoadingView ></LoadingView>)
                         :
                         (<VendorCards navigation={this.props.navigation} multipleCards={this.state.multipleCards} />)
                 }

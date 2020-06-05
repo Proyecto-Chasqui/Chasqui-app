@@ -56,7 +56,6 @@ class ButtonOpenGroupCart extends React.PureComponent {
 
     render() {
         if (!this.props.vendorSelected.few.gcc && !this.props.vendorSelected.few.nodos) {
-            console.log("vendor", this.props.vendorSelected.few)
             return null
         }
 

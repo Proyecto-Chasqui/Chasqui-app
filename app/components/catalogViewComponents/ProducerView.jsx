@@ -39,16 +39,13 @@ class ProducerView extends React.PureComponent{
                     )
                 }
                 <ScrollView >
-                    <View style={{ height: Dimensions.get('window').height-355, }}>
-                                <WebView
-                                    scalesPageToFit={false}
-                                    style={{backgroundColor:"transparent"}}
-                                    containerStyle={{ }}
-                                    injectedJavaScript={INJECTEDJAVASCRIPT}
-                                    style={{flex: 1}}
-                                    source={{ html: this.props.producerSelected.descripcionLarga }}
-                                />
-                    </View>
+                     <WebView
+                        scalesPageToFit={false}
+                        style={{ backgroundColor:"transparent",height: Dimensions.get("window").height -375 }}
+                        containerStyle={{ }}
+                        injectedJavaScript={INJECTEDJAVASCRIPT}
+                        source={{ html: this.props.producerSelected.descripcionLarga }}
+                    />
                 </ScrollView>
                 </View>
             </View>

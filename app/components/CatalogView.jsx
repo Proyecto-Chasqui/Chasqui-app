@@ -68,7 +68,6 @@ class CatalogView extends React.Component {
     updateInfo(){
         if (this.props.vendorSelected !== undefined) {
             if(this.userLogged()){
-                console.log("Update!")
                 this.getShoppingCarts(this.props);
                 this.getUnreadNotifications();
                 this.getPersonalData(this.props);
@@ -125,7 +124,6 @@ class CatalogView extends React.Component {
             this.props.actions.groupsData(res.data);
             this.findSelectedGroup()
         }).catch( (error) => {
-            console.log("error grupos catalogo",error.response)
             if (error.response) {
                 if(error.response.status === 401){
                     Alert.alert(
@@ -462,8 +460,13 @@ class CatalogView extends React.Component {
 
 
     updateSearch = search => {
-        this.setState({ search: search, searchHasChanged: true });
+        this.setState({ search: search });
+        if(this.timeout) clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            this.setState( {searchHasChanged: true});
+        }, 1000);
     }
+    
     isLoadingComponent(value) {
         this.setState({ isLoadingFilterComponent: value });
     }

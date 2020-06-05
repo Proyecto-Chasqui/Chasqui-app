@@ -22,28 +22,27 @@ class LoginView extends React.PureComponent {
       emailErrorRecover: '',
       dataChange: false,
       loading: false,
-      firstLoading:true,
+      firstLoading: true,
     }
-    
+
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.retrieveUserData();
-  }  
-  
-  async storeData(key, item){
+  }
+
+  async storeData(key, item) {
     try {
-      console.log("store:" + key,item)
       await AsyncStorage.setItem(key, JSON.stringify(item));
     } catch (error) {
-      console.log("error on storage",error.message)
+      console.log("error on storage", error.message)
     }
   };
-  
+
 
   loginAsGuest() {
-    
-    if(!this.state.loading){
+
+    if (!this.state.loading) {
       this.props.actions.login({
         email: "invitadx@invitadx.com",
         token: "invitado",
@@ -51,37 +50,35 @@ class LoginView extends React.PureComponent {
         nickname: "invitadx",
         avatar: "",
       });
-      this.storeData("user",{
+      this.storeData("user", {
         email: "invitadx@invitadx.com",
         token: "invitado",
         id: 0,
         nickname: "invitadx",
         avatar: "",
       })
-      this.setState({firstLoading:false})
+      this.setState({ firstLoading: false })
     }
   }
 
-  retrieveUserData = async () =>{
+  retrieveUserData = async () => {
     try {
       let user = await AsyncStorage.getItem("user");
       if (user !== null) {
-        if(JSON.parse(user).id !== 0){
-          this.getPersonalData(JSON.parse(user),JSON.parse(user).password)
-        }else{
+        if (JSON.parse(user).id !== 0) {
+          this.getPersonalData(JSON.parse(user), JSON.parse(user).password)
+        } else {
           this.loginAsGuest()
         }
-      }else{
-        this.setState({firstLoading:false})
+      } else {
+        this.setState({ firstLoading: false })
       }
     } catch (error) {
       console.log("value error", error.message);
     }
   };
-  
+
   getPersonalData(data, password) {
-    console.log("data",data)
-    console.log("password", password)
     const token = base64.encode(`${data.email}:${data.token}`);
     axios.get(this.serverBaseRoute + 'rest/user/adm/read', {
       headers: {
@@ -95,16 +92,16 @@ class LoginView extends React.PureComponent {
       this.setPassword(password);
       this.login(userData);
       this.storeData("user", userData);
-      this.setState({loading:false, firstLoading:false})
+      this.setState({ loading: false, firstLoading: false })
     }).catch((error) => {
-      this.setState({loading:false, firstLoading:false})
+      this.setState({ loading: false, firstLoading: false })
       Alert.alert('Error', 'ocurrio un error al comunicarse con el servidor');
     });
   }
 
   handleSubmit(values) {
     if (!this.state.loading) {
-      this.setState({loading:true})
+      this.setState({ loading: true })
       axios.post(this.serverBaseRoute + 'rest/client/sso/singIn', {
         email: values.email,
         password: values.contraseña
@@ -112,7 +109,7 @@ class LoginView extends React.PureComponent {
         .then(res => {
           this.getPersonalData(res.data, values.contraseña)
         }).catch((error) => {
-          this.setState({loading:false})
+          this.setState({ loading: false })
           if (error.response) {
             if (error.response.data.error === "Usuario o Password incorrectos!") {
               Alert.alert(
@@ -186,21 +183,21 @@ class LoginView extends React.PureComponent {
   }
 
   goToRegister() {
-    
-    if(!this.state.loading){
-    this.navigation.navigate('Registrarse')
+
+    if (!this.state.loading) {
+      this.navigation.navigate('Registrarse')
     }
   }
 
   hideShowPop() {
-    if(!this.state.loading){
+    if (!this.state.loading) {
       this.setState({ isVisible: !this.state.isVisible })
     }
   }
 
   render() {
 
-    if(this.state.firstLoading){
+    if (this.state.firstLoading) {
       return (<LoadingView></LoadingView>)
     }
     return (
@@ -240,65 +237,67 @@ class LoginView extends React.PureComponent {
             </View>
           </View>
         </Overlay>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Bienvenidxs</Text>
-        </View>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
-            style={styles.image}
-          />
-        </View>
-        <Formik
-          initialValues={{ email: '', contraseña: '' }}
-          onSubmit={values => this.handleSubmit(values)}
-        >
-          {({ handleChange, handleBlur, handleSubmit, values }) => (
-            <View>
+        <View style={{flex:1, justifyContent: 'center',}}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Bienvenidxs</Text>
+          </View>
+          <View style={styles.imageContainer}>
+            <Image
+              source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+              style={styles.image}
+            />
+          </View>
+          <Formik
+            initialValues={{ email: '', contraseña: '' }}
+            onSubmit={values => this.handleSubmit(values)}
+          >
+            {({ handleChange, handleBlur, handleSubmit, values }) => (
+              <View>
 
-              <View style={styles.inputContainer}>
-                <Input
-                  inputStyle={{ color: "white", marginLeft: 10 }}
-                  placeholderTextColor="white"
-                  onChangeText={handleChange('email')}
-                  onBlur={handleBlur('email')}
-                  placeholder='Correo electrónico'
-                  leftIcon={{ type: 'font-awesome', name: 'user' }}
-                  value={values.email}
-                />
-              </View>
-              <View style={styles.lowerInputContainer}>
-                <Input
-                  inputStyle={{ color: "white", marginLeft: 10 }}
-                  placeholderTextColor="white"
-                  onChangeText={handleChange('contraseña')}
-                  onBlur={handleBlur('constraseña')}
-                  placeholder='Contraseña'
-                  leftIcon={{ type: 'font-awesome', name: 'lock' }}
-                  secureTextEntry={true}
-                  value={values.contraseña}
-                />
-              </View>
-              <View style={styles.buttonContainer}>
-                <Button disabled={this.state.loading} loading={this.state.loading} buttonStyle={{ height: 60, backgroundColor: '#80bfff', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={handleSubmit} title="INGRESAR" />
-              </View>
-              <View style={styles.lowerButtonsContainer} >
-                <View style={styles.leftButton}>
-                  <Text style={styles.TextStyle} onPress={() => this.hideShowPop()}> Olvidé mi contraseña </Text>
+                <View style={styles.inputContainer}>
+                  <Input
+                    inputStyle={{ color: "white", marginLeft: 10 }}
+                    placeholderTextColor="white"
+                    onChangeText={handleChange('email')}
+                    onBlur={handleBlur('email')}
+                    placeholder='Correo electrónico'
+                    leftIcon={{ type: 'font-awesome', name: 'user' }}
+                    value={values.email}
+                  />
                 </View>
-                <View style={styles.divisor} />
-                <View style={styles.rightButton}>
-                  <Text style={styles.TextStyle} onPress={() => this.goToRegister()}> Registrarme </Text>
+                <View style={styles.lowerInputContainer}>
+                  <Input
+                    inputStyle={{ color: "white", marginLeft: 10 }}
+                    placeholderTextColor="white"
+                    onChangeText={handleChange('contraseña')}
+                    onBlur={handleBlur('constraseña')}
+                    placeholder='Contraseña'
+                    leftIcon={{ type: 'font-awesome', name: 'lock' }}
+                    secureTextEntry={true}
+                    value={values.contraseña}
+                  />
+                </View>
+                <View style={styles.buttonContainer}>
+                  <Button disabled={this.state.loading} loading={this.state.loading} buttonStyle={{ height: 60, backgroundColor: '#80bfff', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={handleSubmit} title="INGRESAR" />
+                </View>
+                <View style={styles.lowerButtonsContainer} >
+                  <View style={styles.leftButton}>
+                    <Text style={styles.TextStyle} onPress={() => this.hideShowPop()}> Olvidé mi contraseña </Text>
+                  </View>
+                  <View style={styles.divisor} />
+                  <View style={styles.rightButton}>
+                    <Text style={styles.TextStyle} onPress={() => this.goToRegister()}> Registrarme </Text>
+                  </View>
+                </View>
+                <View style={styles.middleButton} >
+                  <View>
+                    <Text style={styles.TextStyle} onPress={() => this.loginAsGuest()}> Ingresar como invitadx </Text>
+                  </View>
                 </View>
               </View>
-              <View style={styles.middleButton} >
-                <View>
-                  <Text style={styles.TextStyle} onPress={() => this.loginAsGuest()}> Ingresar como invitadx </Text>
-                </View>
-              </View>
-            </View>
-          )}
-        </Formik>
+            )}
+          </Formik>
+        </View>
       </KeyboardAvoidingView>
     );
   }
@@ -332,7 +331,6 @@ const styles = StyleSheet.create({
   principalContainer: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
     backgroundColor: 'rgba(51, 102, 255, 1)',
   },
 
@@ -346,18 +344,18 @@ const styles = StyleSheet.create({
   },
 
   imageContainer: {
+    marginTop:20,
     alignSelf: 'center',
-    marginTop: "10%"
   },
 
   image: {
-    width: 278 / 2.5,
-    height: 321 / 2.5,
+    width: 278 / 2.7,
+    height: 321 / 2.7,
     resizeMode: 'contain',
   },
 
   inputContainer: {
-    marginTop: '20%',
+    marginTop: 30,
     width: Dimensions.get('window').width - 40,
     height: 71,
     alignSelf: 'center'

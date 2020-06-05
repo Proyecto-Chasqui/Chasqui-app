@@ -79,7 +79,6 @@ class PasswordConfigView extends React.PureComponent {
 
     async storeData(key, item){
         try {
-          console.log("store:" + key,item)
           await AsyncStorage.setItem(key, JSON.stringify(item));
         } catch (error) {
           console.log("error on storage",error.message)
@@ -116,8 +115,6 @@ class PasswordConfigView extends React.PureComponent {
     }
 
     validOldPassword() {
-        console.log("validando password old",this.state.passwordData.old_password)
-        console.log("validando password actual", this.props.user.password)
         return this.props.user.password === this.state.passwordData.old_password;
     }
 

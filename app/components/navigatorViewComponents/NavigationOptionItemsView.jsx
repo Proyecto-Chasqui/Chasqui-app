@@ -123,12 +123,6 @@ class NavigationOptionItemsView extends React.PureComponent {
                 </Button>
               </View>
             ) : (null)}
-            <Button icon={<Icon name="question-circle" type='font-awesome' size={20} iconStyle={styles.iconMenuButton} />}
-              buttonStyle={styles.menuButton}
-              onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
-              title="Ayuda"
-              titleStyle={styles.menuButtonTitle}
-            />
             <Button icon={<Icon name="times-circle" type='font-awesome' size={20} iconStyle={styles.iconMenuButton} />}
               buttonStyle={styles.menuButton}
               onPress={() => this.logoutAlert()}
@@ -138,12 +132,6 @@ class NavigationOptionItemsView extends React.PureComponent {
           </View>
         ) : (
             <View style={{ marginLeft: 20 }}>
-              <Button icon={<Icon name="question-circle" type='font-awesome' size={20} iconStyle={styles.iconMenuButton} />}
-                buttonStyle={styles.menuButton}
-                onPress={() => Alert.alert('En Desarrollo', 'Sección en desarrollo')}
-                title="Ayuda"
-                titleStyle={styles.menuButtonTitle}
-              />
               <Button icon={<Icon name="times-circle" type='font-awesome' size={20} iconStyle={styles.iconMenuButton} />}
                 buttonStyle={styles.menuButton}
                 onPress={() => this.logoutAlert()}

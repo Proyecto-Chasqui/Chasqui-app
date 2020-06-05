@@ -103,7 +103,6 @@ class NavigatorView extends React.PureComponent {
 
   _handleNotification = notification => {
     //Vibration.vibrate();
-    console.log("notificacion",notification);
     this.setState({ notification: notification });
     if(notification.origin === "received"){
       this.analize(notification)

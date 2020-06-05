@@ -1,11 +1,10 @@
 import React from 'react'
-import { View, Text, StyleSheet, Dimensions, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Alert, ActivityIndicator,  ScrollView, TouchableOpacity } from 'react-native';
 import { Header, Button, Icon, Image, Tooltip, Badge } from 'react-native-elements';
 import GLOBALS from '../Globals';
 import SealsView from '../components/catalogViewComponents/SealsView';
 import QuantitySelector from '../components/catalogViewComponents/QuantitySelectorView';
 import WebView from 'react-native-webview'
-import { ScrollView } from 'react-native-gesture-handler';
 import { SliderBox } from "react-native-image-slider-box";
 import OverlayShoppingCartView from '../containers/CatalogComponentsContainers/OverlayShoppingCart'
 import axios from 'axios';
@@ -28,6 +27,7 @@ class ProductView extends React.PureComponent {
                 intentAddingWithOutCart: false,
                 idProduct: 0,
                 interval: null,
+                showDescription:false,
             }
         this.vendorSelected = this.props.vendorSelected;
         this.serverBaseRoute = GLOBALS.BASE_URL;
@@ -353,6 +353,10 @@ class ProductView extends React.PureComponent {
         }
     }
 
+    showDescription(){
+        this.setState({showDescription: !this.state.showDescription})
+    }
+
     render() {
         const INJECTEDJAVASCRIPT = "document.body.style.userSelect = 'none'";
         return (
@@ -413,18 +417,41 @@ class ProductView extends React.PureComponent {
                         {this.state.images.length > 0 ? (
 
                             <SliderBox images={this.state.images}
-                                sliderBoxHeight={280}
+                                sliderBoxHeight={240}
                                 dotColor='rgba(51, 102, 255, 1)'
                                 inactiveDotColor='white'
                                 circleLoop
                             />
-                        ) : (<Image style={{ width: Dimensions.get("window").width, height: 280, alignSelf: 'center', resizeMode: 'contain', backgroundColor: "white" }}
+                        ) : (<Image style={{ width: Dimensions.get("window").width, height: 240, alignSelf: 'center', resizeMode: 'contain', backgroundColor: "white" }}
                             source={{ uri: null }}
                             PlaceholderContent={<ActivityIndicator />}
                         />)
                         }
                     </View>
                     <Text style={styles.priceStyle}>$ {this.definePrice()}</Text>
+                    <View style={styles.caracteristicsContanierStyle}>
+                    <TouchableOpacity onPress={() => this.showDescription()} style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
+                            <Text style={styles.caracteristicsStyle} >Descripción</Text>
+                            <View style={styles.verticalDivisor} />
+                            <Button icon={
+                                this.state.showDescription ? (
+                                    <Icon
+                                        name='caret-up'
+                                        type='font-awesome'
+                                        color='#b0b901'
+                                        size={30}
+                                    />) : (<Icon
+                                        name='caret-down'
+                                        type='font-awesome'
+                                        color='#b0b901'
+                                        size={30}
+                                    />)}
+                                containerStyle={styles.buttonCaracteristicsContainerStyle} buttonStyle={styles.buttonProducerStyle}
+                                onPress={() => this.showDescription()}></Button>
+                        </TouchableOpacity>
+                    </View>
+                    {this.state.showDescription?(
+                    <View style={styles.caracteristicsContanierStyle}>
                     <ScrollView style={styles.descriptionViewContainer}>
                         <View style={{ height: 200 }}>
                             <WebView
@@ -438,8 +465,10 @@ class ProductView extends React.PureComponent {
                             />
                         </View>
                     </ScrollView>
+                    </View>
+                    ):(null)}
                     <View style={styles.caracteristicsContanierStyle}>
-                        <View style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
+                        <TouchableOpacity  onPress={() => this.showCaracteristics()} style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
                             <Text style={styles.caracteristicsStyle} >Caracteristicas</Text>
                             <View style={styles.verticalDivisor} />
                             <Button icon={
@@ -457,13 +486,13 @@ class ProductView extends React.PureComponent {
                                     />)}
                                 containerStyle={styles.buttonCaracteristicsContainerStyle} buttonStyle={styles.buttonProducerStyle}
                                 onPress={() => this.showCaracteristics()}></Button>
-                        </View>
+                        </TouchableOpacity>
                         {this.state.showCaracteristics ?
                             (
                                 <View>
                                     <View>
                                         <View style={styles.divisor} />
-                                        <View style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
+                                        <TouchableOpacity onPress={() => this.goToProducer()} style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
                                             <Text style={styles.producerStyle}>{this.props.productSelected.nombreFabricante}</Text>
                                             <View style={styles.verticalDivisor} />
                                             <Button icon={
@@ -475,12 +504,12 @@ class ProductView extends React.PureComponent {
                                                 />}
                                                 containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
                                                 onPress={() => this.goToProducer()}></Button>
-                                        </View>
+                                        </TouchableOpacity>
                                     </View>
                                     {this.haventSeals() ? (null) : (
                                         <View>
                                             <View style={styles.divisor} />
-                                            <View style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
+                                            <TouchableOpacity onPress={() => this.goToSeals()} style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
                                                 <SealsView sealsContainer={styles.sealsContainer} sealsStyle={styles.sealsStyle} productSeals={this.props.productSelected.medallasProducto} producerSeals={this.props.productSelected.medallasProductor} ></SealsView>
                                                 <View style={styles.verticalDivisor} />
                                                 <Button icon={
@@ -492,7 +521,8 @@ class ProductView extends React.PureComponent {
                                                     />}
                                                     containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
                                                     onPress={() => this.goToSeals()}></Button>
-                                            </View></View>)
+                                            </TouchableOpacity>
+                                            </View>)
                                     }
                                 </View>
                             ) : (null)
@@ -645,12 +675,14 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginLeft: 20,
         marginRight: 20,
+        marginBottom:15,
     },
 
     descriptionViewContainer: {
         marginBottom: 5,
         marginLeft: 15,
-        marginRight: 15
+        marginRight: 15,
+        
     },
 
     descriptionStyle: {
@@ -688,6 +720,7 @@ const styles = StyleSheet.create({
         flex: 23,
         alignSelf: "center",
         fontWeight: "bold",
+        textAlign:"center",
         marginTop: 10,
         marginBottom: 8,
     },

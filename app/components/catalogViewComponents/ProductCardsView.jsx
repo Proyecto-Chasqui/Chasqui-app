@@ -74,13 +74,14 @@ class ProductCardsView extends React.PureComponent {
                                 (<Badge badgeStyle={stylesCards.badge} containerStyle={stylesCards.tagDestacado}
                                     value={<Text style={stylesCards.textBadge}>Destacado</Text>} />
                                 ) : (
-                                    null)
+                                    <Badge badgeStyle={stylesCards.invisibleBadge} containerStyle={stylesCards.tagDestacado}
+                                    value={<Text style={stylesCards.textBadge}></Text>} />)
                             }
                             <View style={{ flexDirection: "column" }}>
                                 <View>
                                     <Text style={stylesCards.priceStyle}>$ {this.definePrice(item)}</Text>
                                 </View>
-                                <ScrollView style={{ height: 55 }}>
+                                <ScrollView style={{ height: 80 }}>
                                     <Text style={stylesCards.nameTextStyle}>{item.nombreProducto}</Text>
                                 </ScrollView>
                                 <ScrollView style={{ height: 50}}>
@@ -115,7 +116,7 @@ class ProductCardsView extends React.PureComponent {
                                     null)
                             }
                         <View style={{ flex:2, height: 170 }}>                            
-                            <ScrollView style={{ height: 120 }}>
+                            <ScrollView style={{ height: 130 }}>
                                 <Text style={stylesListCard.nameTextStyle}>{item.nombreProducto}</Text>
                             </ScrollView>
                             <ScrollView style={{ height: 100, }}>
@@ -392,6 +393,15 @@ const stylesMultipleCards = StyleSheet.create({
         marginLeft: 4
     },
 
+    invisibleBadge: {
+        marginTop: -15,
+        backgroundColor: 'transparent',
+        height: 30,
+        borderRadius: 5,
+        borderColor: "transparent",
+        alignSelf: 'flex-start'
+    },
+
     badge: {
         marginTop: -15,
         backgroundColor: '#00b300',
@@ -428,7 +438,7 @@ const stylesMultipleCards = StyleSheet.create({
     },
 
     card: {
-        height: 385,
+        height: 415,
         borderRadius: 2,
         marginTop: 5,
         marginLeft: 5,
@@ -487,7 +497,7 @@ const stylesMultipleCards = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         marginBottom: 3,
-        height: 55
+        height: 55,
     },
 
     sealStyle: {
