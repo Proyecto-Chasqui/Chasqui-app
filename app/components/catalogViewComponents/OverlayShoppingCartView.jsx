@@ -210,6 +210,7 @@ class OverlayShoppingCartView extends React.PureComponent {
                 onBackdropPress={() => this.props.showFilter()} isVisible={this.props.isVisible}
                 animationType="fade"
             >
+                <View style={{flex:1}}>
                 <View style={styles.topHeader}>
                     <View style={styles.containerIconStyle}>
                         <Icon iconStyle={styles.shoppingCartIcon} name="shopping-cart" size={20} color="white" type='font-awesome' />
@@ -245,7 +246,7 @@ class OverlayShoppingCartView extends React.PureComponent {
                                 <ButtonOpenIndividualCart selectCart={(id) => this.selectCartById(id)} actionFunction={() => this.alertOpenCart()}></ButtonOpenIndividualCart>
                                 {this.props.groupsData.map((group, i) => {
                                     return (
-                                        <ButtonOpenGroupCart group={group} selectCart={(id) => this.selectCartById(id)} actionFunction={() => this.alertOpenGroupCart(group)}></ButtonOpenGroupCart>
+                                        <ButtonOpenGroupCart key={group.id} group={group} selectCart={(id) => this.selectCartById(id)} actionFunction={() => this.alertOpenGroupCart(group)}></ButtonOpenGroupCart>
                                     )
                                 })}
                             </ScrollView>
@@ -271,7 +272,7 @@ class OverlayShoppingCartView extends React.PureComponent {
                         </View>
                     )
                 }
-
+            </View>
             </Overlay>
         );
     }

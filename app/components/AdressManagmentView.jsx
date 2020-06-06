@@ -665,7 +665,7 @@ class AdressManagmentView extends React.PureComponent {
                         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                             {fields.map((field, i) => {
                                 return (
-                                    <View style={styles.inputContainer}>
+                                    <View key={i} style={styles.inputContainer}>
                                         <Text style={styles.fieldText}>{this.normalizeText(field)}</Text>
                                         <Input
                                             inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}
@@ -707,7 +707,7 @@ class AdressManagmentView extends React.PureComponent {
                                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                                         {fields_2.map((field, i) => {
                                             return (
-                                                <View style={styles.inputContainer}>
+                                                <View key={i} style={styles.inputContainer}>
                                                     <Text style={styles.fieldText}>{this.normalizeText(field)}</Text>
                                                     <Input
                                                         inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}

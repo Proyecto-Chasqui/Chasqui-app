@@ -305,7 +305,7 @@ class PasswordConfigView extends React.PureComponent {
                     </View>
                     {fields.map((field, i) => {
                         return (
-                            <View style={styles.inputContainer}>
+                            <View key={i} style={styles.inputContainer}>
                                 <Text style={{fontWeight:"bold"}}>{this.normalizeText(field)}</Text>
                                 <Input
                                     inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}

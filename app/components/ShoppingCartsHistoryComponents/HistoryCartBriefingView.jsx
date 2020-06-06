@@ -77,7 +77,7 @@ class HistoryCartBriefingView extends React.PureComponent {
             return "Mis nodos"
         }
     }
-
+    keyExtractor = (item, index) => index.toString()
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -99,7 +99,7 @@ class HistoryCartBriefingView extends React.PureComponent {
                 <Text style={styles.sectionTitleTextStyle}>Productos</Text>
                 <View style={{ flex: 1 }}>
                     <FlatList data={this.getDataProducts()}
-                        keyExtractor={item => item.idVariante} windowSize={15}
+                        keyExtractor={this.keyExtractor} windowSize={15}
                         renderItem={({ item }) =>
                             <View style={{ flex: 1, backgroundColor: 'white', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
                                 <View>

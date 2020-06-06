@@ -406,7 +406,7 @@ class PersonalDataView extends React.PureComponent {
                     
                     {fields.map((field, i) => {
                         return (
-                            <View style={styles.inputContainer}>
+                            <View key={i+10}style={styles.inputContainer}>
                                 <Text style={styles.fieldText}>{this.normalizeText(field)}</Text>
                                 <Input
                                     inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}

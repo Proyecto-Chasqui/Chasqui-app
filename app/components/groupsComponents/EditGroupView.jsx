@@ -368,7 +368,7 @@ class EditGroupView extends React.PureComponent {
                         <View style={{ justifyContent: "space-evenly", flex: 1 }}>
                             {fields.map((field, i) => {
                                 return (
-                                    <View style={{ flex: 1 }}>
+                                    <View key={i} style={{ flex: 1 }}>
                                         <Text style={styles.fieldText}>{this.normalizeText(field)}</Text>
                                         <Input
                                             inputStyle={this.returnValueBasedOnFieldData(field).length == 0 ? styles.placeholderStyle : styles.inputTextStyle}

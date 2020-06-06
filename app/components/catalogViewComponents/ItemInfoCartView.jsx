@@ -490,7 +490,7 @@ class ItemInfoCartView extends React.PureComponent {
             return this.props.shoppingCartSelected.montoActual
         }
     }
-
+    keyExtractor = (item, index) => index.toString()
     render() {
         if (this.props.shoppingCartSelected.id === undefined) {
             return (
@@ -618,14 +618,11 @@ class ItemInfoCartView extends React.PureComponent {
                             </View>
                         )
                         : (
-                            <FlatList data={this.props.shoppingCartSelected.productosResponse.sort((a, b) => this.compareIds(a, b))} keyExtractor={item => item.idVariante} windowSize={15}
+                            <FlatList data={this.props.shoppingCartSelected.productosResponse.sort((a, b) => this.compareIds(a, b))}  keyExtractor={this.keyExtractor} windowSize={15}
                                 renderItem={({ item }) =>
-
                                     <View style={{ flex: 1, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
                                         <ProductItemView touchable={true} item={item}></ProductItemView>
                                     </View>
-
-
                                 } />)
                     }
                 </View>

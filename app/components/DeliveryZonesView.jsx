@@ -169,6 +169,7 @@ class DeliveryZonesView extends React.PureComponent {
                     onBackdropPress={() => this.hidePop()}
                     animationType="fade"
                 >
+                    <View>
                     {this.state.zoneSelected !== null ? (
                         <View style={{ flex: 1, margin: -10 }}>
                             <View style={styles.infoTextContainer}>
@@ -201,6 +202,7 @@ class DeliveryZonesView extends React.PureComponent {
                             </View>
                         </View>
                     ) : (null)}
+                    </View>
                 </Overlay>
                 <Overlay
                     isVisible={this.state.isSPDataVisible}
@@ -209,6 +211,7 @@ class DeliveryZonesView extends React.PureComponent {
                     onBackdropPress={() => this.hidePopSP()}
                     animationType="fade"
                 >
+                    <View>
                     {this.state.sellerPointSelected !== null ? (
                         <View style={{ flex: 1, margin: -10 }}>
                             <View style={styles.infoTextContainer}>
@@ -232,6 +235,7 @@ class DeliveryZonesView extends React.PureComponent {
                             </View>
                         </View>
                     ) : (null)}
+                    </View>
                 </Overlay>
                 <View>
                     <Header containerStyle={styles.topHeader}>
@@ -257,7 +261,7 @@ class DeliveryZonesView extends React.PureComponent {
                         {this.state.zones.map((zone, i) => {
                             if (zone.coordinates.length > 0) {
                                 return (
-                                    <Polygon
+                                    <Polygon key={i}
                                         coordinates={zone.coordinates}
                                         fillColor={"rgba( 108, 53, 170 ,0.5)"}
                                         strokeColor={"blue"}
@@ -274,7 +278,7 @@ class DeliveryZonesView extends React.PureComponent {
                         {this.state.sellerPoints.map((sellerPoint, i) => {
                             if (sellerPoint.direccion.latitud !== null) {
                                 return (
-                                    <Marker
+                                    <Marker key={i}
                                         coordinate={this.createCoordinateParse(sellerPoint.direccion.latitud, sellerPoint.direccion.longitud)}
                                         onPress={() => this.showSPData(sellerPoint)}
                                     >

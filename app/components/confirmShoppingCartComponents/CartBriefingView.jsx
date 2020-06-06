@@ -56,7 +56,7 @@ class CartBriefingView extends React.PureComponent {
             return "center"
         }
     }
-
+    keyExtractor = (item, index) => index.toString()
     render() {
 
         return (
@@ -67,7 +67,7 @@ class CartBriefingView extends React.PureComponent {
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
                 <View style={{ height: Dimensions.get("window").height - 265 }}>
                     <FlatList data={this.getDataProducts()}
-                        keyExtractor={item => item.idVariante} windowSize={15}
+                        keyExtractor={this.keyExtractor} windowSize={15}
                         renderItem={({ item }) =>
                             <View style={{ flex: 1, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
                                 <ProductItemView touchable={true} item={item}></ProductItemView>

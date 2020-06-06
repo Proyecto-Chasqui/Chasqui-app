@@ -14,7 +14,7 @@ class MapAdressConfig extends React.PureComponent {
             },
             pitch: 1,
             heading: 1,
-            zoom: 15
+            zoom: 15,
         }
         this.initialRegion = {
             latitude: -34.7067799,

@@ -74,6 +74,7 @@ class ConfirmCartView extends React.PureComponent {
         }
         
     }
+    keyExtractor = (item, index) => index.toString()
     render() {
 
         return (
@@ -85,7 +86,7 @@ class ConfirmCartView extends React.PureComponent {
                 <View >
                     <Text style={stylesListCard.sectionTitleTextStyle}>Su pedido</Text>
                     <FlatList data={this.getDataProducts()}
-                        keyExtractor={item => item.idVariante} windowSize={15}
+                        keyExtractor={this.keyExtractor} windowSize={15}
                         renderItem={({ item }) =>
                             <View style={{ backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
                                 <ProductItemView touchable={false} item={item}></ProductItemView>
@@ -100,7 +101,7 @@ class ConfirmCartView extends React.PureComponent {
                                     <Text style={{flex:1,color:"black",fontWeight:"bold", textAlign:"center", }}>Pregunta </Text><Text style={{borderLeftWidth:2,height:"100%",borderColor:"#e1e1e1"}}></Text><Text  style={{flex:1,textAlign:"center",color:"blue",fontWeight:"bold"}}>Respuesta</Text>
                                 </View>
                                 }
-                                keyExtractor={item => item.nombre} windowSize={15}
+                                keyExtractor={this.keyExtractor} windowSize={15}
                                 renderItem={({ item }) =>
                                     <View style={{ flex:1, alignItems:"center",flexDirection: "row", marginLeft:5, marginRight:5, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
                                         <Text style={{flex:1,color:"black",fontWeight:"bold", textAlign:"center"}}>{item.nombre}  </Text><Text style={{borderLeftWidth:2,height:"100%",borderColor:"#e1e1e1"}}></Text><Text  style={{flex:1,textAlign:"center",color:"blue",fontWeight:"bold"}}>{item.opcionSeleccionada}</Text>
@@ -139,11 +140,11 @@ class ConfirmCartView extends React.PureComponent {
                     {this.props.sellerPointSelected !== undefined ? (
                         <View style={{height:130}}>
                         <Text style={stylesListCard.sectionTitleTextStyle}>Lo pasa a retirar en</Text>
-                        <ScrollView style={{  marginLeft:20, marginRight:10, marginBottom:10, marginTop:10 }}>
+                        <View style={{  marginLeft:20, marginRight:10, marginBottom:10, marginTop:10 }}>
                             <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{this.props.sellerPointSelected.nombre}</Text>
                             <Text style={{ color: "blue" }}>{this.parseAdress(this.props.sellerPointSelected.direccion)}</Text>
                             <Text style={{ fontSize: 14,  }}>{this.props.sellerPointSelected.mensaje}</Text>
-                        </ScrollView>
+                        </View>
                         </View>
                         ) : (null)}
                     <View style={{justifyContent:"center"}}>

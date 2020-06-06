@@ -12,7 +12,7 @@ class VendorFiltersView extends React.PureComponent {
         this.showFiltersFunction = props.showFilter;
         this.serverBaseRoute = GLOBALS.BASE_URL;
         this.state = {
-            iconColor:"red",
+            iconColor: "red",
             isLoadingFilterVendors: false,
             isLoading: true,
             showTypeOrganizacionSet: false,
@@ -287,6 +287,7 @@ class VendorFiltersView extends React.PureComponent {
                 onBackdropPress={() => this.props.showFilter()} isVisible={this.props.isVisible}
                 animationType="fade"
             >
+                <View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 3, marginTop: -6 }}>
                     <View style={{ justifyContent: 'center' }}>
                         <Text style={{ alignSelf: 'flex-start', marginLeft: 15, fontSize: 15, fontWeight: 'bold' }}>Buscar Por:</Text>
@@ -314,7 +315,7 @@ class VendorFiltersView extends React.PureComponent {
 
                     <View style={styles.divisor} />
                     <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Tipo de producto"
-                        onPress={() => this.showTypeProductSet()} icon={<Icon iconStyle={styles.iconRevealButton} name="caret-down" iconRight={true} size={20}  type='font-awesome' />
+                        onPress={() => this.showTypeProductSet()} icon={<Icon iconStyle={styles.iconRevealButton} name="caret-down" iconRight={true} size={20} type='font-awesome' />
                         } iconRight />
                     {this.state.showTypeProductSet ?
                         <View style={styles.menuSelectorItems}>
@@ -331,7 +332,7 @@ class VendorFiltersView extends React.PureComponent {
 
                     <View style={styles.divisor} />
                     <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Zona de entrega"
-                        onPress={() => this.showZoneCoverage()} icon={<Icon iconStyle={styles.iconRevealButton} name="caret-down" iconRight={true} size={20}  type='font-awesome' />
+                        onPress={() => this.showZoneCoverage()} icon={<Icon iconStyle={styles.iconRevealButton} name="caret-down" iconRight={true} size={20} type='font-awesome' />
                         } iconRight />
                     {this.state.showZoneCoverage ?
                         <View style={styles.menuSelectorItems}>
@@ -411,6 +412,7 @@ class VendorFiltersView extends React.PureComponent {
                         : null}
                     <View style={styles.divisor} />
                 </ScrollView>
+                </View>
             </Overlay>
         );
     }
@@ -419,11 +421,11 @@ class VendorFiltersView extends React.PureComponent {
 const styles = StyleSheet.create({
 
     overlayContainer: {
-        
+
     },
 
     overlay: {
-        alignSelf:"flex-end",
+        alignSelf: "flex-end",
         width: 300,
         height: Dimensions.get("window").height - 210,
         borderWidth: 2,

@@ -357,6 +357,7 @@ class ProductFilterView extends React.PureComponent{
             onBackdropPress={() => this.props.showFilter()} isVisible={this.props.isVisible}
             animationType="fade"
         >
+            <View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 3, marginTop: -6 }}>
                 <View style={{ justifyContent: 'center' }}>
                     <Text style={{ alignSelf: 'flex-start', marginLeft: 15, fontSize: 15, fontWeight: 'bold' }}>Buscar Por:</Text>
@@ -445,6 +446,7 @@ class ProductFilterView extends React.PureComponent{
                     : null}
                 <View style={styles.divisor} />
             </ScrollView>
+            </View>
             </Overlay>         
 
         )

@@ -35,7 +35,7 @@ class DeliveryAdressConfigView extends React.PureComponent {
 
                 {this.props.adressesData.map((adressData, i) => {
                     return (                        
-                        <View style={styles.directionContanierStyle}>
+                        <View key={i} style={styles.directionContanierStyle}>
                             <View style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
                                 <Text style={styles.caracteristicsStyle} >{adressData.alias}</Text>
                                 <View style={styles.verticalDivisor} />

@@ -313,6 +313,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                 onBackdropPress={() => this.props.showControls()} isVisible={this.props.isVisible}
                 animationType="slide"
             >
+                <View style={{ flex: 1 }}>
                 <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText={"Comunicandose con el servidor..."}></LoadingOverlayView>
                 <View style={{ flex: 1 }}>
                     <View style={styles.topHeader}>
@@ -469,6 +470,7 @@ class GroupControlsOverlayView extends React.PureComponent {
                                 </View>
                             )}
                     </View>
+                </View>
                 </View>
             </Overlay>
         )
