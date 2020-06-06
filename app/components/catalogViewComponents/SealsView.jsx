@@ -62,7 +62,7 @@ class SealsView extends React.PureComponent {
                 {this.setSeals(this.props.productSeals).length > 0 ? (
                     this.props.productSeals.map((seal, i) => {
                         return (
-                                <Image key={seal.idMedalla} style={this.sealsStyle}  PlaceholderContent={<ActivityIndicator  color="#0000ff" />} source={{ uri: (this.normalizeText(this.serverBaseRoute + seal.pathImagen)) }} />
+                                <Image key={i} style={this.sealsStyle}  PlaceholderContent={<ActivityIndicator  color="#0000ff" />} source={{ uri: (this.normalizeText(this.serverBaseRoute + seal.pathImagen)) }} />
                             
                         );
                     })
@@ -70,7 +70,7 @@ class SealsView extends React.PureComponent {
                 {this.setSeals(this.props.producerSeals).length > 0 ? (
                     this.props.producerSeals.map((seal, i) => {
                         return (
-                                <Image key={seal.idMedalla} style={this.sealsStyle}  PlaceholderContent={<ActivityIndicator color="#0000ff" />} source={{ uri: (this.normalizeText(this.serverBaseRoute + seal.pathImagen)) }} />
+                                <Image key={i+200} style={this.sealsStyle}  PlaceholderContent={<ActivityIndicator color="#0000ff" />} source={{ uri: (this.normalizeText(this.serverBaseRoute + seal.pathImagen)) }} />
                             
                         );
                     })

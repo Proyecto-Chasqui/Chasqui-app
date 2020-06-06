@@ -283,7 +283,7 @@ class ShippingSelectionView extends React.PureComponent {
                 {this.state.showMoreInfo ? (
                     <View>
                         {this.state.showRevert ? (
-                            <View style={styles.moreInfoButtonContainer}>
+                            <TouchableOpacity onPress={() => this.revertSelection()} style={styles.moreInfoButtonContainer}>
                                 <Text style={styles.caracteristicsStyle}>Elegir otro metodo</Text>
                                 <View style={styles.verticalDivisor} />
                                 <Button icon={
@@ -301,7 +301,7 @@ class ShippingSelectionView extends React.PureComponent {
                                         />)}
                                     containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
                                     onPress={() => this.revertSelection()}></Button>
-                            </View>) : (null)}
+                            </TouchableOpacity>) : (null)}
 
                         {this.state.showSellerPoints ? (
                             <View>
@@ -403,7 +403,7 @@ class ShippingSelectionView extends React.PureComponent {
                 ) : (
                         <View>
                             {this.props.vendorSelected.few.puntoDeEntrega ? (
-                                <View style={styles.moreInfoButtonContainer}>
+                                <TouchableOpacity onPress={() => this.showMoreInfoSellerPoint()} style={styles.moreInfoButtonContainer}>
                                     <Text style={styles.caracteristicsStyle}>Paso a retirar</Text>
                                     <View style={styles.verticalDivisor} />
                                     <Button icon={
@@ -421,10 +421,10 @@ class ShippingSelectionView extends React.PureComponent {
                                             />)}
                                         containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
                                         onPress={() => this.showMoreInfoSellerPoint()}></Button>
-                                </View>) : (null)}
+                                </TouchableOpacity>) : (null)}
 
                             {this.props.vendorSelected.few.seleccionDeDireccionDelUsuario ? (
-                                <View style={styles.moreInfoButtonContainer}>
+                                <TouchableOpacity onPress={() => this.showMoreInfoAddress()} style={styles.moreInfoButtonContainer}>
                                     <Text style={styles.caracteristicsStyle}>Envio a domicilio</Text>
                                     <View style={styles.verticalDivisor} />
                                     <Button icon={
@@ -442,7 +442,7 @@ class ShippingSelectionView extends React.PureComponent {
                                             />)}
                                         containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
                                         onPress={() => this.showMoreInfoAddress()}></Button>
-                                </View>) : (null)}
+                                </TouchableOpacity>) : (null)}
                         </View>
                     )}
 
