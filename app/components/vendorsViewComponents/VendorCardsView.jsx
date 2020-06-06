@@ -40,6 +40,14 @@ class VendorMultipleCardsView extends React.PureComponent {
         this.props.navigation.navigate('Catalogo');
     }
 
+    defineImageURL(url) {
+        if (url !== null) {
+            return encodeURI(this.serverBaseRoute + url)
+        } else {
+            return null
+        }
+    }
+
     render() {
         let stylesCards = this.props.multipleCards ? stylesMultipleCards : stylesSingleCards;
         if (this.props.vendors.length < 1) {
@@ -70,7 +78,12 @@ class VendorMultipleCardsView extends React.PureComponent {
                                         <Card containerStyle={stylesCards.card}>
                                             <View style={stylesCards.cardImageView}>
                                             <TouchableOpacity onPress={() => this.selectVendor(u)}>
-                                                <Image style={stylesCards.cardImage} source={{ uri: (this.serverBaseRoute + u.imagen) }} />
+                                                {(u.imagen !== null)?(
+                                                <Image style={stylesCards.cardImage} source={{ uri: this.defineImageURL(u.imagen) }} />
+                                                ):(
+                                                    <Image style={stylesCards.cardImage} 
+                                                    source={ require('../../components/catalogViewComponents/catalogAssets/imagennodisponible.png') } />
+                                                )}
                                             </TouchableOpacity>
                                             </View>
                                             <View style={{position:"absolute"}}>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, Dimensions, Alert, ActivityIndicator,  ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Alert, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import { Header, Button, Icon, Image, Tooltip, Badge } from 'react-native-elements';
 import GLOBALS from '../Globals';
 import SealsView from '../components/catalogViewComponents/SealsView';
@@ -27,7 +27,7 @@ class ProductView extends React.PureComponent {
                 intentAddingWithOutCart: false,
                 idProduct: 0,
                 interval: null,
-                showDescription:false,
+                showDescription: false,
             }
         this.vendorSelected = this.props.vendorSelected;
         this.serverBaseRoute = GLOBALS.BASE_URL;
@@ -93,9 +93,9 @@ class ProductView extends React.PureComponent {
         this.setState({ images: varImageRoutes })
     }
 
-    errorAlert(error){
+    errorAlert(error) {
         if (error.response) {
-            if(error.response.status === 401){
+            if (error.response.status === 401) {
                 Alert.alert(
                     'Sesion expirada',
                     'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
@@ -104,17 +104,17 @@ class ProductView extends React.PureComponent {
                     ],
                     { cancelable: false },
                 );
-            }else{
-                if(error.response.data !== null){
+            } else {
+                if (error.response.data !== null) {
                     Alert.alert(
                         'Error',
-                         error.response.data.error,
+                        error.response.data.error,
                         [
                             { text: 'Entendido', onPress: () => null },
                         ],
                         { cancelable: false },
                     );
-                }else{
+                } else {
                     Alert.alert(
                         'Error',
                         'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
@@ -337,24 +337,24 @@ class ProductView extends React.PureComponent {
         return text;
     }
 
-    definePrice(){
-        if(this.vendorSelected.few.nodos && this.vendorSelected.few.usaIncentivos){
+    definePrice() {
+        if (this.vendorSelected.few.nodos && this.vendorSelected.few.usaIncentivos) {
             return this.props.productSelected.precio + this.props.productSelected.incentivo
-        }else{
+        } else {
             return this.props.productSelected.precio
         }
     }
 
-    defineCartPrice(){
-        if(this.vendorSelected.few.nodos && this.vendorSelected.few.usaIncentivos){
+    defineCartPrice() {
+        if (this.vendorSelected.few.nodos && this.vendorSelected.few.usaIncentivos) {
             return this.props.shoppingCartSelected.montoActual + this.props.shoppingCartSelected.incentivoActual
-        }else{
+        } else {
             return this.props.shoppingCartSelected.montoActual
         }
     }
 
-    showDescription(){
-        this.setState({showDescription: !this.state.showDescription})
+    showDescription() {
+        this.setState({ showDescription: !this.state.showDescription })
     }
 
     render() {
@@ -371,8 +371,8 @@ class ProductView extends React.PureComponent {
                         onPress={() => this.props.navigation.goBack()}
                     />
                     <Image
-                        style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'contain' }}
-                        source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                        style={{ width: 50, height: 55 }}
+                        source={require('../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                     />
                     <View>
                         <Button
@@ -430,7 +430,7 @@ class ProductView extends React.PureComponent {
                     </View>
                     <Text style={styles.priceStyle}>$ {this.definePrice()}</Text>
                     <View style={styles.caracteristicsContanierStyle}>
-                    <TouchableOpacity onPress={() => this.showDescription()} style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
+                        <TouchableOpacity onPress={() => this.showDescription()} style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
                             <Text style={styles.caracteristicsStyle} >Descripción</Text>
                             <View style={styles.verticalDivisor} />
                             <Button icon={
@@ -450,25 +450,25 @@ class ProductView extends React.PureComponent {
                                 onPress={() => this.showDescription()}></Button>
                         </TouchableOpacity>
                     </View>
-                    {this.state.showDescription?(
-                    <View style={styles.caracteristicsContanierStyle}>
-                    <ScrollView style={styles.descriptionViewContainer}>
-                        <View style={{ height: 200 }}>
-                            <WebView
-                                originWhitelist={["*"]}
-                                scalesPageToFit={false}
-                                style={{ backgroundColor: "transparent" }}
-                                injectedJavaScript={INJECTEDJAVASCRIPT}
-                                style={{ flex: 1 }}
-                                containerStyle={{}}
-                                source={{ html: this.props.productSelected.descripcion }}
-                            />
+                    {this.state.showDescription ? (
+                        <View style={styles.caracteristicsContanierStyle}>
+                            <ScrollView style={styles.descriptionViewContainer}>
+                                <View style={{ height: 200 }}>
+                                    <WebView
+                                        originWhitelist={["*"]}
+                                        scalesPageToFit={false}
+                                        style={{ backgroundColor: "transparent" }}
+                                        injectedJavaScript={INJECTEDJAVASCRIPT}
+                                        style={{ flex: 1 }}
+                                        containerStyle={{}}
+                                        source={{ html: this.props.productSelected.descripcion }}
+                                    />
+                                </View>
+                            </ScrollView>
                         </View>
-                    </ScrollView>
-                    </View>
-                    ):(null)}
+                    ) : (null)}
                     <View style={styles.caracteristicsContanierStyle}>
-                        <TouchableOpacity  onPress={() => this.showCaracteristics()} style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
+                        <TouchableOpacity onPress={() => this.showCaracteristics()} style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
                             <Text style={styles.caracteristicsStyle} >Caracteristicas</Text>
                             <View style={styles.verticalDivisor} />
                             <Button icon={
@@ -522,7 +522,7 @@ class ProductView extends React.PureComponent {
                                                     containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
                                                     onPress={() => this.goToSeals()}></Button>
                                             </TouchableOpacity>
-                                            </View>)
+                                        </View>)
                                     }
                                 </View>
                             ) : (null)
@@ -665,7 +665,7 @@ const styles = StyleSheet.create({
         fontSize: 22,
         marginLeft: 20,
         marginRight: 20,
-        marginBottom:10,
+        marginBottom: 10,
         textAlign: 'justify'
     },
 
@@ -675,14 +675,14 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginLeft: 20,
         marginRight: 20,
-        marginBottom:15,
+        marginBottom: 15,
     },
 
     descriptionViewContainer: {
         marginBottom: 5,
         marginLeft: 15,
         marginRight: 15,
-        
+
     },
 
     descriptionStyle: {
@@ -720,7 +720,7 @@ const styles = StyleSheet.create({
         flex: 23,
         alignSelf: "center",
         fontWeight: "bold",
-        textAlign:"center",
+        textAlign: "center",
         marginTop: 10,
         marginBottom: 8,
     },
@@ -753,7 +753,7 @@ const styles = StyleSheet.create({
 
     sealsContainer: {
         flexDirection: "row",
-        flexWrap:"wrap",
+        flexWrap: "wrap",
         flex: 23,
     },
 

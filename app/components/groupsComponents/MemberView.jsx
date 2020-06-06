@@ -31,11 +31,11 @@ class MemberView extends React.PureComponent {
             return this.props.memberSelected.nickname + " ha cancelado su pedido"
         }
     }
-    definePrice(item){
-        if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+    definePrice(item) {
+        if (this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos) {
             return item.precio + item.incentivo
-        }else{
-            return item.precio 
+        } else {
+            return item.precio
         }
     }
 
@@ -60,15 +60,15 @@ class MemberView extends React.PureComponent {
             </View>
         </View>
     )
-    isAdministrator(){
+    isAdministrator() {
         return this.props.groupSelected.emailAdministrador === this.props.memberSelected.email
     }
 
-    defineTotalPriceCart(item){
-        
-        if(this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos){
+    defineTotalPriceCart(item) {
+
+        if (this.props.vendorSelected.few.nodos && this.props.vendorSelected.few.usaIncentivos) {
             return this.props.memberSelected.pedido.montoActual + this.props.memberSelected.pedido.incentivoActual
-        }else{
+        } else {
             return this.props.memberSelected.pedido.montoActual
         }
     }
@@ -85,8 +85,8 @@ class MemberView extends React.PureComponent {
                         onPress={() => this.props.navigation.goBack()}
                     />
                     <Image
-                        style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                        source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                        style={{ width: 50, height: 55 }}
+                        source={require('../../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                     />
                 </Header>
                 <View >
@@ -113,7 +113,7 @@ class MemberView extends React.PureComponent {
                         </View>
                     </View>
                 </View>
-                <View style={{flex:1}}>
+                <View style={{ flex: 1 }}>
                     {this.props.memberSelected.pedido != null ? (
                         <View>
                             {this.cartNotConfirmed() ? (
@@ -132,7 +132,7 @@ class MemberView extends React.PureComponent {
                                     </View>
                                 </View>
                             ) : (null)}
-                            <FlatList 
+                            <FlatList
                                 ListHeaderComponent={
                                     <View style={styles.titleContainer}>
                                         <Text style={styles.sectionTitleTextStyle}>Pedido</Text>

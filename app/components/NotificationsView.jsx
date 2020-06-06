@@ -17,7 +17,7 @@ class NotificationsView extends React.PureComponent {
             page: 1,
             totalNotifications: 1,
             unreadNotifications: this.props.unreadNotifications.length,
-            markingAll:false,
+            markingAll: false,
         }
     }
 
@@ -163,7 +163,7 @@ class NotificationsView extends React.PureComponent {
     getUnreadNotifications() {
         axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas', { withCredentials: true }).then(res => {
             this.props.actions.unreadNotifications(res.data);
-            this.setState({ unreadNotifications: this.props.unreadNotifications.length, markingAll:false })
+            this.setState({ unreadNotifications: this.props.unreadNotifications.length, markingAll: false })
         }).catch((error) => {
             this.errorAlert(error)
         });
@@ -229,7 +229,7 @@ class NotificationsView extends React.PureComponent {
                 ],
                 { cancelable: false },
             );
-        }else{
+        } else {
             Alert.alert(
                 'Aviso',
                 'No posee noficaciones sin leer',
@@ -241,33 +241,33 @@ class NotificationsView extends React.PureComponent {
         }
     }
 
-    async alertLongTime(){
+    async alertLongTime() {
         Alert.alert(
             'Pregunta',
             'Tiene demasiadas notificaciones el proceso demorara un tiempo. ¿Desea marcarlas de todas formas?',
             [
                 { text: 'No', onPress: () => null },
-                { text: 'Si', onPress: () =>  this.markAllNotifications().then(this.fullRestart()) },
+                { text: 'Si', onPress: () => this.markAllNotifications().then(this.fullRestart()) },
             ],
             { cancelable: false },
         );
     }
 
-    fullRestart(){
+    fullRestart() {
         this.getUnreadNotifications()
         this.restartNotifications()
     }
 
     async executeMarkAll() {
-        if(this.props.unreadNotifications.length < 10){
-            this.markAllNotifications().then(this.fullRestart())   
-        }else{
+        if (this.props.unreadNotifications.length < 10) {
+            this.markAllNotifications().then(this.fullRestart())
+        } else {
             this.alertLongTime()
-        }     
+        }
     }
 
     async markAllNotifications() {
-        this.setState({ firstLoading: true, markingAll:true })
+        this.setState({ firstLoading: true, markingAll: true })
         return Promise.all(
             this.props.unreadNotifications.map((notification, i) => {
                 if (!this.isInvitation(notification.mensaje)) {
@@ -425,8 +425,8 @@ class NotificationsView extends React.PureComponent {
                             onPress={() => this.props.navigation.goBack()}
                         />
                         <Image
-                            style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                            style={{ width: 50, height: 55 }}
+                            source={require('../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                         />
                         <View>
                             <Button

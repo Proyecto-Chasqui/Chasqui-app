@@ -106,8 +106,8 @@ class MapAdressConfig extends React.PureComponent {
                             onPress={() => this.props.navigation.goBack()}
                         />
                         <Image
-                            style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                            style={{ width: 50, height: 55 }}
+                            source={require('../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                         />
                     </Header>
                 </View>
@@ -150,7 +150,7 @@ class MapAdressConfig extends React.PureComponent {
                             icon={
                                 <Icon name="done" size={20} color="white" type='material' />
                             }
-                            titleStyle={{ marginLeft:15, color: 'white', marginRight:20}}
+                            titleStyle={{ marginLeft: 15, color: 'white', marginRight: 20 }}
                             title="Es correcta"
                             onPress={() => this.confirmLocation()}
                         />
@@ -159,7 +159,7 @@ class MapAdressConfig extends React.PureComponent {
                             icon={
                                 <Icon name="cancel" size={20} color="black" type='material' />
                             }
-                            titleStyle={{ marginLeft:10, color: 'black', marginRight:10}}
+                            titleStyle={{ marginLeft: 10, color: 'black', marginRight: 10 }}
                             title="No es correcta"
                             onPress={() => this.wrongLocation()}
                         />
@@ -171,7 +171,7 @@ class MapAdressConfig extends React.PureComponent {
                                 icon={
                                     <Icon name="done-all" size={20} color="white" type='material' />
                                 }
-                                titleStyle={{ marginLeft:15, color: 'white', marginRight:20}}                            
+                                titleStyle={{ marginLeft: 15, color: 'white', marginRight: 20 }}
                                 title="Listo"
                                 onPress={() => this.confirmLocation()}
                             />

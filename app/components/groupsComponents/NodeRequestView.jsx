@@ -40,22 +40,22 @@ class NodeRequestView extends React.PureComponent {
             },
         }
     }
-    
+
 
     componentDidMount() {
         this.createAddressChecks();
-        if(this.props.route.params !== undefined){
-            if(this.props.route.params.editNodeMode){
+        if (this.props.route.params !== undefined) {
+            if (this.props.route.params.editNodeMode) {
                 this.setEditActiveNode()
-            }else{
+            } else {
                 this.getActiveRequest()
             }
-        }else{            
+        } else {
             this.getActiveRequest()
         }
     }
 
-    createAddressChecks(){
+    createAddressChecks() {
         this.props.adressesData.map((adress, i) => {
             this.addCheck(adress);
         })
@@ -68,7 +68,7 @@ class NodeRequestView extends React.PureComponent {
                     this.props.actions.groupSelected(group)
                 }
             })
-            this.setState({isVisible:false})
+            this.setState({ isVisible: false })
             Alert.alert(
                 'Nodo editado!',
                 'El Nodo fue editado con exito!',
@@ -92,20 +92,20 @@ class NodeRequestView extends React.PureComponent {
         }
     }
 
-    defineStrategyRoute(){
+    defineStrategyRoute() {
         let value = ''
-        if(this.props.vendorSelected.few.gcc){
+        if (this.props.vendorSelected.few.gcc) {
             value = 'rest/user/gcc/'
         }
-        if(this.props.vendorSelected.few.nodos){
+        if (this.props.vendorSelected.few.nodos) {
             value = 'rest/user/nodo/'
         }
         return value
     }
 
-    errorAlert(error){
+    errorAlert(error) {
         if (error.response) {
-            if(error.response.status === 401){
+            if (error.response.status === 401) {
                 Alert.alert(
                     'Sesion expirada',
                     'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
@@ -114,17 +114,17 @@ class NodeRequestView extends React.PureComponent {
                     ],
                     { cancelable: false },
                 );
-            }else{
-                if(error.response.data !== null){
+            } else {
+                if (error.response.data !== null) {
                     Alert.alert(
                         'Error',
-                         error.response.data.error,
+                        error.response.data.error,
                         [
                             { text: 'Entendido', onPress: () => null },
                         ],
                         { cancelable: false },
                     );
-                }else{
+                } else {
                     Alert.alert(
                         'Error',
                         'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
@@ -154,17 +154,17 @@ class NodeRequestView extends React.PureComponent {
         });
     }
 
-    setEditActiveNode(){
+    setEditActiveNode() {
         this.setState({ loadingData: false })
         if (this.props.groupSelected !== null) {
             this.setState((prevState) => ({
                 dataChange: true,
                 isOpen: this.props.groupSelected.tipo === ABIERTO,
                 nodeData: Object.assign({}, prevState.nodeData, {
-                    nombre:  this.props.groupSelected.alias,
-                    barrio:  this.props.groupSelected.barrio,
-                    tipoNodo:  this.props.groupSelected.tipo,
-                    descripcion:  this.props.groupSelected.descripcion,
+                    nombre: this.props.groupSelected.alias,
+                    barrio: this.props.groupSelected.barrio,
+                    tipoNodo: this.props.groupSelected.tipo,
+                    descripcion: this.props.groupSelected.descripcion,
                 })
 
             }))
@@ -410,7 +410,7 @@ class NodeRequestView extends React.PureComponent {
         }
     }
 
-    sendNodeEdit(){
+    sendNodeEdit() {
         if (!this.state.sendingData) {
             if (this.dataValid()) {
                 this.setState({ sendingData: true, isVisible: true })
@@ -422,9 +422,9 @@ class NodeRequestView extends React.PureComponent {
                     tipoNodo: (this.state.isOpen) ? ABIERTO : CERRADO,
                     barrio: this.state.nodeData.barrio,
                     descripcion: this.state.nodeData.descripcion,
-                }).then(res => {                    
+                }).then(res => {
                     this.getGroups(false)
-                   
+
                 }).catch((error) => {
                     this.setState({ sendingData: false, isVisible: false })
                     console.log("error", error.response)
@@ -539,7 +539,7 @@ class NodeRequestView extends React.PureComponent {
         })
     }
 
-    findIndexOf(vadress){
+    findIndexOf(vadress) {
         const index = this.state.dataChecksAdress.findIndex((x) => x.id === vadress.idDireccion);
         return index
     }
@@ -569,12 +569,12 @@ class NodeRequestView extends React.PureComponent {
         }
     }
 
-    editNodeMode(){
-        if(this.props.route.params !== undefined){
+    editNodeMode() {
+        if (this.props.route.params !== undefined) {
             return this.props.route.params.editNodeMode
-        }else{
+        } else {
             return false
-        }        
+        }
     }
 
     render() {
@@ -593,8 +593,8 @@ class NodeRequestView extends React.PureComponent {
                         onPress={() => this.props.navigation.goBack()}
                     />
                     <Image
-                        style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                        source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                        style={{ width: 50, height: 55 }}
+                        source={require('../../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                     />
                     {this.state.activeRequest !== null ? (
                         <Button
@@ -607,7 +607,7 @@ class NodeRequestView extends React.PureComponent {
                 </Header>
                 <LoadingOverlayView isVisible={this.state.isVisible} loadingText={'Enviando datos...'}></LoadingOverlayView>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.adressTitle}>{!this.editNodeMode()?("Solicitud de nodo"):("Gestión del nodo")}</Text>
+                    <Text style={styles.adressTitle}>{!this.editNodeMode() ? ("Solicitud de nodo") : ("Gestión del nodo")}</Text>
                 </View>
                 <KeyboardAvoidingView style={{ flex: 1 }}>
                     <ScrollView style={{}}>
@@ -709,10 +709,10 @@ class NodeRequestView extends React.PureComponent {
                                         )}
                                 </View>
                             ) : (
-                                <View style={styles.buttonContainer}>
-                                    <Button loading={this.state.sendingData} disabled={!this.state.dataChange || !(this.state.selectedAddress.length > 0)} titleStyle={{ fontSize: 20, }} buttonStyle={styles.buttonRegisterStyle} onPress={() => this.sendNodeEdit()} title="Editar Nodo" />
-                                </View>
-                            )}
+                                    <View style={styles.buttonContainer}>
+                                        <Button loading={this.state.sendingData} disabled={!this.state.dataChange || !(this.state.selectedAddress.length > 0)} titleStyle={{ fontSize: 20, }} buttonStyle={styles.buttonRegisterStyle} onPress={() => this.sendNodeEdit()} title="Editar Nodo" />
+                                    </View>
+                                )}
                         </View>
                     </ScrollView>
                 </KeyboardAvoidingView>

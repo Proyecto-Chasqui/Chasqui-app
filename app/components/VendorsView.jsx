@@ -30,9 +30,9 @@ class VendorsView extends React.PureComponent {
 
     updateSearch = search => {
         this.setState({ search: search, });
-        if(this.timeout) clearTimeout(this.timeout);
+        if (this.timeout) clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-            this.setState( {searchHasChanged: true});
+            this.setState({ searchHasChanged: true });
         }, 800);
     }
 
@@ -52,19 +52,19 @@ class VendorsView extends React.PureComponent {
         })
     }
 
-    resetVendorSelected(){
+    resetVendorSelected() {
         let idVendor = this.props.vendorSelected.id
-        this.props.vendors.map((vendor, i)=>{
-            if(idVendor === vendor.id){
+        this.props.vendors.map((vendor, i) => {
+            if (idVendor === vendor.id) {
                 this.props.actions.vendorSelected(vendor)
             }
         })
     }
 
-    componentDidUpdate(){
-        if(this.props.resetState.reset){
+    componentDidUpdate() {
+        if (this.props.resetState.reset) {
             this.getVendors();
-            this.props.actions.resetState({reset:false})
+            this.props.actions.resetState({ reset: false })
         }
     }
 
@@ -86,7 +86,7 @@ class VendorsView extends React.PureComponent {
                 this.vendors(res.data);
                 this.setState({
                     isLoadingVendors: false,
-                });                
+                });
                 this.resetVendorSelected();
             }).catch((error) => {
                 Alert.alert(
@@ -115,7 +115,7 @@ class VendorsView extends React.PureComponent {
         }
 
         return (
-            <View style={{ flex:1 }}>
+            <View style={{ flex: 1 }}>
                 <View>
                     <Header containerStyle={styles.topHeader}>
                         <Button
@@ -126,8 +126,8 @@ class VendorsView extends React.PureComponent {
                             onPress={() => this.props.navigation.openDrawer()}
                         />
                         <Image
-                            style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'contain' }}
-                            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                            style={{ width: 50, height: 55 }}
+                            source={require('../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                         />
                         {this.minWidth ? (
                             !this.state.multipleCards ? (<Button
@@ -174,16 +174,16 @@ class VendorsView extends React.PureComponent {
                         }
                     />
                 </View>
-                <View style={{backgroundColor:"Black"}}></View>
-                    <VendorFilters showFilter={() => this.showFilters()}
-                        isVisible={this.state.isVisible}
-                        searchValue={this.state.search}
-                        searchHasChanged={this.state.searchHasChanged}
-                        functionStopSearch={() => this.stopSearch()}
-                        isLoadingSearch={(value) => this.isLoadingSearch(value)}
-                        isLoadingComponent={(value) => this.isLoadingComponent(value)}>
-                    </VendorFilters>
-                
+                <View style={{ backgroundColor: "Black" }}></View>
+                <VendorFilters showFilter={() => this.showFilters()}
+                    isVisible={this.state.isVisible}
+                    searchValue={this.state.search}
+                    searchHasChanged={this.state.searchHasChanged}
+                    functionStopSearch={() => this.stopSearch()}
+                    isLoadingSearch={(value) => this.isLoadingSearch(value)}
+                    isLoadingComponent={(value) => this.isLoadingComponent(value)}>
+                </VendorFilters>
+
                 {
                     this.state.isLoadingSearchVendors ?
                         (<LoadingView ></LoadingView>)

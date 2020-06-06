@@ -37,9 +37,9 @@ class OpenNodesView extends React.PureComponent {
         }
     }
 
-    errorAlert(error){
+    errorAlert(error) {
         if (error.response) {
-            if(error.response.status === 401){
+            if (error.response.status === 401) {
                 Alert.alert(
                     'Sesion expirada',
                     'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
@@ -48,17 +48,17 @@ class OpenNodesView extends React.PureComponent {
                     ],
                     { cancelable: false },
                 );
-            }else{
-                if(error.response.data !== null){
+            } else {
+                if (error.response.data !== null) {
                     Alert.alert(
                         'Error',
-                         error.response.data.error,
+                        error.response.data.error,
                         [
                             { text: 'Entendido', onPress: () => null },
                         ],
                         { cancelable: false },
                     );
-                }else{
+                } else {
                     Alert.alert(
                         'Error',
                         'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
@@ -354,8 +354,8 @@ class OpenNodesView extends React.PureComponent {
                         onPress={() => this.props.navigation.popToTop()}
                     />
                     <Image
-                        style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                        source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                        style={{ width: 50, height: 55 }}
+                        source={require('../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                     />
                     {this.props.user.id !== 0 ? (
                         <View>

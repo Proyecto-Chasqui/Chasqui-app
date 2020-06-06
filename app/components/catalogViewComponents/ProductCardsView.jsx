@@ -1,6 +1,6 @@
 import React from 'react'
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
-import { Card, Badge, Icon, Image, Button, Avatar  } from 'react-native-elements';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, FlatList, ActivityIndicator, Dimensions } from 'react-native';
+import { Card, Badge, Icon, Image, Button, Avatar } from 'react-native-elements';
 import GLOBALS from '../../Globals';
 import SealsView from '../catalogViewComponents/SealsView';
 
@@ -14,16 +14,16 @@ class ProductCardsView extends React.PureComponent {
         this.size = (props.size != undefined) ? (props.size) : (2);
         this.vendorSelected = this.props.vendorSelected
         this.state = {
-            unmounted:true
+            unmounted: true
         }
     }
 
-    componentDidMount(){
-        this.setState({unmounted:false})
+    componentDidMount() {
+        this.setState({ unmounted: false })
     }
 
-    componentWillUnmount(){
-        this.setState({unmounted:true})
+    componentWillUnmount() {
+        this.setState({ unmounted: true })
     }
 
     normalizeText(text) {
@@ -35,12 +35,20 @@ class ProductCardsView extends React.PureComponent {
         this.navigation.navigate('Producto');
     }
 
-    definePrice(item){
-            if(this.vendorSelected.few.nodos && this.vendorSelected.few.usaIncentivos){
-                return item.precio + item.incentivo
-            }else{
-                return item.precio
-            }
+    definePrice(item) {
+        if (this.vendorSelected.few.nodos && this.vendorSelected.few.usaIncentivos) {
+            return item.precio + item.incentivo
+        } else {
+            return item.precio
+        }
+    }
+
+    defineImageURL() {
+        if (this.props.infoDataVendorSelected.urlLogo !== null) {
+            return encodeURI(this.serverBaseRoute + this.props.infoDataVendorSelected.urlLogo)
+        } else {
+            return null
+        }
     }
 
     render() {
@@ -64,38 +72,66 @@ class ProductCardsView extends React.PureComponent {
         if (this.props.viewSelected === undefined || this.props.viewSelected === this.catalogViewModes.TWOCARDS || this.props.viewSelected === this.catalogViewModes.SINGLECARD) {
             let stylesCards = this.props.viewSelected === this.catalogViewModes.TWOCARDS ? stylesMultipleCards : stylesSingleCards;
             return (
-                <FlatList numColumns={this.props.size} key={this.props.size} windowSize={15} data={this.props.products} renderItem={({ item }) =>
-                    <TouchableOpacity onPress={() => this.goToProductDetails(item)} style={stylesCards.wiewCard}>
-                        <Card containerStyle={stylesCards.card}>
-                            <View style={stylesCards.cardImageView}>
-                                <Image onStartShouldSetResponder={() => null} style={stylesCards.cardImage} PlaceholderContent={<ActivityIndicator size="large" color="#0000ff" />} source={{ uri: (this.normalizeText(this.serverBaseRoute + item.imagenPrincipal)) }} />
+                <FlatList numColumns={this.props.size} key={this.props.size} windowSize={15} data={this.props.products}
+                    ListHeaderComponent={
+                        (this.defineImageURL() !== null) ? (
+                            <View style={stylesCards.titleContainer}>
+                                <Image
+                                    source={{ uri: this.defineImageURL() }}
+                                    style={{
+                                        width: 300,
+                                        height: 55,
+                                        resizeMode: 'contain',
+                                        borderRadius: 5,
+                                    }}></Image>
                             </View>
-                            {item.destacado ?
-                                (<Badge badgeStyle={stylesCards.badge} containerStyle={stylesCards.tagDestacado}
-                                    value={<Text style={stylesCards.textBadge}>Destacado</Text>} />
-                                ) : (
-                                    <Badge badgeStyle={stylesCards.invisibleBadge} containerStyle={stylesCards.tagDestacado}
-                                    value={<Text style={stylesCards.textBadge}></Text>} />)
-                            }
-                            <View style={{ flexDirection: "column" }}>
-                                <View>
-                                    <Text style={stylesCards.priceStyle}>$ {this.definePrice(item)}</Text>
+                        ) : (null)}
+                    ListFooterComponent={
+                        (this.defineImageURL() !== null) ? (
+                            <View style={stylesCards.titleContainer}>
+                                <Image
+                                    source={{ uri: this.defineImageURL() }}
+                                    style={{
+                                        width: 300,
+                                        height: 55,
+                                        resizeMode: 'center',
+                                        borderRadius: 5,
+                                    }}></Image>
+                            </View>
+                        ) : (null)
+                    }
+                    renderItem={({ item }) =>
+                        <TouchableOpacity onPress={() => this.goToProductDetails(item)} style={stylesCards.wiewCard}>
+                            <Card containerStyle={stylesCards.card}>
+                                <View style={stylesCards.cardImageView}>
+                                    <Image onStartShouldSetResponder={() => null} style={stylesCards.cardImage} PlaceholderContent={<ActivityIndicator size="large" color="#0000ff" />} source={{ uri: (this.normalizeText(this.serverBaseRoute + item.imagenPrincipal)) }} />
                                 </View>
-                                <ScrollView style={{ height: 80 }}>
-                                    <Text style={stylesCards.nameTextStyle}>{item.nombreProducto}</Text>
-                                </ScrollView>
-                                <ScrollView style={{ height: 50}}>
-                                    <Text style={stylesCards.nameProducerTextStyle}>{item.nombreFabricante}</Text>
-                                </ScrollView>
-                                <SealsView sealsContainer={stylesCards.sealContainerStyle}
-                                    sealsStyle={stylesCards.sealStyle}
-                                    productSeals={item.medallasProducto}
-                                    producerSeals={item.medallasProductor} >
-                                </SealsView>
-                            </View>
-                        </Card>
-                    </TouchableOpacity>
-                }
+                                {item.destacado ?
+                                    (<Badge badgeStyle={stylesCards.badge} containerStyle={stylesCards.tagDestacado}
+                                        value={<Text style={stylesCards.textBadge}>Destacado</Text>} />
+                                    ) : (
+                                        <Badge badgeStyle={stylesCards.invisibleBadge} containerStyle={stylesCards.tagDestacado}
+                                            value={<Text style={stylesCards.textBadge}></Text>} />)
+                                }
+                                <View style={{ flexDirection: "column" }}>
+                                    <View>
+                                        <Text style={stylesCards.priceStyle}>$ {this.definePrice(item)}</Text>
+                                    </View>
+                                    <ScrollView style={{ height: 80 }}>
+                                        <Text style={stylesCards.nameTextStyle}>{item.nombreProducto}</Text>
+                                    </ScrollView>
+                                    <ScrollView style={{ height: 50 }}>
+                                        <Text style={stylesCards.nameProducerTextStyle}>{item.nombreFabricante}</Text>
+                                    </ScrollView>
+                                    <SealsView sealsContainer={stylesCards.sealContainerStyle}
+                                        sealsStyle={stylesCards.sealStyle}
+                                        productSeals={item.medallasProducto}
+                                        producerSeals={item.medallasProductor} >
+                                    </SealsView>
+                                </View>
+                            </Card>
+                        </TouchableOpacity>
+                    }
                     keyExtractor={item => item.idProducto}
                 >
                 </FlatList>
@@ -103,71 +139,116 @@ class ProductCardsView extends React.PureComponent {
         }
         if (this.props.viewSelected === this.catalogViewModes.LIST) {
             return (
-                <FlatList data={this.props.products} keyExtractor={item => item.idProducto} windowSize={15} renderItem={({ item }) =>
-                    <TouchableOpacity onPress={() => this.goToProductDetails(item)} style={{ borderBottomColor:"#e1e1e1", borderBottomWidth:2}}>
-                        <View style={stylesListCard.containerList}>
-                        <View style={stylesListCard.cardImageView}>
-                            <Avatar overlayContainerStyle={stylesListCard.overlayAvatarContainer} rounded size={100} source={{ uri: (this.normalizeText(this.serverBaseRoute + item.imagenPrincipal)) }} renderPlaceholderContent={<ActivityIndicator size="large" color="#0000ff" />}/>
-                        </View>
-                        {item.destacado ?
-                                (<Badge badgeStyle={stylesListCard.badge} containerStyle={stylesListCard.tagDestacado}
-                                    value={<Text style={stylesListCard.textBadge}>Destacado</Text>} />
-                                ) : (
-                                    null)
-                            }
-                        <View style={{ flex:2, height: 170 }}>                            
-                            <ScrollView style={{ height: 130 }}>
-                                <Text style={stylesListCard.nameTextStyle}>{item.nombreProducto}</Text>
-                            </ScrollView>
-                            <ScrollView style={{ height: 100, }}>
-                                    <Text style={stylesListCard.nameProducerTextStyle}>{item.nombreFabricante}</Text>
-                            </ScrollView>
-                            <SealsView sealsContainer={stylesMultipleCards.sealContainerStyle}
-                                    sealsStyle={stylesMultipleCards.sealStyle}
-                                    productSeals={item.medallasProducto}
-                                    producerSeals={item.medallasProductor} >
-                            </SealsView>
-                            <View  style={{ height: 30}}>
-                                <Text style={stylesMultipleCards.priceStyle}>$ {this.definePrice(item)}</Text>
+                <FlatList data={this.props.products} keyExtractor={item => item.idProducto} windowSize={15}
+                    ListHeaderComponent={
+                        (this.defineImageURL() !== null) ? (
+                            <View style={stylesCards.titleContainer}>
+                                <Image
+                                    source={{ uri: this.defineImageURL() }}
+                                    style={{
+                                        width: 300,
+                                        height: 55,
+                                        resizeMode: 'center',
+                                        borderRadius: 5,
+                                    }}></Image>
                             </View>
+                        ) : (null)
+                    }
+                    ListFooterComponent={
+                        (this.defineImageURL() !== null) ? (
+                            <View style={stylesCards.titleContainer}>
+                                <Image
+                                    source={{ uri: this.defineImageURL() }}
+                                    style={{
+                                        width: 300,
+                                        height: 55,
+                                        resizeMode: 'center',
+                                        borderRadius: 5,
+                                    }}></Image>
+                            </View>
+                        ) : (null)
+                    }
+                    renderItem={({ item }) =>
+                        <TouchableOpacity onPress={() => this.goToProductDetails(item)} style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
+                            <View style={stylesListCard.containerList}>
+                                <View style={stylesListCard.cardImageView}>
+                                    <Avatar overlayContainerStyle={stylesListCard.overlayAvatarContainer} rounded size={100} source={{ uri: (this.normalizeText(this.serverBaseRoute + item.imagenPrincipal)) }} renderPlaceholderContent={<ActivityIndicator size="large" color="#0000ff" />} />
+                                </View>
+                                {item.destacado ?
+                                    (<Badge badgeStyle={stylesListCard.badge} containerStyle={stylesListCard.tagDestacado}
+                                        value={<Text style={stylesListCard.textBadge}>Destacado</Text>} />
+                                    ) : (
+                                        null)
+                                }
+                                <View style={{ flex: 2, height: 170 }}>
+                                    <ScrollView style={{ height: 130 }}>
+                                        <Text style={stylesListCard.nameTextStyle}>{item.nombreProducto}</Text>
+                                    </ScrollView>
+                                    <ScrollView style={{ height: 100, }}>
+                                        <Text style={stylesListCard.nameProducerTextStyle}>{item.nombreFabricante}</Text>
+                                    </ScrollView>
+                                    <SealsView sealsContainer={stylesMultipleCards.sealContainerStyle}
+                                        sealsStyle={stylesMultipleCards.sealStyle}
+                                        productSeals={item.medallasProducto}
+                                        producerSeals={item.medallasProductor} >
+                                    </SealsView>
+                                    <View style={{ height: 30 }}>
+                                        <Text style={stylesMultipleCards.priceStyle}>$ {this.definePrice(item)}</Text>
+                                    </View>
 
-                        </View>
-                        </View>
-                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
 
-                } />)
+                    } />)
         }
     }
 }
 
 const stylesListCard = StyleSheet.create({
-    containerList:{
-        flexDirection:"row",
-        margin:10
+    titleContainer: {
+        backgroundColor: 'transparent',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.32,
+        shadowRadius: 5.46,
+
+        elevation: 9,
+        height: 65,
+        justifyContent: "center",
+        alignItems: "center",
     },
 
-    overlayAvatarContainer:{
+    containerList: {
+        flexDirection: "row",
+        margin: 10
+    },
+
+    overlayAvatarContainer: {
         backgroundColor: 'transparent',
-        marginTop:25,
-        marginBottom:-25,
+        marginTop: 25,
+        marginBottom: -25,
     },
 
     cardImageView: {
-        flex:1,
-        height:"100%",
+        flex: 1,
+        height: "100%",
     },
-    cardImageContainer:{
+    cardImageContainer: {
         borderWidth: 1,
-        borderRadius:50,
-        backgroundColor:"green",
+        borderRadius: 50,
+        backgroundColor: "green",
 
     },
     cardImage: {
-        width:null,
+        width: null,
         height: null,
         marginLeft: 0,
         marginRight: 0,
-        borderRadius:50,
+        borderRadius: 50,
         resizeMode: 'contain',
     },
 
@@ -185,8 +266,8 @@ const stylesListCard = StyleSheet.create({
     },
 
     badge: {
-        marginTop:10,
-        marginLeft:2,
+        marginTop: 10,
+        marginLeft: 2,
         backgroundColor: '#00b300',
         height: 30,
         borderRadius: 5,
@@ -203,7 +284,7 @@ const stylesListCard = StyleSheet.create({
         marginTop: 2
     },
 
-    
+
     sealContainerStyle: {
         flexDirection: "row",
         flexWrap: "wrap",
@@ -226,7 +307,7 @@ const stylesListCard = StyleSheet.create({
     },
 
     tagDestacado: {
-        position:"absolute",
+        position: "absolute",
         alignSelf: 'flex-start',
     },
 
@@ -243,7 +324,7 @@ const stylesListCard = StyleSheet.create({
         alignSelf: 'flex-start'
     },
 
-    
+
     sealContainerStyle: {
         flexDirection: "row",
         flexWrap: "wrap",
@@ -259,6 +340,25 @@ const stylesListCard = StyleSheet.create({
 })
 
 const stylesMultipleCards = StyleSheet.create({
+    titleContainer: {
+        backgroundColor: 'transparent',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.32,
+        shadowRadius: 5.46,
+
+        elevation: 9,
+        height: 65,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    headerImage: {
+
+    },
     viewSearchErrorContainer: {
         height: "100%"
     },
@@ -526,6 +626,22 @@ const stylesMultipleCards = StyleSheet.create({
 });
 
 const stylesSingleCards = StyleSheet.create({
+    titleContainer: {
+        backgroundColor: 'transparent',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.32,
+        shadowRadius: 5.46,
+
+        elevation: 9,
+        height: 65,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
     viewSearchErrorContainer: {
         height: "100%"
     },
@@ -559,6 +675,14 @@ const stylesSingleCards = StyleSheet.create({
         marginTop: 23,
     },
 
+    invisibleBadge: {
+        marginTop: -15,
+        backgroundColor: 'transparent',
+        height: 30,
+        borderRadius: 5,
+        borderColor: "transparent",
+        alignSelf: 'flex-start'
+    },
 
     flexView: {
         flex: 1,

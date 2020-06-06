@@ -369,7 +369,7 @@ class UserRegisterView extends React.PureComponent {
     handleSubmit() {
         if (!this.state.sendingData) {
             if (this.dataValid()) {
-                this.setState({ sendingData: true, isVisible:true })
+                this.setState({ sendingData: true, isVisible: true })
                 axios.post(this.serverBaseRoute + 'rest/client/sso/singUp', {
                     email: this.state.userData.correo,
                     password: this.state.userData.contraseña,
@@ -385,7 +385,7 @@ class UserRegisterView extends React.PureComponent {
 
                     this.showAlertRegistered()
                 }).catch((error) => {
-                    this.setState({ sendingData: false, isVisible:false })
+                    this.setState({ sendingData: false, isVisible: false })
                     if (error.response) {
                         Alert.alert('Error', error.response.data.error);
                     } else if (error.request) {
@@ -571,7 +571,7 @@ class UserRegisterView extends React.PureComponent {
         const fields_2 = [EMAIL, CONFIRM_EMAIL]
         const fields_3 = [PASSWORD, CONFIRM_PASSWORD]
         return (
-            <View style={{flex:1}}>
+            <View style={{ flex: 1 }}>
                 <View>
                     <Header containerStyle={styles.topHeader}>
                         <Button
@@ -582,8 +582,8 @@ class UserRegisterView extends React.PureComponent {
                             onPress={() => this.props.navigation.goBack()}
                         />
                         <Image
-                            style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                            style={{ width: 50, height: 55 }}
+                            source={require('../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                         />
                     </Header>
                 </View>
@@ -591,8 +591,8 @@ class UserRegisterView extends React.PureComponent {
                 <View style={styles.titleContainer}>
                     <Text style={styles.headerTitle}> Registro de usuario </Text>
                 </View>
-                <KeyboardAvoidingView style={{flex:1}}>
-                    <ScrollView style={{ }}>
+                <KeyboardAvoidingView style={{ flex: 1 }}>
+                    <ScrollView style={{}}>
                         <View style={styles.formContainer}>
                             <View style={styles.soloInputContainer}>
                                 <Text style={styles.fieldText}>{this.normalizeText(APODO)}</Text>
@@ -607,7 +607,7 @@ class UserRegisterView extends React.PureComponent {
                                 />
                             </View>
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                                
+
                                 {fields.map((field, i) => {
                                     return (
                                         <View style={styles.inputContainer}>
@@ -685,19 +685,19 @@ class UserRegisterView extends React.PureComponent {
                                 })}
                             </View>
                             <View style={styles.avatarText}>
-                                    <Text style={styles.fieldText} >Avatar</Text>
-                                </View>
-                                <View style={{ flexDirection: "row", justifyContent: "center" }}>
-                                    {this.state.imageRoutesPng.map((route, i) => {
-                                        return (<CheckBox key={i} checked={this.state.imageChecked[i]}
-                                            checkedIcon={<Image style={styles.avatarSelected} source={route} />}
-                                            uncheckedIcon={<Image style={styles.avatarUnselected} source={route} />}
-                                            onPress={() => this.onCheckAvatar(i)}
-                                        />);
-                                    })}
-                                </View>
+                                <Text style={styles.fieldText} >Avatar</Text>
+                            </View>
+                            <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                                {this.state.imageRoutesPng.map((route, i) => {
+                                    return (<CheckBox key={i} checked={this.state.imageChecked[i]}
+                                        checkedIcon={<Image style={styles.avatarSelected} source={route} />}
+                                        uncheckedIcon={<Image style={styles.avatarUnselected} source={route} />}
+                                        onPress={() => this.onCheckAvatar(i)}
+                                    />);
+                                })}
+                            </View>
                             <View style={styles.buttonContainer}>
-                                <Button loading={this.state.sendingData} disabled={!this.state.dataChange} titleStyle={{ fontSize: 20, }} buttonStyle={styles.buttonRegisterStyle} onPress={()=>this.handleSubmit()} title="Registrarme" />
+                                <Button loading={this.state.sendingData} disabled={!this.state.dataChange} titleStyle={{ fontSize: 20, }} buttonStyle={styles.buttonRegisterStyle} onPress={() => this.handleSubmit()} title="Registrarme" />
                             </View>
                         </View>
                     </ScrollView>
@@ -795,7 +795,7 @@ const styles = StyleSheet.create({
         marginTop: '2%',
         width: "95%",
         alignSelf: 'center',
-        marginBottom:15 
+        marginBottom: 15
     },
 
     lowerButtonsContainer: {
@@ -838,8 +838,8 @@ const styles = StyleSheet.create({
     fieldTextPhone: {
         fontWeight: "bold",
         marginLeft: 10,
-        color:"rgba(51, 102, 255, 1)",
-        marginBottom:-15
+        color: "rgba(51, 102, 255, 1)",
+        marginBottom: -15
     },
 
     TextStyle: {
@@ -864,8 +864,8 @@ const styles = StyleSheet.create({
 
     avatarText: {
         alignSelf: 'center',
-        marginTop:7,
-        marginBottom:-5
+        marginTop: 7,
+        marginBottom: -5
     },
 
     rightHeaderButton: {

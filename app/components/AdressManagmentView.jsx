@@ -34,7 +34,7 @@ class AdressManagmentView extends React.PureComponent {
             showMoreInfo: false,
             infoConfirmed: false,
             location: null,
-            loadingText: GEOWAIT, 
+            loadingText: GEOWAIT,
             titleText: 'Nueva dirección',
             isNew: true,
             isVisible: false,
@@ -358,13 +358,13 @@ class AdressManagmentView extends React.PureComponent {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${token}`
-            },withCredentials: true
+            }, withCredentials: true
         }).then(res => {
             this.adressesData(res.data);
             this.showAlertActionComplete(text);
         }).catch((error) => {
             if (error.response) {
-                if(error.response.status === 401){
+                if (error.response.status === 401) {
                     Alert.alert(
                         'Sesion expirada',
                         'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
@@ -373,7 +373,7 @@ class AdressManagmentView extends React.PureComponent {
                         ],
                         { cancelable: false },
                     );
-                }else{
+                } else {
                     Alert.alert(
                         'Error',
                         'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
@@ -387,7 +387,8 @@ class AdressManagmentView extends React.PureComponent {
                 Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
             } else {
                 Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
-            } });
+            }
+        });
     }
 
     sendDataUpdateToServer() {
@@ -409,13 +410,13 @@ class AdressManagmentView extends React.PureComponent {
             comentario: this.state.adressData.comentarios,
             pais: '',
             provincia: '',
-        },{withCredentials: true}).then(res => {
+        }, { withCredentials: true }).then(res => {
             this.updateAdressData(this.state.saveMessage);
-        }).catch( (error) => {
+        }).catch((error) => {
             console.log(error);
-            this.setState({isVisible:false})
+            this.setState({ isVisible: false })
             if (error.response) {
-                if(error.response.status === 401){
+                if (error.response.status === 401) {
                     Alert.alert(
                         'Sesion expirada',
                         'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
@@ -424,7 +425,7 @@ class AdressManagmentView extends React.PureComponent {
                         ],
                         { cancelable: false },
                     );
-                }else{
+                } else {
                     Alert.alert(
                         'Error',
                         'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
@@ -461,13 +462,13 @@ class AdressManagmentView extends React.PureComponent {
             comentario: this.state.adressData.comentarios,
             pais: '',
             provincia: '',
-        },{withCredentials: true}).then(res => {
+        }, { withCredentials: true }).then(res => {
             this.updateAdressData(this.state.saveMessage);
-        }).catch((error) =>{
+        }).catch((error) => {
             console.log(error);
-            this.setState({isVisible:false})
+            this.setState({ isVisible: false })
             if (error.response) {
-                if(error.response.status === 401){
+                if (error.response.status === 401) {
                     Alert.alert(
                         'Sesion expirada',
                         'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
@@ -476,7 +477,7 @@ class AdressManagmentView extends React.PureComponent {
                         ],
                         { cancelable: false },
                     );
-                }else{
+                } else {
                     Alert.alert(
                         'Error',
                         'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
@@ -499,7 +500,7 @@ class AdressManagmentView extends React.PureComponent {
         sender.setState({
             location: valLocation,
             infoConfirmed: true,
-            isVisible:true,
+            isVisible: true,
         });
     }
 
@@ -513,12 +514,12 @@ class AdressManagmentView extends React.PureComponent {
         this.setState({ dataSended: false })
     }
 
-    showWait(message){
-        this.setState({isVisible:true, loadingText:message});
+    showWait(message) {
+        this.setState({ isVisible: true, loadingText: message });
     }
 
-    hideWait(){
-        this.setState({isVisible:false});
+    hideWait() {
+        this.setState({ isVisible: false });
     }
 
     handleSubmit() {
@@ -537,7 +538,7 @@ class AdressManagmentView extends React.PureComponent {
                         this.hideWait();
                         this.goToMap(false);
                     } else {
-                        this.setState({ dataSended: false, isVisible:false })
+                        this.setState({ dataSended: false, isVisible: false })
                         Alert.alert('Aviso', 'No se pudo ubicar su posición con los datos proporcionados, ¿Que desea hacer?',
                             [
                                 { text: 'Cambiar datos', onPress: () => null },
@@ -545,8 +546,8 @@ class AdressManagmentView extends React.PureComponent {
                             ],
                             { cancelable: false });
                     }
-                }).catch((error) => {                    
-                    this.setState({ dataSended: false, isVisible:false })
+                }).catch((error) => {
+                    this.setState({ dataSended: false, isVisible: false })
                     Alert.alert('Error', 'Ocurrio un error al obtener la ubicación, revise su conexión.');
                 });
             } else {
@@ -570,12 +571,12 @@ class AdressManagmentView extends React.PureComponent {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Basic ${token}`
-                },withCredentials: true
+                }, withCredentials: true
             }).then(res => {
                 this.updateAdressData(this.state.deleteMessage);
             }).catch((error) => {
                 if (error.response) {
-                    if(error.response.status === 401){
+                    if (error.response.status === 401) {
                         Alert.alert(
                             'Sesion expirada',
                             'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
@@ -584,7 +585,7 @@ class AdressManagmentView extends React.PureComponent {
                             ],
                             { cancelable: false },
                         );
-                    }else{
+                    } else {
                         Alert.alert(
                             'Error',
                             'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
@@ -598,7 +599,8 @@ class AdressManagmentView extends React.PureComponent {
                     Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
                 } else {
                     Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
-                } });
+                }
+            });
         }
     }
 
@@ -615,10 +617,10 @@ class AdressManagmentView extends React.PureComponent {
         const fields = [STREET, ELEVATION, DEPARTMENT, LOCATION];
         const fields_2 = [STREETONE, STREETTWO, POSTALCODE]
         return (
-            <View style={{flex:1}}>
+            <View style={{ flex: 1 }}>
                 <View>
                     <Header containerStyle={styles.topHeader}>
-                    <Button
+                        <Button
                             icon={
                                 <Icon name="arrow-left" size={20} color="white" type='font-awesome' />
                             }
@@ -626,8 +628,8 @@ class AdressManagmentView extends React.PureComponent {
                             onPress={() => this.props.navigation.goBack()}
                         />
                         <Image
-                            style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                            style={{ width: 50, height: 55 }}
+                            source={require('../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                         />
                         {!this.state.isNew ? (
                             <Button
@@ -643,7 +645,7 @@ class AdressManagmentView extends React.PureComponent {
                     </Header>
                 </View>
                 <LoadingOverlayView isVisible={this.state.isVisible} loadingText={this.state.loadingText}></LoadingOverlayView>
-                <KeyboardAvoidingView style={{flex:1}}>
+                <KeyboardAvoidingView style={{ flex: 1 }}>
                     <View style={styles.titleContainer}>
                         <Text style={styles.adressTitle}>{this.state.titleText}</Text>
                     </View>
@@ -836,7 +838,7 @@ const styles = StyleSheet.create({
         marginTop: '2%',
         width: "95%",
         alignSelf: 'center',
-        marginBottom:15 
+        marginBottom: 15
     },
 
     TextStyle: {

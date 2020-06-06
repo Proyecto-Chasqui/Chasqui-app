@@ -20,8 +20,8 @@ class ShoppingCartsHistoryView extends React.PureComponent {
         };
     }
 
-    componentDidUpdate(){
-        if(this.props.hasReceivedPushNotifications){
+    componentDidUpdate() {
+        if (this.props.hasReceivedPushNotifications) {
             this.getShoppingCarts();
             this.props.actions.hasReceivedPushNotifications(false)
         }
@@ -137,19 +137,19 @@ class ShoppingCartsHistoryView extends React.PureComponent {
         }
     }
 
-    inWaitingOfGroupConfirmation(cart){
-        return (cart.estado ==="CONFIRMADO" && cart.direccion === null && cart.puntoDeRetiro === null && cart.idGrupo !== null)
+    inWaitingOfGroupConfirmation(cart) {
+        return (cart.estado === "CONFIRMADO" && cart.direccion === null && cart.puntoDeRetiro === null && cart.idGrupo !== null)
     }
 
-    defineText(){
-        if(this.props.vendorSelected.few.gcc){
+    defineText() {
+        if (this.props.vendorSelected.few.gcc) {
             return "En espera de confirmación grupal"
-        }else{
+        } else {
             return "En espera de confirmación del nodo"
         }
     }
 
-    definePrice(item){
+    definePrice(item) {
         return item.montoActual + item.incentivoActual;
     }
 
@@ -162,12 +162,12 @@ class ShoppingCartsHistoryView extends React.PureComponent {
                             <Text style={{ fontSize: 11 }}>Tipo de pedido:</Text>
                             <Text style={{ fontSize: 11, fontWeight: "bold", color: "blue" }}> {item.idGrupo === null ? ("Individual") : ("Colectivo")}</Text>
                         </View>
-                        {this.inWaitingOfGroupConfirmation(item)?(
-                        <View style={{ alingItems: "center", flexDirection: "row" }}>
-                            <Text style={{ fontSize: 12, fontWeight: "bold", color: "blue" }}>Aviso: </Text>
-                        <Text style={{ fontSize: 12, fontWeight: "bold", color: "green" }}>{this.defineText()}</Text>
-                        </View>
-                        ):(null)}
+                        {this.inWaitingOfGroupConfirmation(item) ? (
+                            <View style={{ alingItems: "center", flexDirection: "row" }}>
+                                <Text style={{ fontSize: 12, fontWeight: "bold", color: "blue" }}>Aviso: </Text>
+                                <Text style={{ fontSize: 12, fontWeight: "bold", color: "green" }}>{this.defineText()}</Text>
+                            </View>
+                        ) : (null)}
                         <View style={{ alignContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 5 }}>
                             <Text style={{ fontSize: 11, color: "black" }}>Creado el:</Text>
                             <Text style={{ fontSize: 11, fontWeight: "bold", color: "blue" }}> {item.fechaCreacion}</Text>
@@ -192,9 +192,9 @@ class ShoppingCartsHistoryView extends React.PureComponent {
     )
 
     keyExtractor = (item, index) => index.toString()
-    errorAlert(error){
+    errorAlert(error) {
         if (error.response) {
-            if(error.response.status === 401){
+            if (error.response.status === 401) {
                 Alert.alert(
                     'Sesion expirada',
                     'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
@@ -203,17 +203,17 @@ class ShoppingCartsHistoryView extends React.PureComponent {
                     ],
                     { cancelable: false },
                 );
-            }else{
-                if(error.response.data !== null){
+            } else {
+                if (error.response.data !== null) {
                     Alert.alert(
                         'Error',
-                         error.response.data.error,
+                        error.response.data.error,
                         [
                             { text: 'Entendido', onPress: () => null },
                         ],
                         { cancelable: false },
                     );
-                }else{
+                } else {
                     Alert.alert(
                         'Error',
                         'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
@@ -263,8 +263,8 @@ class ShoppingCartsHistoryView extends React.PureComponent {
                             onPress={() => this.props.navigation.goBack()}
                         />
                         <Image
-                            style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                            style={{ width: 50, height: 55 }}
+                            source={require('../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                         />
                         <View>
                             <Button

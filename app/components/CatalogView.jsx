@@ -45,6 +45,7 @@ class CatalogView extends React.Component {
             viewSelected: GLOBALS.CATALOG_VIEW_MODES.TWOCARDS,
             viewSize: 2,
         };
+        console.log("vendor", this.props.vendorSelected);
     }
 
     userLogged(){
@@ -94,6 +95,7 @@ class CatalogView extends React.Component {
                 this.shoppingCarts([]);
             }
             this.vendorId = this.props.vendorSelected.id;
+            this.getVendorInfoData();
             this.getProducts(this.props);
             this.getProducers(this.props);
             this.getSeals(this.props);
@@ -106,6 +108,40 @@ class CatalogView extends React.Component {
                 this.getSellerPoints(this.props);
             }
         }
+    }
+
+    getVendorInfoData(){
+        axios.get((this.serverBaseRoute + 'rest/client/vendedor/datosPortada/'+this.props.vendorSelected.nombreCorto),{},{withCredentials: true})
+        .then(res => {
+            this.props.actions.infoDataVendorSelected(res.data);
+        }).catch( (error) => {
+            console.log("error en vandor info",error);
+            if (error.response) {
+                if(error.response.status === 401){
+                    Alert.alert(
+                        'Sesion expirada',
+                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }else{
+                    Alert.alert(
+                        'Error',
+                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        [
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                        ],
+                        { cancelable: false },
+                    );
+                }
+            } else if (error.request) {
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+            } else {
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+            }
+        });
     }
 
     defineStrategyRoute(){
@@ -494,6 +530,14 @@ class CatalogView extends React.Component {
         this.setState({showShoppingCart:!this.state.showShoppingCart})
     }
 
+    defineImageURL(){
+        if(this.props.infoDataVendorSelected.urlLogo !== null){
+            return encodeURI(this.serverBaseRoute + this.props.infoDataVendorSelected.urlLogo)
+        }else{
+            return null
+        }
+    }
+
     render() {
 
         if (this.state.isLoadingProducts || this.state.isLoadingFilterComponent) {
@@ -511,9 +555,8 @@ class CatalogView extends React.Component {
                         onPress={() => this.props.navigation.openDrawer()}
                     />
                     <Image
-                        style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                        source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
-                    />
+                        style={{ width: 50, height: 55 }}
+                        source={ require('../components/catalogViewComponents/catalogAssets/platform-icon.png') }/>
                     <View>
                     <Button
                         icon={

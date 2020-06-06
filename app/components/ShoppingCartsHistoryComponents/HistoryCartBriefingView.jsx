@@ -91,8 +91,8 @@ class HistoryCartBriefingView extends React.PureComponent {
                             onPress={() => this.props.navigation.goBack()}
                         />
                         <Image
-                            style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                            style={{ width: 50, height: 55 }}
+                            source={require('../../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                         />
                     </Header>
                 </View>
@@ -189,13 +189,13 @@ class HistoryCartBriefingView extends React.PureComponent {
                             </View>
                         )}
 
-                            <View style={{ backgroundColor: "black", }}>
-                                <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
-                                    <View style={styles.singleItemContainer}>
-                                    <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Total:</Text> $ {this.obtainTotalPrice()} </Text>
-                                    </View>
-                                </View>
+                    <View style={{ backgroundColor: "black", }}>
+                        <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                            <View style={styles.singleItemContainer}>
+                                <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Total:</Text> $ {this.obtainTotalPrice()} </Text>
                             </View>
+                        </View>
+                    </View>
 
                 </View>
             </View>
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
     },
 
     singleItemContainer: {
-        justifyContent:"center",
+        justifyContent: "center",
         margin: 5,
         height: 40,
         borderRadius: 5,

@@ -43,7 +43,8 @@ export const ACCESSOPENNODEREQUESTS = 'ACCESSOPENNODEREQUESTS';
 export const SELECTEDNODEREQUESTS ='SELECTEDNODEREQUESTS';
 export const HASRECEIVEDPUSHNOTIFICATIONS = 'HASRECEIVEDPUSHNOTIFICATIONS';
 export const HASRECEIVEDEXPIREDCARTNOTIFICATION = 'HASRECEIVEDEXPIREDCARTNOTIFICATION';
-
+export const INFODATAVENDORSELECTED = 'INFODATAVENDORSELECTED';
+export const INFODATAVENDORUNSELECTED = 'INFODATAVENDORUNSELECTED';
 
 export const resetState = (resetDataState) => ({type:RESETSTATE, resetDataState})
 export const login = userData => ({type: LOGIN, userData});
@@ -90,3 +91,5 @@ export const accessOpenNodeRequests = (accessOpenNodeRequestsStack) => ({type:AC
 export const selectedNodeRequests = (selectedNodeRequestsStack) => ({type:SELECTEDNODEREQUESTS, selectedNodeRequestsStack})
 export const hasReceivedPushNotifications = (hasReceivedPushNotificationsValue) => ({type:HASRECEIVEDPUSHNOTIFICATIONS, hasReceivedPushNotificationsValue})
 export const hasReceivedExpiredCartNotification = (hasReceivedExpiredCartNotificationValue) => ({type:HASRECEIVEDEXPIREDCARTNOTIFICATION, hasReceivedExpiredCartNotificationValue})
+export const infoDataVendorSelected = (dataVendorSelected) => ({type:INFODATAVENDORSELECTED, dataVendorSelected})
+export const infoDataVendorUnselected = () => ({type:INFODATAVENDORUNSELECTED})

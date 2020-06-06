@@ -16,9 +16,9 @@ class InvitationsView extends React.PureComponent {
         }
     }
 
-    errorAlert(error){
+    errorAlert(error) {
         if (error.response) {
-            if(error.response.status === 401){
+            if (error.response.status === 401) {
                 Alert.alert(
                     'Sesion expirada',
                     'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
@@ -27,17 +27,17 @@ class InvitationsView extends React.PureComponent {
                     ],
                     { cancelable: false },
                 );
-            }else{
-                if(error.response.data !== null){
+            } else {
+                if (error.response.data !== null) {
                     Alert.alert(
                         'Error',
-                         error.response.data.error,
+                        error.response.data.error,
                         [
                             { text: 'Entendido', onPress: () => null },
                         ],
                         { cancelable: false },
                     );
-                }else{
+                } else {
                     Alert.alert(
                         'Error',
                         'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
@@ -56,25 +56,25 @@ class InvitationsView extends React.PureComponent {
     }
 
     resetInvitations() {
-        this.setState({loading:true})
+        this.setState({ loading: true })
         axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas', { withCredentials: true }).then(res => {
             this.filterInvitations(res.data);
-            this.setState({loading:false})
+            this.setState({ loading: false })
         }).catch((error) => {
-            this.setState({loading:false})
+            this.setState({ loading: false })
             this.errorAlert(error)
         });
     }
 
-    defineAcceptRoute(){
-        if(this.props.vendorSelected.few.gcc){
+    defineAcceptRoute() {
+        if (this.props.vendorSelected.few.gcc) {
             return 'rest/user/gcc/aceptar'
-        }else{
+        } else {
             return 'rest/user/nodo/aceptarInvitacion'
         }
     }
     sendAccept(id) {
-        this.setState({loading:true})
+        this.setState({ loading: true })
         axios.post(this.serverBaseRoute + this.defineAcceptRoute(), {
             idInvitacion: id,
         }, { withCredentials: true }).then(res => {
@@ -125,12 +125,12 @@ class InvitationsView extends React.PureComponent {
         );
     }
 
-    defineStrategyRoute(){
+    defineStrategyRoute() {
         let value = ''
-        if(this.props.vendorSelected.few.gcc){
+        if (this.props.vendorSelected.few.gcc) {
             value = 'rest/user/gcc/'
         }
-        if(this.props.vendorSelected.few.nodos){
+        if (this.props.vendorSelected.few.nodos) {
             value = 'rest/user/nodo/'
         }
         return value
@@ -141,21 +141,21 @@ class InvitationsView extends React.PureComponent {
             this.props.actions.groupsData(res.data);
         }).catch((error) => {
             console.log(error);
-            this.setState({loading:false})
+            this.setState({ loading: false })
             this.errorAlert(error)
         });
     }
 
-    defineDeclineInvitationRoute(){
-        if(this.props.vendorSelected.few.gcc){
+    defineDeclineInvitationRoute() {
+        if (this.props.vendorSelected.few.gcc) {
             return 'rest/user/gcc/rechazar';
-        }else{
+        } else {
             return 'rest/user/nodo/rechazarInvitacion';
         }
     }
 
     sendDeclined(id) {
-        this.setState({loading:true})
+        this.setState({ loading: true })
         axios.post(this.serverBaseRoute + this.defineDeclineInvitationRoute(), {
             idInvitacion: id,
         }, { withCredentials: true }).then(res => {
@@ -196,7 +196,7 @@ class InvitationsView extends React.PureComponent {
         return message.includes(name);
     }
     isInvitation(message) {
-        return message.includes('invitado al grupo de compras')|| message.includes('invitado al nodo de compras');
+        return message.includes('invitado al grupo de compras') || message.includes('invitado al nodo de compras');
     }
 
     keyExtractor = (item, index) => index.toString()
@@ -290,8 +290,8 @@ class InvitationsView extends React.PureComponent {
                         onPress={() => this.props.navigation.goBack()}
                     />
                     <Image
-                        style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                        source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                        style={{ width: 50, height: 55 }}
+                        source={require('../../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                     />
                     <Button
                         icon={

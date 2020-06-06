@@ -16,7 +16,7 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
         if (this.props.groupHistoryShoppingCartSelected.montoTotal !== undefined) {
             let value = 0
             value = value + this.props.groupHistoryShoppingCartSelected.montoTotal;
-            if(this.props.groupHistoryShoppingCartSelected.incentivoTotal !== null){
+            if (this.props.groupHistoryShoppingCartSelected.incentivoTotal !== null) {
                 value = value + this.props.groupHistoryShoppingCartSelected.incentivoTotal
             }
             return (value).toFixed(2)
@@ -109,9 +109,9 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
     renderItem = ({ item }) => (
         <TouchableOpacity disabled={this.props.disabledPress} onPress={() => this.goToCartDetail(item)} style={this.isUser(item.cliente)}>
             <View style={{ margin: 2, marginStart: 10, flexDirection: "row", alignItems: "center", alignSelf: "stretch" }}>
-                <View style={{ marginStart: 10, flex:10}}>
+                <View style={{ marginStart: 10, flex: 10 }}>
                     <Text style={{ fontSize: 15, fontWeight: "bold", fontStyle: "italic", }}>{item.cliente.alias}</Text>
-                    <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey"}}>{item.cliente.email}</Text>
+                    <Text style={{ fontSize: 12, fontWeight: "bold", fontStyle: "italic", color: "grey" }}>{item.cliente.email}</Text>
                     <View>
                         {item != null ? (
                             <View style={{ flexDirection: "row" }}>
@@ -146,8 +146,8 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                             onPress={() => this.props.navigation.goBack()}
                         />
                         <Image
-                            style={{ width: 50, height: 50, alignSelf: 'center', resizeMode: 'center' }}
-                            source={{ uri: 'https://trello-attachments.s3.amazonaws.com/5e569e21b48d003fde9f506f/278x321/dc32d347623fd85be9939fdf43d9374e/icon-homer-ch.png' }}
+                            style={{ width: 50, height: 55 }}
+                            source={require('../../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                         />
                     </Header>
                 </View>
@@ -209,32 +209,32 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                         )}
                     {this.isAdmin() ? (
                         <View>
-                        {
-                            this.hasNodeAndIncentives() ? (
-                                <View style={{}}>
-                                    <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
-                                        <View style={styles.singleItemContainer}>
-                                            <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Ingreso Nodo :</Text> $ {this.calculateNodeAmount()} </Text>
-                                            <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Costo al Nodo :</Text> $ {this.obtainTotalPrice()} </Text>
-                                            <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Precio Final :</Text> $ {this.calculateFinalAmount()} </Text>
-                                        </View>
-                                    </View>
-                                </View>
-                            ) : (
-                                    <View style={{ }}>
-                                        <View style={{ alignItems: "center", backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
-                                            <View style={[styles.singleItemContainer, { width:"95%", height: 40, justifyContent: "center" }]}>
-                                                <Text style={[styles.itemDataInfoStyle]}><Text style={[styles.itemDataStyle]}> Total :</Text> $ {this.obtainTotalPrice()} </Text>
+                            {
+                                this.hasNodeAndIncentives() ? (
+                                    <View style={{}}>
+                                        <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                                            <View style={styles.singleItemContainer}>
+                                                <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Ingreso Nodo :</Text> $ {this.calculateNodeAmount()} </Text>
+                                                <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Costo al Nodo :</Text> $ {this.obtainTotalPrice()} </Text>
+                                                <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Precio Final :</Text> $ {this.calculateFinalAmount()} </Text>
                                             </View>
                                         </View>
                                     </View>
-                                )
-                        }
+                                ) : (
+                                        <View style={{}}>
+                                            <View style={{ alignItems: "center", backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                                                <View style={[styles.singleItemContainer, { width: "95%", height: 40, justifyContent: "center" }]}>
+                                                    <Text style={[styles.itemDataInfoStyle]}><Text style={[styles.itemDataStyle]}> Total :</Text> $ {this.obtainTotalPrice()} </Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    )
+                            }
                         </View>
                     ) : (
-                            <View style={{  }}>
+                            <View style={{}}>
                                 <View style={{ alignItems: "center", backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
-                                    <View style={[styles.singleItemContainer, { width:"90%", height: 40, justifyContent: "center" }]}>
+                                    <View style={[styles.singleItemContainer, { width: "90%", height: 40, justifyContent: "center" }]}>
                                         <Text style={[styles.itemDataInfoStyle]}><Text style={[styles.itemDataStyle]}> Total :</Text> $ {this.obtainTotalPrice()} </Text>
                                     </View>
                                 </View>
