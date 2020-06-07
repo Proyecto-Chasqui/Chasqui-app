@@ -1,6 +1,6 @@
 import React from 'react'
 import GLOBALS from '../Globals'
-import { View, StyleSheet, Dimensions, } from 'react-native'
+import { View, StyleSheet, Dimensions,ScrollView} from 'react-native'
 import { WebView } from 'react-native-webview';
 import { Text, Header, Image, Button, Icon } from 'react-native-elements';
 
@@ -13,7 +13,7 @@ class PrivacyPolicyView extends React.PureComponent {
     render() {
         const INJECTEDJAVASCRIPT = "document.body.style.userSelect = 'none'";
         return (
-            <View>
+            <View style={{flex:1}}>
                 <View>
                     <Header containerStyle={styles.topHeader}>
                         <Button
@@ -32,14 +32,14 @@ class PrivacyPolicyView extends React.PureComponent {
                 <View style={styles.titleContainer}>
                     <Text style={styles.adressTitle}>Políticas de privacidad</Text>
                 </View>
-                <View>
+                <View style={{flex:1}}>
                     {this.privacyUrl !== "" ? (
                         <WebView
                             originWhitelist={["*"]}
                             scalesPageToFit={false}
                             style={{ backgroundColor: "transparent" }}
                             injectedJavaScript={INJECTEDJAVASCRIPT}
-                            style={{ flex: 1 }}
+                            style={{}}
                             containerStyle={{}}
                             source={{ uri: this.privacyUrl }}
                         />

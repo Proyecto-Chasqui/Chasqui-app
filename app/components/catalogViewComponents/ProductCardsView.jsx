@@ -51,6 +51,7 @@ class ProductCardsView extends React.PureComponent {
         }
     }
 
+    keyExtractor = (item, index) => index.toString()
     render() {
         if (this.props.products.length < 1 || this.state.unmounted) {
             return (
@@ -72,7 +73,8 @@ class ProductCardsView extends React.PureComponent {
         if (this.props.viewSelected === undefined || this.props.viewSelected === this.catalogViewModes.TWOCARDS || this.props.viewSelected === this.catalogViewModes.SINGLECARD) {
             let stylesCards = this.props.viewSelected === this.catalogViewModes.TWOCARDS ? stylesMultipleCards : stylesSingleCards;
             return (
-                <FlatList numColumns={this.props.size} key={this.props.size} windowSize={15} data={this.props.products}
+                <FlatList numColumns={this.props.size} key={this.props.size} 
+                keyExtractor={this.keyExtractor} windowSize={15} data={this.props.products}
                     ListHeaderComponent={
                         (this.defineImageURL() !== null) ? (
                             <View style={stylesCards.titleContainer}>
@@ -132,17 +134,16 @@ class ProductCardsView extends React.PureComponent {
                             </Card>
                         </TouchableOpacity>
                     }
-                    keyExtractor={item => item.idProducto}
                 >
                 </FlatList>
             )
         }
         if (this.props.viewSelected === this.catalogViewModes.LIST) {
             return (
-                <FlatList data={this.props.products} keyExtractor={item => item.idProducto} windowSize={15}
+                <FlatList data={this.props.products} keyExtractor={this.keyExtractor} windowSize={15}
                     ListHeaderComponent={
                         (this.defineImageURL() !== null) ? (
-                            <View style={stylesCards.titleContainer}>
+                            <View style={stylesListCard.titleContainer}>
                                 <Image
                                     source={{ uri: this.defineImageURL() }}
                                     style={{
@@ -156,7 +157,7 @@ class ProductCardsView extends React.PureComponent {
                     }
                     ListFooterComponent={
                         (this.defineImageURL() !== null) ? (
-                            <View style={stylesCards.titleContainer}>
+                            <View style={stylesListCard.titleContainer}>
                                 <Image
                                     source={{ uri: this.defineImageURL() }}
                                     style={{

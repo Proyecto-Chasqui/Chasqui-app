@@ -36,6 +36,14 @@ class LoginView extends React.PureComponent {
       await AsyncStorage.setItem(key, JSON.stringify(item));
     } catch (error) {
       console.log("error on storage", error.message)
+      Alert.alert(
+        'Error',
+        'Ocurrio un error inesperado, vualva a ingresar, si el problema persiste comuniquese con soporte técnico.',
+        [
+          { text: 'Entendido', onPress: () => this.props.actions.logout() },
+        ],
+        { cancelable: false },
+      );
     }
   };
 

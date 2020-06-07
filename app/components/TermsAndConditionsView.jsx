@@ -13,7 +13,7 @@ class TermsAndConditionsView extends React.PureComponent {
     render() {
         const INJECTEDJAVASCRIPT = "document.body.style.userSelect = 'none'";
         return (
-            <View>
+            <View style={{flex:1}}>
                 <View>
                     <Header containerStyle={styles.topHeader}>
                         <Button
@@ -32,14 +32,14 @@ class TermsAndConditionsView extends React.PureComponent {
                 <View style={styles.titleContainer}>
                     <Text style={styles.adressTitle}>Términos y condiciones</Text>
                 </View>
-                <View>
+                <View style={{flex:1}}>
                     {this.privacyUrl !== "" ? (
                         <WebView
                             originWhitelist={["*"]}
                             scalesPageToFit={false}
                             style={{ backgroundColor: "transparent" }}
                             injectedJavaScript={INJECTEDJAVASCRIPT}
-                            style={{ flex: 1 }}
+                            style={{ }}
                             containerStyle={{}}
                             source={{ uri: this.privacyUrl }}
                         />
