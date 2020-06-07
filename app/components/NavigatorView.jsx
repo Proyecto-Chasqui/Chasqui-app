@@ -4,6 +4,8 @@ import Vendors from '../containers/Vendors';
 import SubNavigatorView from './SubNavigatorView';
 import NavigationItems from '../containers/NavigatorComponentContainters/NavigationItems';
 import NavigationOptionItems from '../containers/NavigatorComponentContainters/NavigationOptionItems';
+import PrivacyPolicyView from '../components/PrivacyPolicyView'
+import TermsAndConditionsView from '../components/TermsAndConditionsView'
 import UserRegisterView from '../components/UserRegisterView';
 import { Text, Header, Image } from 'react-native-elements';
 import { NavigationContainer } from '@react-navigation/native';
@@ -187,7 +189,10 @@ class NavigatorView extends React.PureComponent {
                 title: 'Registro',
                 animationTypeForReplace: this.state.isSignout ? 'pop' : 'push',
               }}
-            />
+             />
+            <StackLogin.Screen name='TerminosYCondiciones' component={TermsAndConditionsView} options={{headerShown:false}}  />                   
+            <StackLogin.Screen name='PoliticasDePrivacidad' component={PrivacyPolicyView} options={{headerShown:false}}  />   
+           
           </StackLogin.Navigator>
         ) : (
             <DrawerCatalogs.Navigator initialRouteName="Catalogos"

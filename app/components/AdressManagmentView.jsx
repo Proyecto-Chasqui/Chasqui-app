@@ -22,7 +22,7 @@ const SENDINGDATAWAIT = 'Enviando sus datos al servidor...'
 class AdressManagmentView extends React.PureComponent {
     constructor(props) {
         super(props)
-        this.apiKey = GOLBALS.APIKEY;
+        this.apiKey = GOLBALS.GEO_APIKEY;
         this.serverBaseRoute = GOLBALS.BASE_URL;
         this.adressesData = this.props.actions.adressesData;
         this.handleSubmit = this.handleSubmit.bind(this);

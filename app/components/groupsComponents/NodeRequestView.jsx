@@ -55,6 +55,16 @@ class NodeRequestView extends React.PureComponent {
         }
     }
 
+    addCheckWithIndex(vadress) {
+        const data = this.state.dataChecksAdress;
+        data.push({ adress: vadress, id: vadress.idDireccion, checked: false })
+        this.setState({
+            dataChecksAdress: data,
+        })
+        const index = data.findIndex((x) => x.id === vadress.idDireccion);
+        return index
+    }
+
     createAddressChecks() {
         this.props.adressesData.map((adress, i) => {
             this.addCheck(adress);
@@ -474,8 +484,7 @@ class NodeRequestView extends React.PureComponent {
                     barrio: this.state.nodeData.barrio,
                     descripcion: this.state.nodeData.descripcion,
                 }).then(res => {
-
-                    this.showAlertRequestSended("La solicitud fue enviada correctamente, mientras la misma no este aprobada puede editar o cancelarla en esta misma sección.")
+                    this.showAlertRequestSended("La solicitud fue enviada correctamente, deberá esperar a que le acepten la solicitud. Mientras la misma no este aprobada puede editarla o cancelarla en esta misma sección.")
                 }).catch((error) => {
                     this.setState({ sendingData: false, isVisible: false })
                     console.log("error", error.response)
@@ -669,7 +678,8 @@ class NodeRequestView extends React.PureComponent {
                                     </View>
                                 ) : (null)}
                                 {this.props.adressesData.map((adress, i) => {
-                                    const index = this.findIndexOf(adress);
+                                    
+                                    let index  = this.addCheckWithIndex(adress);
 
                                     return (
                                         <TouchableOpacity key={adress.idDireccion} onPress={() => this.onCheckChangedAdress(adress.idDireccion)} style={{ flexDirection: "row", alignItems: 'center', height: 90, borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>

@@ -314,6 +314,7 @@ class GroupsView extends React.PureComponent {
                                 <Text style={{ fontSize: 16, fontWeight: "bold" }}> Confirmados: {this.calcularPedidosConfirmados(item.miembros)} / {this.numberOfActiveMembers(item.miembros)}</Text>
                             </View>
                         </View>
+                        {this.props.vendorSelected.montoMinimo > 0 ?(
                         <View style={{ backgroundColor: "#ebedeb", marginBottom: 3, flexDirection: "row", justifyContent: "center", alignItems: "center", borderColor: "black", borderWidth: 1, borderRadius: 5 }}>
                             <Text style={{ fontSize: 16, fontWeight: "bold" }}> Min. Monto Colectivo: </Text>
                             <View style={{ flexDirection: "row", margin: 3 }}>
@@ -325,6 +326,7 @@ class GroupsView extends React.PureComponent {
                                 </View>
                             </View>
                         </View>
+                        ):(null)}
                         {this.props.vendorSelected.few.nodos && item.esAdministrador ? (
                             <RequestQuantityView date={new Date().getTime()} idNode={item.id}></RequestQuantityView>
                         ) : (null)}
@@ -559,7 +561,6 @@ const styles = StyleSheet.create({
 
     tipErrorText: {
         marginTop: 25,
-        fontSize: 12,
         alignSelf: 'center',
     },
 

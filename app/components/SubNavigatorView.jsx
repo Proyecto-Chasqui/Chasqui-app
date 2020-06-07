@@ -22,6 +22,8 @@ import GroupHistoryShoppingCartsView from '../containers/GroupsComponentsContain
 import GroupHistoryShoppingCartDetailView from '../containers/GroupsComponentsContainers/GroupHistoryShoppingCartDetail';
 import NodeRequestView from '../containers/GroupsComponentsContainers/NodeRequest';
 import OpenNodesView from '../containers/OpenNodes'
+import PrivacyPolicyView from '../components/PrivacyPolicyView'
+import TermsAndConditionsView from '../components/TermsAndConditionsView'
 import { createStackNavigator } from '@react-navigation/stack';
 
 
@@ -83,6 +85,8 @@ class SubNavigatorView extends React.PureComponent{
                   <Stack.Screen name='DetalleHistorialPedidosGrupo' component={GroupHistoryShoppingCartDetailView} options={{headerShown:false}}  />                   
                   <Stack.Screen name='SolicitudDeNodo' component={NodeRequestView} options={{headerShown:false}}  />                   
                   <Stack.Screen name='NodosAbiertos' component={OpenNodesView} options={{headerShown:false}}  />                   
+                  <Stack.Screen name='TerminosYCondiciones' component={TermsAndConditionsView} options={{headerShown:false}}  />                   
+                  <Stack.Screen name='PoliticasDePrivacidad' component={PrivacyPolicyView} options={{headerShown:false}}  />                   
                 
              </Stack.Navigator>
           );
