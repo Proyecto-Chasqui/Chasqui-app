@@ -9,6 +9,7 @@ import OverlayShoppingCartView from '../containers/CatalogComponentsContainers/O
 import base64 from 'react-native-base64'
 import axios from 'axios';
 import NoSellsWarnOverlayView from '../components/generalComponents/NoSellsWarnOverlayView'
+import ShakeEventExpo from '../ShakeEventExpo'
 
 class CatalogView extends React.Component {
     constructor(props) {
@@ -44,6 +45,7 @@ class CatalogView extends React.Component {
             searchHasChanged: false,
             viewSelected: GLOBALS.CATALOG_VIEW_MODES.TWOCARDS,
             viewSize: 2,
+            shakeDetected:false,
         };
         console.log("vendor", this.props.vendorSelected);
     }
@@ -277,6 +279,7 @@ class CatalogView extends React.Component {
     }
 
     componentWillUnmount() {
+        ShakeEventExpo.removeListener();
         BackHandler.removeEventListener('hardwareBackPress', this.backButtonClick);
     }
 
@@ -335,8 +338,29 @@ class CatalogView extends React.Component {
         }
     }
 
+    restart(){
+        this.props.actions.resetState({ reset: true })
+        this.setState({isLoadingProducts:true})
+        this.load()
+        this.setState({shakeDetected:false})
+    }
+
 
     componentDidMount() {
+        ShakeEventExpo.addListener(() => {            
+            if(!this.state.shakeDetected){
+                this.setState({shakeDetected:true})
+                Alert.alert(
+                    'Aviso',
+                    '¿Desea actualizar los datos de la aplicación?',
+                    [,
+                        { text: 'No', onPress: () => this.setState({shakeDetected:false}) },
+                        { text: 'Si', onPress: () => this.restart() },
+                    ],
+                    { cancelable: false },
+                );
+            }
+        });
         BackHandler.addEventListener('hardwareBackPress', this.backButtonClick);
         this.load();
     }

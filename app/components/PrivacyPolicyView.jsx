@@ -38,7 +38,6 @@ class PrivacyPolicyView extends React.PureComponent {
                             originWhitelist={["*"]}
                             scalesPageToFit={false}
                             style={{ backgroundColor: "transparent" }}
-                            injectedJavaScript={INJECTEDJAVASCRIPT}
                             style={{}}
                             containerStyle={{}}
                             source={{ uri: this.privacyUrl }}

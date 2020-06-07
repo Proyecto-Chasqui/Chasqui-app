@@ -63,6 +63,9 @@ class VendorsView extends React.PureComponent {
 
     componentDidUpdate() {
         if (this.props.resetState.reset) {
+            this.setState({
+                isLoadingVendors: true,
+            });
             this.getVendors();
             this.props.actions.resetState({ reset: false })
         }
