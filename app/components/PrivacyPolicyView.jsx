@@ -48,10 +48,10 @@ class PrivacyPolicyView extends React.PureComponent {
                                     <Icon name="file-remove" type='material-community' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
                                 </View>
                                 <Text style={styles.errorText}>
-                                    No hay Políticas de privacidad
+                                    No hay políticas de privacidad
                                 </Text>
                                 <Text style={styles.tipErrorText}>
-                                    Por el momento no se encuentran la Políticas de privacidad 
+                                    Por el momento no hay políticas de privacidad diponibles
                                 </Text>
                             </View>
                         )}

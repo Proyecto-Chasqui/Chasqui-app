@@ -52,7 +52,7 @@ class TermsAndConditionsView extends React.PureComponent {
                                     No hay términos y condiciones
                                 </Text>
                                 <Text style={styles.tipErrorText}>
-                                    Por el momento no se encuentran los términos y condiciones 
+                                    Por el momento no hay términos y condiciones disponibles 
                                 </Text>
                             </View>
                         )}
