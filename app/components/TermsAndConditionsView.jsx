@@ -3,6 +3,7 @@ import GLOBALS from '../Globals'
 import { View, StyleSheet, Dimensions, } from 'react-native'
 import { WebView } from 'react-native-webview';
 import { Text, Header, Image, Button, Icon } from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
 
 class TermsAndConditionsView extends React.PureComponent {
     constructor(props) {
@@ -32,13 +33,13 @@ class TermsAndConditionsView extends React.PureComponent {
                 <View style={styles.titleContainer}>
                     <Text style={styles.adressTitle}>Términos y condiciones</Text>
                 </View>
-                <View style={{flex:1}}>
+                <ScrollView style={{flex:1}}>
                     {this.privacyUrl !== "" ? (
                         <WebView
                             originWhitelist={["*"]}
                             scalesPageToFit={false}
                             style={{ backgroundColor: "transparent" }}
-                            style={{ }}
+                            style={{ height:Dimensions.get("window").height -135}}
                             containerStyle={{}}
                             source={{ uri: this.privacyUrl }}
                         />
@@ -55,7 +56,7 @@ class TermsAndConditionsView extends React.PureComponent {
                                 </Text>
                             </View>
                         )}
-                </View>
+                </ScrollView>
             </View>
         )
     }

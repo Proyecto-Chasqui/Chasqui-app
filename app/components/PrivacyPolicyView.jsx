@@ -32,13 +32,13 @@ class PrivacyPolicyView extends React.PureComponent {
                 <View style={styles.titleContainer}>
                     <Text style={styles.adressTitle}>Políticas de privacidad</Text>
                 </View>
-                <View style={{flex:1}}>
+                <ScrollView style={{flex:1}}>
                     {this.privacyUrl !== "" ? (
                         <WebView
                             originWhitelist={["*"]}
                             scalesPageToFit={false}
                             style={{ backgroundColor: "transparent" }}
-                            style={{}}
+                            style={{ height:Dimensions.get("window").height -135}}
                             containerStyle={{}}
                             source={{ uri: this.privacyUrl }}
                         />
@@ -55,7 +55,7 @@ class PrivacyPolicyView extends React.PureComponent {
                                 </Text>
                             </View>
                         )}
-                </View>
+                </ScrollView>
             </View>
         )
     }
