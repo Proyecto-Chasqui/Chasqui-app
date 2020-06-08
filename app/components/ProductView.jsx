@@ -276,13 +276,19 @@ class ProductView extends React.PureComponent {
             }, { withCredentials: true }).then(res => {
                 this.getShoppingCarts()
             }).catch((error) => {
+                console.log(error);
+                console.log(error.response);
                 this.setState({ buttonLoading: false, buttonDisabled: false })
                 if (error.response) {
                     if (error.response.data.error === "El vendedor por el momento no permite hacer compras o agregar mas productos, intentelo mas tarde.") {
                         this.props.actions.resetState({ reset: true })
                         Alert.alert('Aviso', "No se permiten hacer compras por el momento, solo puede remover productos. Tenga en cuenta que si remueve productos no podrá agregarlos luego.");
                     } else {
-                        this.errorAlert(error)
+                        if(error.response.data.error === "El producto no posee más Stock"){
+                            Alert.alert('Aviso', "El producto no posee stock para la cantidad seleccionada.");
+                        }else{
+                            this.errorAlert(error)
+                        }
                     }
                 } else if (error.request) {
                     Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");

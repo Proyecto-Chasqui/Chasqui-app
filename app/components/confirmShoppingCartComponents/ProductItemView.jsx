@@ -163,7 +163,11 @@ class ProductItemView extends React.PureComponent {
                         this.props.actions.resetState({ reset: true })
                         Alert.alert('Aviso', "No se permiten hacer compras por el momento, solo puede remover productos. Tenga en cuenta que si remueve productos no podrá agregarlos luego.");
                     } else {
-                        this.errorAlert(error)
+                        if(error.response.data.error === "El producto no posee más Stock"){
+                            Alert.alert('Aviso', "El producto no posee stock para la cantidad seleccionada.");
+                        }else{
+                            this.errorAlert(error)
+                        }
                     }
                 } else if (error.request) {
                     Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
