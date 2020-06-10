@@ -1,5 +1,3 @@
-![](http://proyectochasqui.org/images/logo_chasqui_400.png)
-
 1. [¿Qué es Chasqui?](#qué-es-chasqui)
 2. [Información técnica](#información-técnica)
 3. [Notas de las diferentes versiones](#notas-de-las-diferentes-versiones)
@@ -25,9 +23,6 @@ Para más información ir al [sitio del proyecto](http://observatorioess.org.ar/
 
 ## Información técnica
 Para detalles de la instalación y arquitectura ir a [CONFIGURATIONS](../master/CONFIGURATIONS.md)
-
-## Notas de las diferentes versiones
-Ver detalles en [RELEASE_NOTES](../master/RELEASE_NOTES.md)
 
 ## Autoría
 Las diferentes personas que participaron del proyecto se encuentran mencionadas en [AUTHORS](../master/AUTHORS.md)
