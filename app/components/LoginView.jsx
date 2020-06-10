@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, Alert, View, Dimensions, KeyboardAvoidingView } from 'react-native';
-import { Input, Image, Button, Overlay } from 'react-native-elements';
+import { Input, Image, Button, Overlay, Icon } from 'react-native-elements';
 import { Formik } from 'formik';
 import axios from 'axios';
 import GLOBALS from '../Globals';
@@ -23,6 +23,8 @@ class LoginView extends React.PureComponent {
       dataChange: false,
       loading: false,
       firstLoading: true,
+      securePassword: true,
+      icon: 'eye-slash'
     }
 
   }
@@ -47,25 +49,35 @@ class LoginView extends React.PureComponent {
     }
   };
 
+  async removeStorageUser(){
+    await AsyncStorage.removeItem("user");
+  }
 
   loginAsGuest() {
-
     if (!this.state.loading) {
-      this.props.actions.login({
-        email: "invitadx@invitadx.com",
-        token: "invitado",
-        id: 0,
-        nickname: "invitadx",
-        avatar: "",
+      axios.get(this.serverBaseRoute, {
+      }).then(res => {
+        this.props.actions.login({
+          email: "invitadx@invitadx.com",
+          token: "invitado",
+          id: 0,
+          nickname: "invitadx",
+          avatar: "",
+        });
+        this.storeData("user", {
+          email: "invitadx@invitadx.com",
+          token: "invitado",
+          id: 0,
+          nickname: "invitadx",
+          avatar: "",
+        })
+        this.setState({ firstLoading: false })
+      }).catch((error) => {
+        console.log(error);
+        this.setState({ loading: false, firstLoading: false })
+        this.removeStorageUser()
+        Alert.alert('Error', 'ocurrio un error al comunicarse con el servidor');
       });
-      this.storeData("user", {
-        email: "invitadx@invitadx.com",
-        token: "invitado",
-        id: 0,
-        nickname: "invitadx",
-        avatar: "",
-      })
-      this.setState({ firstLoading: false })
     }
   }
 
@@ -86,7 +98,7 @@ class LoginView extends React.PureComponent {
     }
   };
 
-  getPersonalData(data, password) {
+  async getPersonalData(data, password) {
     const token = base64.encode(`${data.email}:${data.token}`);
     axios.get(this.serverBaseRoute + 'rest/user/adm/read', {
       headers: {
@@ -103,6 +115,7 @@ class LoginView extends React.PureComponent {
       this.setState({ loading: false, firstLoading: false })
     }).catch((error) => {
       this.setState({ loading: false, firstLoading: false })
+      this.removeStorageUser()
       Alert.alert('Error', 'ocurrio un error al comunicarse con el servidor');
     });
   }
@@ -203,6 +216,13 @@ class LoginView extends React.PureComponent {
     }
   }
 
+  changeIcon() {
+    this.setState({
+      securePassword: !this.state.securePassword,
+      icon: this.state.icon === 'eye-slash' ? 'eye' : 'eye-slash',
+    })
+  }
+
   render() {
 
     if (this.state.firstLoading) {
@@ -245,13 +265,13 @@ class LoginView extends React.PureComponent {
             </View>
           </View>
         </Overlay>
-        <View style={{flex:1, justifyContent: 'center',}}>
+        <View style={{ flex: 1, justifyContent: 'center', }}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Bienvenidxs</Text>
           </View>
           <View style={styles.imageContainer}>
             <Image
-              source={ require('../components/catalogViewComponents/catalogAssets/platform-icon.png') }
+              source={require('../components/catalogViewComponents/catalogAssets/platform-icon.png')}
               style={styles.image}
             />
           </View>
@@ -281,7 +301,8 @@ class LoginView extends React.PureComponent {
                     onBlur={handleBlur('constraseña')}
                     placeholder='Contraseña'
                     leftIcon={{ type: 'font-awesome', name: 'lock' }}
-                    secureTextEntry={true}
+                    rightIcon={<Icon type='font-awesome' onPress={() => this.changeIcon()} name={this.state.icon}></Icon>}
+                    secureTextEntry={this.state.securePassword}
                     value={values.contraseña}
                   />
                 </View>
@@ -352,7 +373,7 @@ const styles = StyleSheet.create({
   },
 
   imageContainer: {
-    marginTop:20,
+    marginTop: 20,
     alignSelf: 'center',
   },
 

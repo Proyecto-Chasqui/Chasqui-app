@@ -26,6 +26,8 @@ class UserRegisterView extends React.PureComponent {
             sendingData: false,
             dataChange: false,
             isVisible: false,
+            securePassword:true,
+            icon:'eye-slash',
             userData: {
                 apodo: '',
                 nombre: '',
@@ -468,6 +470,13 @@ class UserRegisterView extends React.PureComponent {
         return null
     }
 
+    changeIcon(){
+        this.setState({
+          securePassword:!this.state.securePassword,
+          icon: this.state.icon === 'eye-slash' ? 'eye' : 'eye-slash',
+        })
+      }
+
     handleChangeOfField(field, value) {
         switch (field) {
             case APODO:
@@ -712,7 +721,8 @@ class UserRegisterView extends React.PureComponent {
                                                 value={this.returnValueBasedOnFieldData(field)}
                                                 errorStyle={{ color: 'red' }}
                                                 errorMessage={this.assignErrorMessage(field)}
-                                                secureTextEntry={true}
+                                                rightIcon={<Icon type='font-awesome'  onPress={()=> this.changeIcon()} name={this.state.icon}></Icon>}
+                                                secureTextEntry={this.state.securePassword}
                                             />
                                         </View>)
                                 })}

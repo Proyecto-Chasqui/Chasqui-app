@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, Alert, View, Dimensions, KeyboardAvoidingView } from 'react-native';
-import { Input, Image, Button, CheckBox } from 'react-native-elements';
+import { Input, Image, Button, CheckBox, Icon } from 'react-native-elements';
 import axios from 'axios';
 import GLOBALS from '../../Globals';
 import base64 from 'react-native-base64'
@@ -24,6 +24,8 @@ class PasswordConfigView extends React.PureComponent {
             sendingData: false,
             dataChange: false,
             isVisible: false,
+            icon:'eye-slash',
+            securePassword:true,
             passwordData: {
                 old_password: '',
                 new_password: '',
@@ -37,6 +39,13 @@ class PasswordConfigView extends React.PureComponent {
         }        
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+
+    changeIcon(){
+        this.setState({
+          securePassword:!this.state.securePassword,
+          icon: this.state.icon === 'eye-slash' ? 'eye' : 'eye-slash',
+        })
+      }
 
     errorAlert(error){
         if (error.response) {
@@ -315,7 +324,8 @@ class PasswordConfigView extends React.PureComponent {
                                     value={this.returnValueBasedOnFieldData(field)}
                                     errorStyle={{ color: 'red' }}
                                     errorMessage={this.assignErrorMessage(field)}
-                                    secureTextEntry={true}
+                                    rightIcon={<Icon type='font-awesome'  onPress={()=> this.changeIcon()} name={this.state.icon}></Icon>}
+                                    secureTextEntry={this.state.securePassword}
                                     maxLength={26}
                                 />
                             </View>)
