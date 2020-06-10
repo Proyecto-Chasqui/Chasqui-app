@@ -2,8 +2,6 @@
 
 Las configuraciones descriptas debajo solo son para el entorno **Android**, debido que la aplicación esta desarrollada solo bajo el enfoque de **Android 5 +** por lo tanto no se asegura que funcione para **IOS**.
 
-[TOC]
-
 ## Requerimientos
 ### Desarrollo
 1. Expo SDK 37
@@ -35,7 +33,7 @@ Para crear un entorno de desarrollo funcional se deberán configurar los siguien
 ## Executar el proyecto
 Para levantar un servidor local de la aplicación, deberá estar en la carpeta raiz del proyecto y ejecutar en la consola/terminal **expo start**
 
-Para ejecutarlo en un emulador o dispositivo físico, se deberá bajar la siguiente ** [aplicación de expo](https://play.google.com/store/apps/details?id=host.exp.exponent&referrer=www)**
+Para ejecutarlo en un emulador o dispositivo físico, se deberá bajar la siguiente **[aplicación de expo](https://play.google.com/store/apps/details?id=host.exp.exponent&referrer=www)**
 
 ## Configuración de servicios Google Cloud.
 Para poder tener completamente operativa la aplicación tanto en entorno de desarrollo como en producción, se deberan configurar los siguientes servicios de GoogleCloud.
@@ -73,5 +71,5 @@ Para crear el apk completamente funcional se debe tener completamente configurad
 Debe estar logeado con la cuenta expo en **expo CLI**, para logearse debe ejecutar en una consola/terminal **expo login** e ingresar sus credenciales, recuerde que el usuario que acceda debe ser el mismo que esta declarado en **app.json** como se explica en la sección **Configuración del proyecto**.
 
 Una vez logeado y configurados los archivos, se debe tener corriendo el proyecto en una sesión de **expo start** y en una consola/terminal **paralela** ubicada en la raíz del proyecto ejecutar **expo build:android**, esto ejecutara el proceso de creación del APK para android en los servidores de expo.io, para acceder al resultado deberá ingresar a **https://expo.io/dashboard/** y descargar la apk generada.
-Para mas información puede leer esta guia** [Building standalone apps](https://docs.expo.io/distribution/building-standalone-apps/)**.
+Para mas información puede leer esta guia **[Building standalone apps](https://docs.expo.io/distribution/building-standalone-apps/)**.
 
