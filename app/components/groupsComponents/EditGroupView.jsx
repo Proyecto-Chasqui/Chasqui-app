@@ -108,9 +108,17 @@ class EditGroupView extends React.PureComponent {
                 }
             }
         } else if (error.request) {
-            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde",
+            [
+                { text: 'Entendido', onPress: () => this.props.actions.logout() },
+            ],
+            { cancelable: false },);
         } else {
-            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.");
+            Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.",
+            [
+                { text: 'Entendido', onPress: () => this.props.actions.logout() },
+            ],
+            { cancelable: false },);
         }
     }
 

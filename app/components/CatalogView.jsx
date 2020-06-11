@@ -139,9 +139,17 @@ class CatalogView extends React.Component {
                     );
                 }
             } else if (error.request) {
-                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde",
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },);
             } else {
-                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.",
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },);
             }
         });
     }
@@ -183,9 +191,17 @@ class CatalogView extends React.Component {
                     );
                 }
             } else if (error.request) {
-                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde",
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },);
             } else {
-                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.",
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },);
             }
         });
     }
@@ -232,9 +248,17 @@ class CatalogView extends React.Component {
                     );
                 }
             } else if (error.request) {
-                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde",
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },);
             } else {
-                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.",
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },);
             }
         });
     }
@@ -271,9 +295,17 @@ class CatalogView extends React.Component {
                     );
                 }
             } else if (error.request) {
-                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde",
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },);
             } else {
-                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.",
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },);
             }
         });
     }
@@ -396,9 +428,17 @@ class CatalogView extends React.Component {
                     );
                 }
             } else if (error.request) {
-                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde",
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },);
             } else {
-                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.",
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },);
             }
         });
     }
@@ -523,9 +563,17 @@ class CatalogView extends React.Component {
                   );
                 }
               } else if (error.request) {
-                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde");
+                Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde",
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },);
               } else {
-                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.");
+                Alert.alert('Error', "Ocurrio un error al tratar de enviar la recuperación de contraseña, intente más tarde o verifique su conectividad.",
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false },);
               }
         });
     }
