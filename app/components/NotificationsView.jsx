@@ -18,7 +18,9 @@ class NotificationsView extends React.PureComponent {
             totalNotifications: 1,
             unreadNotifications: this.props.unreadNotifications.length,
             markingAll: false,
+            hasMarkedAll: true,
         }
+        this.unreadNotificationsUnmarked = 0
     }
 
     errorAlert(error) {
@@ -66,12 +68,25 @@ class NotificationsView extends React.PureComponent {
             this.getUnreadNotifications()
             this.props.actions.hasReceivedPushNotifications(false)
         }
+        if(!this.state.hasMarkedAll){
+            this.fullRestart()
+            this.setState({hasMarkedAll:true})
+        }   
     }
 
     componentDidMount() {
         this.setState({ firstLoading: true })
         this.getNotifications(this.state.page)
         this.getTotalNotifications()
+    }
+    typeInvitation(message) {
+        if(message.includes('invitado al grupo de compras')){
+            return "grupo"
+        }
+        if(message.includes('invitado al nodo de compras')){
+            return "nodo"
+        }
+        return "sin definir"
     }
 
     acceptInvitation(notification) {
@@ -80,7 +95,7 @@ class NotificationsView extends React.PureComponent {
             "¿Esta seguro de aceptar la invitación?",
             [
                 { text: 'No', onPress: () => null },
-                { text: 'Si', onPress: () => this.sendAccept(notification.id) },
+                { text: 'Si', onPress: () => this.sendAccept(notification.id, this.typeInvitation(notification.mensaje)) },
             ],
             { cancelable: false },
         );
@@ -92,7 +107,7 @@ class NotificationsView extends React.PureComponent {
             "¿Esta seguro de rechazar la invitación?",
             [
                 { text: 'No', onPress: () => null },
-                { text: 'Si', onPress: () => this.sendDeclined(notification.id) },
+                { text: 'Si', onPress: () => this.sendDeclined(notification.id, this.typeInvitation(notification.mensaje)) },
             ],
             { cancelable: false },
         );
@@ -103,10 +118,19 @@ class NotificationsView extends React.PureComponent {
         this.getFirstNotifications()
         this.getTotalNotifications()
     }
-    //la ruta para aceptar una invitacion de nodo es rest/user/nodos/aceptarInvitacion
-    //revisar como parametrizar esto.
-    sendAccept(id) {
-        axios.post(this.serverBaseRoute + 'rest/user/gcc/aceptar', {
+
+    defineAcceptRoute(type) {
+        if (type === "grupo") {
+            return 'rest/user/gcc/aceptar'
+        } 
+        if(type === "nodo"){
+            return 'rest/user/nodo/aceptarInvitacion'
+        }
+        return ''
+    }
+ 
+    sendAccept(id, type) {
+        axios.post(this.serverBaseRoute + this.defineAcceptRoute(type), {
             idInvitacion: id,
         }, { withCredentials: true }).then(res => {
             this.markNotification(id, "NOTIFICACION_ACEPTADA");
@@ -120,7 +144,7 @@ class NotificationsView extends React.PureComponent {
                 { cancelable: false },
             );
         }).catch((error) => {
-            console.log(error.response);
+            console.log("error en send accept",error.response);
             Alert.alert(
                 'Error',
                 "Ocurrio un error, es probable que la invitación haya sido cancelada por el remitente",
@@ -131,10 +155,9 @@ class NotificationsView extends React.PureComponent {
             );
         });
     }
-    //la ruta para aceptar una invitacion de nodo es rest/user/nodos/rechazarInvitacion
-    //revisar como parametrizar esto.
-    sendDeclined(id) {
-        axios.post(this.serverBaseRoute + 'rest/user/gcc/rechazar', {
+  
+    sendDeclined(id, type) {
+        axios.post(this.serverBaseRoute + this.defineAcceptRoute(type), {
             idInvitacion: id,
         }, { withCredentials: true }).then(res => {
             this.markNotification(id, "NOTIFICACION_RECHAZADA");
@@ -163,7 +186,7 @@ class NotificationsView extends React.PureComponent {
     getUnreadNotifications() {
         axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas', { withCredentials: true }).then(res => {
             this.props.actions.unreadNotifications(res.data);
-            this.setState({ unreadNotifications: this.props.unreadNotifications.length, markingAll: false })
+            this.setState({ unreadNotifications: res.data.length, markingAll: false })
         }).catch((error) => {
             this.errorAlert(error)
         });
@@ -247,27 +270,45 @@ class NotificationsView extends React.PureComponent {
             'Tiene demasiadas notificaciones el proceso demorara un tiempo. ¿Desea marcarlas de todas formas?',
             [
                 { text: 'No', onPress: () => null },
-                { text: 'Si', onPress: () => this.markAllNotifications().then(this.fullRestart()) },
+                { text: 'Si', onPress: () => this.markAllNotifications() },
             ],
             { cancelable: false },
         );
     }
 
     fullRestart() {
-        this.getUnreadNotifications()
-        this.restartNotifications()
+        if(this.timeout) clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            this.getUnreadNotifications()
+            this.restartNotifications()
+        }, 2000);
     }
 
     async executeMarkAll() {
-        if (this.props.unreadNotifications.length < 10) {
-            this.markAllNotifications().then(this.fullRestart())
+        if (this.props.unreadNotifications.length < 25) {
+            this.markAllNotifications()
         } else {
             this.alertLongTime()
         }
     }
 
+    createListUnreadNotifications(){
+        this.unreadNotificationsMarked = []
+        this.props.unreadNotifications.map((notification, i) => {
+            this.unreadNotificationsMarked.push(i);
+        })
+    }
+
+    decrementUnreadNotifications(){
+        this.unreadNotificationsUnmarked = this.unreadNotificationsUnmarked - 1;
+        if(this.unreadNotificationsUnmarked <= 0){
+            this.setState({hasMarkedAll:true})
+        }
+    }
+
     async markAllNotifications() {
-        this.setState({ firstLoading: true, markingAll: true })
+        this.setState({ firstLoading: true, markingAll: true, hasMarkedAll:false })
+        this.unreadNotificationsUnmarked = this.props.unreadNotifications.length;
         return Promise.all(
             this.props.unreadNotifications.map((notification, i) => {
                 if (!this.isInvitation(notification.mensaje)) {
@@ -281,8 +322,9 @@ class NotificationsView extends React.PureComponent {
         this.setState({ loading: true })
         axios.post(this.serverBaseRoute + 'rest/user/adm/notificacion/' + id, {}, { withCredentials: true })
             .then(res => {
-                //this.markNotification(id, value)
+                this.decrementUnreadNotifications()
             }).catch((error) => {
+                this.decrementUnreadNotifications()
                 console.log(error);
             });
     }
@@ -307,7 +349,7 @@ class NotificationsView extends React.PureComponent {
 
     renderItem = ({ item }) => (
         <TouchableOpacity onPress={() => this.markViewedNotification(item.id, "Leido")} disabled={this.isInvitation(item.mensaje)} style={styles.notificationItem}>
-            <View style={{ flex: 4, marginLeft: 20 }}>
+            <View style={{ flex: 4, margin: 10 }}>
                 <View style={{ alingItems: "center", flexDirection: "row" }}>
                     <Text style={{ fontSize: 11 }}>De:</Text>
                     <Text style={{ fontSize: 11, fontWeight: "bold", color: "blue" }}> {item.usuarioOrigen}</Text>
@@ -544,7 +586,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         margin: 4,
         borderRadius: 5,
-        height: Dimensions.get("window").height / 4.5,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

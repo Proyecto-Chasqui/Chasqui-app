@@ -71,7 +71,7 @@ class LoginView extends React.PureComponent {
           nickname: "invitadx",
           avatar: "",
         })
-        this.setState({ firstLoading: false })
+        this.setState({ loading: false, firstLoading: false })
       }).catch((error) => {
         console.log(error);
         this.setState({ loading: false, firstLoading: false })
@@ -91,7 +91,7 @@ class LoginView extends React.PureComponent {
           this.loginAsGuest()
         }
       } else {
-        this.setState({ firstLoading: false })
+        this.setState({ loading:false, firstLoading: false })
       }
     } catch (error) {
       console.log("value error", error.message);

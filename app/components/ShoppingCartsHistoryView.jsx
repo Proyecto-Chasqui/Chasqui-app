@@ -157,7 +157,7 @@ class ShoppingCartsHistoryView extends React.PureComponent {
         <View>
             {this.showCart(item) ? (
                 <TouchableOpacity onPress={() => this.goToCart(item)} style={styles.notificationItem}>
-                    <View style={{ flex: 4, marginLeft: 20 }}>
+                    <View style={{ flex: 4, margin: 10 }}>
                         <View style={{ alingItems: "center", flexDirection: "row" }}>
                             <Text style={{ fontSize: 11 }}>Tipo de pedido:</Text>
                             <Text style={{ fontSize: 11, fontWeight: "bold", color: "blue" }}> {item.idGrupo === null ? ("Individual") : ("Colectivo")}</Text>
@@ -386,7 +386,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         margin: 4,
         borderRadius: 5,
-        height: Dimensions.get("window").height / 5.5,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

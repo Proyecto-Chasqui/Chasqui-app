@@ -205,13 +205,14 @@ class AdministrationMembersView extends React.PureComponent {
     }
 
     sendPassAdministration(email) {
+        if(!this.state.loading){
         this.setState({ loading: true })
         axios.post((this.serverBaseRoute + this.defineStrategyRoute() + 'cederAdministracion'), {
             idGrupo: this.props.groupSelected.id,
             emailCliente: email
         }, { withCredentials: true }).then(res => {
             this.getGroups()
-            this.setState({ loading: false })
+            this.setState({ loading: false })            
             Alert.alert(
                 'Aviso',
                 'La administración fue cedida con exito',
@@ -226,6 +227,7 @@ class AdministrationMembersView extends React.PureComponent {
             console.log(error);
             this.errorAlert(error);
         });
+        }
     }
 
     sendRemoveMember(email) {
@@ -266,6 +268,7 @@ class AdministrationMembersView extends React.PureComponent {
             this.setState({ loading: false })
             this.findSelectedGroup()
         }).catch((error) => {
+            console.log("error on get grupos");
             this.setState({ loading: false })
             console.log(error);
             this.errorAlert(error)

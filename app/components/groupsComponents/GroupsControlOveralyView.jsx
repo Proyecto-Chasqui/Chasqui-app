@@ -131,7 +131,7 @@ class GroupsControlsOverlayView extends React.PureComponent {
 const styles = StyleSheet.create({
     overlayContainer: { flexDirection: "column", alignItems: "flex-end" },
     overlay: {
-        maxHeight: 250,
+        maxHeight: 280,
     },
     topHeader: {
         backgroundColor: 'rgba(51, 102, 255, 1)',

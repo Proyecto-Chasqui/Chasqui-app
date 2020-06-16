@@ -223,7 +223,7 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
         <View>
             {true ? (
                 <TouchableOpacity onPress={() => this.goToCart(item)} style={styles.notificationItem}>
-                    <View style={{ flex: 4, marginLeft: 20 }}>
+                    <View style={{ flex: 4, margin: 10 }}>
                         <View style={{ alignContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 5 }}>
                             <Text style={{ fontSize: 11, color: "black" }}>Confirmado el:</Text>
                             <Text style={{ fontSize: 11, fontWeight: "bold", color: "blue" }}> {item.fechaModificacion}</Text>
@@ -361,7 +361,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         margin: 4,
         borderRadius: 5,
-        height: Dimensions.get("window").height / 5.5,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
