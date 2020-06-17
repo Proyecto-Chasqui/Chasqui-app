@@ -9,7 +9,7 @@ const DESCRIPCION = "Descripción";
 class NewGroupView extends React.PureComponent {
     constructor(props) {
         super(props)
-        this.serverBaseRoute= GLOBALS.BASE_URL;
+        this.serverBaseRoute = GLOBALS.BASE_URL;
         this.state = {
             groupData: {
                 alias: "",
@@ -23,9 +23,9 @@ class NewGroupView extends React.PureComponent {
         }
     }
 
-    errorAlert(error){
+    errorAlert(error) {
         if (error.response) {
-            if(error.response.status === 401){
+            if (error.response.status === 401) {
                 Alert.alert(
                     'Sesion expirada',
                     'Su sesión expiro, se va a reiniciar la aplicación.',
@@ -34,17 +34,17 @@ class NewGroupView extends React.PureComponent {
                     ],
                     { cancelable: false },
                 );
-            }else{
-                if(error.response.data !== null){
+            } else {
+                if (error.response.data !== null) {
                     Alert.alert(
                         'Error',
-                         error.response.data.error,
+                        error.response.data.error,
                         [
                             { text: 'Entendido', onPress: () => null },
                         ],
                         { cancelable: false },
                     );
-                }else{
+                } else {
                     Alert.alert(
                         'Error',
                         'Ocurrió un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuníquese con soporte técnico.',
@@ -57,23 +57,23 @@ class NewGroupView extends React.PureComponent {
             }
         } else if (error.request) {
             Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde",
-            [
-                { text: 'Entendido', onPress: () => this.props.actions.logout() },
-            ],
-            { cancelable: false },);
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false });
         } else {
             Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.",
-            [
-                { text: 'Entendido', onPress: () => this.props.actions.logout() },
-            ],
-            { cancelable: false },);
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false });
         }
     }
 
-    getGroups(){
-        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/'+this.props.vendorSelected.id),{},{withCredentials: true}).then(res => {
+    getGroups() {
+        axios.get((this.serverBaseRoute + 'rest/user/gcc/all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
             this.props.actions.groupsData(res.data);
-            this.setState({loading:false})
+            this.setState({ loading: false })
             this.cancel()
             Alert.alert(
                 'Grupo creado!',
@@ -83,23 +83,23 @@ class NewGroupView extends React.PureComponent {
                 ],
                 { cancelable: false },
             );
-        }).catch( (error) => {
-            this.setState({loading:false})
+        }).catch((error) => {
+            this.setState({ loading: false })
             console.log(error);
             this.errorAlert(error)
         });
     }
 
-    sendCreateGroup(){
-        this.setState({loading:true})
-        axios.post((this.serverBaseRoute + 'rest/user/gcc/alta'),{
-            idVendedor:this.props.vendorSelected.id,
-            alias:this.state.groupData.alias,
-            descripcion:this.state.groupData.descripcion
-        },{withCredentials: true}).then(res => {
+    sendCreateGroup() {
+        this.setState({ loading: true })
+        axios.post((this.serverBaseRoute + 'rest/user/gcc/alta'), {
+            idVendedor: this.props.vendorSelected.id,
+            alias: this.state.groupData.alias,
+            descripcion: this.state.groupData.descripcion
+        }, { withCredentials: true }).then(res => {
             this.getGroups();
-        }).catch( (error) => {
-            this.setState({loading:false})
+        }).catch((error) => {
+            this.setState({ loading: false })
             console.log(error);
             this.errorAlert(error)
         });
@@ -107,39 +107,41 @@ class NewGroupView extends React.PureComponent {
 
 
     handleChangeOfField(field, value) {
-        switch (field) {
-            case ALIAS:
-                if (value.length <= 64) {
-                    this.setState((prevState) => ({
-                        groupData: Object.assign({}, prevState.groupData, {
-                            alias: value
-                        })
-                    }))
-                    this.setState((prevState) => ({
-                        errorMessage: Object.assign({}, prevState.errorMessage, {
-                            alias: ''
-                        })
-                    }))
-                } else {
-                    this.showErrorAlias();
-                }
-                break;
-            case DESCRIPCION:
-                if (value.length <= 64) {
-                    this.setState((prevState) => ({
-                        groupData: Object.assign({}, prevState.groupData, {
-                            descripcion: value
-                        })
-                    }))
-                    this.setState((prevState) => ({
-                        errorMessage: Object.assign({}, prevState.errorMessage, {
-                            descripcion: ''
-                        })
-                    }))
-                } else {
-                    this.showErrorDescription();
-                }
-                break;
+        if (/([A-zÀ-ú0-9!()\\-`.+,/\"]+|\s|[\b])$/.test(value) || value === "") {
+            switch (field) {
+                case ALIAS:
+                    if (value.length <= 64) {
+                        this.setState((prevState) => ({
+                            groupData: Object.assign({}, prevState.groupData, {
+                                alias: value
+                            })
+                        }))
+                        this.setState((prevState) => ({
+                            errorMessage: Object.assign({}, prevState.errorMessage, {
+                                alias: ''
+                            })
+                        }))
+                    } else {
+                        this.showErrorAlias();
+                    }
+                    break;
+                case DESCRIPCION:
+                    if (value.length <= 64) {
+                        this.setState((prevState) => ({
+                            groupData: Object.assign({}, prevState.groupData, {
+                                descripcion: value
+                            })
+                        }))
+                        this.setState((prevState) => ({
+                            errorMessage: Object.assign({}, prevState.errorMessage, {
+                                descripcion: ''
+                            })
+                        }))
+                    } else {
+                        this.showErrorDescription();
+                    }
+                    break;
+            }
         }
     }
     returnValueBasedOnFieldData(field) {

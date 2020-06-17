@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet, Dimensions, KeyboardAvoidingView, Alert } from 'react-native'
+import { Text, View, StyleSheet, Dimensions, KeyboardAvoidingView, Alert, TouchableOpacity } from 'react-native'
 import { Header, Button, Icon, ButtonGroup, Image, Input, Overlay } from 'react-native-elements'
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
@@ -237,82 +237,84 @@ class AdressManagmentView extends React.PureComponent {
     }
 
     handleChangeOfField(field, value) {
-        switch (field) {
-            case NAMEREMAINDER:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    adressData: Object.assign({}, prevState.adressData, {
-                        nombre_recordatorio: value
-                    })
-                }))
-                break;
-            case STREET:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    adressData: Object.assign({}, prevState.adressData, {
-                        calle: value
-                    })
-                }))
-                break;
-            case ELEVATION:
-                let datavalue = this.onlyNumbers(value)
-                if (datavalue !== null) {
+        if (/([A-zÀ-ú0-9!()\\-`.+,/\"]+|\s|[\b])$/.test(value) || value === "") {
+            switch (field) {
+                case NAMEREMAINDER:
                     this.setState((prevState) => ({
                         dataChange: true,
                         adressData: Object.assign({}, prevState.adressData, {
-                            altura: value
+                            nombre_recordatorio: value
                         })
                     }))
-                }
-                break;
-            case DEPARTMENT:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    adressData: Object.assign({}, prevState.adressData, {
-                        departamento: value
-                    })
-                }))
-                break;
-            case STREETONE:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    adressData: Object.assign({}, prevState.adressData, {
-                        calle_1: value
-                    })
-                }))
-                break;
-            case STREETTWO:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    adressData: Object.assign({}, prevState.adressData, {
-                        calle_2: value
-                    })
-                }))
-                break;
-            case LOCATION:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    adressData: Object.assign({}, prevState.adressData, {
-                        localidad: value
-                    })
-                }))
-                break;
-            case POSTALCODE:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    adressData: Object.assign({}, prevState.adressData, {
-                        codigo_postal: value
-                    })
-                }))
-                break;
-            case COMMENTS:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    adressData: Object.assign({}, prevState.adressData, {
-                        comentarios: value
-                    })
-                }))
-                break;
+                    break;
+                case STREET:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        adressData: Object.assign({}, prevState.adressData, {
+                            calle: value
+                        })
+                    }))
+                    break;
+                case ELEVATION:
+                    let datavalue = this.onlyNumbers(value)
+                    if (datavalue !== null) {
+                        this.setState((prevState) => ({
+                            dataChange: true,
+                            adressData: Object.assign({}, prevState.adressData, {
+                                altura: value
+                            })
+                        }))
+                    }
+                    break;
+                case DEPARTMENT:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        adressData: Object.assign({}, prevState.adressData, {
+                            departamento: value
+                        })
+                    }))
+                    break;
+                case STREETONE:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        adressData: Object.assign({}, prevState.adressData, {
+                            calle_1: value
+                        })
+                    }))
+                    break;
+                case STREETTWO:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        adressData: Object.assign({}, prevState.adressData, {
+                            calle_2: value
+                        })
+                    }))
+                    break;
+                case LOCATION:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        adressData: Object.assign({}, prevState.adressData, {
+                            localidad: value
+                        })
+                    }))
+                    break;
+                case POSTALCODE:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        adressData: Object.assign({}, prevState.adressData, {
+                            codigo_postal: value
+                        })
+                    }))
+                    break;
+                case COMMENTS:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        adressData: Object.assign({}, prevState.adressData, {
+                            comentarios: value
+                        })
+                    }))
+                    break;
+            }
         }
     }
 
@@ -681,7 +683,7 @@ class AdressManagmentView extends React.PureComponent {
                             })}
                         </View>
 
-                        <View style={styles.moreInfoButtonContainer}>
+                        <TouchableOpacity onPress={() => this.showMoreInfo()} style={styles.moreInfoButtonContainer}>
                             <Text style={styles.caracteristicsStyle}>Agregar información adicional</Text>
                             <View style={styles.verticalDivisor} />
                             <Button icon={
@@ -698,8 +700,8 @@ class AdressManagmentView extends React.PureComponent {
                                         size={30}
                                     />)}
                                 containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
-                                onPress={() => this.showMoreInfo()}></Button>
-                        </View>
+                                onPress={() => this.showMoreInfo()} ></Button>
+                        </TouchableOpacity>
                         {
                             this.state.showMoreInfo ? (
                                 <View>

@@ -192,9 +192,9 @@ class PersonalDataView extends React.PureComponent {
         })
     }
 
-    errorAlert(error){
+    errorAlert(error) {
         if (error.response) {
-            if(error.response.status === 401){
+            if (error.response.status === 401) {
                 Alert.alert(
                     'Sesion expirada',
                     'Su sesión expiro, se va a reiniciar la aplicación.',
@@ -203,17 +203,17 @@ class PersonalDataView extends React.PureComponent {
                     ],
                     { cancelable: false },
                 );
-            }else{
-                if(error.response.data !== null){
+            } else {
+                if (error.response.data !== null) {
                     Alert.alert(
                         'Error',
-                         error.response.data.error,
+                        error.response.data.error,
                         [
                             { text: 'Entendido', onPress: () => null },
                         ],
                         { cancelable: false },
                     );
-                }else{
+                } else {
                     Alert.alert(
                         'Error',
                         'Ocurrió un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuníquese con soporte técnico.',
@@ -226,21 +226,21 @@ class PersonalDataView extends React.PureComponent {
             }
         } else if (error.request) {
             Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde",
-            [
-                { text: 'Entendido', onPress: () => this.props.actions.logout() },
-            ],
-            { cancelable: false },);
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false });
         } else {
             Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.",
-            [
-                { text: 'Entendido', onPress: () => this.props.actions.logout() },
-            ],
-            { cancelable: false },);
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false });
         }
     }
 
     getPersonalData() {
-        axios.get(this.serverBaseRoute + 'rest/user/adm/read',{withCredentials: true}).then(res => {
+        axios.get(this.serverBaseRoute + 'rest/user/adm/read', { withCredentials: true }).then(res => {
             this.personalData(res.data);
         }).catch((error) => {
             this.errorAlert(error)
@@ -263,10 +263,10 @@ class PersonalDataView extends React.PureComponent {
                     extension: ".jpg",
                     avatar: this.state.imageRoutesHashPng[this.state.avatarSelected]
 
-                },{withCredentials: true})
+                }, { withCredentials: true })
                     .then(res => {
                         res.data.nickname = this.state.userData.apodo,
-                        this.props.actions.login(res.data);
+                            this.props.actions.login(res.data);
                         this.setState({
                             sendingData: false,
                             dataChange: false,
@@ -276,7 +276,7 @@ class PersonalDataView extends React.PureComponent {
                         this.getPersonalData()
                         this.flushErrors();
                         Alert.alert('Aviso', 'Los datos fueron actualizados correctamente');
-                    }).catch((error) =>{
+                    }).catch((error) => {
                         this.flushErrors();
                         this.setState({
                             sendingData: false,
@@ -339,51 +339,53 @@ class PersonalDataView extends React.PureComponent {
     }
 
     handleChangeOfField(field, value) {
-        switch (field) {
-            case APODO:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    userData: Object.assign({}, prevState.userData, {
-                        apodo: value
-                    })
-                }))
-                break;
-            case NOMBRE:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    userData: Object.assign({}, prevState.userData, {
-                        nombre: value
-                    })
-                }))
-                break;
-
-            case APELLIDO:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    userData: Object.assign({}, prevState.userData, {
-                        apellido: value
-                    })
-                }))
-                break;
-            case TELEFONOMOVIL:
-                let datavalue = this.onlyNumbers(value)
-                if (datavalue !== null) {
+        if (/([A-zÀ-ú0-9!()\\-`.+,/\"]+|\s|[\b])$/.test(value) || value === "") {
+            switch (field) {
+                case APODO:
                     this.setState((prevState) => ({
                         dataChange: true,
                         userData: Object.assign({}, prevState.userData, {
-                            telefono_movil: datavalue
+                            apodo: value
                         })
                     }))
-                }
-                break;
-            case TELEFONOFIJO:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    userData: Object.assign({}, prevState.userData, {
-                        telefono_fijo: value
-                    })
-                }))
-                break;
+                    break;
+                case NOMBRE:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        userData: Object.assign({}, prevState.userData, {
+                            nombre: value
+                        })
+                    }))
+                    break;
+
+                case APELLIDO:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        userData: Object.assign({}, prevState.userData, {
+                            apellido: value
+                        })
+                    }))
+                    break;
+                case TELEFONOMOVIL:
+                    let datavalue = this.onlyNumbers(value)
+                    if (datavalue !== null) {
+                        this.setState((prevState) => ({
+                            dataChange: true,
+                            userData: Object.assign({}, prevState.userData, {
+                                telefono_movil: datavalue
+                            })
+                        }))
+                    }
+                    break;
+                case TELEFONOFIJO:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        userData: Object.assign({}, prevState.userData, {
+                            telefono_fijo: value
+                        })
+                    }))
+                    break;
+            }
         }
     }
 
@@ -408,13 +410,13 @@ class PersonalDataView extends React.PureComponent {
     render() {
         const fields = [APODO, NOMBRE, APELLIDO];
         return (
-            <KeyboardAvoidingView style={{flex:1}}>
-            <ScrollView style={{height:Dimensions.get("window").height - 167}}>            
-            <LoadingOverlayView isVisible={this.state.isVisible} loadingText={'Enviando sus datos al servidor...'}></LoadingOverlayView>
-                    
+            <KeyboardAvoidingView style={{ flex: 1 }}>
+                <ScrollView style={{ height: Dimensions.get("window").height - 167 }}>
+                    <LoadingOverlayView isVisible={this.state.isVisible} loadingText={'Enviando sus datos al servidor...'}></LoadingOverlayView>
+
                     {fields.map((field, i) => {
                         return (
-                            <View key={i+10}style={styles.inputContainer}>
+                            <View key={i + 10} style={styles.inputContainer}>
                                 <Text style={styles.fieldText}>{this.normalizeText(field)}</Text>
                                 <Input
                                     inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}
@@ -467,10 +469,10 @@ class PersonalDataView extends React.PureComponent {
                     <View style={styles.buttonContainer}>
                         <Button loading={this.state.sendingData} disabled={!this.state.dataChange} buttonStyle={{ height: 60, backgroundColor: '#5ebb47', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={this.handleSubmit} title="Guardar" />
                     </View>
-                    
+
                 </ScrollView>
-                </KeyboardAvoidingView>
-            
+            </KeyboardAvoidingView>
+
         );
     }
 }

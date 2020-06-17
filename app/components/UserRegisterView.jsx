@@ -26,8 +26,8 @@ class UserRegisterView extends React.PureComponent {
             sendingData: false,
             dataChange: false,
             isVisible: false,
-            securePassword:true,
-            icon:'eye-slash',
+            securePassword: true,
+            icon: 'eye-slash',
             userData: {
                 apodo: '',
                 nombre: '',
@@ -64,10 +64,10 @@ class UserRegisterView extends React.PureComponent {
                 require('./configurationViewComponents/configurationAssets/avatar_3.png'),
             ],
             avatarSelected: 0,
-            termsAccepted:false,
+            termsAccepted: false,
             policyAccepted: false,
             showErrorTerms: false,
-            showErrorPolicy:false,
+            showErrorPolicy: false,
         }
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -356,11 +356,11 @@ class UserRegisterView extends React.PureComponent {
             this.showErrorPassword()
             this.showErrorConfirmPassword()
         }
-        if(!this.state.policyAccepted){
-            this.setState({showErrorPolicy: true})
+        if (!this.state.policyAccepted) {
+            this.setState({ showErrorPolicy: true })
         }
-        if(!this.state.termsAccepted){
-            this.setState({showErrorTerms: true})
+        if (!this.state.termsAccepted) {
+            this.setState({ showErrorTerms: true })
         }
     }
 
@@ -470,95 +470,97 @@ class UserRegisterView extends React.PureComponent {
         return null
     }
 
-    changeIcon(){
+    changeIcon() {
         this.setState({
-          securePassword:!this.state.securePassword,
-          icon: this.state.icon === 'eye-slash' ? 'eye' : 'eye-slash',
+            securePassword: !this.state.securePassword,
+            icon: this.state.icon === 'eye-slash' ? 'eye' : 'eye-slash',
         })
-      }
+    }
 
     handleChangeOfField(field, value) {
-        switch (field) {
-            case APODO:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    userData: Object.assign({}, prevState.userData, {
-                        apodo: value
-                    })
-                }))
-                break;
-            case NOMBRE:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    userData: Object.assign({}, prevState.userData, {
-                        nombre: value
-                    })
-                }))
-                break;
-
-            case APELLIDO:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    userData: Object.assign({}, prevState.userData, {
-                        apellido: value
-                    })
-                }))
-                break;
-            case TELEFONO_MOVIL:
-                let datavalue = this.onlyNumbers(value)
-                if (datavalue !== null) {
+        if (/([A-zÀ-ú0-9!()\\-`.+,/\"]+|\s|[\b])$/.test(value) || value === ""|| field === PASSWORD || field === CONFIRM_PASSWORD) {
+            switch (field) {
+                case APODO:
                     this.setState((prevState) => ({
                         dataChange: true,
                         userData: Object.assign({}, prevState.userData, {
-                            telefono_movil: datavalue
+                            apodo: value
                         })
                     }))
-                }
-                break;
-            case TELEFONO_FIJO:
-                let datavalue2 = this.onlyNumbers(value)
-                if (datavalue2 !== null) {
+                    break;
+                case NOMBRE:
                     this.setState((prevState) => ({
                         dataChange: true,
                         userData: Object.assign({}, prevState.userData, {
-                            telefono_fijo: value
+                            nombre: value
                         })
                     }))
-                }
-                break;
-            case PASSWORD:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    userData: Object.assign({}, prevState.userData, {
-                        contraseña: value
-                    })
-                }))
-                break;
-            case CONFIRM_PASSWORD:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    userData: Object.assign({}, prevState.userData, {
-                        repetir_contraseña: value
-                    })
-                }))
-                break;
-            case EMAIL:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    userData: Object.assign({}, prevState.userData, {
-                        correo: value
-                    })
-                }))
-                break;
-            case CONFIRM_EMAIL:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    userData: Object.assign({}, prevState.userData, {
-                        repetir_correo: value
-                    })
-                }))
-                break;
+                    break;
 
+                case APELLIDO:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        userData: Object.assign({}, prevState.userData, {
+                            apellido: value
+                        })
+                    }))
+                    break;
+                case TELEFONO_MOVIL:
+                    let datavalue = this.onlyNumbers(value)
+                    if (datavalue !== null) {
+                        this.setState((prevState) => ({
+                            dataChange: true,
+                            userData: Object.assign({}, prevState.userData, {
+                                telefono_movil: datavalue
+                            })
+                        }))
+                    }
+                    break;
+                case TELEFONO_FIJO:
+                    let datavalue2 = this.onlyNumbers(value)
+                    if (datavalue2 !== null) {
+                        this.setState((prevState) => ({
+                            dataChange: true,
+                            userData: Object.assign({}, prevState.userData, {
+                                telefono_fijo: value
+                            })
+                        }))
+                    }
+                    break;
+                case PASSWORD:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        userData: Object.assign({}, prevState.userData, {
+                            contraseña: value
+                        })
+                    }))
+                    break;
+                case CONFIRM_PASSWORD:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        userData: Object.assign({}, prevState.userData, {
+                            repetir_contraseña: value
+                        })
+                    }))
+                    break;
+                case EMAIL:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        userData: Object.assign({}, prevState.userData, {
+                            correo: value
+                        })
+                    }))
+                    break;
+                case CONFIRM_EMAIL:
+                    this.setState((prevState) => ({
+                        dataChange: true,
+                        userData: Object.assign({}, prevState.userData, {
+                            repetir_correo: value
+                        })
+                    }))
+                    break;
+
+            }
         }
     }
 
@@ -585,26 +587,26 @@ class UserRegisterView extends React.PureComponent {
         }
     }
 
-    goToPrivacyPolicy(){
+    goToPrivacyPolicy() {
         this.props.navigation.navigate("PoliticasDePrivacidad")
     }
 
-    goToTermsAndConditions(){
+    goToTermsAndConditions() {
         this.props.navigation.navigate("TerminosYCondiciones")
     }
 
-    onCheckTerms(){
-        if(!this.state.termsAccepted){
-            this.setState({showErrorTerms:false})
+    onCheckTerms() {
+        if (!this.state.termsAccepted) {
+            this.setState({ showErrorTerms: false })
         }
-        this.setState({termsAccepted: !this.state.termsAccepted})
+        this.setState({ termsAccepted: !this.state.termsAccepted })
     }
 
-    onCheckPolicy(){
-        if(!this.state.policyAccepted){
-            this.setState({showErrorPolicy:false})
+    onCheckPolicy() {
+        if (!this.state.policyAccepted) {
+            this.setState({ showErrorPolicy: false })
         }
-        this.setState({policyAccepted:  !this.state.policyAccepted})
+        this.setState({ policyAccepted: !this.state.policyAccepted })
     }
 
 
@@ -721,7 +723,7 @@ class UserRegisterView extends React.PureComponent {
                                                 value={this.returnValueBasedOnFieldData(field)}
                                                 errorStyle={{ color: 'red' }}
                                                 errorMessage={this.assignErrorMessage(field)}
-                                                rightIcon={<Icon type='font-awesome'  onPress={()=> this.changeIcon()} name={this.state.icon}></Icon>}
+                                                rightIcon={<Icon type='font-awesome' onPress={() => this.changeIcon()} name={this.state.icon}></Icon>}
                                                 secureTextEntry={this.state.securePassword}
                                             />
                                         </View>)
@@ -739,42 +741,42 @@ class UserRegisterView extends React.PureComponent {
                                     />);
                                 })}
                             </View>
-                            {this.state.showErrorTerms ?(
-                            <View>
-                                <Text style={{ fontSize:12, color:"red", textAlign:"center"}}> Debe aceptar los términos y condiciones</Text>
-                            </View>):(
-                                null
-                            )}
-                            <View style={{flexDirection:"row",alignItems:"center"}}>
+                            {this.state.showErrorTerms ? (
+                                <View>
+                                    <Text style={{ fontSize: 12, color: "red", textAlign: "center" }}> Debe aceptar los términos y condiciones</Text>
+                                </View>) : (
+                                    null
+                                )}
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
                                 <CheckBox
                                     center
                                     checked={this.state.termsAccepted}
                                     onPress={() => this.onCheckTerms()}
                                 />
                                 <View>
-                                    <Text style={{fontWeight:"bold"}} >Acepto los</Text>
+                                    <Text style={{ fontWeight: "bold" }} >Acepto los</Text>
                                 </View>
                                 <View>
-                                <Button type="clear" loading={this.state.sendingData}   onPress={()=>this.goToTermsAndConditions()}  title="Términos y condiciones" />
+                                    <Button type="clear" loading={this.state.sendingData} onPress={() => this.goToTermsAndConditions()} title="Términos y condiciones" />
                                 </View>
                             </View>
-                            {this.state.showErrorPolicy ?(                            
-                            <View>
-                                <Text  style={{ fontSize:12, color:"red", textAlign:"center"}}> Debe aceptar las políticas de privacidad</Text>
-                            </View>):(
-                                null
-                            )}
-                            <View style={{flexDirection:"row", alignItems:"center"}}>
+                            {this.state.showErrorPolicy ? (
+                                <View>
+                                    <Text style={{ fontSize: 12, color: "red", textAlign: "center" }}> Debe aceptar las políticas de privacidad</Text>
+                                </View>) : (
+                                    null
+                                )}
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
                                 <CheckBox
                                     center
                                     checked={this.state.policyAccepted}
                                     onPress={() => this.onCheckPolicy()}
                                 />
                                 <View>
-                                    <Text style={{fontWeight:"bold"}}>Acepto las</Text>
+                                    <Text style={{ fontWeight: "bold" }}>Acepto las</Text>
                                 </View>
                                 <View>
-                                <Button type="clear" onPress={()=>this.goToPrivacyPolicy()} loading={this.state.sendingData}  title="Políticas de privacidad" />
+                                    <Button type="clear" onPress={() => this.goToPrivacyPolicy()} loading={this.state.sendingData} title="Políticas de privacidad" />
                                 </View>
                             </View>
                             <View style={styles.buttonContainer}>

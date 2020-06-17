@@ -147,16 +147,16 @@ class NodeRequestView extends React.PureComponent {
             }
         } else if (error.request) {
             Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde",
-            [
-                { text: 'Entendido', onPress: () => this.props.actions.logout() },
-            ],
-            { cancelable: false },);
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false });
         } else {
             Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.",
-            [
-                { text: 'Entendido', onPress: () => this.props.actions.logout() },
-            ],
-            { cancelable: false },);
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false });
         }
     }
 
@@ -220,77 +220,79 @@ class NodeRequestView extends React.PureComponent {
     }
 
     handleChangeOfField(field, value) {
-        switch (field) {
-            case NOMBRENODO:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    nodeData: Object.assign({}, prevState.nodeData, {
-                        nombre: value
-                    })
-                }))
-                if (value.length < 2 || value.length > 64) {
+        if (/([A-zÀ-ú0-9!()\\-`.+,/\"]+|\s|[\b])$/.test(value) || value === "") {
+            switch (field) {
+                case NOMBRENODO:
                     this.setState((prevState) => ({
                         dataChange: true,
-                        errorMessage: Object.assign({}, prevState.errorMessage, {
-                            nombre: "Debe contener entre 2 y 64 caracteres"
+                        nodeData: Object.assign({}, prevState.nodeData, {
+                            nombre: value
                         })
                     }))
-                } else {
+                    if (value.length < 2 || value.length > 64) {
+                        this.setState((prevState) => ({
+                            dataChange: true,
+                            errorMessage: Object.assign({}, prevState.errorMessage, {
+                                nombre: "Debe contener entre 2 y 64 caracteres"
+                            })
+                        }))
+                    } else {
+                        this.setState((prevState) => ({
+                            dataChange: true,
+                            errorMessage: Object.assign({}, prevState.errorMessage, {
+                                nombre: ""
+                            })
+                        }))
+                    }
+                    break;
+                case DESCRIPCION:
                     this.setState((prevState) => ({
                         dataChange: true,
-                        errorMessage: Object.assign({}, prevState.errorMessage, {
-                            nombre: ""
+                        nodeData: Object.assign({}, prevState.nodeData, {
+                            descripcion: value
                         })
                     }))
-                }
-                break;
-            case DESCRIPCION:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    nodeData: Object.assign({}, prevState.nodeData, {
-                        descripcion: value
-                    })
-                }))
-                if (value.length < 2 || value.length > 64) {
+                    if (value.length < 2 || value.length > 64) {
+                        this.setState((prevState) => ({
+                            dataChange: true,
+                            errorMessage: Object.assign({}, prevState.errorMessage, {
+                                descripcion: "Debe contener entre 2 y 64 caracteres"
+                            })
+                        }))
+                    } else {
+                        this.setState((prevState) => ({
+                            dataChange: true,
+                            errorMessage: Object.assign({}, prevState.errorMessage, {
+                                descripcion: ""
+                            })
+                        }))
+                    }
+                    break;
+                case BARRIO:
                     this.setState((prevState) => ({
                         dataChange: true,
-                        errorMessage: Object.assign({}, prevState.errorMessage, {
-                            descripcion: "Debe contener entre 2 y 64 caracteres"
+                        nodeData: Object.assign({}, prevState.nodeData, {
+                            barrio: value
                         })
                     }))
-                } else {
-                    this.setState((prevState) => ({
-                        dataChange: true,
-                        errorMessage: Object.assign({}, prevState.errorMessage, {
-                            descripcion: ""
-                        })
-                    }))
-                }
-                break;
-            case BARRIO:
-                this.setState((prevState) => ({
-                    dataChange: true,
-                    nodeData: Object.assign({}, prevState.nodeData, {
-                        barrio: value
-                    })
-                }))
-                if (value.length < 2 || value.length > 64) {
-                    this.setState((prevState) => ({
-                        dataChange: true,
-                        errorMessage: Object.assign({}, prevState.errorMessage, {
-                            barrio: "Debe contener entre 2 y 64 caracteres"
-                        })
-                    }))
-                } else {
-                    this.setState((prevState) => ({
-                        dataChange: true,
-                        errorMessage: Object.assign({}, prevState.errorMessage, {
-                            barrio: ""
-                        })
-                    }))
-                }
-                break;
+                    if (value.length < 2 || value.length > 64) {
+                        this.setState((prevState) => ({
+                            dataChange: true,
+                            errorMessage: Object.assign({}, prevState.errorMessage, {
+                                barrio: "Debe contener entre 2 y 64 caracteres"
+                            })
+                        }))
+                    } else {
+                        this.setState((prevState) => ({
+                            dataChange: true,
+                            errorMessage: Object.assign({}, prevState.errorMessage, {
+                                barrio: ""
+                            })
+                        }))
+                    }
+                    break;
 
+            }
         }
     }
 
@@ -686,8 +688,8 @@ class NodeRequestView extends React.PureComponent {
                                     </View>
                                 ) : (null)}
                                 {this.props.adressesData.map((adress, i) => {
-                                    
-                                    let index  = this.addCheckWithIndex(adress);
+
+                                    let index = this.addCheckWithIndex(adress);
 
                                     return (
                                         <TouchableOpacity key={adress.idDireccion} onPress={() => this.onCheckChangedAdress(adress.idDireccion)} style={{ flexDirection: "row", alignItems: 'center', height: 90, borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>

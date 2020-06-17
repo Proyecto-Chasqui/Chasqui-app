@@ -1,7 +1,7 @@
 import React from 'react'
-import { View, Text, StyleSheet, Dimensions, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Alert, ActivityIndicator, TouchableOpacity} from 'react-native';
 import { Button, Icon } from 'react-native-elements';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView,} from 'react-native-gesture-handler';
 
 class DeliveryAdressConfigView extends React.PureComponent {
     constructor(props) {
@@ -9,13 +9,13 @@ class DeliveryAdressConfigView extends React.PureComponent {
         this.navigation = props.navigation;
     }
 
-    goToNewAdress(){
+    goToNewAdress() {
         this.navigation.navigate('GestiónDeDirección', {
             adressDataInfo: null,
         });
     }
 
-    goToEditAdress(adressData){
+    goToEditAdress(adressData) {
         this.navigation.navigate('GestiónDeDirección', {
             adressDataInfo: adressData,
         });
@@ -23,37 +23,37 @@ class DeliveryAdressConfigView extends React.PureComponent {
 
     render() {
         return (
-            <View>
-            <View>
-            <Button titleStyle={{ color: "black", }}
-                containerStyle={styles.buttonAddProductContainer}
-                buttonStyle={styles.buttonNewAddressStyle}
-                onPress={()=> this.goToNewAdress()} title="Nueva dirección">
-            </Button>
-            </View>
-            <ScrollView style={{height:Dimensions.get('window').height - 210}}>
+            <View style={{ flex: 1 }}>
+                <View>
+                    <Button titleStyle={{ color: "black", }}
+                        containerStyle={styles.buttonAddProductContainer}
+                        buttonStyle={styles.buttonNewAddressStyle}
+                        onPress={() => this.goToNewAdress()} title="Nueva dirección">
+                    </Button>
+                </View>
+                <ScrollView>
 
-                {this.props.adressesData.map((adressData, i) => {
-                    return (                        
-                        <View key={i} style={styles.directionContanierStyle}>
-                            <View style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
-                                <Text style={styles.caracteristicsStyle} >{adressData.alias}</Text>
-                                <View style={styles.verticalDivisor} />
-                                <Button icon={
-                                    <Icon
-                                    name='caret-right'
-                                    type='font-awesome'
-                                    color='#b0b901'
-                                    size={30}
-                                    />}
-                                    containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
-                                    onPress={() =>  this.goToEditAdress(adressData)}></Button>
-                            </View>
-                        </View>
-                    )
-                })
-                }
-            </ScrollView>
+                    {this.props.adressesData.map((adressData, i) => {
+                        return (
+                            <TouchableOpacity onPress={() => this.goToEditAdress(adressData)} key={i} style={styles.directionContanierStyle}>
+                                <View style={{ flexDirection: "row", marginLeft: 20, marginTop: 5, marginBottom: 5 }}>
+                                    <Text style={styles.caracteristicsStyle} >{adressData.alias}</Text>
+                                    <View style={styles.verticalDivisor} />
+                                    <Button icon={
+                                        <Icon
+                                            name='caret-right'
+                                            type='font-awesome'
+                                            color='#b0b901'
+                                            size={30}
+                                        />}
+                                        containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
+                                        onPress={() => this.goToEditAdress(adressData)}></Button>
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    })
+                    }
+                </ScrollView>
             </View>
 
         )
