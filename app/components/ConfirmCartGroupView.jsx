@@ -80,7 +80,7 @@ class ConfirmCartGroupView extends React.PureComponent {
                 }else{
                     Alert.alert(
                         'Error',
-                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        'Ocurrió un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuníquese con soporte técnico.',
                         [
                             { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],

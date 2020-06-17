@@ -42,7 +42,7 @@ class OpenNodesView extends React.PureComponent {
             if (error.response.status === 401) {
                 Alert.alert(
                     'Sesion expirada',
-                    'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                    'Su sesión expiro, se va a reiniciar la aplicación.',
                     [
                         { text: 'Entendido', onPress: () => this.props.actions.logout() },
                     ],
@@ -61,7 +61,7 @@ class OpenNodesView extends React.PureComponent {
                 } else {
                     Alert.alert(
                         'Error',
-                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        'Ocurrió un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuníquese con soporte técnico.',
                         [
                             { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],
