@@ -52,7 +52,7 @@ class ItemInfoCartView extends React.PureComponent {
             if(error.response.status === 401){
                 Alert.alert(
                     'Sesion expirada',
-                    'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                    'Su sesión expiro, se va a reiniciar la aplicación.',
                     [
                         { text: 'Entendido', onPress: () => this.props.actions.logout() },
                     ],

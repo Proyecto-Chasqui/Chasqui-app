@@ -122,7 +122,7 @@ class CatalogView extends React.Component {
                 if(error.response.status === 401){
                     Alert.alert(
                         'Sesion expirada',
-                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        'Su sesión expiro, se va a reiniciar la aplicación.',
                         [
                             { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],
@@ -131,7 +131,7 @@ class CatalogView extends React.Component {
                 }else{
                     Alert.alert(
                         'Error',
-                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        'Ocurrio un error inesperado, si el problema persiste comuníquese con soporte técnico',
                         [
                             { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],
@@ -174,7 +174,7 @@ class CatalogView extends React.Component {
                 if(error.response.status === 401){
                     Alert.alert(
                         'Sesion expirada',
-                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        'Su sesión expiro, se va a reiniciar la aplicación.',
                         [
                             { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],
@@ -183,7 +183,7 @@ class CatalogView extends React.Component {
                 }else{
                     Alert.alert(
                         'Error',
-                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        'Ocurrio un error inesperado, si el problema persiste comuníquese con soporte técnico',
                         [
                             { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],
@@ -231,7 +231,7 @@ class CatalogView extends React.Component {
                 if(error.response.status === 401){
                     Alert.alert(
                         'Sesion expirada',
-                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        'Su sesión expiro, se va a reiniciar la aplicación.',
                         [
                             { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],
@@ -240,7 +240,7 @@ class CatalogView extends React.Component {
                 }else{
                     Alert.alert(
                         'Error',
-                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        'Ocurrio un error inesperado, si el problema persiste comuníquese con soporte técnico',
                         [
                             { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],
@@ -278,7 +278,7 @@ class CatalogView extends React.Component {
                 if(error.response.status === 401){
                     Alert.alert(
                         'Sesion expirada',
-                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        'Su sesión expiro, se va a reiniciar la aplicación.',
                         [
                             { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],
@@ -287,7 +287,7 @@ class CatalogView extends React.Component {
                 }else{
                     Alert.alert(
                         'Error',
-                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        'Ocurrio un error inesperado, si el problema persiste comuníquese con soporte técnico',
                         [
                             { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],
@@ -411,7 +411,7 @@ class CatalogView extends React.Component {
                 if(error.response.status === 401){
                     Alert.alert(
                         'Sesion expirada',
-                        'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+                        'Su sesión expiro, se va a reiniciar la aplicación.',
                         [
                             { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],
@@ -420,7 +420,7 @@ class CatalogView extends React.Component {
                 }else{
                     Alert.alert(
                         'Error',
-                        'Ocurrio un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuniquese con soporte tecnico.',
+                        'Ocurrio un error inesperado, si el problema persiste comuníquese con soporte técnico',
                         [
                             { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],

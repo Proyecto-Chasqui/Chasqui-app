@@ -235,7 +235,7 @@ class OpenNodesView extends React.PureComponent {
 
     cancelUserRequest(id) {
         axios.post((this.serverBaseRoute + 'rest/user/nodo/cancelarSolicitudDePertenencia/' + id)).then(res => {
-            this.messageAlert("La solicitud se cancelo con correctamente")
+            this.messageAlert("La solicitud se cancelo correctamente")
             this.getAccessOpenNodeRequests()
         }).catch((error) => {
             this.setState({ loading: false })

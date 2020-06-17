@@ -21,21 +21,23 @@ class NavigationOptionItemsView extends React.PureComponent {
       this.props.actions.shoppingCarts([])
       this.props.actions.shoppingCartUnselected()
       this.props.actions.groupsData([])
+      this.navigation.navigate("Catalogos")
       this.logout()
     } catch (error) {
       console.log("error on storage", error.message)
     }
   };
 
-  sendLogout() {
+  sendLogout() {    
     this.removeUserData()
   }
+
   errorAlert(error) {
     if (error.response) {
       if (error.response.status === 401) {
         Alert.alert(
           'Sesion expirada',
-          'Su sesión expiro, retornara a los catalogos para reiniciar su sesión',
+          'Su sesión expiro, se va a reiniciar la aplicación.',
           [
             { text: 'Entendido', onPress: () => this.props.actions.logout() },
           ],
