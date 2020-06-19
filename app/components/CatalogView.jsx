@@ -627,7 +627,7 @@ class CatalogView extends React.Component {
                         onPress={() => this.props.navigation.openDrawer()}
                     />
                     <Image
-                        style={{ width: 50, height: 55 }}
+                        style={{ width: 40, height: 45 }}
                         source={ require('../components/catalogViewComponents/catalogAssets/platform-icon.png') }/>
                     <View>
                     <Button
@@ -698,7 +698,9 @@ const styles = StyleSheet.create({
 
     topHeader: {
         backgroundColor: 'rgba(51, 102, 255, 1)',
-        marginTop: -25
+        justifyContent:"center",
+        alignContent:"center",
+        alignItems:"center",
     },
 
     lowerHeaderStyle: {

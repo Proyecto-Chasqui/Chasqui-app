@@ -813,7 +813,6 @@ const styles = StyleSheet.create({
     },
     topHeader: {
         backgroundColor: 'rgba(51, 102, 255, 1)',
-        marginTop: -25,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

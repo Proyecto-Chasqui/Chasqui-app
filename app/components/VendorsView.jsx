@@ -120,7 +120,7 @@ class VendorsView extends React.PureComponent {
         return (
             <View style={{ flex: 1 }}>
                 <View>
-                    <Header containerStyle={styles.topHeader}>
+                    <Header containerStyle={styles.topHeader} statusBarProps={{ translucent: true }}>
                         <Button
                             icon={
                                 <Icon name="bars" size={20} color="white" type='font-awesome' />
@@ -129,27 +129,9 @@ class VendorsView extends React.PureComponent {
                             onPress={() => this.props.navigation.openDrawer()}
                         />
                         <Image
-                            style={{ width: 50, height: 55 }}
+                            style={{ width: 40, height: 45 }}
                             source={require('../components/catalogViewComponents/catalogAssets/platform-icon.png')}
                         />
-                        {this.minWidth ? (
-                            !this.state.multipleCards ? (<Button
-                                icon={
-                                    <Icon name="th" size={20} color="white" type='font-awesome' />
-                                }
-                                buttonStyle={styles.leftHeaderButton}
-                                onPress={() => this.switchStyle()}
-                            />) : (<Button
-                                icon={
-                                    <Icon name="th-large" size={20} color="white" type='font-awesome' />
-                                }
-                                buttonStyle={styles.leftHeaderButton}
-                                onPress={() => this.switchStyle()}
-                            />)
-                        )
-                            :
-                            null
-                        }
                     </Header>
                     <Header backgroundColor='white' containerStyle={styles.lowerHeaderStyle}
                         leftComponent={
@@ -177,7 +159,6 @@ class VendorsView extends React.PureComponent {
                         }
                     />
                 </View>
-                <View style={{ backgroundColor: "Black" }}></View>
                 <VendorFilters showFilter={() => this.showFilters()}
                     isVisible={this.state.isVisible}
                     searchValue={this.state.search}
@@ -205,7 +186,6 @@ const styles = StyleSheet.create({
 
     topHeader: {
         backgroundColor: 'rgba(51, 102, 255, 1)',
-        marginTop: -25
     },
 
     lowerHeaderStyle: {

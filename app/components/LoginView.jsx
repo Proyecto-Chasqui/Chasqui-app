@@ -318,9 +318,9 @@ class LoginView extends React.PureComponent {
                     <Text style={styles.TextStyle} onPress={() => this.goToRegister()}> Registrarme </Text>
                   </View>
                 </View>
-                <View style={styles.middleButton} >
-                  <View>
-                    <Text style={styles.TextStyle} onPress={() => this.loginAsGuest()}> Ingresar como invitadx </Text>
+                <View style={styles.guestButton} >
+                  <View style={{paddingLeft:5, paddingEnd:5, paddingTop:5, paddingBottom:6}}>
+                    <Text style={styles.textStyleButtonGuest} onPress={() => this.loginAsGuest()}> Ingresar como invitadx </Text>
                   </View>
                 </View>
               </View>
@@ -447,6 +447,25 @@ const styles = StyleSheet.create({
     color: '#ffffff'
 
   },
+
+  guestButton: {
+    backgroundColor: '#4da6ff',
+    borderColor: "white",
+    borderWidth: 1,
+    borderRadius: 5,
+    height: 30,
+    marginTop: 10,
+    marginLeft: 0,
+    alignSelf: 'center',
+    justifyContent:"center",
+    alignContent:"center",
+    alignItems:"center",
+  },
+
+  textStyleButtonGuest:{
+    fontSize: 16,
+    color: '#ffffff',
+  }
 
 
 });
