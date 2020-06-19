@@ -15,7 +15,7 @@ class PrivacyPolicyView extends React.PureComponent {
         return (
             <View style={{flex:1}}>
                 <View>
-                    <Header containerStyle={styles.topHeader}>
+                    <Header containerStyle={styles.topHeader} statusBarProps={{ translucent: true }}>
                         <Button
                             icon={
                                 <Icon name="arrow-left" size={20} color="white" type='font-awesome' />

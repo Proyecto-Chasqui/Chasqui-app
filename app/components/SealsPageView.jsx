@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, Dimensions, StyleSheet } from 'react-native';
-import { Card, Button, Icon, SearchBar, Image } from 'react-native-elements';
+import { Card, Header, Button, Icon, SearchBar, Image } from 'react-native-elements';
 import { WebView } from 'react-native-webview'
 import GLOBALS from '../Globals';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -14,44 +14,57 @@ class SealsPageView extends React.PureComponent {
     render() {
         const INJECTEDJAVASCRIPT = "document.body.style.userSelect = 'none'";
         return (
-            <ScrollView horizontal={true}>
-            <View style={{flexDirection:"row"}}>
-            {this.props.sealsSelected.map((seal, i) => {
-                return (
-                    <View key={seal.idMedalla + i}> 
-                        <Card containerStyle={styles.cardStyle}>
-                            <View style={{ flexDirection: "column", width: Dimensions.get("window").width - 60 }}>
-                                <Image
-                                    onStartShouldSetResponder={() =>null}
-                                    containerStyle={{ alignSelf: "center" }}
-                                    style={{ width: 150, height: 150, marginBottom:5, resizeMode: 'stretch' }}
-                                    source={{ uri: this.serverBaseRoute + seal.pathImagen }}
-                                />
-                            </View>
-                            <View  style={{ height: Dimensions.get("window").height - 100}}>
-                                <WebView
-                                    originWhitelist= {["*"]}
-                                    scalesPageToFit={false}
-                                    containerStyle={{ height: 100, }}
-                                    injectedJavaScript={INJECTEDJAVASCRIPT}
-                                    style={{flex: 1}}
-                                    source={{ html: seal.descripcion }}
-                                />
-                            </View>
-                        </Card>
+            <View style={{ flex:1 }}>
+                <Header containerStyle={styles.topHeader} statusBarProps={{ translucent: true }}>
+                    <Button
+                        icon={
+                            <Icon name="arrow-left" size={20} color="white" type='font-awesome' />
+                        }
+                        buttonStyle={styles.rightHeaderButton}
+                        onPress={() => this.props.navigation.goBack()}
+                    />
+                    <Image
+                        style={{ width: 40, height: 45 }}
+                        source={require('../components/catalogViewComponents/catalogAssets/platform-icon.png')}
+                    />
+                </Header>
+                <ScrollView horizontal={true}>
+                    <View style={{ flexDirection: "row", justifyContent: "center"}}>
+                        {this.props.sealsSelected.map((seal, i) => {
+                            return (
+                                <View key={seal.idMedalla + i} style={{height:50}}>
+                                    <Card containerStyle={styles.cardStyle}>
+                                        <View style={{ flexDirection: "column", width: Dimensions.get("window").width - 60 }}>
+                                            <Image
+                                                onStartShouldSetResponder={() => null}
+                                                containerStyle={{ alignSelf: "center" }}
+                                                style={{ width: 150, height: 150, marginBottom: 5, resizeMode: 'stretch' }}
+                                                source={{ uri: this.serverBaseRoute + seal.pathImagen }}
+                                            />
+                                        </View>
+                                        <View style={{ height: Dimensions.get("window").height - 300 }}>
+                                            <WebView
+                                                originWhitelist={["*"]}
+                                                scalesPageToFit={false}
+                                                containerStyle={{ height: 100, }}
+                                                injectedJavaScript={INJECTEDJAVASCRIPT}
+                                                style={{ flex: 1 }}
+                                                source={{ html: seal.descripcion }}
+                                            />
+                                        </View>
+                                    </Card>
+                                </View>
+                            );
+                        })}
                     </View>
-                );
-            })}
+                </ScrollView>
             </View>
-            </ScrollView>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    cardStyle:{
-        height: Dimensions.get("window").height - 50,
-        
+    cardStyle: {
         alignSelf: 'center', shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -60,6 +73,34 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.32,
         shadowRadius: 5.46,
         elevation: 9,
+    },
+    topHeader: {
+        backgroundColor: 'rgba(51, 102, 255, 1)',
+    },
+
+    lowerHeaderStyle: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.32,
+        shadowRadius: 5.46,
+        
+        elevation: 9,
+        flexDirection:"row",
+        justifyContent:"space-between",
+        alignItems:"center",
+        height:35
+    },
+
+    rightHeaderButton: {
+        backgroundColor: '#66000000',
+        marginRight: 15,
+        borderColor: "white",
+        borderWidth: 1,
+        width: 40,
+        height: 40
     },
 })
 
