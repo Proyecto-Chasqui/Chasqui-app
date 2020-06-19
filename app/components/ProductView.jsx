@@ -452,12 +452,12 @@ class ProductView extends React.PureComponent {
                                     <Icon
                                         name='caret-up'
                                         type='font-awesome'
-                                        color='#b0b901'
+                                        color="#fff000"
                                         size={30}
                                     />) : (<Icon
                                         name='caret-down'
                                         type='font-awesome'
-                                        color='#b0b901'
+                                        color="#fff000"
                                         size={30}
                                     />)}
                                 containerStyle={styles.buttonCaracteristicsContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -465,7 +465,7 @@ class ProductView extends React.PureComponent {
                         </TouchableOpacity>
                     </View>
                     {this.state.showDescription ? (
-                        <View style={styles.caracteristicsContanierStyle}>
+                        <View style={styles.descriptionContanierStyle}>
                             <ScrollView style={styles.descriptionViewContainer}>
                                 <View style={{ height: 200 }}>
                                     <WebView
@@ -490,12 +490,12 @@ class ProductView extends React.PureComponent {
                                     <Icon
                                         name='caret-up'
                                         type='font-awesome'
-                                        color='#b0b901'
+                                        color="#fff000"
                                         size={30}
                                     />) : (<Icon
                                         name='caret-down'
                                         type='font-awesome'
-                                        color='#b0b901'
+                                        color="#fff000"
                                         size={30}
                                     />)}
                                 containerStyle={styles.buttonCaracteristicsContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -513,7 +513,7 @@ class ProductView extends React.PureComponent {
                                                 <Icon
                                                     name='caret-right'
                                                     type='font-awesome'
-                                                    color='#b0b901'
+                                                    color="#fff000"
                                                     size={30}
                                                 />}
                                                 containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -530,7 +530,7 @@ class ProductView extends React.PureComponent {
                                                     <Icon
                                                         name='caret-right'
                                                         type='font-awesome'
-                                                        color='#b0b901'
+                                                        color="#fff000"
                                                         size={30}
                                                     />}
                                                     containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -704,6 +704,16 @@ const styles = StyleSheet.create({
         textAlign: 'justify'
     },
 
+    descriptionContanierStyle:{
+        flex: 1,
+        borderRadius: 5,
+        borderColor: "grey",
+        borderWidth: 0,
+        marginLeft: 20,
+        marginRight: 20,
+        marginBottom: 5,
+    },
+
     caracteristicsContanierStyle: {
         flex: 1,
         borderRadius: 5,
@@ -796,7 +806,7 @@ const styles = StyleSheet.create({
 
     buttonAddProductStyle: {
         height: "100%",
-        backgroundColor: "#f8f162",
+        backgroundColor: "#fff000",
     },
 
     buttonAddProductContainer: {

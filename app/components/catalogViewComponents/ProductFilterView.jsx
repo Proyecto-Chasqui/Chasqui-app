@@ -364,8 +364,8 @@ class ProductFilterView extends React.PureComponent{
             windowBackgroundColor="rgba(0, 0, 0, 0.3)"
             onBackdropPress={() => this.props.showFilter()} isVisible={this.props.isVisible}
             animationType="fade"
-        >
-            <View>
+            >
+            <View style={{flex:1}}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 3, marginTop: -6 }}>
                 <View style={{ justifyContent: 'center' }}>
                     <Text style={{ alignSelf: 'flex-start', marginLeft: 15, fontSize: 15, fontWeight: 'bold' }}>Buscar Por:</Text>
@@ -471,8 +471,8 @@ const styles = StyleSheet.create({
         alignSelf:"flex-end",
         width: 300,
         height: Dimensions.get("window").height - 210,
-        borderWidth: 2,
-        borderColor: "#D8D8D8",
+        borderWidth: 0,
+        borderColor: "#ffffff",
     },
 
     scrollViewFilters: {
@@ -488,7 +488,7 @@ const styles = StyleSheet.create({
     },
 
     divisor: {
-        borderTopWidth: 2,
+        borderTopWidth: 1,
         borderTopColor: "#D8D8D8",
         marginLeft: -9,
         width: "107%"
@@ -522,7 +522,7 @@ const styles = StyleSheet.create({
     iconRevealButton: {
         marginLeft: 50,
         alignSelf: 'flex-end',
-        color: "#D7DF01"
+        color: "#fff000"
     },
 
     iconContainer: {

@@ -119,45 +119,43 @@ class VendorsView extends React.PureComponent {
 
         return (
             <View style={{ flex: 1 }}>
-                <View>
-                    <Header containerStyle={styles.topHeader} statusBarProps={{ translucent: true }}>
-                        <Button
-                            icon={
-                                <Icon name="bars" size={20} color="white" type='font-awesome' />
-                            }
-                            buttonStyle={styles.rightHeaderButton}
-                            onPress={() => this.props.navigation.openDrawer()}
-                        />
-                        <Image
-                            style={{ width: 40, height: 45 }}
-                            source={require('../components/catalogViewComponents/catalogAssets/platform-icon.png')}
-                        />
-                    </Header>
-                    <Header backgroundColor='white' containerStyle={styles.lowerHeaderStyle}
-                        leftComponent={
-                            <SearchBar
-                                placeholder="Tu búsqueda comienza aquí"
-                                onChangeText={this.updateSearch}
-                                value={this.state.search}
-                                containerStyle={styles.searchContainer}
-                                inputContainerStyle={styles.inputSearchContainer}
-                                inputStyle={styles.inputStyle}
-                                leftIconContainerStyle={styles.iconContainerLeft}
-                                placeholderTextColor={"rgba(51, 102, 255, 1)"}
-                                searchIcon={<Icon name="search" type='font-awesome' size={16} iconStyle={styles.searchIcon} />}
-                                lightTheme
-                            />
+                <Header containerStyle={styles.topHeader} statusBarProps={{ translucent: true }}>
+                    <Button
+                        icon={
+                            <Icon name="bars" size={20} color="white" type='font-awesome' />
                         }
-                        rightComponent={
-                            <Button
-                                icon={<Icon name="caret-down" type='font-awesome' size={20} iconStyle={styles.iconLowerHeaderButton} />}
-                                buttonStyle={styles.lowerHeaderButton}
-                                onPress={() => this.showFilters()}
-                                title="Filtros"
-                                titleStyle={styles.lowerHeaderButtonTitle}
-                            />
-                        }
+                        buttonStyle={styles.rightHeaderButton}
+                        onPress={() => this.props.navigation.openDrawer()}
                     />
+                    <Image
+                        style={{ width: 40, height: 45 }}
+                        source={require('../components/catalogViewComponents/catalogAssets/platform-icon.png')}
+                    />
+                </Header>
+                <View backgroundColor='white' style={styles.lowerHeaderStyle}>
+                        <View style={{flex:1}}>
+                        <SearchBar
+                            placeholder="Búsqueda por nombre"
+                            onChangeText={this.updateSearch}
+                            value={this.state.search}
+                            containerStyle={styles.searchContainer}
+                            inputContainerStyle={styles.inputSearchContainer}
+                            inputStyle={styles.inputStyle}
+                            leftIconContainerStyle={styles.iconContainerLeft}
+                            placeholderTextColor={"rgba(51, 102, 255, 1)"}
+                            searchIcon={<Icon name="search" type='font-awesome' size={16} iconStyle={styles.searchIcon} />}
+                            lightTheme
+                        />
+                        </View>
+                        <View style={{borderLeftColor:"grey", borderLeftWidth:1, height:"75%"}}>                           
+                        </View>
+                        <Button
+                            icon={<Icon name="caret-down" type='font-awesome' size={20} iconStyle={styles.iconLowerHeaderButton} />}
+                            buttonStyle={styles.lowerHeaderButton}
+                            onPress={() => this.showFilters()}
+                            title="Filtros"
+                            titleStyle={styles.lowerHeaderButtonTitle}
+                        />
                 </View>
                 <VendorFilters showFilter={() => this.showFilters()}
                     isVisible={this.state.isVisible}
@@ -196,19 +194,12 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.32,
         shadowRadius: 5.46,
-
+        
         elevation: 9,
-        height: 35,
-    },
-
-    contentContainer: {
-        flex: 1,
-        flexDirection: 'column',
-        paddingVertical: -20,
-        marginStart: -15,
-        marginEnd: -13,
-        marginTop: -14.5,
-        marginBottom: 0,
+        flexDirection:"row",
+        justifyContent:"space-between",
+        alignItems:"center",
+        height:35
     },
 
     rightHeaderButton: {
@@ -220,40 +211,27 @@ const styles = StyleSheet.create({
         height: 40
     },
 
-    leftHeaderButton: {
-        backgroundColor: '#66000000',
-        marginLeft: 15,
-        borderColor: "white",
-        borderWidth: 1,
-        width: 40,
-        height: 40
-    },
-
     searchContainer: {
-        marginTop: -20,
         backgroundColor: "transparent",
-        marginLeft: -18,
         borderBottomColor: "transparent",
         borderTopColor: "transparent",
-        borderWidth: 0,
+        borderWidth: 0,  
+        flex:1,        
+        padding:0,
     },
 
     inputSearchContainer: {
         backgroundColor: "transparent",
         borderColor: "white",
-        marginTop: -5,
-        height: 30,
-        width: "350%",
-        borderWidth: 0,
+        height:32,
     },
 
     inputStyle: {
-        width: "100%",
         fontSize: 13,
         fontWeight: "bold",
         color: "black",
-
     },
+
     iconContainerLeft: {
         backgroundColor: "transparent",
     },
@@ -264,14 +242,8 @@ const styles = StyleSheet.create({
 
     lowerHeaderButton: {
         backgroundColor: '#66000000',
-        marginLeft: 15,
-        borderColor: "grey",
-        borderLeftWidth: 1,
         borderRadius: 0,
-        width: 100,
-        height: 20,
-        marginBottom: 25,
-        marginLeft: -5
+        width: 90,
     },
 
     iconLowerHeaderButton: {
@@ -280,7 +252,8 @@ const styles = StyleSheet.create({
     },
 
     lowerHeaderButtonTitle: {
-        color: "rgba(51, 102, 255, 1)"
+        color: "rgba(51, 102, 255, 1)",
+        fontSize:13
     },
 
     overlayContainer: {

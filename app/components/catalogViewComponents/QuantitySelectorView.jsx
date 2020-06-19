@@ -78,12 +78,12 @@ class QuantitySelectorView extends React.PureComponent{
         return(
         <View style={{flexDirection:"row", flex:1}}>
             <View style={{flex:3}} >
-            <Button disabled={this.props.disabled} buttonStyle={{height:"100%", backgroundColor:"transparent", }}
+            <Button disabled={this.props.disabled} buttonStyle={{height:"100%", backgroundColor:"white", }}
                 icon={
                     <Icon
                     name='caret-left'
                     type='font-awesome'
-                    color='#b0b901'
+                    color="#fff000"
                     size={30}
                     />
                 }
@@ -91,9 +91,9 @@ class QuantitySelectorView extends React.PureComponent{
                 />
             </View>
             <View style={styles.verticalDivisor} />
-            <View style={{flex:12, alignSelf:"center", height:"100%", justifyContent:"center", alignContent:"center", flexDirection:"row" }}> 
+            <View style={{flex:12, alignSelf:"center", height:"100%", justifyContent:"center", backgroundColor:"white", alignContent:"center", flexDirection:"row" }}> 
                 <Text style={{alignSelf:"center", fontSize:20}}>{this.props.text}</Text>
-                <TextInput style={{height:"100%", alignSelf:"center", fontSize:20}} containerStyle={{alignSelf:"center", }}
+                <TextInput style={{height:"100%", alignSelf:"center", fontSize:20,}} containerStyle={{alignSelf:"center", }}
                         maxLength={10}
                         keyboardType='numeric'
                         onChangeText={text => this.onChangeText(text)}
@@ -103,12 +103,12 @@ class QuantitySelectorView extends React.PureComponent{
             </View>
             <View style={styles.verticalDivisor} />
             <View style={{flex:3}} >
-            <Button disabled={!this.allowAdd() || this.props.disabled} buttonStyle={{height:"100%", backgroundColor:"transparent"}}
+            <Button disabled={!this.allowAdd() || this.props.disabled} buttonStyle={{height:"100%", backgroundColor:"white"}}
                 icon={
                         <Icon
                         name='caret-right'
                         type='font-awesome'
-                        color='#b0b901'
+                        color="#fff000"
                         size={30}
                         />
                 }

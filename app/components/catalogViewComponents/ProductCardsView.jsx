@@ -361,11 +361,11 @@ const stylesMultipleCards = StyleSheet.create({
 
     },
     viewSearchErrorContainer: {
-        height: "100%"
+        flex:1,
+        justifyContent:"center"
     },
 
     viewErrorContainer: {
-        marginTop: 230
     },
 
     errorText: {
@@ -536,14 +536,16 @@ const stylesMultipleCards = StyleSheet.create({
 
     wiewCard: {
         width: "50%",
+        marginRight:0,
+        marginLeft:0
     },
 
     card: {
         height: 415,
         borderRadius: 2,
         marginTop: 5,
-        marginLeft: 5,
-        marginRight: 5,
+        marginLeft: 3,
+        marginRight: 3,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

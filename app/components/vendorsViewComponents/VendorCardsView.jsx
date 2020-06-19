@@ -58,10 +58,10 @@ class VendorMultipleCardsView extends React.PureComponent {
                             <Icon name="search" type='font-awesome' size={50} color={"white"} containerStyle={stylesSingleCards.searchIconError}></Icon>
                         </View>
                         <Text style={stylesSingleCards.errorText}>
-                            No se encontraron vendedores
+                            No se encontraron catálogos
                     </Text>
                         <Text style={stylesSingleCards.tipErrorText}>
-                            Revise los filtros o la busqueda
+                            Revise los filtros o la búsqueda
                     </Text>
                     </View>
                 </View>
@@ -317,11 +317,11 @@ const stylesMultipleCards = StyleSheet.create({
 
 const stylesSingleCards = StyleSheet.create({
     viewSearchErrorContainer: {
-        height: "100%"
+        height: "80%",
+        justifyContent:"center",
     },
 
     viewErrorContainer: {
-        marginTop: 230
     },
 
     errorText: {
@@ -354,7 +354,7 @@ const stylesSingleCards = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         marginTop: 5,
-        marginBottom: 50,
+        marginBottom: 10,
         flexWrap: 'wrap',
     },
 

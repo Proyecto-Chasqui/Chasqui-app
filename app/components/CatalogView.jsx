@@ -643,8 +643,8 @@ class CatalogView extends React.Component {
                     </View>
                 </Header>
                 <NoSellsWarnOverlayView isVisible={!this.props.vendorSelected.ventasHabilitadas} message={this.props.vendorSelected.mensajeVentasDeshabilitadas}></NoSellsWarnOverlayView>
-                <Header backgroundColor='white' containerStyle={styles.lowerHeaderStyle}
-                    leftComponent={
+                <View backgroundColor='white' style={styles.lowerHeaderStyle}>
+                        <View style={{flex:1}}>
                         <SearchBar
                             placeholder="Tu búsqueda comienza aquí"
                             onChangeText={this.updateSearch}
@@ -657,8 +657,9 @@ class CatalogView extends React.Component {
                             searchIcon={<Icon name="search" type='font-awesome' size={16} iconStyle={styles.searchIcon} />}
                             lightTheme
                         />
-                    }
-                    rightComponent={
+                        </View>
+                        <View style={{borderLeftColor:"grey", borderLeftWidth:1, height:"75%"}}>                           
+                        </View>
                         <Button
                             icon={<Icon name="caret-down" type='font-awesome' size={20} iconStyle={styles.iconLowerHeaderButton} />}
                             buttonStyle={styles.lowerHeaderButton}
@@ -666,8 +667,7 @@ class CatalogView extends React.Component {
                             title="Filtros"
                             titleStyle={styles.lowerHeaderButtonTitle}
                         />
-                    }
-                />
+                </View>
                 <ProductFilterView showFilter={() => this.showFilters()}
                     isVisible={this.state.isVisible}
                     searchValue={this.state.search}
@@ -711,9 +711,12 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.32,
         shadowRadius: 5.46,
-
+        
         elevation: 9,
-        height: 35,
+        flexDirection:"row",
+        justifyContent:"space-between",
+        alignItems:"center",
+        height:35
     },
 
     contentContainer: {
@@ -745,29 +748,24 @@ const styles = StyleSheet.create({
     },
 
     searchContainer: {
-        marginTop: -20,
         backgroundColor: "transparent",
-        marginLeft: -18,
         borderBottomColor: "transparent",
         borderTopColor: "transparent",
-        borderWidth: 0,
+        borderWidth: 0,  
+        flex:1,        
+        padding:0,
     },
 
     inputSearchContainer: {
         backgroundColor: "transparent",
         borderColor: "white",
-        marginTop: -5,
-        height: 30,
-        width: "350%",
-        borderWidth: 0,
+        height:32,
     },
 
     inputStyle: {
-        width: "100%",
         fontSize: 13,
         fontWeight: "bold",
         color: "black",
-
     },
     iconContainerLeft: {
         backgroundColor: "transparent",
@@ -779,14 +777,8 @@ const styles = StyleSheet.create({
 
     lowerHeaderButton: {
         backgroundColor: '#66000000',
-        marginLeft: 15,
-        borderColor: "grey",
-        borderLeftWidth: 1,
         borderRadius: 0,
-        width: 100,
-        height: 20,
-        marginBottom: 25,
-        marginLeft: -5
+        width: 90,
     },
 
     iconLowerHeaderButton: {
@@ -795,7 +787,8 @@ const styles = StyleSheet.create({
     },
 
     lowerHeaderButtonTitle: {
-        color: "rgba(51, 102, 255, 1)"
+        color: "rgba(51, 102, 255, 1)",
+        fontSize:13
     },
 
     overlayContainer: {
