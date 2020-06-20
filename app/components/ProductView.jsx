@@ -602,7 +602,7 @@ class ProductView extends React.PureComponent {
 const styles = StyleSheet.create({
 
     footerControlsSection: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "#ebedeb",
     },
 
     topHeader: {
