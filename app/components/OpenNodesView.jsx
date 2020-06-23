@@ -54,7 +54,7 @@ class OpenNodesView extends React.PureComponent {
                         'Error',
                         error.response.data.error,
                         [
-                            { text: 'Entendido', onPress: () => null },
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],
                         { cancelable: false },
                     );
@@ -152,6 +152,7 @@ class OpenNodesView extends React.PureComponent {
     async goToLogin() {
         try {
             await AsyncStorage.removeItem("user");
+            this.props.navigation.navigate("Catalogos")
             this.props.actions.logout();
         } catch (error) {
             console.log("error on go to login", error.message)

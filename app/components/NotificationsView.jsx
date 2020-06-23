@@ -155,9 +155,19 @@ class NotificationsView extends React.PureComponent {
             );
         });
     }
+
+    defineDeclinedRoute(type) {
+        if (type === "grupo") {
+            return 'rest/user/gcc/rechazar'
+        } 
+        if(type === "nodo"){
+            return 'rest/user/nodo/rechazarInvitacion'
+        }
+        return ''
+    }
   
     sendDeclined(id, type) {
-        axios.post(this.serverBaseRoute + this.defineAcceptRoute(type), {
+        axios.post(this.serverBaseRoute + this.defineDeclinedRoute(type), {
             idInvitacion: id,
         }, { withCredentials: true }).then(res => {
             this.markNotification(id, "NOTIFICACION_RECHAZADA");

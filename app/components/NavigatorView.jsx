@@ -45,14 +45,14 @@ class NavigatorView extends React.PureComponent {
         finalStatus = status;
       }
       if (finalStatus !== 'granted') {
-        Alert.alert('No se logro obtener el permiso para las notificaciones, puede usar la aplicación pero perderá ciertas sincronizaciones necesarias en compras colectivas.');
+        Alert.alert('Advertencia', 'No se logro obtener el permiso para las notificaciones, puede usar la aplicación pero perderá ciertas sincronizaciones necesarias en compras colectivas.');
         return;
       }
       let token = await Notifications.getExpoPushTokenAsync();
       this.setState({ expoPushToken: token });
       this.registerTokenOnServer(token.toString());
     } else {
-      Alert.alert('Las notificaciones solo funcionan en dispositivos fisicos');
+      Alert.alert('Advertencia','Las notificaciones solo funcionan en dispositivos físicos');
     }
 
     if (Platform.OS === 'android') {
@@ -71,7 +71,7 @@ class NavigatorView extends React.PureComponent {
     }).then(res => {
 
     }).catch((error) => {
-      Alert.alert('Error', 'ocurrio un error al registrar el dispositivo para las notificaciones.');
+      Alert.alert('Advertencia', 'Ocurrio un error al registrar el dispositivo para las notificaciones, puede utilizar la aplicación pero es posible que tenga problemas de sincronización con compras colectivas.');
     });
   }
 
@@ -118,7 +118,11 @@ class NavigatorView extends React.PureComponent {
   componentDidUpdate(){
     if(this.state.lastAccessId !== this.props.user.id){
       if(this.props.user.id !== 0){
+        try{
         this.registerForPushNotificationsAsync();
+        }catch (error){
+          Alert.alert('Advertencia', 'Ocurrio un error al registrar el dispositivo para las notificaciones, puede utilizar la aplicación pero es posible que tenga problemas de sincronización con compras colectivas.');
+        }
       }
       this.resetData()
       this.setState({ lastAccessId: this.props.user.id, nickname:this.props.user.nickname})
@@ -136,7 +140,7 @@ class NavigatorView extends React.PureComponent {
     actions.openNodesData([])
     actions.personalData([])
     actions.shoppingCartSelected([])
-    actions.shoppingCartSelected([])
+    actions.vendorUnSelected()
     actions.shoppingCarts([])
     actions.accessOpenNodeRequests([])
   }

@@ -16,13 +16,14 @@ class OverlayShoppingCartView extends React.PureComponent {
         this.serverBaseRoute = GLOBAL.BASE_URL;
         this.shoppingCartSelected = this.props.actions.shoppingCartSelected;
         this.shoppingCarts = this.props.actions.shoppingCarts;
-        this.vendorSelected = this.props.vendorSelected
+        
         this.state = {
             showShoppingCarts: false,
             shoppingCartTypeSelected: 'Ver pedidos',
             getShoppingCarts: false,
             showWaitSign: false,
             guest: this.props.user.id === 0,
+            vendorSelected : this.props.vendorSelected
         }
     }
 
@@ -41,6 +42,9 @@ class OverlayShoppingCartView extends React.PureComponent {
         if(this.props.hasReceivedPushNotifications){
             this.forceUpdate();
             this.props.actions.hasReceivedPushNotifications(false)
+        }
+        if(this.props.resetState.reset){
+            this.setState({vendorSelected: this.props.vendorSelected})
         }
     }
 
@@ -90,7 +94,7 @@ class OverlayShoppingCartView extends React.PureComponent {
                         'Error',
                          error.response.data.error,
                         [
-                            { text: 'Entendido', onPress: () => null },
+                            { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],
                         { cancelable: false },
                     );
@@ -190,13 +194,12 @@ class OverlayShoppingCartView extends React.PureComponent {
         this.showShoppingCarts();
     }
 
+    vendorHasAtLeastOneModeOfSelling(){
+        return this.state.vendorSelected.few.gcc || this.state.vendorSelected.few.nodos || this.state.vendorSelected.few.compraIndividual
+    }
+
     validCatalog() {
-        return true;
-        if (this.vendorSelected.few.compraIndividual !== undefined) {
-            return this.vendorSelected.few.compraIndividual
-        } else {
-            return false
-        }
+        return this.vendorHasAtLeastOneModeOfSelling();
     }
 
     canShowCartBasedOnVendorState(cart) {
@@ -263,10 +266,10 @@ class OverlayShoppingCartView extends React.PureComponent {
                                 <Icon name="exclamation" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
                             </View>
                             <Text style={styles.errorText}>
-                                Catálogo no soportado
+                                Catálogo sin modos de venta
                             </Text>
                             <Text style={styles.tipErrorText}>
-                                El catálogo no opera con pedidos <Text style={{ fontWeight: 'bold' }}>Individuales</Text>
+                                El catálogo no esta <Text style={{ fontWeight: 'bold' }}>configurado</Text> para la venta
                             </Text>
                         </View>)}
                     </View>

@@ -4,7 +4,8 @@ import NavigatorView from '../components/NavigatorView';
 import {
   logout, groupsData, groupSelected, historyShoppingCarts, historyCartSelected,
   invitationsData, memberSelected, openNodesData, personalData, shoppingCartSelected, 
-  shoppingCarts,accessOpenNodeRequests, hasReceivedPushNotifications,hasReceivedExpiredCartNotification
+  shoppingCarts,accessOpenNodeRequests, hasReceivedPushNotifications,hasReceivedExpiredCartNotification,
+  vendorUnSelected
 } from '../actions';
 
 const mapStateToProps = state => ({
@@ -20,7 +21,7 @@ const mapDispatchToProps = dispatch => ({
     historyShoppingCarts, historyCartSelected, invitationsData,
     memberSelected, openNodesData, personalData, shoppingCartSelected,
     shoppingCarts, accessOpenNodeRequests, hasReceivedPushNotifications, 
-    hasReceivedExpiredCartNotification
+    hasReceivedExpiredCartNotification,vendorUnSelected
   }, dispatch),
 });
 

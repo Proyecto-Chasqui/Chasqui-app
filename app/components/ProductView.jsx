@@ -402,7 +402,7 @@ class ProductView extends React.PureComponent {
                         {this.props.shoppingCarts.length > 0 ? (
                             <Badge value={this.props.shoppingCarts.length} status="error" containerStyle={{ position: 'absolute', top: -6, right: -6 }} />
                         ) : (null)}
-                        <View style={{ position: 'absolute', marginLeft: 35, marginTop: 75 }}>
+                        <View style={{ position: 'absolute', marginLeft: 35, marginTop: 50 }}>
                             <Tooltip onClose={() => this.toogleClosedHandler()} containerStyle={{ borderColor: 'black', borderWidth: 1, backgroundColor: "white", height: 150, width: 300, marginLeft: -135 }} ref={(ref) => { this.tooltipRef = ref }} withOverlay={false}
                                 pointerColor='rgba(51, 102, 255, 1)'
                                 popover={

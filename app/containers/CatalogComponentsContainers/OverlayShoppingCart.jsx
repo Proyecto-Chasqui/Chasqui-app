@@ -10,6 +10,7 @@ const mapStateToProps = state => ({
     user: state.user,
     groupsData: state.groupsData,
     hasReceivedPushNotifications: state.hasReceivedPushNotifications,
+    resetState: state.resetState,
 });
 
 const mapDispatchToProps = dispatch => ({

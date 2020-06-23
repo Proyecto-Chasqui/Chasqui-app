@@ -21,6 +21,7 @@ class NavigationOptionItemsView extends React.PureComponent {
       this.props.actions.shoppingCarts([])
       this.props.actions.shoppingCartUnselected()
       this.props.actions.groupsData([])
+      this.unregisterUserFromNotifications()
       this.navigation.navigate("Catalogos")
       this.logout()
     } catch (error) {
@@ -66,6 +67,12 @@ class NavigationOptionItemsView extends React.PureComponent {
       ],
       { cancelable: false },);
     }
+  }
+
+  unregisterUserFromNotifications() {
+    axios.put(this.serverBaseRoute + 'rest/user/adm/desvincularDispositivo').then(res => {
+    }).catch((error) => {
+    });
   }
 
   getUnreadNotifications() {

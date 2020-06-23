@@ -68,10 +68,17 @@ class CatalogView extends React.Component {
         }
       }
 
+    getUserShoppingCarts(){
+        if(this.vendorHasAtLeastOneModeOfSelling()){                    
+            this.getShoppingCarts(this.props);
+        }else{
+            this.shoppingCarts([]);
+        }
+    }
     updateInfo(){
         if (this.props.vendorSelected !== undefined) {
             if(this.userLogged()){
-                this.getShoppingCarts(this.props);
+                this.getUserShoppingCarts()
                 this.getUnreadNotifications();
                 this.getPersonalData(this.props);
                 if(this.props.vendorSelected.few.gcc || this.props.vendorSelected.few.nodos){
@@ -81,10 +88,14 @@ class CatalogView extends React.Component {
         }
     }
 
+    vendorHasAtLeastOneModeOfSelling(){
+        return this.props.vendorSelected.few.gcc || this.props.vendorSelected.few.nodos || this.props.vendorSelected.few.compraIndividual
+    }
+
     load() {
         if (this.props.vendorSelected.id !== undefined) {
             if(this.userLogged()){
-                this.getShoppingCarts(this.props);
+                this.getUserShoppingCarts();
                 this.getUnreadNotifications();
                 this.props.actions.shoppingCartUnselected();
                 this.getPersonalData(this.props);
@@ -109,6 +120,11 @@ class CatalogView extends React.Component {
             if (this.props.vendorSelected.few.puntoDeEntrega) {
                 this.getSellerPoints(this.props);
             }
+        }else{
+            this.props.actions.vendorUnSelected();
+            this.props.actions.shoppingCartUnselected();
+            this.vendorId = 0;        
+            this.props.navigation.navigate("Catalogos")
         }
     }
 
@@ -368,6 +384,7 @@ class CatalogView extends React.Component {
             this.props.actions.shoppingCartUnselected();
             this.props.actions.hasReceivedExpiredCartNotification(false)
         }
+
     }
 
     restart(){
@@ -395,6 +412,7 @@ class CatalogView extends React.Component {
         });
         BackHandler.addEventListener('hardwareBackPress', this.backButtonClick);
         this.load();
+
     }
    
     getShoppingCarts(props){
