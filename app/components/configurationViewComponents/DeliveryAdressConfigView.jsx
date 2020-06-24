@@ -43,7 +43,7 @@ class DeliveryAdressConfigView extends React.PureComponent {
                                         <Icon
                                             name='caret-right'
                                             type='font-awesome'
-                                            color='#b0b901'
+                                            color='#fff000'
                                             size={30}
                                         />}
                                         containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
         flex: 1,
         borderRadius: 5,
         borderColor: "grey",
+        backgroundColor:"white",
         borderWidth: 1,
         marginLeft: 10,
         marginRight: 10,

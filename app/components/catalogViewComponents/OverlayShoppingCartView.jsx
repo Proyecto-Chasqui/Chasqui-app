@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
 
     iconRevealButton: {
         alignSelf: 'flex-end',
-        color: "#D7DF01",
+        color: "#fff000",
     },
 
     iconContainer: {

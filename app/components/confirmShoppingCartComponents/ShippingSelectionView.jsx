@@ -291,12 +291,12 @@ class ShippingSelectionView extends React.PureComponent {
                                         <Icon
                                             name='caret-up'
                                             type='font-awesome'
-                                            color='#b0b901'
+                                            color='#fff000'
                                             size={30}
                                         />) : (<Icon
                                             name='caret-down'
                                             type='font-awesome'
-                                            color='#b0b901'
+                                            color='#fff000'
                                             size={30}
                                         />)}
                                     containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -411,12 +411,12 @@ class ShippingSelectionView extends React.PureComponent {
                                             <Icon
                                                 name='caret-up'
                                                 type='font-awesome'
-                                                color='#b0b901'
+                                                color='#fff000'
                                                 size={30}
                                             />) : (<Icon
                                                 name='caret-down'
                                                 type='font-awesome'
-                                                color='#b0b901'
+                                                color='#fff000'
                                                 size={30}
                                             />)}
                                         containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -432,12 +432,12 @@ class ShippingSelectionView extends React.PureComponent {
                                             <Icon
                                                 name='caret-up'
                                                 type='font-awesome'
-                                                color='#b0b901'
+                                                color='#fff000'
                                                 size={30}
                                             />) : (<Icon
                                                 name='caret-down'
                                                 type='font-awesome'
-                                                color='#b0b901'
+                                                color='#fff000'
                                                 size={30}
                                             />)}
                                         containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -517,6 +517,7 @@ const styles = StyleSheet.create({
     moreInfoButtonContainer: {
         flexDirection: "row",
         borderColor: 'grey',
+        backgroundColor:"white",
         margin: 10,
         borderRadius: 3,
         borderWidth: 1
