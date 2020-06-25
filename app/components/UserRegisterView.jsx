@@ -478,7 +478,7 @@ class UserRegisterView extends React.PureComponent {
     }
 
     handleChangeOfField(field, value) {
-        if (/([A-zÀ-ú0-9!()\\-`.+,/@\"]+|\s|[\b])$/.test(value) || value === ""|| field === PASSWORD || field === CONFIRM_PASSWORD) {
+        if (/([A-zÀ-ú0-9!()\\-`.+,/\"]+|\s|[\b])$/.test(value) || value === ""|| field === PASSWORD || field === CONFIRM_PASSWORD || field === EMAIL) {
             switch (field) {
                 case APODO:
                     this.setState((prevState) => ({
