@@ -344,9 +344,9 @@ class CatalogView extends React.Component {
                 Alert.alert(
                     'Pregunta',
                     '¿Desea volver a la lista de catálogos?',
-                    [
-                        { text: 'Si', onPress: () => this.goBackCatalogs()},
+                    [                        
                         { text: 'No', onPress: () => null },
+                        { text: 'Si', onPress: () => this.goBackCatalogs()},
                     ],
                     { cancelable: true },
                 );

@@ -145,6 +145,15 @@ class MapAdressConfig extends React.PureComponent {
                 </MapView>
                 {!this.state.canMoveMarker ? (
                     <View style={styles.submenu}>
+                        
+                        <Button containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonNotStyle}
+                            icon={
+                                <Icon name="cancel" size={20} color="black" type='material' />
+                            }
+                            titleStyle={{ marginLeft: 10, color: 'black', marginRight: 10 }}
+                            title="No es correcta"
+                            onPress={() => this.wrongLocation()}
+                        />
 
                         <Button containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonOkStyle}
                             icon={
@@ -155,14 +164,7 @@ class MapAdressConfig extends React.PureComponent {
                             onPress={() => this.confirmLocation()}
                         />
 
-                        <Button containerStyle={styles.subMenuButtonContainer} buttonStyle={styles.subMenuButtonNotStyle}
-                            icon={
-                                <Icon name="cancel" size={20} color="black" type='material' />
-                            }
-                            titleStyle={{ marginLeft: 10, color: 'black', marginRight: 10 }}
-                            title="No es correcta"
-                            onPress={() => this.wrongLocation()}
-                        />
+
                     </View>
                 ) : (
                         <View style={styles.submenu}>

@@ -88,8 +88,8 @@ class NavigationOptionItemsView extends React.PureComponent {
       'Cerrar sesión',
       '¿Está segurx que desea cerrar la sesión?',
       [
-        { text: 'Si', onPress: () => this.sendLogout() },
         { text: 'No', onPress: () => null },
+        { text: 'Si', onPress: () => this.sendLogout() },
       ])
   }
 

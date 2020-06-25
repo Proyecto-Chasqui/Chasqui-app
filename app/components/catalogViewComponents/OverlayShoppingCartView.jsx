@@ -62,8 +62,8 @@ class OverlayShoppingCartView extends React.PureComponent {
             'Aviso',
             '¿Seguro que desea abrir un pedido individual?',
             [
-                { text: 'Si', onPress: () => this.openCart() },
                 { text: 'No', onPress: () => null },
+                { text: 'Si', onPress: () => this.openCart() },
             ],
             { cancelable: false },
         );
@@ -128,9 +128,9 @@ class OverlayShoppingCartView extends React.PureComponent {
         Alert.alert(
             'Aviso',
             '¿Seguro que desea abrir un pedido para el '+ this.defineTypeGroup() + ' ' + group.alias + '?',
-            [
-                { text: 'Si', onPress: () => this.openCartOnGroup(group) },
+            [                
                 { text: 'No', onPress: () => null },
+                { text: 'Si', onPress: () => this.openCartOnGroup(group) },
             ],
             { cancelable: false },
         );
