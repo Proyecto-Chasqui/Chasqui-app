@@ -143,15 +143,16 @@ class ItemInfoCartView extends React.PureComponent {
 
     async removeUserData(){
         try {
-          await AsyncStorage.removeItem("user");
-          this.props.actions.logout();
+          await AsyncStorage.removeItem("user")
+          this.props.navigation.navigate("Catalogos")
+          this.props.actions.logout()
         } catch (error) {
           console.log("error on storage",error.message)
         }
       };
 
     goToRegister() {
-        this.removeUserData()
+        this.removeUserData()      
     }
 
     detectAlert(alertText){
