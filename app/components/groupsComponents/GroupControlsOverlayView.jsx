@@ -236,7 +236,8 @@ class GroupControlsOverlayView extends React.PureComponent {
             idGrupo: this.props.groupSelected.id,
             emailCliente: this.props.user.email
         }, { withCredentials: true }).then(res => {
-            this.goToGroups("Salio del grupo con exito")
+            let text = 'Salio del '+ (this.props.vendorSelected.few.gcc ? 'grupo' : 'nodo') + ' con exito'
+            this.goToGroups(text)
         }).catch((error) => {
             this.setState({ showWaitSign: false })
             this.errorAlert(error)
@@ -255,7 +256,7 @@ class GroupControlsOverlayView extends React.PureComponent {
         if (!this.hasCartOpenOrConfirmed()) {
             Alert.alert(
                 'Aviso',
-                '¿Esta seguro que desea irse del grupo?',
+                '¿Esta seguro que desea irse del ' + (this.props.vendorSelected.few.gcc ?'grupo?':'nodo?'),
                 [
                     { text: 'No', onPress: () => null },
                     { text: 'Si', onPress: () => this.getOutOfGroup() },
@@ -266,18 +267,20 @@ class GroupControlsOverlayView extends React.PureComponent {
             if (this.hasCartOpen()) {
                 Alert.alert(
                     'Aviso',
-                    'No puede irse debido a que tiene un pedido abierto. Deberá cancelar su pedido para poder salir.',
+                    'Tiene un pedido abierto, si sale del '+ (this.props.vendorSelected.few.gcc ? 'grupo' : 'nodo') +' el mismo será cancelado, ¿Desea salir?',
                     [
-                        { text: 'Entendido', onPress: () => null },
+                        { text: 'No', onPress: () => null },
+                        { text: 'Si', onPress: () => this.getOutOfGroup() },
                     ],
                     { cancelable: false },
                 );
             } else {
                 Alert.alert(
                     'Aviso',
-                    'No puede irse debido a que tiene un pedido confirmado. Deberá esperar que el ciclo de compra este ' + this.defineType()+ ' finalice para poder salir.',
+                    'Tiene un pedido confirmado, si sale del '+ (this.props.vendorSelected.few.gcc ? 'grupo' : 'nodo') +' el mismo será cancelado, ¿Desea salir?',
                     [
-                        { text: 'Entendido', onPress: () => null },
+                        { text: 'No', onPress: () => null },
+                        { text: 'Si', onPress: () => this.getOutOfGroup() },
                     ],
                     { cancelable: false },
                 );

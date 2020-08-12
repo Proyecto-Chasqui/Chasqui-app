@@ -76,13 +76,25 @@ class AdministrationMembersView extends React.PureComponent {
         );
     }
 
+    askActionRemoveMemberWithCartActive(member) { 
+        Alert.alert(
+            'Pregunta',
+            "El usuario que va a expulsar posee un pedido ABIERTO o CONFIRMADO, expulsarlo cancelará su pedido. ¿Esta seguro de expulsar a " + this.defineMessage(member) + " ?",
+            [
+                { text: 'No', onPress: () => null },
+                { text: 'Si', onPress: () => this.sendRemoveMember(member.email) },
+            ],
+            { cancelable: false },
+        );
+    }
+
     removeMember(member) {
         if (!this.state.loading) {
             if (member.pedido !== null) {
                 if (!(member.pedido.estado == "ABIERTO" || member.pedido.estado == "CONFIRMADO")) {
                     this.askActionRemoveMember(member)
                 } else {
-                    this.showAlert('No puede eliminar un miembro que posee un pedido ' + member.pedido.estado.toLowerCase() + '.')
+                    this.askActionRemoveMemberWithCartActive(member)
                 }
             } else {
                 this.askActionRemoveMember(member)
