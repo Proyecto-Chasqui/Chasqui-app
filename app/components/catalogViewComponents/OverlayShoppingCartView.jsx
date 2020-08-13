@@ -16,35 +16,35 @@ class OverlayShoppingCartView extends React.PureComponent {
         this.serverBaseRoute = GLOBAL.BASE_URL;
         this.shoppingCartSelected = this.props.actions.shoppingCartSelected;
         this.shoppingCarts = this.props.actions.shoppingCarts;
-        
+
         this.state = {
             showShoppingCarts: false,
             shoppingCartTypeSelected: 'Ver pedidos',
             getShoppingCarts: false,
             showWaitSign: false,
             guest: this.props.user.id === 0,
-            vendorSelected : this.props.vendorSelected
+            vendorSelected: this.props.vendorSelected
         }
     }
 
-    defineStrategyRoute(){
+    defineStrategyRoute() {
         let value = ''
-        if(this.props.vendorSelected.few.gcc){
+        if (this.props.vendorSelected.few.gcc) {
             value = 'rest/user/gcc/'
         }
-        if(this.props.vendorSelected.few.nodos){
+        if (this.props.vendorSelected.few.nodos) {
             value = 'rest/user/nodo/'
         }
         return value
     }
 
-    componentDidUpdate(){
-        if(this.props.hasReceivedPushNotifications){
+    componentDidUpdate() {
+        if (this.props.hasReceivedPushNotifications) {
             this.forceUpdate();
             this.props.actions.hasReceivedPushNotifications(false)
         }
-        if(this.props.resetState.reset){
-            this.setState({vendorSelected: this.props.vendorSelected})
+        if (this.props.resetState.reset) {
+            this.setState({ vendorSelected: this.props.vendorSelected })
         }
     }
 
@@ -69,17 +69,17 @@ class OverlayShoppingCartView extends React.PureComponent {
         );
     }
 
-    defineTypeGroup(){
-        if(this.props.vendorSelected.few.gcc){
+    defineTypeGroup() {
+        if (this.props.vendorSelected.few.gcc) {
             return "grupo"
-        }else{
+        } else {
             return "nodo"
         }
     }
 
-    errorAlert(error){
+    errorAlert(error) {
         if (error.response) {
-            if(error.response.status === 401){
+            if (error.response.status === 401) {
                 Alert.alert(
                     'Sesion expirada',
                     'Su sesión expiro, se va a reiniciar la aplicación.',
@@ -88,17 +88,17 @@ class OverlayShoppingCartView extends React.PureComponent {
                     ],
                     { cancelable: false },
                 );
-            }else{
-                if(error.response.data !== null){
+            } else {
+                if (error.response.data !== null) {
                     Alert.alert(
                         'Error',
-                         error.response.data.error,
+                        error.response.data.error,
                         [
                             { text: 'Entendido', onPress: () => this.props.actions.logout() },
                         ],
                         { cancelable: false },
                     );
-                }else{
+                } else {
                     Alert.alert(
                         'Error',
                         'Ocurrió un error inesperado, sera reenviado a los catalogos. Si el problema persiste comuníquese con soporte técnico.',
@@ -111,24 +111,24 @@ class OverlayShoppingCartView extends React.PureComponent {
             }
         } else if (error.request) {
             Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde",
-            [
-                { text: 'Entendido', onPress: () => this.props.actions.logout() },
-            ],
-            { cancelable: false },);
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false });
         } else {
             Alert.alert('Error', "Ocurrio un error de comunicación con el servidor, intente más tarde.",
-            [
-                { text: 'Entendido', onPress: () => this.props.actions.logout() },
-            ],
-            { cancelable: false },);
+                [
+                    { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                ],
+                { cancelable: false });
         }
     }
 
     alertOpenGroupCart(group) {
         Alert.alert(
             'Aviso',
-            '¿Seguro que desea abrir un pedido para el '+ this.defineTypeGroup() + ' ' + group.alias + '?',
-            [                
+            '¿Seguro que desea abrir un pedido para el ' + this.defineTypeGroup() + ' ' + group.alias + '?',
+            [
                 { text: 'No', onPress: () => null },
                 { text: 'Si', onPress: () => this.openCartOnGroup(group) },
             ],
@@ -138,7 +138,7 @@ class OverlayShoppingCartView extends React.PureComponent {
 
     openCartOnGroup(group) {
         this.setState({ showWaitSign: true })
-        axios.post((this.serverBaseRoute + this.defineStrategyRoute()+ 'individual'), {
+        axios.post((this.serverBaseRoute + this.defineStrategyRoute() + 'individual'), {
             idGrupo: group.id,
             idVendedor: this.props.vendorSelected.id
         }, { withCredentials: true }).then(res => {
@@ -194,7 +194,7 @@ class OverlayShoppingCartView extends React.PureComponent {
         this.showShoppingCarts();
     }
 
-    vendorHasAtLeastOneModeOfSelling(){
+    vendorHasAtLeastOneModeOfSelling() {
         return this.state.vendorSelected.few.gcc || this.state.vendorSelected.few.nodos || this.state.vendorSelected.few.compraIndividual
     }
 
@@ -211,6 +211,19 @@ class OverlayShoppingCartView extends React.PureComponent {
 
     }
 
+    defineButtonTitle() {
+        if (this.state.vendorSelected.few.gcc) {
+            return "Ingrese a Mis grupos"
+        } else {
+            return "Ingrese a Mis nodos"
+        }
+    }
+
+    goToGroups(){
+        this.props.showFilter()
+        this.props.navigation.navigate("MisGrupos")
+    }
+
     render() {
 
         return (
@@ -221,69 +234,103 @@ class OverlayShoppingCartView extends React.PureComponent {
                 onBackdropPress={() => this.props.showFilter()} isVisible={this.props.isVisible}
                 animationType="fade"
             >
-                <View style={{flex:1}}>
-                <View style={styles.topHeader}>
-                    <View style={styles.containerIconStyle}>
-                        <Icon iconStyle={styles.shoppingCartIcon} name="shopping-cart" size={20} color="white" type='font-awesome' />
-                    </View>
-                    <Text style={styles.title}>PEDIDOS</Text>
-                </View>
-
-                <View style={styles.selectorContainer}>
-                    <Button disabled={this.state.guest} titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title={this.state.shoppingCartTypeSelected}
-                        onPress={() => this.showShoppingCarts()} icon=
-                        {this.state.showShoppingCarts ? (<Icon containerStyle={styles.iconContainer} iconStyle={styles.iconRevealButton} name="caret-up" size={20} color={'black'} type='font-awesome' />
-                        ) :
-                            (<Icon containerStyle={styles.iconContainer} iconStyle={styles.iconRevealButton} name="caret-down" size={20} color={'black'} type='font-awesome' />
-                            )
-                        } iconRight />
-                </View>
-                <View style={styles.divisor}></View>
-                <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
-
-
-                {this.state.showShoppingCarts ?
-
-                    <View style={{ flex: 1 }}>
-
-                        {this.validCatalog() ? (
-                            <ScrollView style={{ flex: 1 }}>
-                                {(!this.props.vendorSelected.ventasHabilitadas) ? (
-                                    <View style={styles.selectorContainer}>
-                                        <Text style={{ marginTop: 5, marginLeft: 5, marginRight: 5, fontSize: 16, fontStyle: 'italic', textAlign: "center", fontWeight: "bold" }}>Las ventas estan deshabilitadas</Text>
-                                        <Text style={{ marginBottom: 5, marginLeft: 5, marginRight: 5, fontStyle: 'italic', textAlign: "justify" }}>Por el momento no podrá abrir nuevos pedidos, pero podra gestionar los pedidos abiertos existentes</Text>
-                                    </View>
-                                ) : (null)}
-                                <ButtonOpenIndividualCart selectCart={(id) => this.selectCartById(id)} actionFunction={() => this.alertOpenCart()}></ButtonOpenIndividualCart>
-                                {this.props.groupsData.map((group, i) => {
-                                    return (
-                                        <ButtonOpenGroupCart key={group.id} group={group} selectCart={(id) => this.selectCartById(id)} actionFunction={() => this.alertOpenGroupCart(group)}></ButtonOpenGroupCart>
-                                    )
-                                })}
-                            </ScrollView>
-                        ) : (<View style={styles.viewErrorContainer}>
-                            <View style={styles.searchIconErrorContainer}>
-                                <Icon name="exclamation" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
-                            </View>
-                            <Text style={styles.errorText}>
-                                Catálogo sin modos de venta
-                            </Text>
-                            <Text style={styles.tipErrorText}>
-                                El catálogo no esta <Text style={{ fontWeight: 'bold' }}>configurado</Text> para la venta
-                            </Text>
-                        </View>)}
-                    </View>
-
-                    :
-                    (
-                        <View style={{ marginLeft: -9, marginRight: -9 }}>
-
-                            <ItemInfoCartView functionShow={() => this.props.showFilter()} navigation={this.props.navigation}></ItemInfoCartView>
-
+                <View style={{ flex: 1 }}>
+                    <View style={styles.topHeader}>
+                        <View style={styles.containerIconStyle}>
+                            <Icon iconStyle={styles.shoppingCartIcon} name="shopping-cart" size={20} color="white" type='font-awesome' />
                         </View>
-                    )
-                }
-            </View>
+                        <Text style={styles.title}>PEDIDOS</Text>
+                    </View>
+
+                    <View style={styles.selectorContainer}>
+                        <Button disabled={this.state.guest} titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title={this.state.shoppingCartTypeSelected}
+                            onPress={() => this.showShoppingCarts()} icon=
+                            {this.state.showShoppingCarts ? (<Icon containerStyle={styles.iconContainer} iconStyle={styles.iconRevealButton} name="caret-up" size={20} color={'black'} type='font-awesome' />
+                            ) :
+                                (<Icon containerStyle={styles.iconContainer} iconStyle={styles.iconRevealButton} name="caret-down" size={20} color={'black'} type='font-awesome' />
+                                )
+                            } iconRight />
+                    </View>
+                    <View style={styles.divisor}></View>
+                    <LoadingOverlayView isVisible={this.state.showWaitSign} loadingText="Comunicandose con el servidor..."></LoadingOverlayView>
+
+
+                    {this.state.showShoppingCarts ?
+
+                        <View style={{ flex: 1 }}>
+
+                            {this.validCatalog() ? (
+
+                                <ScrollView style={{ flex: 1 }}>
+                                    {(!this.props.vendorSelected.ventasHabilitadas) ? (
+                                        <View style={styles.selectorContainer}>
+                                            <Text style={{ marginTop: 5, marginLeft: 5, marginRight: 5, fontSize: 16, fontStyle: 'italic', textAlign: "center", fontWeight: "bold" }}>Las ventas estan deshabilitadas</Text>
+                                            <Text style={{ marginBottom: 5, marginLeft: 5, marginRight: 5, fontStyle: 'italic', textAlign: "justify" }}>Por el momento no podrá abrir nuevos pedidos, pero podra gestionar los pedidos abiertos existentes</Text>
+                                        </View>
+                                    ) : (null)}
+                                    <ButtonOpenIndividualCart selectCart={(id) => this.selectCartById(id)} actionFunction={() => this.alertOpenCart()}></ButtonOpenIndividualCart>
+                                    {this.props.groupsData.map((group, i) => {
+                                        return (
+                                            <ButtonOpenGroupCart key={group.id} group={group} selectCart={(id) => this.selectCartById(id)} actionFunction={() => this.alertOpenGroupCart(group)}></ButtonOpenGroupCart>
+                                        )
+                                    })}
+                                    {this.state.vendorSelected.few.gcc || this.state.vendorSelected.few.nodos ? (
+                                        <View style={{flex:1, margin: 10}}>
+                                            {this.props.groupsData.length === 0 ?
+                                                (
+                                                    <View style={{ flex: 1, width:"100%",borderWidth: 2, borderRadius: 3, borderColor: '#D8D8D8', flexDirection: "column", alignSelf: "center" }}>
+                                                        <View style={{ marginTop: 15, marginBottom: 15, alignSelf: "center" }}>
+                                                            <View style={styles.viewErrorContainer}>
+
+                                                                <View style={styles.searchIconErrorContainer}>
+                                                                    <Icon name="users" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
+                                                                </View>
+                                                                <Text style={styles.errorText}>
+                                                                    No pertenece a ningun {this.state.vendorSelected.few.gcc ? ("grupo") : ("nodo")}
+                                                                </Text>
+                                                                <Text style={styles.errorText2}>
+                                                                    Para comenzar a comprar en un {this.state.vendorSelected.few.gcc ? ("grupo") : ("nodo")}
+                                                                </Text>
+                                                                <View style={{ justifyContent: "center", alignContent: "center", alignItems: "center" }}>
+                                                                    <Button
+                                                                        title={this.defineButtonTitle()}
+                                                                        buttonStyle={styles.buttonTipErrorText2}
+                                                                        onPress={() => this.goToGroups()}
+                                                                        type="solid"
+                                                                    />
+                                                                </View>
+                                                            </View>
+                                                        </View>
+                                                    </View>
+                                                )
+                                                :
+                                                (null)}
+                                        </View>
+                                    ) : (null)}
+                                </ScrollView>
+                            ) : (<View style={styles.viewErrorContainer}>
+                                <View style={styles.searchIconErrorContainer}>
+                                    <Icon name="exclamation" type='font-awesome' size={50} color={"white"} containerStyle={styles.searchIconError}></Icon>
+                                </View>
+                                <Text style={styles.errorText}>
+                                    Catálogo sin modos de venta
+                            </Text>
+                                <Text style={styles.tipErrorText}>
+                                    El catálogo no esta <Text style={{ fontWeight: 'bold' }}>configurado</Text> para la venta
+                            </Text>
+                            </View>)}
+                        </View>
+
+                        :
+                        (
+                            <View style={{ marginLeft: -9, marginRight: -9 }}>
+
+                                <ItemInfoCartView functionShow={() => this.props.showFilter()} navigation={this.props.navigation}></ItemInfoCartView>
+
+                            </View>
+                        )
+                    }
+                </View>
             </Overlay>
         );
     }
@@ -312,14 +359,32 @@ const styles = StyleSheet.create({
     },
 
     viewErrorContainer: {
-        flex:1,
-        justifyContent:"center"
+        flex: 1,
+        justifyContent: "center"
     },
 
     errorText: {
         marginTop: 25,
         fontSize: 15,
         fontWeight: "bold",
+        alignSelf: 'center'
+    },
+
+    errorText2: {
+        marginTop: 5,
+        fontSize: 15,
+        fontWeight: "bold",
+        alignSelf: 'center'
+    },
+
+    buttonTipErrorText: {
+        marginTop: 25,
+        alignSelf: 'center'
+    },
+
+    
+    buttonTipErrorText2: {
+        marginTop: 10,
         alignSelf: 'center'
     },
 
@@ -335,7 +400,7 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         alignSelf: 'center',
-        borderWidth:2,
+        borderWidth: 2,
     },
 
     cartIconOkContainer: {
@@ -383,9 +448,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'white',
         borderRadius: 3,
-        height:40,
-        width:40,
-        justifyContent:"center"
+        height: 40,
+        width: 40,
+        justifyContent: "center"
     },
 
     shoppingCartIcon: {
