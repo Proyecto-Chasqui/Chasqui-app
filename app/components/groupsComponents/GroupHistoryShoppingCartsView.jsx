@@ -94,7 +94,7 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
                         size={30}
                         name='shopping-cart'
                         type='font-awesome'
-                        color='blue'
+                        color='#00adee'
                     />
                 )
             case "CANCELADO":
@@ -226,7 +226,7 @@ class GroupHistoryShoppingCartsView extends React.PureComponent {
                     <View style={{ flex: 4, margin: 10 }}>
                         <View style={{ alignContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 5 }}>
                             <Text style={{ fontSize: 11, color: "black" }}>Confirmado el:</Text>
-                            <Text style={{ fontSize: 11, fontWeight: "bold", color: "blue" }}> {item.fechaModificacion}</Text>
+                            <Text style={{ fontSize: 11, fontWeight: "bold", color: '#00adee' }}> {item.fechaModificacion}</Text>
                         </View>
 
                         <View style={{ flexDirection: "row" }}>
@@ -375,7 +375,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 16,
         fontWeight: "bold",
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         color: "white",
         borderBottomWidth: 1,
         borderTopWidth: 1,
@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
     },
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -591,7 +591,7 @@ const styles = StyleSheet.create({
     },
 
     badgeProductos: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         height: 30,
         borderRadius: 5,
         alignSelf: 'flex-start',

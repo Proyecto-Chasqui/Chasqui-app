@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     },
     
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
     },
 
     lowerHeaderStyle: {

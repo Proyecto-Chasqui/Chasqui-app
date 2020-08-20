@@ -404,7 +404,7 @@ class ProductView extends React.PureComponent {
                         ) : (null)}
                         <View style={{ position: 'absolute', marginLeft: 35, marginTop: 50 }}>
                             <Tooltip onClose={() => this.toogleClosedHandler()} containerStyle={{ borderColor: 'black', borderWidth: 1, backgroundColor: "white", height: 150, width: 300, marginLeft: -135 }} ref={(ref) => { this.tooltipRef = ref }} withOverlay={false}
-                                pointerColor='rgba(51, 102, 255, 1)'
+                                pointerColor='#00adee'
                                 popover={
                                     <View style={{ width: "100%" }}>
                                         <View style={{ marginTop: 5 }}>
@@ -432,7 +432,7 @@ class ProductView extends React.PureComponent {
 
                             <SliderBox images={this.state.images}
                                 sliderBoxHeight={240}
-                                dotColor='rgba(51, 102, 255, 1)'
+                                dotColor='#00adee'
                                 inactiveDotColor='white'
                                 circleLoop
                             />
@@ -452,12 +452,12 @@ class ProductView extends React.PureComponent {
                                     <Icon
                                         name='caret-up'
                                         type='font-awesome'
-                                        color="#fff000"
+                                        color="#00adee"
                                         size={30}
                                     />) : (<Icon
                                         name='caret-down'
                                         type='font-awesome'
-                                        color="#fff000"
+                                        color="#00adee"
                                         size={30}
                                     />)}
                                 containerStyle={styles.buttonCaracteristicsContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -490,12 +490,12 @@ class ProductView extends React.PureComponent {
                                     <Icon
                                         name='caret-up'
                                         type='font-awesome'
-                                        color="#fff000"
+                                        color="#00adee"
                                         size={30}
                                     />) : (<Icon
                                         name='caret-down'
                                         type='font-awesome'
-                                        color="#fff000"
+                                        color="#00adee"
                                         size={30}
                                     />)}
                                 containerStyle={styles.buttonCaracteristicsContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -513,7 +513,7 @@ class ProductView extends React.PureComponent {
                                                 <Icon
                                                     name='caret-right'
                                                     type='font-awesome'
-                                                    color="#fff000"
+                                                    color="#00adee"
                                                     size={30}
                                                 />}
                                                 containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -530,7 +530,7 @@ class ProductView extends React.PureComponent {
                                                     <Icon
                                                         name='caret-right'
                                                         type='font-awesome'
-                                                        color="#fff000"
+                                                        color="#00adee"
                                                         size={30}
                                                     />}
                                                     containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -602,11 +602,11 @@ class ProductView extends React.PureComponent {
 const styles = StyleSheet.create({
 
     footerControlsSection: {
-        backgroundColor: "#ebedeb",
+        backgroundColor: "#cccccc",
     },
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         borderBottomWidth: 0,
         shadowColor: "#000",
         shadowOffset: {
@@ -806,7 +806,7 @@ const styles = StyleSheet.create({
 
     buttonAddProductStyle: {
         height: "100%",
-        backgroundColor: "#fff000",
+        backgroundColor: "#00adee",
     },
 
     buttonAddProductContainer: {

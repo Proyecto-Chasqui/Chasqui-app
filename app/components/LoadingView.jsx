@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         alignContent: 'center',
-        backgroundColor: 'rgba(51, 102, 255, 1)'
+        backgroundColor: 'white'
     },
 
     imageContainer: {
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         fontSize: 24,
         marginTop: 5,
-        color: 'white',
+        color: 'black',
         fontWeight: "bold",
         marginTop: "100%",
     },

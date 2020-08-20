@@ -130,11 +130,11 @@ class MapAdressConfig extends React.PureComponent {
                         onPress={() => null}
                         ref={(ref) => { this.refMarker = ref }}
                     >
-                        <View style={{ backgroundColor: "white", borderWidth: 1.5, borderColor: "blue", width: 30, height: 30, borderTopStartRadius: 50, borderTopEndRadius: 50, borderBottomEndRadius: 50, borderBottomStartRadius: 50 }}>
+                        <View style={{ backgroundColor: "white", borderWidth: 1.5, borderColor: '#00adee', width: 30, height: 30, borderTopStartRadius: 50, borderTopEndRadius: 50, borderBottomEndRadius: 50, borderBottomStartRadius: 50 }}>
                             <Icon
                                 name='home'
                                 type='material'
-                                color='blue'
+                                color='#00adee'
                                 size={25}
                                 iconStyle={{ marginTop: 0 }}
                             />
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     },
 
     infoTextContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "#00adee",
         marginTop: -10,
         marginLeft: -10,
         marginRight: -10,
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
     },
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
     },
     rightHeaderButton: {
         backgroundColor: '#66000000',

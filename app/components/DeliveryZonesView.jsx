@@ -264,7 +264,7 @@ class DeliveryZonesView extends React.PureComponent {
                                     <Polygon key={i}
                                         coordinates={zone.coordinates}
                                         fillColor={"rgba( 108, 53, 170 ,0.5)"}
-                                        strokeColor={"blue"}
+                                        strokeColor={'#00adee'}
                                         strokeWidth={2}
                                         tappable={true}
                                         title={"UNQ"}
@@ -282,11 +282,11 @@ class DeliveryZonesView extends React.PureComponent {
                                         coordinate={this.createCoordinateParse(sellerPoint.direccion.latitud, sellerPoint.direccion.longitud)}
                                         onPress={() => this.showSPData(sellerPoint)}
                                     >
-                                        <View style={{ backgroundColor: "white", borderWidth: 1.5, borderColor: "blue", width: 30, height: 30, borderTopStartRadius: 50, borderTopEndRadius: 50, borderBottomEndRadius: 0, borderBottomStartRadius: 50 }}>
+                                        <View style={{ backgroundColor: "white", borderWidth: 1.5, borderColor: '#00adee', width: 30, height: 30, borderTopStartRadius: 50, borderTopEndRadius: 50, borderBottomEndRadius: 0, borderBottomStartRadius: 50 }}>
                                             <Icon
                                                 name='store-mall-directory'
                                                 type='material'
-                                                color='blue'
+                                                color='#00adee'
                                                 size={25}
                                                 iconStyle={{ marginTop: 1 }}
                                             />
@@ -304,7 +304,7 @@ class DeliveryZonesView extends React.PureComponent {
                                 reverse
                                 name='store-mall-directory'
                                 type='material'
-                                color={this.state.showSP ? ('rgba(51, 102, 255, 0.4)') : ('rgba(51, 102, 255, 1)')}
+                                color={this.state.showSP ? ('rgba(0, 173, 224, 0.4)') : ('rgba(0, 173, 224, 1)')}
                                 size={18}
                                 onPress={() => this.showHideSP()}
                             />)
@@ -314,7 +314,7 @@ class DeliveryZonesView extends React.PureComponent {
                                 reverse
                                 name='layers'
                                 type='material'
-                                color={this.state.showDZ ? ('rgba(51, 102, 255, 0.4)') : ('rgba(51, 102, 255, 1)')}
+                                color={this.state.showDZ ? ('rgba(0, 173, 224, 0.4)') : ('rgba(0, 173, 224, 1)')}
                                 size={18}
                                 onPress={() => this.showHideDZ()}
                             />)
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
     },
 
     infoTextContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "rgba(0, 173, 224, 1)",
 
         height: 50,
         alignItems: "center"
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
     },
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         borderBottomWidth: 0,
     },
     rightHeaderButton: {

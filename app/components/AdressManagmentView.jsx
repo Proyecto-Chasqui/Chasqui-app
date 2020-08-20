@@ -655,7 +655,7 @@ class AdressManagmentView extends React.PureComponent {
                         <View style={styles.soloInputContainer}>
                             <Text style={styles.fieldText}>{this.normalizeText(NAMEREMAINDER)}</Text>
                             <Input
-                                inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}
+                                inputStyle={{ color: '#00adee', marginLeft: 10 }}
                                 placeholderTextColor='black'
                                 onChangeText={text => this.handleChangeOfField(NAMEREMAINDER, text)}
                                 placeholder={'Ej. casa, oficina, etc'}
@@ -670,7 +670,7 @@ class AdressManagmentView extends React.PureComponent {
                                     <View key={i} style={styles.inputContainer}>
                                         <Text style={styles.fieldText}>{this.normalizeText(field)}</Text>
                                         <Input
-                                            inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}
+                                            inputStyle={{ color: '#00adee', marginLeft: 10 }}
                                             placeholderTextColor='black'
                                             onChangeText={text => this.handleChangeOfField(field, text)}
                                             placeholder={this.normalizeText(field)}
@@ -691,12 +691,12 @@ class AdressManagmentView extends React.PureComponent {
                                     <Icon
                                         name='caret-up'
                                         type='font-awesome'
-                                        color='#fff000'
+                                        color='#00adee'
                                         size={30}
                                     />) : (<Icon
                                         name='caret-down'
                                         type='font-awesome'
-                                        color='#fff000'
+                                        color='#00adee'
                                         size={30}
                                     />)}
                                 containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -712,7 +712,7 @@ class AdressManagmentView extends React.PureComponent {
                                                 <View key={i} style={styles.inputContainer}>
                                                     <Text style={styles.fieldText}>{this.normalizeText(field)}</Text>
                                                     <Input
-                                                        inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}
+                                                        inputStyle={{ color: '#00adee', marginLeft: 10 }}
                                                         placeholderTextColor='black'
                                                         onChangeText={text => this.handleChangeOfField(field, text)}
                                                         placeholder={this.normalizeText(field)}
@@ -727,7 +727,7 @@ class AdressManagmentView extends React.PureComponent {
                                     <View style={styles.soloInputContainer}>
                                         <Text style={styles.fieldText}>{this.normalizeText(COMMENTS)}</Text>
                                         <Input
-                                            inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}
+                                            inputStyle={{ color: '#00adee', marginLeft: 10 }}
                                             placeholderTextColor='black'
                                             onChangeText={text => this.handleChangeOfField(COMMENTS, text)}
                                             placeholder={'Ej. Casa de rejas verdes'}
@@ -755,7 +755,7 @@ export default AdressManagmentView
 
 const styles = StyleSheet.create({
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
     },
 
     lowerHeaderStyle: {

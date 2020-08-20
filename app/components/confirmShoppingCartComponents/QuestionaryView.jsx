@@ -73,7 +73,7 @@ class QuestionaryView extends React.PureComponent {
                                 </View>
                                 <View key={i} style={{
                                     flex: 14,
-                                    borderColor: this.state.answers[i].opcionSeleccionada === null ? "black" : "blue", borderWidth: 1, borderRadius: 10, margin: 8, marginRight: 15
+                                    borderColor: this.state.answers[i].opcionSeleccionada === null ? "black" : '#00adee', borderWidth: 1, borderRadius: 10, margin: 8, marginRight: 15
                                 }}>                                    
                                     <Text style={{width:"100%", textAlign:"center", fontSize:16, marginTop:5}}>{question.nameQuestion}</Text>
                                     <Input
@@ -99,7 +99,7 @@ class QuestionaryView extends React.PureComponent {
                                 </View>
                                 <View key={i} style={{
                                     flex: 14,
-                                    borderColor: this.state.answers[i].opcionSeleccionada === null ? "black" : "blue", borderWidth: 1, borderRadius: 10, margin: 8, marginRight: 15
+                                    borderColor: this.state.answers[i].opcionSeleccionada === null ? "black" : '#00adee', borderWidth: 1, borderRadius: 10, margin: 8, marginRight: 15
                                 }}>
                                     <RNPickerSelect
                                         onValueChange={(value) => this.setAnswer(question.nameQuestion, value)}
@@ -107,7 +107,7 @@ class QuestionaryView extends React.PureComponent {
                                         placeholder={{
                                             label: question.nameQuestion,
                                             value: null,
-                                            color: "blue"
+                                            color: '#00adee'
                                         }}
                                         value={this.state.answers[i].opcionSeleccionada}
                                         useNativeAndroidPickerStyle={true}

@@ -657,7 +657,7 @@ const stylesListCard = StyleSheet.create({
         textAlign: "center",
         fontSize: 16,
         fontWeight: "bold",
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         color: "white",
         marginLeft: -2,
         marginRight: -2,
@@ -834,7 +834,7 @@ const stylesListCard = StyleSheet.create({
     },
 
     badgeProductos: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         height: 30,
         borderRadius: 5,
         alignSelf: 'flex-start',

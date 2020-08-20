@@ -142,7 +142,7 @@ class VendorsView extends React.PureComponent {
                             inputContainerStyle={styles.inputSearchContainer}
                             inputStyle={styles.inputStyle}
                             leftIconContainerStyle={styles.iconContainerLeft}
-                            placeholderTextColor={"rgba(51, 102, 255, 1)"}
+                            placeholderTextColor={"#00adee"}
                             searchIcon={<Icon name="search" type='font-awesome' size={16} iconStyle={styles.searchIcon} />}
                             lightTheme
                         />
@@ -183,7 +183,7 @@ class VendorsView extends React.PureComponent {
 const styles = StyleSheet.create({
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
     },
 
     lowerHeaderStyle: {
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     },
 
     searchIcon: {
-        color: "rgba(51, 102, 255, 1)",
+        color: "#00adee",
     },
 
     lowerHeaderButton: {
@@ -248,11 +248,11 @@ const styles = StyleSheet.create({
 
     iconLowerHeaderButton: {
         marginRight: 15,
-        color: "rgba(51, 102, 255, 1)"
+        color: "#00adee"
     },
 
     lowerHeaderButtonTitle: {
-        color: "rgba(51, 102, 255, 1)",
+        color: "#00adee",
         fontSize:13
     },
 

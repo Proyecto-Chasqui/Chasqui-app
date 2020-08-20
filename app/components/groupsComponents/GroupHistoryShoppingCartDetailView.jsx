@@ -70,7 +70,7 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                     },
                     shadowOpacity: 0.25,
                     shadowRadius: 3.84,
-                    borderColor: "blue",
+                    borderColor: '#00adee',
                     elevation: 5,
                 }
             )
@@ -126,7 +126,7 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                     <Icon
                         name='chevron-right'
                         type='font-awesome'
-                        color='blue'
+                        color='#00adee'
                     />
                 </View>
             </View>
@@ -166,7 +166,7 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                     {this.props.groupHistoryShoppingCartSelected.direccion !== null ? (
                         <View style={{ height: 150 }}>
                             <Text style={styles.sectionTitleTextStyle}>Dirección de entrega</Text>
-                            <Text style={{ margin: 5, color: "blue", fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.parseAdress(this.props.groupHistoryShoppingCartSelected.direccion)}</Text>
+                            <Text style={{ margin: 5, color: '#00adee', fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.parseAdress(this.props.groupHistoryShoppingCartSelected.direccion)}</Text>
                             <View style={{ flex: 1 }}>
                                 {this.props.groupHistoryShoppingCartSelected.zona != null ? (
                                     <View style={{ flex: 1 }}>
@@ -200,7 +200,7 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                                         <Text style={styles.sectionTitleTextStyle}>Punto de retiro seleccionado</Text>
                                         <ScrollView style={{ flex: 5, marginLeft: 20, marginRight: 10, marginBottom: 10, marginTop: 10 }}>
                                             <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{this.props.groupHistoryShoppingCartSelected.puntoDeRetiro.nombre}</Text>
-                                            <Text style={{ color: "blue" }}>{this.parseAdress(this.props.groupHistoryShoppingCartSelected.puntoDeRetiro.direccion)}</Text>
+                                            <Text style={{ color: '#00adee' }}>{this.parseAdress(this.props.groupHistoryShoppingCartSelected.puntoDeRetiro.direccion)}</Text>
                                             <Text style={{ fontSize: 14, }}>{this.props.groupHistoryShoppingCartSelected.puntoDeRetiro.mensaje}</Text>
                                         </ScrollView>
                                     </View>
@@ -212,7 +212,7 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                             {
                                 this.hasNodeAndIncentives() ? (
                                     <View style={{}}>
-                                        <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                                        <View style={{ backgroundColor: "#00adee", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
                                             <View style={styles.singleItemContainer}>
                                                 <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Ingreso Nodo :</Text> $ {this.calculateNodeAmount()} </Text>
                                                 <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Costo al Nodo :</Text> $ {this.obtainTotalPrice()} </Text>
@@ -222,7 +222,7 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                                     </View>
                                 ) : (
                                         <View style={{}}>
-                                            <View style={{ alignItems: "center", backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                                            <View style={{ alignItems: "center", backgroundColor: "#00adee", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
                                                 <View style={[styles.singleItemContainer, { width: "95%", height: 40, justifyContent: "center" }]}>
                                                     <Text style={[styles.itemDataInfoStyle]}><Text style={[styles.itemDataStyle]}> Total :</Text> $ {this.obtainTotalPrice()} </Text>
                                                 </View>
@@ -233,7 +233,7 @@ class GroupHistoryShoppingCartDetailView extends React.PureComponent {
                         </View>
                     ) : (
                             <View style={{}}>
-                                <View style={{ alignItems: "center", backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                                <View style={{ alignItems: "center", backgroundColor: "#00adee", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
                                     <View style={[styles.singleItemContainer, { width: "90%", height: 40, justifyContent: "center" }]}>
                                         <Text style={[styles.itemDataInfoStyle]}><Text style={[styles.itemDataStyle]}> Total :</Text> $ {this.obtainTotalPrice()} </Text>
                                     </View>
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 16,
         fontWeight: "bold",
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         color: "white",
         borderBottomWidth: 1,
         borderTopWidth: 1,
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     },
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -527,7 +527,7 @@ const styles = StyleSheet.create({
     },
 
     badgeProductos: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         height: 30,
         borderRadius: 5,
         alignSelf: 'flex-start',

@@ -89,10 +89,9 @@ class ProductCardsView extends React.PureComponent {
                             </View>
                         ) : (null)}
                     ListFooterComponent={
-                        (this.defineImageURL() !== null) ? (
                             <View style={stylesCards.titleContainer}>
                                 <Image
-                                    source={{ uri: this.defineImageURL() }}
+                                    source={require('../catalogViewComponents/catalogAssets/unq_logo_300.png')}
                                     style={{
                                         width: 300,
                                         height: 55,
@@ -100,7 +99,6 @@ class ProductCardsView extends React.PureComponent {
                                         borderRadius: 5,
                                     }}></Image>
                             </View>
-                        ) : (null)
                     }
                     renderItem={({ item }) =>
                         <TouchableOpacity onPress={() => this.goToProductDetails(item)} style={stylesCards.wiewCard}>
@@ -156,18 +154,17 @@ class ProductCardsView extends React.PureComponent {
                         ) : (null)
                     }
                     ListFooterComponent={
-                        (this.defineImageURL() !== null) ? (
                             <View style={stylesListCard.titleContainer}>
                                 <Image
-                                    source={{ uri: this.defineImageURL() }}
+                                    source={require('../catalogViewComponents/catalogAssets/unq_logo_300.png')}
                                     style={{
                                         width: 300,
                                         height: 55,
                                         resizeMode: 'center',
                                         borderRadius: 5,
+                                        marginTop:20,
                                     }}></Image>
                             </View>
-                        ) : (null)
                     }
                     renderItem={({ item }) =>
                         <TouchableOpacity onPress={() => this.goToProductDetails(item)} style={{ borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
@@ -220,7 +217,10 @@ const stylesListCard = StyleSheet.create({
         elevation: 9,
         height: 65,
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: "center",    
+        
+        marginTop:10, 
+        marginBottom:10,   
     },
 
     containerList: {
@@ -299,7 +299,7 @@ const stylesListCard = StyleSheet.create({
     },
 
     badgeProductos: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         height: 30,
         borderRadius: 5,
         alignSelf: 'flex-start',
@@ -355,6 +355,10 @@ const stylesMultipleCards = StyleSheet.create({
         height: 65,
         justifyContent: "center",
         alignItems: "center",
+
+        
+        marginTop:10, 
+        marginBottom:10,  
     },
 
     headerImage: {
@@ -522,7 +526,7 @@ const stylesMultipleCards = StyleSheet.create({
     },
 
     badgeProductos: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         height: 30,
         borderRadius: 5,
         alignSelf: 'flex-start',
@@ -643,6 +647,9 @@ const stylesSingleCards = StyleSheet.create({
         height: 65,
         justifyContent: "center",
         alignItems: "center",
+
+        
+        marginTop:20,
     },
 
     viewSearchErrorContainer: {
@@ -806,7 +813,7 @@ const stylesSingleCards = StyleSheet.create({
     },
 
     badgeProductos: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         height: 30,
         borderRadius: 5,
         alignSelf: 'flex-start',

@@ -433,7 +433,7 @@ const styles = StyleSheet.create({
         maxHeight: 300,
     },
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         borderTopEndRadius: 3,
         borderTopStartRadius: 3,
         shadowColor: "#000",
@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
     },
 
     normalTitleButton: { fontWeight: "bold", fontSize: 18 },
-    normalButtonStyle: { backgroundColor: "rgba(51, 102, 255, 1)", flex: 1 },
+    normalButtonStyle: { backgroundColor: "#00adee", flex: 1 },
     contanierNormalButton: {},
     cancelarTitleButton: { fontWeight: "bold", fontSize: 18, color: "black" },
     cancelarButtonStyle: { backgroundColor: "transparent" },
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
     },
 
     inputTextStyle: {
-        color: 'rgba(51, 102, 255, 1)',
+        color: '#00adee',
         marginLeft: 10,
         fontSize: 15
     },

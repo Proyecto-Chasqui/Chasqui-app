@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
 
   iconMenuButton: {
     marginRight: 15,
-    color: "rgba(51, 102, 255, 1)"
+    color: "#00adee"
   },
 
 });

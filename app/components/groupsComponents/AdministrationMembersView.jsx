@@ -342,7 +342,7 @@ class AdministrationMembersView extends React.PureComponent {
                     },
                     shadowOpacity: 0.25,
                     shadowRadius: 3.84,
-                    borderColor: "blue",
+                    borderColor: '#00adee',
                     elevation: 5,
                 }
             )
@@ -532,12 +532,12 @@ class AdministrationMembersView extends React.PureComponent {
                     )}
                 {this.isAdministrator(item) ? (
                     <View style={{ position: "absolute", alignSelf: "flex-start", marginStart: -4, marginTop: 1, borderWidth: 1, borderRadius: 10, backgroundColor: "#5ebb47" }}>
-                        <Icon containerStyle={{ margin: 1 }} name="star" size={15} color="blue" type='font-awesome' />
+                        <Icon containerStyle={{ margin: 1 }} name="star" size={15} color='#00adee' type='font-awesome' />
                     </View>
                 ) : (null)}
                 {this.isInvited(item) ? (
                     <View style={{ position: "absolute", alignSelf: "flex-start", marginStart: -4, marginTop: 1, borderWidth: 1, borderRadius: 10, backgroundColor: "#5ebb47" }}>
-                        <Icon containerStyle={{ margin: 1 }} name="email-plus" size={15} color="blue" type='material-community' />
+                        <Icon containerStyle={{ margin: 1 }} name="email-plus" size={15} color='#00adee' type='material-community' />
                     </View>
                 ) : (null)}
                 <View style={{ marginStart: 10, flex: 1 }}>
@@ -553,7 +553,7 @@ class AdministrationMembersView extends React.PureComponent {
                             : (
                                 <View>
                                     {this.isInvited(item) ? (
-                                        <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "blue" }} >Invitación enviada</Text>
+                                        <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: '#00adee' }} >Invitación enviada</Text>
                                     ) : (
                                             <Text style={{ fontSize: 14, marginEnd: 10, fontWeight: "bold", fontStyle: "italic", color: "grey" }} >Sin pedido</Text>
                                         )}
@@ -587,7 +587,7 @@ class AdministrationMembersView extends React.PureComponent {
                     </View>
                 ) : (
                         <View style={{ marginEnd: 12 }}>
-                            <Icon name="account-star" size={25} color="blue" type='material-community' />
+                            <Icon name="account-star" size={25} color='#00adee' type='material-community' />
                         </View>)}
             </View>
         </View>
@@ -743,7 +743,7 @@ class AdministrationMembersView extends React.PureComponent {
 
 const styles = StyleSheet.create({
     buttonGroupContainer: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',   
+        backgroundColor: '#00adee',   
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -795,14 +795,14 @@ const styles = StyleSheet.create({
     },
 
     titleRequestContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "#00adee",
         height: 50,
         alignItems: "center",
         justifyContent: "center"
     },
 
     infoTextContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "#00adee",
         marginTop: -10,
         marginLeft: -10,
         marginRight: -10,
@@ -821,10 +821,10 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
     },
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -918,7 +918,7 @@ const styles = StyleSheet.create({
     },
 
     searchIconErrorContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "#00adee",
         borderWidth: 2,
         borderRadius: 50,
         width: 100,

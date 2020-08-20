@@ -671,7 +671,7 @@ class CatalogView extends React.Component {
                             inputContainerStyle={styles.inputSearchContainer}
                             inputStyle={styles.inputStyle}
                             leftIconContainerStyle={styles.iconContainerLeft}
-                            placeholderTextColor={"rgba(51, 102, 255, 1)"}
+                            placeholderTextColor={"rgba(0, 173, 224, 1)"}
                             searchIcon={<Icon name="search" type='font-awesome' size={16} iconStyle={styles.searchIcon} />}
                             lightTheme
                         />
@@ -715,7 +715,7 @@ class CatalogView extends React.Component {
 const styles = StyleSheet.create({
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         justifyContent:"center",
         alignContent:"center",
         alignItems:"center",
@@ -783,14 +783,14 @@ const styles = StyleSheet.create({
     inputStyle: {
         fontSize: 13,
         fontWeight: "bold",
-        color: "black",
+        color: "rgba(0, 173, 224, 1)",
     },
     iconContainerLeft: {
         backgroundColor: "transparent",
     },
 
     searchIcon: {
-        color: "rgba(51, 102, 255, 1)",
+        color: "#00adee",
     },
 
     lowerHeaderButton: {
@@ -801,11 +801,11 @@ const styles = StyleSheet.create({
 
     iconLowerHeaderButton: {
         marginRight: 15,
-        color: "rgba(51, 102, 255, 1)"
+        color: "#00adee"
     },
 
     lowerHeaderButtonTitle: {
-        color: "rgba(51, 102, 255, 1)",
+        color: "rgba(0, 173, 224, 1)",
         fontSize:13
     },
 

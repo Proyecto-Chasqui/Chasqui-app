@@ -325,7 +325,7 @@ class PasswordConfigView extends React.PureComponent {
                             <View key={i} style={styles.inputContainer}>
                                 <Text style={{fontWeight:"bold"}}>{this.normalizeText(field)}</Text>
                                 <Input
-                                    inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}
+                                    inputStyle={{ color: '#00adee', marginLeft: 10 }}
                                     placeholderTextColor='black'
                                     onChangeText={text => this.handleChangeOfField(field, text)}
                                     placeholder={this.normalizeText(field)}
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
     },
 
     titleContainer: {

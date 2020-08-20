@@ -97,7 +97,7 @@ class MemberView extends React.PureComponent {
                         />
                         {this.isAdministrator() ? (
                             <View style={{ position: "absolute", alignSelf: "flex-start", marginStart: -4, marginTop: 1, borderWidth: 1, borderRadius: 10, backgroundColor: "#5ebb47" }}>
-                                <Icon containerStyle={{ margin: 1 }} name="star" size={15} color="blue" type='font-awesome' />
+                                <Icon containerStyle={{ margin: 1 }} name="star" size={15} color='#00adee' type='font-awesome' />
                             </View>
                         ) : (null)}
                         <View style={{ marginStart: 10, flex: 1 }}>
@@ -172,7 +172,7 @@ class MemberView extends React.PureComponent {
 const styles = StyleSheet.create({
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 16,
         fontWeight: "bold",
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         color: "white",
         borderBottomWidth: 1,
         borderTopWidth: 1,
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     },
 
     searchIconErrorContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: '#00adee',
         borderWidth: 2,
         borderRadius: 50,
         width: 100,

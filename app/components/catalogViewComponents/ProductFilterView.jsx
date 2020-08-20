@@ -522,7 +522,7 @@ const styles = StyleSheet.create({
     iconRevealButton: {
         marginLeft: 50,
         alignSelf: 'flex-end',
-        color: "#fff000"
+        color: "#00adee"
     },
 
     iconContainer: {
@@ -531,7 +531,7 @@ const styles = StyleSheet.create({
     },
 
     searchButtonResetTitle: {
-        color: "rgba(51, 102, 255, 1)"
+        color: "#00adee"
     },
 
     searchButtonReset: {
@@ -541,7 +541,7 @@ const styles = StyleSheet.create({
     badgeFilterSelected: {
         height:40,
         width:40,
-        borderColor: "blue",
+        borderColor: '#00adee',
         borderRadius: 5,
         borderWidth: 2
     },

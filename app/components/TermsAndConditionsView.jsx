@@ -66,7 +66,7 @@ class TermsAndConditionsView extends React.PureComponent {
 const styles = StyleSheet.create({
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     },
 
     searchIconErrorContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "#00adee",
         borderWidth: 2,
         borderRadius: 50,
         width: 100,

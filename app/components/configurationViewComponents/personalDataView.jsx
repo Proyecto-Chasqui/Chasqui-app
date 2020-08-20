@@ -419,7 +419,7 @@ class PersonalDataView extends React.PureComponent {
                             <View key={i + 10} style={styles.inputContainer}>
                                 <Text style={styles.fieldText}>{this.normalizeText(field)}</Text>
                                 <Input
-                                    inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}
+                                    inputStyle={{ color: '#00adee', marginLeft: 10 }}
                                     placeholderTextColor='black'
                                     onChangeText={text => this.handleChangeOfField(field, text)}
                                     placeholder={this.normalizeText(field)}
@@ -432,7 +432,7 @@ class PersonalDataView extends React.PureComponent {
                     <View style={styles.inputContainer}>
                         <Text style={styles.fieldText}>{this.normalizeText(TELEFONOMOVIL)}</Text>
                         <Input
-                            inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}
+                            inputStyle={{ color: '#00adee', marginLeft: 10 }}
                             placeholderTextColor='black'
                             onChangeText={text => this.handleChangeOfField(TELEFONOMOVIL, text)}
                             placeholder={this.normalizeText(TELEFONOMOVIL)}
@@ -444,7 +444,7 @@ class PersonalDataView extends React.PureComponent {
                     <View style={styles.inputContainer}>
                         <Text style={styles.fieldText}>{this.normalizeText(TELEFONOFIJO)}</Text>
                         <Input
-                            inputStyle={{ color: 'rgba(51, 102, 255, 1)', marginLeft: 10 }}
+                            inputStyle={{ color: '#00adee', marginLeft: 10 }}
                             placeholderTextColor='black'
                             onChangeText={text => this.handleChangeOfField(TELEFONOFIJO, text)}
                             placeholder={this.normalizeText(TELEFONOFIJO)}
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
     },
 
     titleContainer: {

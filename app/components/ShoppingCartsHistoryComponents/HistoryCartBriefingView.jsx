@@ -125,7 +125,7 @@ class HistoryCartBriefingView extends React.PureComponent {
                     (
                         <View>
                             <Text style={styles.sectionTitleTextStyle}>Realizado en </Text>
-                            <Text style={{ margin: 5, color: "blue", fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.props.historyCartSelected.aliasGrupo}</Text>
+                            <Text style={{ margin: 5, color: '#00adee', fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.props.historyCartSelected.aliasGrupo}</Text>
                         </View>
                     )
                     : (null)
@@ -134,10 +134,10 @@ class HistoryCartBriefingView extends React.PureComponent {
                     <TouchableOpacity onPress={() => this.goToGroups()} style={{}}>
                         <Text style={styles.sectionTitleTextStyle}> Aviso </Text>
                         <Text style={{ fontSize: 15, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10, fontStyle: 'italic', textAlign: "auto" }}>
-                            Su pedido dentro del {this.defineWord()} esta confirmado, pero esta a la espera de la <Text style={{ fontWeight: "bold", color: "blue" }}>confirmación</Text> por parte del administrador.
+                            Su pedido dentro del {this.defineWord()} esta confirmado, pero esta a la espera de la <Text style={{ fontWeight: "bold", color: '#00adee' }}>confirmación</Text> por parte del administrador.
                                 </Text>
                         <Text style={{ fontSize: 15, marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 10, fontStyle: 'italic', textAlign: "center" }}>
-                            Puede presionar aquí para ir a <Text style={{ fontWeight: "bold", color: "blue" }}>{this.defineText()}</Text>.
+                            Puede presionar aquí para ir a <Text style={{ fontWeight: "bold", color: '#00adee' }}>{this.defineText()}</Text>.
                                 </Text>
                     </TouchableOpacity>
                 ) : (
@@ -147,7 +147,7 @@ class HistoryCartBriefingView extends React.PureComponent {
                     {this.props.historyCartSelected.direccion !== null ? (
                         <View style={{ height: 150 }}>
                             <Text style={styles.sectionTitleTextStyle}>Dirección de entrega</Text>
-                            <Text style={{ margin: 5, color: "blue", fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.parseAdress(this.props.historyCartSelected.direccion)}</Text>
+                            <Text style={{ margin: 5, color: '#00adee', fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.parseAdress(this.props.historyCartSelected.direccion)}</Text>
                             <View style={{ flex: 1 }}>
                                 {this.props.historyCartSelected.zona != null ? (
                                     <View style={{ flex: 1 }}>
@@ -181,7 +181,7 @@ class HistoryCartBriefingView extends React.PureComponent {
                                         <Text style={styles.sectionTitleTextStyle}>Punto de retiro seleccionado</Text>
                                         <ScrollView style={{ flex: 5, marginLeft: 20, marginRight: 10, marginBottom: 10, marginTop: 10 }}>
                                             <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{this.props.historyCartSelected.puntoDeRetiro.nombre}</Text>
-                                            <Text style={{ color: "blue" }}>{this.parseAdress(this.props.historyCartSelected.puntoDeRetiro.direccion)}</Text>
+                                            <Text style={{ color: '#00adee'}}>{this.parseAdress(this.props.historyCartSelected.puntoDeRetiro.direccion)}</Text>
                                             <Text style={{ fontSize: 14, }}>{this.props.historyCartSelected.puntoDeRetiro.mensaje}</Text>
                                         </ScrollView>
                                     </View>
@@ -190,7 +190,7 @@ class HistoryCartBriefingView extends React.PureComponent {
                         )}
 
                     <View style={{ backgroundColor: "black", }}>
-                        <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                        <View style={{ backgroundColor: '#00adee', borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
                             <View style={styles.singleItemContainer}>
                                 <Text style={styles.itemDataInfoStyle}><Text style={styles.itemDataStyle}> Total:</Text> $ {this.obtainTotalPrice()} </Text>
                             </View>
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 16,
         fontWeight: "bold",
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         color: "white",
         borderBottomWidth: 1,
         borderTopWidth: 1,
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     },
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -435,7 +435,7 @@ const styles = StyleSheet.create({
     },
 
     badgeProductos: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         height: 30,
         borderRadius: 5,
         alignSelf: 'flex-start',

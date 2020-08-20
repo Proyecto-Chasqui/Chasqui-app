@@ -284,8 +284,8 @@ class LoginView extends React.PureComponent {
 
                 <View style={styles.inputContainer}>
                   <Input
-                    inputStyle={{ color: "white", marginLeft: 10 }}
-                    placeholderTextColor="white"
+                    inputStyle={{ color: "black", marginLeft: 10 }}
+                    placeholderTextColor="black"
                     onChangeText={handleChange('email')}
                     onBlur={handleBlur('email')}
                     placeholder='Correo electrónico'
@@ -295,8 +295,8 @@ class LoginView extends React.PureComponent {
                 </View>
                 <View style={styles.lowerInputContainer}>
                   <Input
-                    inputStyle={{ color: "white", marginLeft: 10 }}
-                    placeholderTextColor="white"
+                    inputStyle={{ color: "black", marginLeft: 10 }}
+                    placeholderTextColor="black"
                     onChangeText={handleChange('contraseña')}
                     onBlur={handleBlur('constraseña')}
                     placeholder='Contraseña'
@@ -307,7 +307,7 @@ class LoginView extends React.PureComponent {
                   />
                 </View>
                 <View style={styles.buttonContainer}>
-                  <Button disabled={this.state.loading} loading={this.state.loading} buttonStyle={{ height: 60, backgroundColor: '#80bfff', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={handleSubmit} title="INGRESAR" />
+                  <Button disabled={this.state.loading} loading={this.state.loading} buttonStyle={{ height: 60, backgroundColor: '#00adee', borderColor: "white", borderWidth: 1 }} titleStyle={{ fontSize: 20, }} onPress={handleSubmit} title="INGRESAR" />
                 </View>
                 <View style={styles.lowerButtonsContainer} >
                   <View style={styles.leftButton}>
@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
   },
 
   infoTextContainer: {
-    backgroundColor: "rgba(51, 102, 255, 1)",
+    backgroundColor: "#00adee",
     marginTop: -10,
     marginLeft: -10,
     marginRight: -10,
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
   principalContainer: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'rgba(51, 102, 255, 1)',
+    backgroundColor: '#cccccc',
   },
 
   titleContainer: {
@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 36,
-    color: '#ffffff'
+    color: 'black'
   },
 
   imageContainer: {
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
   divisor: {
     height: 38,
     width: 1,
-    backgroundColor: 'rgba(194, 215, 242, 1)',
+    backgroundColor: 'black',
   },
 
   leftButton: {
@@ -444,12 +444,12 @@ const styles = StyleSheet.create({
 
   TextStyle: {
     fontSize: 16,
-    color: '#ffffff'
+    color: '#909090'
 
   },
 
   guestButton: {
-    backgroundColor: '#4da6ff',
+    backgroundColor: '#00adee',
     borderColor: "white",
     borderWidth: 1,
     borderRadius: 5,

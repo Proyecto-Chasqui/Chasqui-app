@@ -642,7 +642,7 @@ class UserRegisterView extends React.PureComponent {
                                 <Text style={styles.fieldText}>{this.normalizeText(APODO)}</Text>
                                 <Input
                                     inputStyle={this.returnValueBasedOnFieldData(APODO).length == 0 ? styles.placeholderStyle : styles.inputTextStyle}
-                                    placeholderTextColor='black'
+                                    placeholderTextColor='rgba(194, 215, 242, 0.9)'
                                     onChangeText={text => this.handleChangeOfField(APODO, text)}
                                     placeholder={this.normalizeText(APODO)}
                                     value={this.returnValueBasedOnFieldData(APODO)}
@@ -658,7 +658,7 @@ class UserRegisterView extends React.PureComponent {
                                             <Text style={styles.fieldText}>{this.normalizeText(field)}</Text>
                                             <Input
                                                 inputStyle={this.returnValueBasedOnFieldData(field).length == 0 ? styles.placeholderStyle : styles.inputTextStyle}
-                                                placeholderTextColor='black'
+                                                placeholderTextColor='rgba(194, 215, 242, 1)'
                                                 onChangeText={text => this.handleChangeOfField(field, text)}
                                                 placeholder={this.normalizeText(field)}
                                                 value={this.returnValueBasedOnFieldData(field)}
@@ -674,7 +674,7 @@ class UserRegisterView extends React.PureComponent {
                                     <Text style={styles.fieldText}>{this.normalizeText(TELEFONO_MOVIL)}</Text>
                                     <Input
                                         inputStyle={this.returnValueBasedOnFieldData(TELEFONO_MOVIL).length == 0 ? styles.placeholderStyle : styles.inputTextStyle}
-                                        placeholderTextColor='black'
+                                        placeholderTextColor='rgba(194, 215, 242, 0.9)'
                                         onChangeText={text => this.handleChangeOfField(TELEFONO_MOVIL, text)}
                                         placeholder={this.normalizeText(TELEFONO_MOVIL)}
 
@@ -687,7 +687,7 @@ class UserRegisterView extends React.PureComponent {
                                     <Text style={styles.fieldText}>{this.normalizeText(TELEFONO_FIJO)}</Text>
                                     <Input
                                         inputStyle={this.returnValueBasedOnFieldData(TELEFONO_FIJO).length == 0 ? styles.placeholderStyle : styles.inputTextStyle}
-                                        placeholderTextColor='black'
+                                        placeholderTextColor='rgba(194, 215, 242, 0.9)'
                                         onChangeText={text => this.handleChangeOfField(TELEFONO_FIJO, text)}
                                         placeholder={this.normalizeText(TELEFONO_FIJO)}
                                         value={this.returnValueBasedOnFieldData(TELEFONO_FIJO)}
@@ -702,7 +702,7 @@ class UserRegisterView extends React.PureComponent {
                                             <Text style={styles.fieldText}>{this.normalizeText(field)}</Text>
                                             <Input
                                                 inputStyle={this.returnValueBasedOnFieldData(field).length == 0 ? styles.placeholderStyle : styles.inputTextStyle}
-                                                placeholderTextColor='black'
+                                                placeholderTextColor='rgba(194, 215, 242, 0.9)'
                                                 onChangeText={text => this.handleChangeOfField(field, text)}
                                                 placeholder={this.normalizeText(field)}
                                                 value={this.returnValueBasedOnFieldData(field)}
@@ -717,7 +717,7 @@ class UserRegisterView extends React.PureComponent {
                                             <Text style={styles.fieldText}>{this.normalizeText(field)}</Text>
                                             <Input
                                                 inputStyle={this.returnValueBasedOnFieldData(field).length == 0 ? styles.placeholderStyle : styles.inputTextStyle}
-                                                placeholderTextColor='black'
+                                                placeholderTextColor='rgba(194, 215, 242, 0.9)'
                                                 onChangeText={text => this.handleChangeOfField(field, text)}
                                                 placeholder={this.normalizeText(field)}
                                                 value={this.returnValueBasedOnFieldData(field)}
@@ -797,7 +797,7 @@ const styles = StyleSheet.create({
     },
 
     inputTextStyle: {
-        color: 'rgba(51, 102, 255, 1)',
+        color: '#00adee',
         marginLeft: 10,
         fontSize: 15
     },
@@ -832,7 +832,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
     },
 
     title: {
@@ -921,7 +921,7 @@ const styles = StyleSheet.create({
     fieldTextPhone: {
         fontWeight: "bold",
         marginLeft: 10,
-        color: "rgba(51, 102, 255, 1)",
+        color: "#00adee",
         marginBottom: -15
     },
 
@@ -961,7 +961,7 @@ const styles = StyleSheet.create({
     },
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
     },
 
     buttonRegisterStyle: {

@@ -291,12 +291,12 @@ class ShippingSelectionView extends React.PureComponent {
                                         <Icon
                                             name='caret-up'
                                             type='font-awesome'
-                                            color='#fff000'
+                                            color='#00adee'
                                             size={30}
                                         />) : (<Icon
                                             name='caret-down'
                                             type='font-awesome'
-                                            color='#fff000'
+                                            color='#00adee'
                                             size={30}
                                         />)}
                                     containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -326,7 +326,7 @@ class ShippingSelectionView extends React.PureComponent {
                                                 </View>
                                                 <View style={{ flex: 5 }}>
                                                     <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{sellerPoint.nombre}</Text>
-                                                    <Text style={{ color: "blue" }}>{this.parseAdress(sellerPoint.direccion)}</Text>
+                                                    <Text style={{ color: '#00adee' }}>{this.parseAdress(sellerPoint.direccion)}</Text>
                                                     <Text style={{ fontSize: 16 }}>{sellerPoint.mensaje}</Text>
                                                 </View>
                                             </TouchableOpacity>)
@@ -336,7 +336,7 @@ class ShippingSelectionView extends React.PureComponent {
 
                         {this.state.showAdresses ? (
                             <View>
-                                <Button titleStyle={{ color: "black", }}
+                                <Button titleStyle={{ color: "white", }}
                                     containerStyle={styles.buttonAddProductContainer}
                                     buttonStyle={styles.buttonNewAddressStyle}
                                     onPress={() => this.goToNewAdress()} title="Nueva dirección">
@@ -382,7 +382,7 @@ class ShippingSelectionView extends React.PureComponent {
                                                 </View>
                                                 <View style={{ flex: 5 }}>
                                                     <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{adress.alias}</Text>
-                                                    <Text style={{ color: "blue" }}>{this.parseAdress(adress)}</Text>
+                                                    <Text style={{ color: '#00adee' }}>{this.parseAdress(adress)}</Text>
                                                     <Text style={{ fontSize: 16 }}>{adress.comentario}</Text>
 
                                                 </View>
@@ -411,12 +411,12 @@ class ShippingSelectionView extends React.PureComponent {
                                             <Icon
                                                 name='caret-up'
                                                 type='font-awesome'
-                                                color='#fff000'
+                                                color='#00adee'
                                                 size={30}
                                             />) : (<Icon
                                                 name='caret-down'
                                                 type='font-awesome'
-                                                color='#fff000'
+                                                color='#00adee'
                                                 size={30}
                                             />)}
                                         containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -432,12 +432,12 @@ class ShippingSelectionView extends React.PureComponent {
                                             <Icon
                                                 name='caret-up'
                                                 type='font-awesome'
-                                                color='#fff000'
+                                                color='#00adee'
                                                 size={30}
                                             />) : (<Icon
                                                 name='caret-down'
                                                 type='font-awesome'
-                                                color='#fff000'
+                                                color='#00adee'
                                                 size={30}
                                             />)}
                                         containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -571,7 +571,7 @@ const styles = StyleSheet.create({
     },
 
     buttonNewAddressStyle: {
-        backgroundColor: "#f8f162",
+        backgroundColor: "#00adee",
         borderColor: 'grey',
         borderWidth: 1
     },

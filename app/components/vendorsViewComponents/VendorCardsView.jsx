@@ -34,8 +34,8 @@ class VendorMultipleCardsView extends React.PureComponent {
             return text;
         }
     }
-    
-    selectVendor(vendor){
+
+    selectVendor(vendor) {
         this.props.actions.vendorSelected(vendor);
         this.props.navigation.navigate('Catalogo');
     }
@@ -74,22 +74,22 @@ class VendorMultipleCardsView extends React.PureComponent {
                         this.props.vendors.map((u, i) => {
                             if (u.visibleEnMulticatalogo) {
                                 return (
-                                    <View style={stylesCards.wiewCard}  key={u.id}>
+                                    <View style={stylesCards.wiewCard} key={u.id}>
                                         <Card containerStyle={stylesCards.card}>
                                             <View style={stylesCards.cardImageView}>
-                                            <TouchableOpacity onPress={() => this.selectVendor(u)}>
-                                                {(u.imagen !== null)?(
-                                                <Image style={stylesCards.cardImage} source={{ uri: this.defineImageURL(u.imagen) }} />
-                                                ):(
-                                                    <Image style={stylesCards.cardImage} 
-                                                    source={ require('../../components/catalogViewComponents/catalogAssets/imagennodisponible.png') } />
-                                                )}
-                                            </TouchableOpacity>
+                                                <TouchableOpacity onPress={() => this.selectVendor(u)}>
+                                                    {(u.imagen !== null) ? (
+                                                        <Image style={stylesCards.cardImage} source={{ uri: this.defineImageURL(u.imagen) }} />
+                                                    ) : (
+                                                            <Image style={stylesCards.cardImage}
+                                                                source={require('../../components/catalogViewComponents/catalogAssets/imagennodisponible.png')} />
+                                                        )}
+                                                </TouchableOpacity>
                                             </View>
-                                            <View style={{position:"absolute"}}>
+                                            <View style={{ position: "absolute" }}>
                                                 <View>
-                                                {! u.ventasHabilitadas ? (<View style={stylesCards.backgroundBadge}><Image style={stylesCards.badgeImage} source={require('./badge_icons/no-sells.png')} /></View>):(null)}
-                                                </View>                                                
+                                                    {!u.ventasHabilitadas ? (<View style={stylesCards.backgroundBadge}><Image style={stylesCards.badgeImage} source={require('./badge_icons/no-sells.png')} /></View>) : (null)}
+                                                </View>
                                             </View>
                                             <View style={stylesCards.viewTagsOrgAndSellStrat}>
                                                 <View style={stylesCards.viewBadgesTOrg}>
@@ -106,7 +106,7 @@ class VendorMultipleCardsView extends React.PureComponent {
                                             <View style={stylesCards.viewTagsZonesAndSellModes} >
                                                 <View style={stylesCards.viewZones}>
                                                     {(u.tagsZonaDeCobertura.map((tag) =>
-                                                        <Badge  key={tag.id} badgeStyle={stylesCards.badgeCobertura} containerStyle={stylesCards.tagOrganizacion} value={this.props.multipleCards ? this.createScrollText(tag.nombre, stylesCards.textBadge) : <Text style={stylesCards.textBadge}>{this.cropText(tag.nombre)}</Text>} />
+                                                        <Badge key={tag.id} badgeStyle={stylesCards.badgeCobertura} containerStyle={stylesCards.tagOrganizacion} value={this.props.multipleCards ? this.createScrollText(tag.nombre, stylesCards.textBadge) : <Text style={stylesCards.textBadge}>{this.cropText(tag.nombre)}</Text>} />
                                                     ))}
                                                 </View>
                                                 <View style={stylesCards.viewBadgesSellingModes}>
@@ -117,7 +117,7 @@ class VendorMultipleCardsView extends React.PureComponent {
                                             </View>
                                             <View style={stylesCards.viewProducts}>
                                                 {(u.tagsTipoProductos.map((tag) =>
-                                                    <Badge  key={tag.id} badgeStyle={stylesCards.badgeProductos} containerStyle={stylesCards.tagOrganizacion} value={this.props.multipleCards ? this.createScrollText(tag.nombre, stylesCards.textBadge) : <Text style={stylesCards.textBadge} >{this.cropText(tag.nombre)}</Text>} />
+                                                    <Badge key={tag.id} badgeStyle={stylesCards.badgeProductos} containerStyle={stylesCards.tagOrganizacion} value={this.props.multipleCards ? this.createScrollText(tag.nombre, stylesCards.textBadge) : <Text style={stylesCards.textBadge} >{this.cropText(tag.nombre)}</Text>} />
                                                 ))}
                                             </View>
                                         </Card>
@@ -126,6 +126,19 @@ class VendorMultipleCardsView extends React.PureComponent {
                             }
                         })
                     }
+                </View>
+                <View style={{alignSelf:"center", marginBottom:15}}>
+                    <Image
+                        source={ require('../catalogViewComponents/catalogAssets/unq_logo.png') }
+                        style={{
+                            width: 350,
+                            height: 55,
+                            resizeMode: 'center',
+                            borderRadius: 5,
+                            marginTop:10, 
+                            marginBottom:10, 
+                        }}>
+                    </Image>
                 </View>
             </ScrollView>
         );
@@ -244,7 +257,7 @@ const stylesMultipleCards = StyleSheet.create({
     },
 
     badgeProductos: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         height: 23,
         borderRadius: 5,
         alignSelf: 'flex-start'
@@ -318,7 +331,7 @@ const stylesMultipleCards = StyleSheet.create({
 const stylesSingleCards = StyleSheet.create({
     viewSearchErrorContainer: {
         height: "80%",
-        justifyContent:"center",
+        justifyContent: "center",
     },
 
     viewErrorContainer: {
@@ -467,7 +480,7 @@ const stylesSingleCards = StyleSheet.create({
     },
 
     badgeProductos: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         height: 30,
         borderRadius: 5,
         alignSelf: 'flex-start',

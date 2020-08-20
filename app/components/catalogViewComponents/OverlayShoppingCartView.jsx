@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
         color: "white"
     },
     buttonNewCartButton: {
-        backgroundColor: 'rgba(51, 102, 255, 1)'
+        backgroundColor: '#00adee'
     },
     subMenuButtonContainer: {
         flex: 1
@@ -435,7 +435,7 @@ const styles = StyleSheet.create({
 
     iconRevealButton: {
         alignSelf: 'flex-end',
-        color: "#fff000",
+        color: "#00adee",
     },
 
     iconContainer: {
@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         marginLeft: -10,
         marginRight: -10,
         marginTop: -12,

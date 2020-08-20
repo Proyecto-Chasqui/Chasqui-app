@@ -290,7 +290,7 @@ class GroupsView extends React.PureComponent {
 
     renderItem = ({ item }) => (
         <View style={styles.groupItem}>
-            <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", flexDirection: "row", alignItems: "center", justifyContent: "center", borderTopStartRadius: 3, borderTopEndRadius: 3, flex: 1, width: "100%" }}>
+            <View style={{ backgroundColor: "#00adee", flexDirection: "row", alignItems: "center", justifyContent: "center", borderTopStartRadius: 3, borderTopEndRadius: 3, flex: 1, width: "100%" }}>
                 <Text style={{ textAlign: "center", fontSize: 18, margin: 2, fontWeight: "bold", color: "white" }}> {item.alias} </Text>
             </View>
             <View style={{ flex: 3, width: "100%" }}>
@@ -300,7 +300,7 @@ class GroupsView extends React.PureComponent {
                     <View style={{ borderBottomWidth: 1 }}></View>
                     <View style={{ justifyContent: "center", backgroundColor: "#ebedeb", borderBottomWidth: 1, borderColor: "black", flexDirection: "row", alignItems: "center" }}>
                         <View style={{ margin: 3, flexDirection: "row", alignItems: "center" }}>
-                            <Icon name="account-star" size={25} color="blue" type='material-community' />
+                            <Icon name="account-star" size={25} color="#00adee" type='material-community' />
                             <Text style={{ fontWeight: "bold", fontSize: 15 }}> {item.emailAdministrador}</Text>
                         </View>
                     </View>
@@ -469,7 +469,7 @@ class GroupsView extends React.PureComponent {
 const styles = StyleSheet.create({
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -494,7 +494,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         backgroundColor: '#66000000',
         marginRight: 0,
-        borderColor: 'rgba(51, 102, 255, 1)',
+        borderColor: '#00adee',
         borderWidth: 1,
         width: 40,
         height: 40
@@ -572,7 +572,7 @@ const styles = StyleSheet.create({
     },
 
     searchIconErrorContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "#00adee",
         borderWidth: 2,
         borderRadius: 50,
         width: 100,

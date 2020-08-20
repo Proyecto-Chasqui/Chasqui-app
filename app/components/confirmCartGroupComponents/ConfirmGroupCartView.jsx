@@ -136,13 +136,13 @@ class ConfirmGroupCartView extends React.PureComponent {
                             <FlatList data={this.props.answers}
                                 ListHeaderComponent={
                                 <View style={{ flex:1, alignItems:"center",flexDirection: "row", marginLeft:5, marginRight:5, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
-                                    <Text style={{flex:1,color:"black",fontWeight:"bold", textAlign:"center", }}>Pregunta </Text><Text style={{borderLeftWidth:2,height:"100%",borderColor:"#e1e1e1"}}></Text><Text  style={{flex:1,textAlign:"center",color:"blue",fontWeight:"bold"}}>Respuesta</Text>
+                                    <Text style={{flex:1,color:"black",fontWeight:"bold", textAlign:"center", }}>Pregunta </Text><Text style={{borderLeftWidth:2,height:"100%",borderColor:"#e1e1e1"}}></Text><Text  style={{flex:1,textAlign:"center",color:'#00adee',fontWeight:"bold"}}>Respuesta</Text>
                                 </View>
                                 }
                                 keyExtractor={item => item.nombre} windowSize={15}
                                 renderItem={({ item }) =>
                                     <View style={{ flex:1, alignItems:"center",flexDirection: "row", marginLeft:5, marginRight:5, backgroundColor: '#ebedeb', borderBottomColor: "#e1e1e1", borderBottomWidth: 2 }}>
-                                        <Text style={{flex:1,color:"black",fontWeight:"bold", textAlign:"center"}}>{item.nombre}  </Text><Text style={{borderLeftWidth:2,height:"100%",borderColor:"#e1e1e1"}}></Text><Text  style={{flex:1,textAlign:"center",color:"blue",fontWeight:"bold"}}>{item.opcionSeleccionada}</Text>
+                                        <Text style={{flex:1,color:"black",fontWeight:"bold", textAlign:"center"}}>{item.nombre}  </Text><Text style={{borderLeftWidth:2,height:"100%",borderColor:"#e1e1e1"}}></Text><Text  style={{flex:1,textAlign:"center",color:'#00adee',fontWeight:"bold"}}>{item.opcionSeleccionada}</Text>
                                     </View>
                                 } />
                         </View>) : (null)
@@ -151,7 +151,7 @@ class ConfirmGroupCartView extends React.PureComponent {
                         <View style={{ flex: 1 }}>
                             <Text style={stylesListCard.sectionTitleTextStyle}>Será entregado en</Text>
                             <View style={{ flex: 1 }}>
-                                <Text style={{ margin: 5, color: "blue", fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.parseAdress(this.props.adressSelected)}</Text>
+                                <Text style={{ margin: 5, color: '#00adee', fontSize: 16, fontWeight: 'bold', textAlign: "center" }}>{this.parseAdress(this.props.adressSelected)}</Text>
                                 {this.props.zone != undefined ? (
                                     <View style={{ flex: 1, }}>
                                         <Text style={stylesListCard.sectionTitleTextStyle}> Detalles de la zona de entrega</Text>
@@ -180,7 +180,7 @@ class ConfirmGroupCartView extends React.PureComponent {
                             <Text style={stylesListCard.sectionTitleTextStyle}>Lo pasa a retirar en</Text>
                             <ScrollView style={{ marginLeft: 20, marginRight: 10, marginBottom: 10, marginTop: 10 }}>
                                 <Text style={{ fontSize: 15, fontWeight: 'bold' }}>{this.props.sellerPointSelected.nombre}</Text>
-                                <Text style={{ color: "blue" }}>{this.parseAdress(this.props.sellerPointSelected.direccion)}</Text>
+                                <Text style={{ color: '#00adee' }}>{this.parseAdress(this.props.sellerPointSelected.direccion)}</Text>
                                 <Text style={{ fontSize: 14, }}>{this.props.sellerPointSelected.mensaje}</Text>
                             </ScrollView>
                         </View>
@@ -189,7 +189,7 @@ class ConfirmGroupCartView extends React.PureComponent {
                         <Text style={stylesListCard.sectionTitleTextStyle}>Comentario [ {this.comment.length} / 200 ]</Text>
                         <TextInput style={{ marginLeft: 10, alignSelf: "flex-start", borderColor: 'gray', }}
                             placeholder={"  Puede dejar un comentario para el pedido aqui."}
-                            placeholderTextColor="blue"
+                            placeholderTextColor='#00adee'
                             multiline
                             numberOfLines={4}
                             onChangeText={text => this.updateText(text)}
@@ -202,7 +202,7 @@ class ConfirmGroupCartView extends React.PureComponent {
                 </View>
                 {this.hasNodeAndIncentives() ? (
                     <View style={{}}>
-                        <View style={{ backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                        <View style={{ backgroundColor: "#00adee", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
                             <View style={stylesListCard.singleItemContainer}>
                                 <Text style={stylesListCard.itemDataInfoStyle}><Text style={stylesListCard.itemDataStyle}> Ingreso Nodo :</Text> $ {this.calculateNodeAmount()} </Text>
                                 <Text style={stylesListCard.itemDataInfoStyle}><Text style={stylesListCard.itemDataStyle}> Costo al Nodo :</Text> $ {this.obtainTotalPrice()} </Text>
@@ -212,7 +212,7 @@ class ConfirmGroupCartView extends React.PureComponent {
                     </View>
                 ) : (
                         <View style={{ backgroundColor: "black", }}>
-                            <View style={{ alignItems: "center", backgroundColor: "rgba(51, 102, 255, 1)", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
+                            <View style={{ alignItems: "center", backgroundColor: "#00adee", borderColor: 'black', borderBottomWidth: 1, borderTopWidth: 1, }}>
                                 <View style={[stylesListCard.singleItemContainer, { height: 40, justifyContent: "center" }]}>
                                     <Text style={[stylesListCard.itemDataInfoStyle]}><Text style={[stylesListCard.itemDataStyle]}> Total :</Text> $ {this.obtainTotalPrice()} </Text>
                                 </View>
@@ -245,7 +245,7 @@ const stylesListCard = StyleSheet.create({
         textAlign: "center",
         fontSize: 16,
         fontWeight: "bold",
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         color: "white",
         borderBottomWidth: 1,
         borderTopWidth: 1,
@@ -426,7 +426,7 @@ const stylesListCard = StyleSheet.create({
     },
 
     badgeProductos: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         height: 30,
         borderRadius: 5,
         alignSelf: 'flex-start',

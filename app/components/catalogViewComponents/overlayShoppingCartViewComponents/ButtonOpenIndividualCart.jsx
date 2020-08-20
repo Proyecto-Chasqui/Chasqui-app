@@ -36,7 +36,7 @@ class ButtonOpenIndividualCart extends React.PureComponent {
                     margin: 10,
                     borderColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('black'):("#D8D8D8"),
                 }}>
-                    <View style={{ flex: 1, justifyContent: "center", borderColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('black'):("#D8D8D8"), borderWidth: 2, borderBottomWidth: 0, borderTopRightRadius: 5, borderTopLeftRadius: 5, marginLeft: -2, marginRight: -2, marginTop: -2, alignItems: 'center', flexDirection: "row", backgroundColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('#5ebb47'):('rgba(51, 102, 255, 1)') }}>
+                    <View style={{ flex: 1, justifyContent: "center", borderColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('black'):("#D8D8D8"), borderWidth: 2, borderBottomWidth: 0, borderTopRightRadius: 5, borderTopLeftRadius: 5, marginLeft: -2, marginRight: -2, marginTop: -2, alignItems: 'center', flexDirection: "row", backgroundColor: (this.props.shoppingCartSelected.id === this.state.cart.id) ? ('#5ebb47'):('#00adee') }}>
                         <Text style={{ fontWeight: 'bold', color: "white", fontSize: 15, marginRight: 20, flex: 8, textAlign:"center"}}> Pedido Individual </Text>
                         <View style={{ backgroundColor: "white", borderColor: "black", borderRadius: 5, borderWidth: 1, margin: 4 }}>
                             <Image style={styles.badgeImage} source={require('../../vendorsViewComponents/badge_icons/compra_individual.png')} />
@@ -61,7 +61,7 @@ class ButtonOpenIndividualCart extends React.PureComponent {
                     margin: 10,
                     borderColor: "#D8D8D8",
                 }}>
-                <View style={{ flex: 1, justifyContent: "center", borderColor: "#D8D8D8", borderWidth: 2, borderBottomWidth: 0, borderTopRightRadius: 5, borderTopLeftRadius: 5, marginLeft: -2, marginRight: -2, marginTop: -2, alignItems: 'center', flexDirection: "row", backgroundColor: 'rgba(51, 102, 255, 1)' }}>
+                <View style={{ flex: 1, justifyContent: "center", borderColor: "#D8D8D8", borderWidth: 2, borderBottomWidth: 0, borderTopRightRadius: 5, borderTopLeftRadius: 5, marginLeft: -2, marginRight: -2, marginTop: -2, alignItems: 'center', flexDirection: "row", backgroundColor: '#00adee' }}>
                         <Text style={{ fontWeight: 'bold', color: "white", fontSize: 15, marginRight: 20, textAlign:"center" }}> Pedido Individual </Text>
                         <View style={{ backgroundColor: "white", borderColor: "black", borderRadius: 5, borderWidth: 1, margin: 4 }}>
                             <Image style={styles.badgeImage} source={require('../../vendorsViewComponents/badge_icons/compra_individual.png')} />
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     },
 
     buttonNewCartButton: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
 
     },
     badgeImage: { height: 25, width: 25 },
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     },
 
     buttonNewCartButton: {
-        backgroundColor: 'rgba(51, 102, 255, 1)'
+        backgroundColor: '#00adee'
     },
 
     selectorContainer: {

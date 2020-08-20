@@ -263,7 +263,7 @@ class OpenNodesView extends React.PureComponent {
                             {this.hasDescription(item.nodo.descripcion) ? (
                                 <View style={{ backgroundColor: "#ebedeb" }}>
                                     <View style={{ alingItems: "center", flexDirection: "row", margin: 5, marginStart: 10, marginEnd: 10 }}>
-                                        <Text style={{ fontSize: 16, fontWeight: "bold", color: "blue" }}>{item.nodo.descripcion}</Text>
+                                        <Text style={{ fontSize: 16, fontWeight: "bold", color: '#00adee' }}>{item.nodo.descripcion}</Text>
                                     </View>
                                     <View style={{ borderBottomWidth: 1, borderColor: "grey" }}></View>
                                 </View>
@@ -308,7 +308,7 @@ class OpenNodesView extends React.PureComponent {
                         {this.hasDescription(item.descripcion) ? (
                             <View style={{ backgroundColor: "#ebedeb" }}>
                                 <View style={{ alingItems: "center", flexDirection: "row", margin: 5, marginStart: 10, marginEnd: 10 }}>
-                                    <Text style={{ fontSize: 16, fontWeight: "bold", color: "blue" }}>{item.descripcion}</Text>
+                                    <Text style={{ fontSize: 16, fontWeight: "bold", color: '#00adee' }}>{item.descripcion}</Text>
                                 </View>
                                 <View style={{ borderBottomWidth: 1, borderColor: "grey" }}></View>
                             </View>
@@ -477,7 +477,7 @@ const styles = StyleSheet.create({
     },
 
     searchIconErrorContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "#00adee",
         borderWidth: 2,
         borderRadius: 50,
         width: 100,
@@ -511,7 +511,7 @@ const styles = StyleSheet.create({
     },
 
     searchIconErrorContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "#00adee",
         borderWidth: 2,
         borderRadius: 50,
         width: 100,
@@ -543,7 +543,7 @@ const styles = StyleSheet.create({
     itemDataInfoStyle: { fontSize: 16, fontWeight: "bold", fontStyle: "italic", color: "grey" },
     itemDataStyle: { color: "black", fontStyle: "normal" },
     infoTextContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "#00adee",
         width: "100%",
         height: 45,
         alignItems: "center",
@@ -590,7 +590,7 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -626,7 +626,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         backgroundColor: '#66000000',
         marginRight: 0,
-        borderColor: 'rgba(51, 102, 255, 1)',
+        borderColor: '#00adee',
         borderWidth: 1,
         width: 40,
         height: 40

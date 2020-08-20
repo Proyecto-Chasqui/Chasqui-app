@@ -25,7 +25,7 @@ class DeliveryAdressConfigView extends React.PureComponent {
         return (
             <View style={{ flex: 1 }}>
                 <View>
-                    <Button titleStyle={{ color: "black", }}
+                    <Button titleStyle={{ color: "white", }}
                         containerStyle={styles.buttonAddProductContainer}
                         buttonStyle={styles.buttonNewAddressStyle}
                         onPress={() => this.goToNewAdress()} title="Nueva dirección">
@@ -43,7 +43,7 @@ class DeliveryAdressConfigView extends React.PureComponent {
                                         <Icon
                                             name='caret-right'
                                             type='font-awesome'
-                                            color='#fff000'
+                                            color='#00adee'
                                             size={30}
                                         />}
                                         containerStyle={styles.buttonProducerContainerStyle} buttonStyle={styles.buttonProducerStyle}
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     },
 
     buttonNewAddressStyle: {
-        backgroundColor: "#f8f162",
+        backgroundColor: "#00adee",
         borderColor: 'grey',
         borderWidth: 1
     },

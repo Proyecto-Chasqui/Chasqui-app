@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
       },  
     
       infoTextContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "#00adee",
         marginTop: -10,
         marginLeft: -10,
         marginRight: -10,

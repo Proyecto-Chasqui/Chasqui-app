@@ -349,7 +349,7 @@ class VendorFiltersView extends React.PureComponent {
 
                     <View style={styles.divisor} />
                     <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Tipo de entrega"
-                        onPress={() => this.showDeliveryType()} icon={<Icon iconStyle={styles.iconRevealButton} name="caret-down" iconRight={true} size={20} color="blue" type='font-awesome' />
+                        onPress={() => this.showDeliveryType()} icon={<Icon iconStyle={styles.iconRevealButton} name="caret-down" iconRight={true} size={20} color='#00adee' type='font-awesome' />
                         } iconRight />
                     {this.state.showDeliveryType ?
                         <View style={styles.menuSelectorItems}>
@@ -378,7 +378,7 @@ class VendorFiltersView extends React.PureComponent {
 
                     <View style={styles.divisor} />
                     <Button titleStyle={styles.titleButtonReveal} buttonStyle={styles.searchButtonReveal} containerStyle={styles.searchContainerButtonReveal} type="clear" title="Modo de venta"
-                        onPress={() => this.showSellingModes()} icon={<Icon iconStyle={styles.iconRevealButton} name="caret-down" iconRight={true} size={20} color="blue" type='font-awesome' />
+                        onPress={() => this.showSellingModes()} icon={<Icon iconStyle={styles.iconRevealButton} name="caret-down" iconRight={true} size={20} color='#00adee' type='font-awesome' />
                         } iconRight />
                     {this.state.showSellingModes ?
                         <View style={styles.menuSelectorItems}>
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
     iconRevealButton: {
         marginLeft: 50,
         alignSelf: 'flex-end',
-        color: "#fff000"
+        color: "#00adee"
     },
 
     iconContainer: {
@@ -488,7 +488,7 @@ const styles = StyleSheet.create({
     },
 
     searchButtonResetTitle: {
-        color: "rgba(51, 102, 255, 1)"
+        color: "#00adee"
     },
 
     searchButtonReset: {

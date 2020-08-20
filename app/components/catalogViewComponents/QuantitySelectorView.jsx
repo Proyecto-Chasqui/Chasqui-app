@@ -83,7 +83,7 @@ class QuantitySelectorView extends React.PureComponent{
                     <Icon
                     name='caret-left'
                     type='font-awesome'
-                    color="#fff000"
+                    color="#00adee"
                     size={30}
                     />
                 }
@@ -108,7 +108,7 @@ class QuantitySelectorView extends React.PureComponent{
                         <Icon
                         name='caret-right'
                         type='font-awesome'
-                        color="#fff000"
+                        color="#00adee"
                         size={30}
                         />
                 }

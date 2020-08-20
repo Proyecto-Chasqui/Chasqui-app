@@ -362,7 +362,7 @@ class NotificationsView extends React.PureComponent {
             <View style={{ flex: 4, margin: 10 }}>
                 <View style={{ alingItems: "center", flexDirection: "row" }}>
                     <Text style={{ fontSize: 11 }}>De:</Text>
-                    <Text style={{ fontSize: 11, fontWeight: "bold", color: "blue" }}> {item.usuarioOrigen}</Text>
+                    <Text style={{ fontSize: 11, fontWeight: "bold", color: "#00adee" }}> {item.usuarioOrigen}</Text>
                 </View>
                 <View style={{ alignContent: "center", alignItems: "center", flexDirection: "row", marginBottom: 5 }}>
                     <Icon
@@ -371,7 +371,7 @@ class NotificationsView extends React.PureComponent {
                         type='font-awesome'
                         color='grey'
                     />
-                    <Text style={{ fontSize: 11, fontWeight: "bold", color: "blue" }}> {item.fechaCreacion}</Text>
+                    <Text style={{ fontSize: 11, fontWeight: "bold", color: "#00adee" }}> {item.fechaCreacion}</Text>
                 </View>
                 <Text style={{ fontSize: 13 }}>{item.mensaje}</Text>
                 {this.isInvitation(item.mensaje) ? (
@@ -535,7 +535,7 @@ class NotificationsView extends React.PureComponent {
 const styles = StyleSheet.create({
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -628,7 +628,7 @@ const styles = StyleSheet.create({
     },
 
     searchIconErrorContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "#00adee",
         borderWidth: 2,
         borderRadius: 50,
         width: 100,

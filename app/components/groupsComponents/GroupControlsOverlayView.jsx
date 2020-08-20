@@ -494,7 +494,7 @@ const styles = StyleSheet.create({
         maxHeight: 325,
     },
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         borderTopEndRadius: 3,
         borderTopStartRadius: 3,
         shadowColor: "#000",
@@ -513,7 +513,7 @@ const styles = StyleSheet.create({
     },
 
     normalTitleButton: { fontWeight: "bold", fontSize: 18 },
-    normalButtonStyle: { backgroundColor: "rgba(51, 102, 255, 1)" },
+    normalButtonStyle: { backgroundColor: "#00adee" },
     contanierNormalButton: { marginTop: 5 },
     iconContainerStyle: { marginEnd: 10 },
 

@@ -157,7 +157,7 @@ class DetailGroupView extends React.PureComponent {
                     },
                     shadowOpacity: 0.25,
                     shadowRadius: 3.84,
-                    borderColor: "blue",
+                    borderColor: '#00adee',
                     elevation: 5,
                 }
             )
@@ -217,7 +217,7 @@ class DetailGroupView extends React.PureComponent {
                         />
                         {this.isAdministrator(item) ? (
                             <View style={{ position: "absolute", alignSelf: "flex-start", marginStart: -4, marginTop: 1, borderWidth: 1, borderRadius: 10, backgroundColor: "#5ebb47" }}>
-                                <Icon containerStyle={{ margin: 1 }} name="star" size={15} color="blue" type='font-awesome' />
+                                <Icon containerStyle={{ margin: 1 }} name="star" size={15} color='#00adee' type='font-awesome' />
                             </View>
                         ) : (null)}
                         <View style={{ marginStart: 10, flex:10}}>
@@ -238,7 +238,7 @@ class DetailGroupView extends React.PureComponent {
                                 <Icon
                                     name='chevron-right'
                                     type='font-awesome'
-                                    color='blue'
+                                    color='#00adee'
                                 />
                             </View>
                         ) : (null)}
@@ -306,7 +306,7 @@ class DetailGroupView extends React.PureComponent {
 const styles = StyleSheet.create({
 
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
     },
 
     searchIconErrorContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: "#00adee",
         borderWidth: 2,
         borderRadius: 50,
         width: 100,

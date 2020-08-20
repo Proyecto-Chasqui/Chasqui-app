@@ -524,13 +524,13 @@ class NodeRequestView extends React.PureComponent {
         if (this.state.nodeData.tiponodo === ABIERTO) {
             return "green"
         } else {
-            return "blue"
+            return '#00adee'
         }
     }
 
     getCloseColor() {
         if (this.state.nodeData.tiponodo === CERRADO) {
-            return "blue"
+            return '#00adee'
         } else {
             return "green"
         }
@@ -652,11 +652,11 @@ class NodeRequestView extends React.PureComponent {
                                     <Text style={{ color: this.state.isOpen ? "grey" : "red", fontWeight: "bold", fontSize: 16 }}>Cerrado</Text>
                                     <Switch
                                         trackColor={{ false: "#767577", true: "green" }}
-                                        thumbColor={this.state.isOpen ? "blue" : "red"}
+                                        thumbColor={this.state.isOpen ? '#00adee' : "red"}
                                         onValueChange={() => this.toggleSwitch()}
                                         value={this.state.isOpen}
                                     />
-                                    <Text style={{ color: this.state.isOpen ? "blue" : "grey", fontWeight: "bold", fontSize: 16 }}>Abierto</Text>
+                                    <Text style={{ color: this.state.isOpen ? '#00adee' : "grey", fontWeight: "bold", fontSize: 16 }}>Abierto</Text>
                                 </View>
                                 <View style={{ marginTop: 5, marginBottom: 5 }}>
                                     {this.state.isOpen ? (
@@ -670,7 +670,7 @@ class NodeRequestView extends React.PureComponent {
 
                             <View style={{ flex: 1, marginBottom: 10 }}>
                                 <Text style={styles.sectionTitleTextStyle}>Dirección del nodo</Text>
-                                <Button titleStyle={{ color: "black", }}
+                                <Button titleStyle={{ color: "white", }}
                                     containerStyle={styles.buttonAddProductContainer}
                                     buttonStyle={styles.buttonNewAddressStyle}
                                     onPress={() => this.goToNewAdress()} title="Nueva dirección">
@@ -701,7 +701,7 @@ class NodeRequestView extends React.PureComponent {
                                             </View>
                                             <View style={{ flex: 5 }}>
                                                 <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{adress.alias}</Text>
-                                                <Text style={{ color: "blue" }}>{this.parseAdress(adress)}</Text>
+                                                <Text style={{ color: '#00adee' }}>{this.parseAdress(adress)}</Text>
                                                 <Text style={{ fontSize: 16 }}>{adress.comentario}</Text>
 
                                             </View>
@@ -749,7 +749,7 @@ const styles = StyleSheet.create({
     },
 
     inputTextStyle: {
-        color: 'rgba(51, 102, 255, 1)',
+        color: '#00adee',
         marginLeft: 10,
         fontSize: 15,
         textAlign: "center",
@@ -758,7 +758,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
     },
     searchIconErrorContainer: {
-        backgroundColor: "rgba(51, 102, 255, 1)",
+        backgroundColor: '#00adee',
         borderWidth: 2,
         borderRadius: 50,
         width: 45,
@@ -769,7 +769,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 16,
         fontWeight: "bold",
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#00adee',
         color: "white",
         borderBottomWidth: 1,
         borderTopWidth: 1,
@@ -781,7 +781,7 @@ const styles = StyleSheet.create({
     tipText: {
         fontWeight: "bold",
         marginLeft: 10,
-        color: "blue",
+        color: '#00adee',
         textAlign: "center"
     },
     soloInputContainer: {
@@ -797,7 +797,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     topHeader: {
-        backgroundColor: 'rgba(51, 102, 255, 1)',
+        backgroundColor: '#909090',
     },
 
     lowerHeaderStyle: {
@@ -871,7 +871,7 @@ const styles = StyleSheet.create({
     },
 
     searchIcon: {
-        color: "rgba(51, 102, 255, 1)",
+        color: '#00adee',
     },
 
     lowerHeaderButton: {
@@ -888,11 +888,11 @@ const styles = StyleSheet.create({
 
     iconLowerHeaderButton: {
         marginRight: 15,
-        color: "rgba(51, 102, 255, 1)"
+        color: '#00adee'
     },
 
     lowerHeaderButtonTitle: {
-        color: "rgba(51, 102, 255, 1)"
+        color: '#00adee'
     },
 
     overlayContainer: {
@@ -938,7 +938,7 @@ const styles = StyleSheet.create({
 
 
     buttonNewAddressStyle: {
-        backgroundColor: "#f8f162",
+        backgroundColor: "#00adee",
         borderColor: 'grey',
         borderWidth: 1
     },
