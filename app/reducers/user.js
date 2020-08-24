@@ -1,13 +1,15 @@
 import {
     LOGIN,
-    LOGOUT
+    LOGOUT,
+    SETPASSWORD
   } from '../actions';
   
   const initialState = {
     email: "",
     token: "",
     id: 0,
-    nickname: "usuario no logueado"
+    nickname: "usuario no logueado",
+    avatar: "",
   }
   
   export default function user(state=initialState, action) {
@@ -18,6 +20,11 @@ import {
   
       case LOGOUT:
         return initialState;
+
+      case SETPASSWORD:
+        return Object.assign({}, state, {
+          password: action.passwordData
+        });
   
       default:
         return state;

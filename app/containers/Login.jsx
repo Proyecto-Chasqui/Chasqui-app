@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {login, logout} from '../actions';
+import {login, logout,setPassword} from '../actions';
 import LoginView from '../components/LoginView';
 
 const mapStateToProps = state => ({
@@ -8,7 +8,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({login, logout}, dispatch),
+  actions: bindActionCreators({login, logout,setPassword}, dispatch),
 });
 
 export default connect(
