@@ -5,7 +5,7 @@ Las configuraciones descriptas debajo solo son para el entorno **Android**, debi
 ## Requerimientos
 ### Desarrollo
 1. Expo SDK 37
-2. Node 13.10.1
+2. Node 14.8.0
 3. Yarn
 
 ### Creación de apk
