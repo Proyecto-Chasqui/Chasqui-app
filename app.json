@@ -4,7 +4,6 @@
     "slug": "chasqui-app",
     "privacy": "unlisted",
     "owner": "user_logged_in_expo",
-    "sdkVersion": "37.0.0",
     "platforms": [
       "ios",
       "android",
@@ -35,8 +34,10 @@
       "googleServicesFile": "./google-services.json",
       "versionCode": 1,
       "config": {
-        "googleMaps": { "apiKey": "yourSDKMAPSkey" }   
-     }
+        "googleMaps": {
+          "apiKey": "yourSDKMAPSkey"
+        }
+      }
     },
     "description": ""
   }

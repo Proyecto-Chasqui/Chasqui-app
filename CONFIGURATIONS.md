@@ -13,7 +13,7 @@ Las configuraciones descriptas debajo solo son para el entorno **Android**, debi
 2. Cuenta en **[expo.io](https://expo.io/)**.
 
 ## Instalación de Expo
-1. Instalar **[NodeJS 13.10.1](https://nodejs.org/es/)** o superior.
+1. Instalar **[NodeJS 14.8.0](https://nodejs.org/es/)** o superior.
 2. Abrir una consola/terminal y ejecutar **npm install expo-cli --global**
 3. Crease una cuenta en **[expo.io](https://expo.io/)**, esto permitirá crear el apk via expo CLI.
 4. Instalar Yarn, abrir una consola/terminal y ejecutar **npm install -g yarn**.
