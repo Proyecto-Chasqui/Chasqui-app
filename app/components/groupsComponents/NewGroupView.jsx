@@ -85,7 +85,6 @@ class NewGroupView extends React.PureComponent {
             );
         }).catch((error) => {
             this.setState({ loading: false })
-            console.log(error);
             this.errorAlert(error)
         });
     }
@@ -100,7 +99,6 @@ class NewGroupView extends React.PureComponent {
             this.getGroups();
         }).catch((error) => {
             this.setState({ loading: false })
-            console.log(error);
             this.errorAlert(error)
         });
     }

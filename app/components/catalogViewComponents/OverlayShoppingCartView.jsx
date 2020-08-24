@@ -161,7 +161,6 @@ class OverlayShoppingCartView extends React.PureComponent {
             this.setState({ showWaitSign: false });
             this.showShoppingCarts();
         }).catch((error) => {
-            console.log(error);
             this.errorAlert(error)
         });
     }
@@ -175,7 +174,6 @@ class OverlayShoppingCartView extends React.PureComponent {
             this.getShoppingCarts();
         }).catch((error) => {
             this.setState({ showWaitSign: false })
-            console.log("error", error);
             this.errorAlert(error)
         });
     }

@@ -47,7 +47,6 @@ class CatalogView extends React.Component {
             viewSize: 2,
             shakeDetected:false,
         };
-        console.log("vendor", this.props.vendorSelected);
     }
 
     userLogged(){
@@ -133,7 +132,6 @@ class CatalogView extends React.Component {
         .then(res => {
             this.props.actions.infoDataVendorSelected(res.data);
         }).catch( (error) => {
-            console.log("error en vandor info",error);
             if (error.response) {
                 if(error.response.status === 401){
                     Alert.alert(
@@ -242,7 +240,6 @@ class CatalogView extends React.Component {
         axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas',{withCredentials: true}).then(res => {
             this.props.actions.unreadNotifications(res.data);
         }).catch((error) => {
-            console.log("error",error)
             if (error.response) {
                 if(error.response.status === 401){
                     Alert.alert(
@@ -424,7 +421,6 @@ class CatalogView extends React.Component {
           },{withCredentials: true}).then(res => {
             this.shoppingCarts(res.data);
         }).catch((error) =>{
-            console.log(error);
             if (error.response) {
                 if(error.response.status === 401){
                     Alert.alert(
@@ -465,7 +461,6 @@ class CatalogView extends React.Component {
         axios.get((this.serverBaseRoute + 'rest/client/medalla/all/')).then(res => {
             this.seals(res.data);
         }, {withCredentials: true}).catch((error)=> {
-            console.log("error en sellos")
             Alert.alert(
                 'Error',
                 'Ocurrio un error al obtener los productos del servidor, vuelva a intentar más tarde.',
@@ -482,7 +477,6 @@ class CatalogView extends React.Component {
         axios.get((this.serverBaseRoute + 'rest/client/zona/all/' + this.props.vendorSelected.id)).then(res => {
             this.zones(res.data);
         }).catch((error) => {
-            console.log("error en zonas")
             Alert.alert(
                 'Error',
                 'Ocurrio un error al obtener las zonas del servidor, vuelva a intentar más tarde.',
@@ -498,7 +492,6 @@ class CatalogView extends React.Component {
         axios.get((this.serverBaseRoute + 'rest/client/vendedor/puntosDeRetiro/' + this.props.vendorSelected.nombreCorto)).then(res => {
             this.sellerPoints(res.data.puntosDeRetiro);
         }).catch((error) => {
-            console.log("error seller points")
             Alert.alert(
                 'Error',
                 'Ocurrio un error al obtener los puntos de retiro del servidor, vuelva a intentar más tarde.',
@@ -543,7 +536,6 @@ class CatalogView extends React.Component {
                 isLoadingProducts: false,
             });
         }).catch(function (error) {
-            console.log("error en productos")
             Alert.alert(
                 'Error',
                 'Ocurrio un error al obtener los productos del servidor, vuelva a intentar más tarde.',
@@ -559,7 +551,6 @@ class CatalogView extends React.Component {
         axios.get((this.serverBaseRoute + 'rest/client/productor/all/' + props.vendorSelected.id)).then(res => {
             this.producers(res.data);
         }).catch((error)=> {
-            console.log("error en productores",error)
             if (error.response) {
                 if (error.response.status === 404) {
                   Alert.alert(

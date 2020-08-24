@@ -98,7 +98,6 @@ class PasswordConfigView extends React.PureComponent {
         try {
           await AsyncStorage.setItem(key, JSON.stringify(item));
         } catch (error) {
-          console.log("error on storage",error.message)
         }
       };
     
@@ -122,7 +121,6 @@ class PasswordConfigView extends React.PureComponent {
                         this.setState({isVisible:false})
                     }).catch((error) => {
                         this.setState({ sendingData: false, dataChange: true, isVisible: false })
-                        console.log("error",error)
                         this.errorAlert(error)
                     });
             } else {

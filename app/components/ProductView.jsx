@@ -255,7 +255,6 @@ class ProductView extends React.PureComponent {
             this.setState({ showWaitSign: false, idPedido: 0 })
             this.openTooltip()
         }).catch((error) => {
-            console.log(error);
             this.errorAlert(error)
         });
     }
@@ -268,7 +267,6 @@ class ProductView extends React.PureComponent {
         }, { withCredentials: true }).then(res => {
             this.getShoppingCarts();
         }).catch((error) => {
-            console.log(error);
             this.setState({ buttonLoading: false, buttonDisabled: false })
             this.errorAlert(error)
         });
@@ -284,8 +282,6 @@ class ProductView extends React.PureComponent {
             }, { withCredentials: true }).then(res => {
                 this.getShoppingCarts()
             }).catch((error) => {
-                console.log(error);
-                console.log(error.response);
                 this.setState({ buttonLoading: false, buttonDisabled: false })
                 if (error.response) {
                     if (error.response.data.error === "El vendedor por el momento no permite hacer compras o agregar mas productos, intentelo mas tarde.") {

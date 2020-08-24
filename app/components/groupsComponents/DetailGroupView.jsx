@@ -127,7 +127,6 @@ class DetailGroupView extends React.PureComponent {
         axios.get(this.serverBaseRoute + 'rest/user/nodo/obtenerSolicitudesDePertenenciaANodo/' + this.props.groupSelected.id).then(res => {
             this.props.actions.selectedNodeRequests(res.data)
         }).catch((error) => {
-            console.log("error request:",error);
             this.errorAlert(error)
         });
     }

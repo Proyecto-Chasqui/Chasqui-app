@@ -236,7 +236,6 @@ class AdministrationMembersView extends React.PureComponent {
 
         }).catch((error) => {
             this.setState({ loading: false })
-            console.log(error);
             this.errorAlert(error);
         });
         }
@@ -259,7 +258,6 @@ class AdministrationMembersView extends React.PureComponent {
             );
         }).catch((error) => {
             this.setState({ loading: false })
-            console.log(error);
             this.errorAlert(error)
         });
     }
@@ -268,7 +266,6 @@ class AdministrationMembersView extends React.PureComponent {
         axios.get(this.serverBaseRoute + 'rest/user/nodo/obtenerSolicitudesDePertenenciaANodo/' + this.props.groupSelected.id, { withCredentials: true }).then(res => {
             this.props.actions.selectedNodeRequests(res.data)
         }).catch((error) => {
-            console.log(error);
             this.errorAlert(error)
         });
     }
@@ -280,9 +277,7 @@ class AdministrationMembersView extends React.PureComponent {
             this.setState({ loading: false })
             this.findSelectedGroup()
         }).catch((error) => {
-            console.log("error on get grupos");
             this.setState({ loading: false })
-            console.log(error);
             this.errorAlert(error)
         });
     }
@@ -425,7 +420,6 @@ class AdministrationMembersView extends React.PureComponent {
             this.showAlert(action.successMessage)
         }).catch((error) => {
             this.setState({ loading: false })
-            console.log(error);
             if (error.response) {
                 if(error.response.data.error === 'La solicitud ya fue gestionada'){
                     Alert.alert(

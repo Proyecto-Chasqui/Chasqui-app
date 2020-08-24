@@ -25,7 +25,7 @@ class NavigationOptionItemsView extends React.PureComponent {
       this.navigation.navigate("Catalogos")
       this.logout()
     } catch (error) {
-      console.log("error on storage", error.message)
+
     }
   };
 

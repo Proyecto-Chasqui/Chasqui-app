@@ -98,7 +98,6 @@ class ItemInfoCartView extends React.PureComponent {
         axios.get((this.serverBaseRoute + this.defineStrategyRoute() + 'all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
             this.props.actions.groupsData(res.data);
         }).catch((error) => {
-            console.log(error);
             this.errorAlert(error);
         });
     }
@@ -147,7 +146,6 @@ class ItemInfoCartView extends React.PureComponent {
           this.props.navigation.navigate("Catalogos")
           this.props.actions.logout()
         } catch (error) {
-          console.log("error on storage",error.message)
         }
       };
 
@@ -195,7 +193,6 @@ class ItemInfoCartView extends React.PureComponent {
             this.setState({ showWaitSign: false })
             this.detectAlert(alertText)
         }).catch((error) => {
-            console.log(error);
             this.props.actions.shoppingCartUnselected();
             this.errorAlert(error);
         });
@@ -207,7 +204,6 @@ class ItemInfoCartView extends React.PureComponent {
             this.getShoppingCarts('El pedido ha sido cancelado correctamente');
         }, { withCredentials: true }).catch((error) => {
             this.setState({ showWaitSign: false })
-            console.log("error", error);
             this.errorAlert(error);
         });
     }
@@ -217,7 +213,6 @@ class ItemInfoCartView extends React.PureComponent {
             id: this.props.shoppingCartSelected.id
         }, { withCredentials: true }).then(res => {
         }).catch((error) => {
-            console.log("error", error);
             this.errorAlert(error);
         });
     }
@@ -325,7 +320,6 @@ class ItemInfoCartView extends React.PureComponent {
         axios.get(this.serverBaseRoute + 'rest/user/adm/notificacion/noLeidas', { withCredentials: true }).then(res => {
             this.props.actions.unreadNotifications(res.data);
         }).catch((error) => {
-            console.log(error);
             this.errorAlert(error);
         });
     }

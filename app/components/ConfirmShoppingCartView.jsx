@@ -251,7 +251,6 @@ class ConfirmShoppingCartView extends React.PureComponent {
                 { cancelable: false },
             );
         }).catch((error) => {
-            console.log(error);
             this.errorAlert(error)
         });
     }

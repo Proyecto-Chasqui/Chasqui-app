@@ -415,7 +415,6 @@ class AdressManagmentView extends React.PureComponent {
         }, { withCredentials: true }).then(res => {
             this.updateAdressData(this.state.saveMessage);
         }).catch((error) => {
-            console.log(error);
             this.setState({ isVisible: false })
             if (error.response) {
                 if (error.response.status === 401) {
@@ -467,7 +466,6 @@ class AdressManagmentView extends React.PureComponent {
         }, { withCredentials: true }).then(res => {
             this.updateAdressData(this.state.saveMessage);
         }).catch((error) => {
-            console.log(error);
             this.setState({ isVisible: false })
             if (error.response) {
                 if (error.response.status === 401) {

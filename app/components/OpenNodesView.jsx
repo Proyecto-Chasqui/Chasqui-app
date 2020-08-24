@@ -90,7 +90,6 @@ class OpenNodesView extends React.PureComponent {
                 this.props.actions.accessOpenNodeRequests(res.data)
             }).catch((error) => {
                 this.setState({ loading: false })
-                console.log(error);
                 this.errorAlert(error)
             });
     }
@@ -102,7 +101,6 @@ class OpenNodesView extends React.PureComponent {
             this.setState({ loading: false })
         }).catch((error) => {
             this.setState({ loading: false })
-            console.log(error);
             this.errorAlert(error)
         });
     }
@@ -155,7 +153,6 @@ class OpenNodesView extends React.PureComponent {
             this.props.navigation.navigate("Catalogos")
             this.props.actions.logout();
         } catch (error) {
-            console.log("error on go to login", error.message)
         }
     }
 
@@ -204,7 +201,6 @@ class OpenNodesView extends React.PureComponent {
             this.getAccessOpenNodeRequests()
         }).catch((error) => {
             this.setState({ loading: false })
-            console.log(error);
             this.errorAlert(error)
         });
     }
@@ -240,7 +236,6 @@ class OpenNodesView extends React.PureComponent {
             this.getAccessOpenNodeRequests()
         }).catch((error) => {
             this.setState({ loading: false })
-            console.log(error);
             this.errorAlert(error)
         });
     }

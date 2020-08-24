@@ -30,7 +30,6 @@ class RequestQuantityView extends React.PureComponent{
         axios.get(this.serverBaseRoute + 'rest/user/nodo/obtenerSolicitudesDePertenenciaANodo/' + vidNode, { withCredentials: true }).then(res => {
             this.setState({requestQuantity:this.amountOfNotManageRequests(res.data)})
         }).catch((error) => {
-            console.log(error);
         });
     }
 

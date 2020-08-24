@@ -257,7 +257,6 @@ class ConfirmCartGroupView extends React.PureComponent {
             this.props.actions.groupsData(res.data);     
         }).catch( (error) => {
             this.setState({loading:false})
-            console.log(error);
             this.errorAlert(error)
         });
     }
@@ -285,7 +284,6 @@ class ConfirmCartGroupView extends React.PureComponent {
                 { cancelable: false },
             );
         }).catch((error) => {
-            console.log(error);
             this.errorAlert(error)
         });
     }

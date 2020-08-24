@@ -97,7 +97,6 @@ class InvitationsView extends React.PureComponent {
                 { cancelable: false },
             );
         }).catch((error) => {
-            console.log(error.response);
             Alert.alert(
                 'Error',
                 "Ocurrio un error, es probable que la invitación haya sido cancelada por el remitente",
@@ -148,7 +147,6 @@ class InvitationsView extends React.PureComponent {
         axios.get((this.serverBaseRoute + this.defineStrategyRoute() + 'all/' + this.props.vendorSelected.id), {}, { withCredentials: true }).then(res => {
             this.props.actions.groupsData(res.data);
         }).catch((error) => {
-            console.log(error);
             this.setState({ loading: false })
             this.errorAlert(error)
         });
@@ -177,7 +175,6 @@ class InvitationsView extends React.PureComponent {
                 { cancelable: false },
             );
         }).catch((error) => {
-            console.log(error.response);
             Alert.alert(
                 'Error',
                 "Ocurrio un error, es probable que la invitación haya sido cancelada por el remitente",

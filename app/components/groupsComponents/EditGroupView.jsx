@@ -129,7 +129,6 @@ class EditGroupView extends React.PureComponent {
             this.findAndSelectGroup(deleting);
         }).catch((error) => {
             this.setState({ loading: false })
-            console.log(error);
             this.errorAlert(error)
         });
     }
@@ -156,7 +155,6 @@ class EditGroupView extends React.PureComponent {
             this.getGroups(false);
         }).catch((error) => {
             this.setState({ loading: false })
-            console.log(error);
             this.errorAlert(error)
         });
     }

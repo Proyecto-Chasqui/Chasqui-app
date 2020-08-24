@@ -144,7 +144,6 @@ class NotificationsView extends React.PureComponent {
                 { cancelable: false },
             );
         }).catch((error) => {
-            console.log("error en send accept",error.response);
             Alert.alert(
                 'Error',
                 "Ocurrio un error, es probable que la invitación haya sido cancelada por el remitente",
@@ -181,7 +180,6 @@ class NotificationsView extends React.PureComponent {
                 { cancelable: false },
             );
         }).catch((error) => {
-            console.log(error.response);
             Alert.alert(
                 'Error',
                 "Ocurrio un error, es probable que la invitación haya sido cancelada por el remitente",
@@ -335,7 +333,6 @@ class NotificationsView extends React.PureComponent {
                 this.decrementUnreadNotifications()
             }).catch((error) => {
                 this.decrementUnreadNotifications()
-                console.log(error);
             });
     }
 

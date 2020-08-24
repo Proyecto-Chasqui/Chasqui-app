@@ -167,7 +167,6 @@ class NodeRequestView extends React.PureComponent {
             this.findAndSelectGroup(deleting);
         }).catch((error) => {
             this.setState({ loading: false })
-            console.log(error);
             this.errorAlert(error)
         });
     }
@@ -399,7 +398,6 @@ class NodeRequestView extends React.PureComponent {
                 this.fillData()
             }).catch((error) => {
                 this.setState({ sendingData: false, isVisible: false })
-                console.log("error", error)
                 this.errorAlert(error)
             })
     }
@@ -424,7 +422,6 @@ class NodeRequestView extends React.PureComponent {
                 this.showAlertRequestSended("La solicitud fue cancelada!")
             }).catch((error) => {
                 this.setState({ sendingData: false, isVisible: false })
-                console.log("error", error.response)
                 this.errorAlert(error)
             });
         }
@@ -447,7 +444,6 @@ class NodeRequestView extends React.PureComponent {
 
                 }).catch((error) => {
                     this.setState({ sendingData: false, isVisible: false })
-                    console.log("error", error.response)
                     this.errorAlert(error)
                 });
             } else {
@@ -473,7 +469,6 @@ class NodeRequestView extends React.PureComponent {
                     this.showAlertRequestSended("La solicitud fue editada con exito")
                 }).catch((error) => {
                     this.setState({ sendingData: false, isVisible: false })
-                    console.log("error", error.response)
                     this.errorAlert(error)
                 });
             } else {
@@ -497,7 +492,6 @@ class NodeRequestView extends React.PureComponent {
                     this.showAlertRequestSended("La solicitud fue enviada correctamente, deberá esperar a que le acepten la solicitud. Mientras la misma no este aprobada puede editarla o cancelarla en esta misma sección.")
                 }).catch((error) => {
                     this.setState({ sendingData: false, isVisible: false })
-                    console.log("error", error.response)
                     this.errorAlert(error)
                 });
             } else {

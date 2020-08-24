@@ -133,7 +133,6 @@ class GroupControlsOverlayView extends React.PureComponent {
             this.setState({ showWaitSign: false });
             this.gotToCatalog();
         }).catch((error) => {
-            console.log(error);
             this.errorAlert(error)
         });
     }
@@ -177,7 +176,6 @@ class GroupControlsOverlayView extends React.PureComponent {
             this.props.actions.shoppingCarts(res.data);
             this.findOpenCart()
         }).catch((error) => {
-            console.log(error);
             this.errorAlert(error)
         });
     }
@@ -224,7 +222,6 @@ class GroupControlsOverlayView extends React.PureComponent {
             this.props.navigation.goBack();
         }).catch((error) => {
             this.setState({ loading: false })
-            console.log(error);
             this.errorAlert(error)
         });
     }

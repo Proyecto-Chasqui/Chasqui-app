@@ -37,7 +37,6 @@ class LoginView extends React.PureComponent {
     try {
       await AsyncStorage.setItem(key, JSON.stringify(item));
     } catch (error) {
-      console.log("error on storage", error.message)
       Alert.alert(
         'Error',
         'Ocurrio un error inesperado, vualva a ingresar, si el problema persiste comuniquese con soporte técnico.',
@@ -73,7 +72,6 @@ class LoginView extends React.PureComponent {
         })
         this.setState({ loading: false, firstLoading: false })
       }).catch((error) => {
-        console.log(error);
         this.setState({ loading: false, firstLoading: false })
         this.removeStorageUser()
         Alert.alert('Error', 'ocurrio un error al comunicarse con el servidor');
@@ -94,7 +92,6 @@ class LoginView extends React.PureComponent {
         this.setState({ loading:false, firstLoading: false })
       }
     } catch (error) {
-      console.log("value error", error.message);
     }
   };
 

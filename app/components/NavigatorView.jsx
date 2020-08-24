@@ -99,7 +99,6 @@ class NavigatorView extends React.PureComponent {
         .then(res => {
             this.props.actions.hasReceivedPushNotifications(true);
         }).catch((error) => {
-            console.log(error)
         });
   }
 
