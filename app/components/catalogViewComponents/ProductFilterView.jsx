@@ -144,7 +144,7 @@ class ProductFilterView extends React.PureComponent{
                     'Catálogo en construcción',
                     'El Catálogo esta en construcción, vuelva mas tarde.',
                     [
-                      { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                      { text: 'Entendido', onPress: () => this.props.goBackFunction() },
                     ],
                     { cancelable: false },
                   );

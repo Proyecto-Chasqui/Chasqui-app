@@ -33,6 +33,41 @@ class DeliveryZonesView extends React.PureComponent {
         }
     }
 
+    setInitialRegion(){
+        if(this.parsedZones.length > 0){
+            let zone = this.parsedZones[0]
+            let coordinate = zone.coordinates[0]
+            let newInitialRegion = {
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude,
+                latitudeDelta: 1.1922,
+                longitudeDelta: 1.1421,
+            }
+            this.setState({initialRegion: newInitialRegion})
+        }
+        if(this.sellerPoints.length > 0){
+            let vsellerPoint = this.sellerPoints[0]
+            if(vsellerPoint.direccion.latitud !== null){
+                let coordinate = this.createCoordinateParse(vsellerPoint.direccion.latitud, vsellerPoint.direccion.longitud)
+                let newInitialRegion = {
+                    latitude: coordinate.latitude,
+                    longitude: coordinate.longitude,
+                    latitudeDelta: 1.1922,
+                    longitudeDelta: 1.1421,
+                }
+                this.setState({initialRegion: newInitialRegion})
+            }else{
+                let newInitialRegion = {
+                    latitude: -34.7067799,
+                    longitude: -58.278568,
+                    latitudeDelta: 1.1922,
+                    longitudeDelta: 1.1421,
+                }
+                this.setState({initialRegion: newInitialRegion})
+            }            
+        }
+    }
+
     componentDidUpdate() {
         if (this.vendorID !== this.props.vendorSelected.id) {
             this.zones = this.props.zones;
@@ -115,7 +150,8 @@ class DeliveryZonesView extends React.PureComponent {
             }
             varZones.push(parsedZone);
         })
-        this.parsedZones = varZones
+        this.parsedZones = varZones        
+        this.setInitialRegion()
         this.setState({ zones: varZones })
     }
 

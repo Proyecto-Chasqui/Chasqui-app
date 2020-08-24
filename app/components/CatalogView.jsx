@@ -566,7 +566,7 @@ class CatalogView extends React.Component {
                     'Catálogo en construcción',
                     'El Catálogo esta en construcción, vuelva mas tarde.',
                     [
-                      { text: 'Entendido', onPress: () => this.props.actions.logout() },
+                      { text: 'Entendido', onPress: () => this.goBackCatalogs() },
                     ],
                     { cancelable: false },
                   );
@@ -693,7 +693,9 @@ class CatalogView extends React.Component {
                     functionStopSearch={() => this.stopSearch()}
                     isLoadingSearch={(value) => this.isLoadingSearch(value)}
                     isLoadingComponent={(value) => this.isLoadingComponent(value)}
-                    viewSelected={(value) => this.viewSelected(value)}>
+                    viewSelected={(value) => this.viewSelected(value)}
+                    goBackFunction= {()=>this.goBackCatalogs()}
+                    >
                 </ProductFilterView>
                 <OverlayShoppingCartView
                     showFilter={() => this.showShoppingCart()}
